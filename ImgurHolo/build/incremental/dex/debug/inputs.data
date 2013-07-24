@@ -1,0 +1,53 @@
+# incremental data. DO NOT EDIT.
+# format is <lastModified> <length> <SHA-1> <path>
+# Encoding is UTF-8
+1374661348853 1444 cde4e7790e993a77b88bb527632b8a28aa5c997d C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\GalleryFragment$GridItemClickListener.class
+1374628034740 353 0c4722877a644f921b5893eaa96036a4eac96023 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\BuildConfig.class
+1374661348899 1914 cdb154379d521e39cc62acad45178a49b56cf54a C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\ImagesFragment$ImageAdapter.class
+1374652963572 805 1a81b1c367979ec9f041feeab57939d1915ee19e C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\R$drawable.class
+1374652963608 821 84c950f5d9e88636c28f630a761534ccbfa695ed C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\R.class
+1374661348782 2997 3e04aa4ce074bf6ff9c7b4f2c541a8a5b4f06773 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\AlbumsFragment$1.class
+1374652963554 643 2d404540877fe60bc00a4347d19602baed7bf580 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\R$array.class
+1374483860777 82423 c841ffe78b77d6ca1fd38f744e2b107b5f6f74d6 C:\Users\Kurt Zimmer\.gradle\caches\artifacts-24\filestore\org.apache.httpcomponents\httpasyncclient\4.0-beta3\jar\c841ffe78b77d6ca1fd38f744e2b107b5f6f74d6\httpasyncclient-4.0-beta3.jar
+1374661721668 3318 4c40b8a9d9c692cf474060bf0f011eb0e7234da3 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\SingleImageFragment$CommentAdapter.class
+1374661348848 1921 3b685322b92ddbb6f12d095392208db651acaf46 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\GalleryFragment$ImageAdapter.class
+1374652963598 436 0b62602c8cf889ac6d30370e1e9b8aef82810e16 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\R$menu.class
+1374661721654 2004 93f2df3f8228f3e3c7eaff7b778ff51f1ffd4e8c C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\SingleImageFragment$1$1.class
+1374574895943 93354 764f851d481c8ca9b515a713a34305cea00a4124 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\libs\scribe-1.3.5.jar
+1374661348993 1465 9ec37a3dc2a36e878c9a258d93d0900d54edfe43 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\MainActivity$1.class
+1374652963569 473 b5681385901592151fcd207ea78e737be660f80f C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\R$dimen.class
+1374662449349 1490 1ea5ce47464c9de32c31590b780eb00965ee9f45 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\AccountFragment$DrawerItemClickListener.class
+1374661348999 2608 9c0de6f4eddc936e850f172d09d656606ffcd128 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\MainActivity$2.class
+1374662273652 4877 dd465cccb9505bee71829bf87e0ac84aed64bf3a C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\AccountFragment$1.class
+1374652963601 1441 43a3cb87f16d85fd70022cc0ad2e3b75ef0bdfa3 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\R$string.class
+1374652963604 443 f2f7ab88946eea2a0006020a2f4f3bc557ea73cf C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\R$style.class
+1374532141964 36348 67125d743e0035a1b157ba8210c2abf1ff374e10 C:\Users\Kurt Zimmer\.gradle\caches\artifacts-24\filestore\com.koushikdutta.urlimageviewhelper\urlimageviewhelper\1.0.4\jar\67125d743e0035a1b157ba8210c2abf1ff374e10\urlimageviewhelper-1.0.4.jar
+1374661349003 1951 9b5c7befd547d7ae56061d3c4eeb2f5a5914f637 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\MainActivity$3.class
+1374628034659 1017 43c14e5123e960f482741db54c6d959fe413e304 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\SquareImageView.class
+1374651500728 1501 3416934e1297ba997ee5ef144e6b2d276203b624 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\SettingsFragment$DrawerItemClickListener.class
+1374661721673 790 1ae831a658f6af6d7c2c9462d50f490e254b002c C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\SingleImageFragment$ViewHolder.class
+1374662470747 3004 85f4879e9bad4db1290f9aef8756ee975c4d107b C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\ImagesFragment$1.class
+1374661348800 3813 1f0c1b5b5f14b1a01f945b1ab740a27b22078f18 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\AlbumsFragment.class
+1374652963595 681 509d5a7abc5010917279c767155a7ea7e28ca9e5 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\R$layout.class
+1374652963459 2608 5269ac7aa00f7b150a0303e0f7c2ec57275cf876 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\SettingsFragment.class
+1374661695760 12917 4bf91c88450223ba0311d7d697396e7a347a96c8 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\MainActivity.class
+1374661348903 1434 556ef867067ec338d6261eb1136087401718addd C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\ImagesFragment$GridItemClickListener.class
+1374661349007 1457 a5297793544fd60a0c05c59d3f0fc8456e48ece0 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\MainActivity$DrawerItemClickListener.class
+1374661348858 1524 c1225010d809668ed02ab7f1ab288e29bfcd7c9e C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\GalleryFragment$2.class
+1374661721683 7213 89f2407e0057e9ae0e5b183d07c0d29a07ccb011 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\SingleImageFragment.class
+1374661348793 1434 646fa960189cfe4b1010428012c8f9102010dfde C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\AlbumsFragment$GridItemClickListener.class
+1369432936000 490914 3fe75433da602500cc71fcc1c46e5550291dd45d C:\Program Files (x86)\Android\android-studio\sdk\extras\android\m2repository\com\android\support\support-v4\13.0.0\support-v4-13.0.0.jar
+1374483889468 26477 118ae1bc7f3aeeddfe564f0edfd79c11d09d17d1 C:\Users\Kurt Zimmer\.gradle\caches\artifacts-24\filestore\org.apache.httpcomponents\httpmime\4.2.3\jar\118ae1bc7f3aeeddfe564f0edfd79c11d09d17d1\httpmime-4.2.3.jar
+1374662567531 4385 5b1e1d6ff63811eb63bb97618919d83772baffbd C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\AccountFragment.class
+1374483845439 223571 b76bee23cd3f3ee9b98bc7c2c14670e821ddbbfd C:\Users\Kurt Zimmer\.gradle\caches\artifacts-24\filestore\org.apache.httpcomponents\httpcore\4.2.2\jar\b76bee23cd3f3ee9b98bc7c2c14670e821ddbbfd\httpcore-4.2.2.jar
+1374661348911 3809 afdf7f1a30ddb2e49676416af3227ebfe327ddde C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\ImagesFragment.class
+1374661721661 2862 eab6f91db042275b8940b8e8b4e2e37cff966283 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\SingleImageFragment$1.class
+1374651436132 245 612088ec1e06aba4df288e266b4250c2a61c0c83 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\SettingsFragment$1.class
+1374661348865 5339 823c189f04542f42fc8ad760047fed32b8ca7597 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\GalleryFragment.class
+1374661348788 1914 46947bfbe2d4e553e8791541596fed2e5364e843 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\AlbumsFragment$ImageAdapter.class
+1374652963591 1177 29d293ba14eb7cac52dee3a9375b415a737a7401 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\R$id.class
+1374661438006 3325 9cbe1444b6f42c6841db8f0c8e3700c6e303dde9 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\GalleryFragment$1.class
+1374652963557 352 30710db34e53b9566e7a9117f81fe6fc2825a507 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\R$attr.class
+1374484471021 24226 ec5a9eaa479ac8fce15899d2fdf81a48f273b477 C:\Users\Kurt Zimmer\.gradle\caches\artifacts-24\filestore\com.mashape.unirest\unirest-java\1.1.1\jar\ec5a9eaa479ac8fce15899d2fdf81a48f273b477\unirest-java-1.1.1.jar
+1374652963565 4980 090f20405f35e16df946b6fde05c72505ba02e5d C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\classes\debug\com\krayzk9s\imgurholo\R$color.class
+1374483860487 285592 8de205b66e168bf8a3f2eba10925a90c33c2ebd6 C:\Users\Kurt Zimmer\.gradle\caches\artifacts-24\filestore\org.apache.httpcomponents\httpcore-nio\4.2.2\jar\8de205b66e168bf8a3f2eba10925a90c33c2ebd6\httpcore-nio-4.2.2.jar

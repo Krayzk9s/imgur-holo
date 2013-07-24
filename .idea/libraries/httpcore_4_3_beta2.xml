@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="httpcore-4.3-beta2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ImgurHolo/libs/httpcore-4.3-beta2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array
+        name="imgurMenuListLoggedIn">
+        <item>@string/menu_gallery</item>
+        <item>@string/menu_account</item>
+        <item>@string/menu_upload</item>
+        <item>@string/menu_images</item>
+        <item>@string/menu_albums</item>
+        <item>@string/menu_favorites</item>
+        <item>@string/menu_messages</item>
+        <item>@string/menu_settings</item>
+        <item>@string/menu_logout</item>
+    </array>
+    <array
+            name="imgurMenuListLoggedOut">
+        <item>@string/menu_login</item>
+        <item>@string/menu_gallery</item>
+        <item>@string/menu_settings</item>
+    </array>
+    <array
+        name="accountMenu">
+        <item>@string/menu_albums</item>
+        <item>@string/menu_images</item>
+        <item>@string/menu_likes</item>
+        <item>@string/menu_comments</item>
+        <item>@string/menu_messages</item>
+        <item>@string/menu_account_creation</item>
+        <item>@string/menu_bio</item>
+        <item>@string/menu_account_settings</item>
+        <item>@string/menu_disk_used</item>
+        <item>@string/menu_bandwidth_used</item>
+    </array>
+
+    <array
+            name="emptyList">
+    </array>
+
+   <array
+       name="singleImageList">
+       <item>@string/image_type</item>
+       <item>@string/size</item>
+       <item>@string/views</item>
+       <item>@string/menu_account_creation</item>
+       <item>@string/menu_bandwidth_used</item>
+   </array>
+
+    <array
+            name="galleryOptions">
+        <item>@string/hot</item>
+        <item>@string/top</item>
+        <item>@string/newsort</item>
+    </array>
+
+    <array
+            name="settings">
+        <item>@string/hot</item>
+        <item>@string/top</item>
+        <item>@string/newsort</item>
+    </array>
+</resources>
