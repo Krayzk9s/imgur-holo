@@ -9,7 +9,7 @@ package com.krayzk9s.imgurholo;
 
 public final class R {
     public static final class array {
-        /**  From: file:/C:/Users/Kurt%20Zimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/arrays.xml 
+        /**  From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/arrays.xml 
          */
         public static final int accountMenu=0x7f040000;
         public static final int emptyList=0x7f040001;
@@ -22,7 +22,7 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
-        /**  From: file:/C:/Users/Kurt%20Zimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/colors.xml 
+        /**  From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/colors.xml 
          */
         public static final int AliceBlue=0x7f050000;
         public static final int AntiqueWhite=0x7f050001;
@@ -166,8 +166,8 @@ public final class R {
         public static final int YellowGreen=0x7f05008b;
     }
     public static final class dimen {
-        /**  From: file:/C:/Users/Kurt%20Zimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/dimens.xml 
- From: file:/C:/Users/Kurt%20Zimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values-sw720dp-land/dimens.xml 
+        /**  From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/dimens.xml 
+ From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values-sw720dp-land/dimens.xml 
          */
         public static final int activity_horizontal_margin=0x7f060000;
         public static final int activity_vertical_margin=0x7f060001;
@@ -190,16 +190,17 @@ public final class R {
     public static final class id {
         public static final int account_layout=0x7f0a0000;
         public static final int account_list=0x7f0a0001;
-        public static final int action_copy=0x7f0a0014;
-        public static final int action_delete=0x7f0a0015;
-        public static final int action_settings=0x7f0a0016;
+        public static final int action_copy=0x7f0a0015;
+        public static final int action_delete=0x7f0a0016;
+        public static final int action_settings=0x7f0a0017;
         public static final int body=0x7f0a000d;
+        public static final int comment_buttons=0x7f0a000e;
         public static final int comment_item=0x7f0a0005;
-        public static final int comment_thread=0x7f0a0013;
+        public static final int comment_thread=0x7f0a0014;
         public static final int drawer_layout=0x7f0a0002;
         public static final int frame_layout=0x7f0a0003;
         public static final int header=0x7f0a000c;
-        public static final int image_layout=0x7f0a000f;
+        public static final int image_layout=0x7f0a0010;
         public static final int left_drawer=0x7f0a0004;
         public static final int margin_1=0x7f0a0006;
         public static final int margin_2=0x7f0a0007;
@@ -207,10 +208,10 @@ public final class R {
         public static final int margin_4=0x7f0a0009;
         public static final int margin_5=0x7f0a000a;
         public static final int margin_6=0x7f0a000b;
-        public static final int picture=0x7f0a000e;
-        public static final int single_image_details=0x7f0a0012;
-        public static final int single_image_title=0x7f0a0010;
-        public static final int single_image_view=0x7f0a0011;
+        public static final int picture=0x7f0a000f;
+        public static final int single_image_details=0x7f0a0013;
+        public static final int single_image_title=0x7f0a0011;
+        public static final int single_image_view=0x7f0a0012;
     }
     public static final class layout {
         public static final int account_layout=0x7f030000;
@@ -227,7 +228,7 @@ public final class R {
         public static final int main=0x7f090001;
     }
     public static final class string {
-        /**  From: file:/C:/Users/Kurt%20Zimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/strings.xml 
+        /**  From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/strings.xml 
          */
         public static final int action_copy=0x7f070000;
         public static final int action_delete=0x7f070001;
@@ -261,13 +262,13 @@ public final class R {
         public static final int views=0x7f07001d;
     }
     public static final class style {
-        /**  From: file:/C:/Users/Kurt%20Zimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/styles.xml 
+        /**  From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/styles.xml 
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         
- From: file:/C:/Users/Kurt%20Zimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values-v11/styles.xml 
+ From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values-v11/styles.xml 
  API 11 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f080000;

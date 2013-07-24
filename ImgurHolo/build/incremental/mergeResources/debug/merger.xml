@@ -2,169 +2,174 @@
 <merger>
 
     <dataSet config="main" >
-        <source path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res" >
+        <source path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res" >
             <file
                 name="selector"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable\selector.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable\selector.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="drawer_shadow"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\drawer_shadow.9.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\drawer_shadow.9.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="icon"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\icon.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\icon.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="ic_drawer"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\ic_drawer.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\ic_drawer.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="ic_launcher"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\ic_launcher.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\ic_launcher.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="sample_0"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_0.jpg"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_0.jpg"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="sample_1"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_1.jpg"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_1.jpg"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="sample_2"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_2.jpg"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_2.jpg"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="sample_3"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_3.jpg"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_3.jpg"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="sample_4"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_4.jpg"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_4.jpg"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="sample_5"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_5.jpg"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_5.jpg"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="sample_6"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_6.jpg"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_6.jpg"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="sample_7"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_7.jpg"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-hdpi\sample_7.jpg"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="drawer_shadow"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-mdpi\drawer_shadow.9.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-mdpi\drawer_shadow.9.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="icon"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-mdpi\icon.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-mdpi\icon.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="ic_drawer"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-mdpi\ic_drawer.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-mdpi\ic_drawer.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="ic_launcher"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-mdpi\ic_launcher.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-mdpi\ic_launcher.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="drawer_shadow"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-xhdpi\drawer_shadow.9.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-xhdpi\drawer_shadow.9.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="icon"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-xhdpi\icon.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-xhdpi\icon.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="ic_drawer"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-xhdpi\ic_drawer.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-xhdpi\ic_drawer.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="ic_launcher"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-xhdpi\ic_launcher.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-xhdpi\ic_launcher.png"
                 qualifiers="xhdpi"
                 type="drawable" />
             <file
                 name="icon"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-xxhdpi\icon.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-xxhdpi\icon.png"
                 qualifiers="xxhdpi"
                 type="drawable" />
             <file
                 name="ic_launcher"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-xxhdpi\ic_launcher.png"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\drawable-xxhdpi\ic_launcher.png"
                 qualifiers="xxhdpi"
                 type="drawable" />
             <file
                 name="account_layout"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\account_layout.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\account_layout.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="activity_main"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\activity_main.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\activity_main.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="comment_list_item"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\comment_list_item.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\comment_list_item.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="drawer_list_item"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\drawer_list_item.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\drawer_list_item.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="image_card"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\image_card.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\image_card.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="image_layout"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\image_layout.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\image_layout.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="image_view"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\image_view.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="single_image_layout"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\single_image_layout.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\single_image_layout.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="imagecontext"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\menu\imagecontext.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\menu\imagecontext.xml"
                 qualifiers=""
                 type="menu" />
             <file
                 name="main"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\menu\main.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\menu\main.xml"
                 qualifiers=""
                 type="menu" />
             <file
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values\arrays.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values\arrays.xml"
                 qualifiers="" >
                 <array name="galleryOptions" >
                     <item>
@@ -187,6 +192,8 @@
                     <item>
 @string/menu_settings
                     </item>
+                </array>
+                <array name="emptyList" >
                 </array>
                 <array name="imgurMenuListLoggedIn" >
                     <item>
@@ -216,8 +223,6 @@
                     <item>
 @string/menu_logout
                     </item>
-                </array>
-                <array name="emptyList" >
                 </array>
                 <array name="settings" >
                     <item>
@@ -281,7 +286,7 @@
                 </array>
             </file>
             <file
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values\colors.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values\colors.xml"
                 qualifiers="" >
                 <color name="GhostWhite" >#F8F8FF
                 </color>
@@ -565,7 +570,7 @@
                 </color>
             </file>
             <file
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values\dimens.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values\dimens.xml"
                 qualifiers="" >
                 <dimen name="activity_horizontal_margin" >16dp
                 </dimen>
@@ -573,7 +578,7 @@
                 </dimen>
             </file>
             <file
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values\strings.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values\strings.xml"
                 qualifiers="" >
                 <string name="action_settings" >Settings
                 </string>
@@ -637,7 +642,7 @@
                 </string>
             </file>
             <file
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values\styles.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values\styles.xml"
                 qualifiers="" >
 
                 <style
@@ -659,16 +664,16 @@
                 </style>
             </file>
             <file
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values-sw600dp\dimens.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values-sw600dp\dimens.xml"
                 qualifiers="sw600dp" />
             <file
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values-sw720dp-land\dimens.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values-sw720dp-land\dimens.xml"
                 qualifiers="sw720dp-land" >
                 <dimen name="activity_horizontal_margin" >128dp
                 </dimen>
             </file>
             <file
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values-v11\styles.xml"
+                path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\values-v11\styles.xml"
                 qualifiers="v11" >
 
                 <style
@@ -678,16 +683,11 @@
                     <!-- API 11 theme customizations can go here. -->
                 </style>
             </file>
-            <file
-                name="image_view"
-                path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\main\res\layout\image_view.xml"
-                qualifiers=""
-                type="layout" />
         </source>
-        <source path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\rs\debug" />
+        <source path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\rs\debug" />
     </dataSet>
     <dataSet config="debug" >
-        <source path="C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\debug\res" />
+        <source path="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\src\debug\res" />
     </dataSet>
 
 </merger>

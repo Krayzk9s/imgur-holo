@@ -18,7 +18,8 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/single_image_view"
             android:layout_width="wrap_content"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="200dp"
             android:layout_gravity="center_horizontal"
             />
     <TextView
@@ -30,4 +31,31 @@
             android:textColor="@color/DarkGray"
             android:textAppearance="?android:textAppearanceSmall"
             />
-</LinearLayout><!-- From: file:/C:/Users/Kurt%20Zimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/layout/image_view.xml -->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="horizontal"
+                  android:layout_width="wrap_content"
+                  android:layout_gravity="center_horizontal"
+                  android:layout_height="50dp"
+                    >
+        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+"/>
+        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"/>
+        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User"/>
+        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reply"/>
+        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Report"/>
+    </LinearLayout>
+</LinearLayout><!-- From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/layout/image_view.xml -->
