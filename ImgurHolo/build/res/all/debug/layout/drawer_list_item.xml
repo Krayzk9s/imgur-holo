@@ -8,4 +8,4 @@
     android:paddingRight="16dp"
     android:textColor="#000000"
     android:background="?android:attr/activatedBackgroundIndicator"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall"/><!-- From: file:/C:/Users/Kurt%20Zimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/layout/drawer_list_item.xml -->
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"/><!-- From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/layout/drawer_list_item.xml -->

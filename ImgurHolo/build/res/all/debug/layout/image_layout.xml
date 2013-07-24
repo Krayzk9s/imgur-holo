@@ -13,4 +13,4 @@
             android:drawSelectorOnTop="true"
             android:listSelector="@drawable/selector"
             android:gravity="center">
-</GridView><!-- From: file:/C:/Users/Kurt%20Zimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/layout/image_layout.xml -->
+</GridView><!-- From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/layout/image_layout.xml -->

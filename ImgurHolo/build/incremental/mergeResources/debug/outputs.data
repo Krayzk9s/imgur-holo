@@ -1,39 +1,39 @@
 # incremental data. DO NOT EDIT.
 # format is <lastModified> <length> <SHA-1> <path>
 # Encoding is UTF-8
-1374627671527 363 f7cb49994286229a82b19f7e7219b809b472f00a C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\menu\main.xml
-1374627671848 414 7e5eb3e7ac1fe7bfeb488f26bc56e306ed3cb496 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-xhdpi\icon.png
-1374651564027 657 694f7883f9e210785b3fe24771f608863df0d079 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\drawer_list_item.xml
-1374627671674 272 98fa6c2e813fc389c0279e1f9c92cf1354e9f705 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\values-sw720dp-land\values.xml
-1374627671623 121 85d6435ba2685be1336d49a7bf6b577b2712587c C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\ic_drawer.png
-1374627671828 195 1c5077b0c3b821c024b481c164bce56205ee9fd4 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-xhdpi\drawer_shadow.9.png
-1374627671725 601 d64998966d0b0c21bc1e8b2369034a9dafefff01 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\image_card.xml
-1374627671717 173 680ee1fcb14bb4333e95c5301116a7450fcc3a5f C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-mdpi\drawer_shadow.9.png
-1374627671557 593 890709ad3e868142718b7070b340b0095e2ab001 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\menu\imagecontext.xml
-1374627671798 318 263a42d18842dde12ed79e4dc9b679fa1ea2fac8 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\icon.png
-1374627671753 5946 4bf7402bd7df466a787014bdbf5cafd9aa89c2b5 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\ic_launcher.png
-1374627671568 178 f5dc48ceebdbf5571aa0d0ed034a7847800d8ccd C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-xxhdpi\icon.png
-1374627671698 475 80c3411b17b3d75c4654c2058ba394213023b5be C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-mdpi\icon.png
-1374661895233 1578 aaa09f1d565f50fdaf7ec0df80f9df73e027354c C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\image_view.xml
-1374651713935 641 a0422d4c91855e0e75db97aac07cc5218e7647f7 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\account_layout.xml
-1374627671668 66782 58a2331e79934483f1830f0be6fef881ee9a45e4 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_6.jpg
-1374627671659 343 9563a2f3a0d511717eff5775955c62fc1d678996 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\values-v11\values.xml
-1374627671809 188 e659609c33f7899eadf2411bebe57d98d3d40265 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\drawer_shadow.9.png
-1374627671669 54704 5cbfcf5e38649fb6d7e0567e245fbecf0daead4c C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_7.jpg
-1374627671756 9332 4e0e62a430558d0cce3c5dee6f4709055a63a45c C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-xhdpi\ic_launcher.png
-1374627671672 50757 f38bd9013e2b657eb73bac3a7e7c5369634be5a9 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_4.jpg
-1374627671658 59867 a6ebc257a2f88797848e60bd6ecae03b87b3267a C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_0.jpg
-1374627671537 957 a41513418c439cbe84f40b9fc8e5557a3f1d18a8 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\activity_main.xml
-1374652766732 827 77860d2279d178bd4d8a97b607c28200f543836e C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\single_image_layout.xml
-1374627671687 784 9dcd73392dfac5b16a44f3a8e65203d2f6b548d7 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\image_layout.xml
-1374627671677 49657 ce00865e129b197ec79bd2d0f3e5adade7afe4b5 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_5.jpg
-1374627671680 55168 3131251aa7ee96ab03033a0908a5b80e848bff05 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_2.jpg
-1374627671663 68413 a0f1d16403a3045fed83093b48a2c284db0a824a C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_1.jpg
-1374627671596 124 b98041423de06a6af23aed3d019aa724f60dfe94 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-xhdpi\ic_drawer.png
-1374627671775 17765 702fd3311475c099afc13c0b03375d917cc82018 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-xxhdpi\ic_launcher.png
-1374627671627 3121 c13193c37274d333ac028cc72c260b891662d9d0 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-mdpi\ic_launcher.png
-1374651605587 4000 c8ef3e62dabbfe2ea280db656e57cba21a38b9e4 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\comment_list_item.xml
-1374627671685 62389 b8835088c240610d291ecf2229dff68c1c2b2ef1 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_3.jpg
-1374652961336 10858 02b27e39687e493088fbde2c14d5035d75a85818 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\values\values.xml
-1374627671792 122 a040701c5c1b18d3ac608e81fe1c817cf8dbe5b2 C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-mdpi\ic_drawer.png
-1374627671657 1921 1485d6e46ea82d41fa24908d27b3d9d98f6d8e8f C:\Users\Kurt Zimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable\selector.xml
+1374674938701 188 e659609c33f7899eadf2411bebe57d98d3d40265 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\drawer_shadow.9.png
+1374684360715 636 5fc061cfc6f9b1ecb40ee95fa928f6eacb648537 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\account_layout.xml
+1374674938638 49657 ce00865e129b197ec79bd2d0f3e5adade7afe4b5 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_5.jpg
+1374674939749 475 80c3411b17b3d75c4654c2058ba394213023b5be C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-mdpi\icon.png
+1374674940456 414 7e5eb3e7ac1fe7bfeb488f26bc56e306ed3cb496 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-xhdpi\icon.png
+1374674939708 3121 c13193c37274d333ac028cc72c260b891662d9d0 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-mdpi\ic_launcher.png
+1374684360883 10833 561df5e0cbfa3ce35d0643b2b57253f2e4af1095 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\values\values.xml
+1374674938689 59867 a6ebc257a2f88797848e60bd6ecae03b87b3267a C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_0.jpg
+1374674939334 17765 702fd3311475c099afc13c0b03375d917cc82018 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-xxhdpi\ic_launcher.png
+1374684360892 267 6f688eb4ce06893e3f5f6e9f9c2fb43c41bfcc30 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\values-sw720dp-land\values.xml
+1374684361680 652 f20f324bdd6fb672e8dde99a5f981ad0ac584e5b C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\drawer_list_item.xml
+1374674938614 318 263a42d18842dde12ed79e4dc9b679fa1ea2fac8 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\icon.png
+1374684360717 358 ed8e090a7e9752915dab018ae38848a0e38fcdea C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\menu\main.xml
+1374674939672 173 680ee1fcb14bb4333e95c5301116a7450fcc3a5f C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-mdpi\drawer_shadow.9.png
+1374674938667 66782 58a2331e79934483f1830f0be6fef881ee9a45e4 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_6.jpg
+1374674938524 121 85d6435ba2685be1336d49a7bf6b577b2712587c C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\ic_drawer.png
+1374674938606 62389 b8835088c240610d291ecf2229dff68c1c2b2ef1 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_3.jpg
+1374684362285 822 03e4576f19f59182c561ac92caf9f4dec494c693 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\single_image_layout.xml
+1374674940486 9332 4e0e62a430558d0cce3c5dee6f4709055a63a45c C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-xhdpi\ic_launcher.png
+1374674938632 68413 a0f1d16403a3045fed83093b48a2c284db0a824a C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_1.jpg
+1374674938455 5946 4bf7402bd7df466a787014bdbf5cafd9aa89c2b5 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\ic_launcher.png
+1374684362074 596 3de88963aadaab727a85035e82cde7f617cd275c C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\image_card.xml
+1374674940460 124 b98041423de06a6af23aed3d019aa724f60dfe94 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-xhdpi\ic_drawer.png
+1374674938652 50757 f38bd9013e2b657eb73bac3a7e7c5369634be5a9 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_4.jpg
+1374684361679 1916 60ed968571722002ee5e061000552d9e77ba95bd C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable\selector.xml
+1374684360889 338 c72726553bb0081258a89f9729539c3aadb51e66 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\values-v11\values.xml
+1374684361457 588 89ea930b79f71680443a0785408293a72116281e C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\menu\imagecontext.xml
+1374674939263 178 f5dc48ceebdbf5571aa0d0ed034a7847800d8ccd C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-xxhdpi\icon.png
+1374684361972 779 0facf328f044c8fadd0d080263299b13249f2afa C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\image_layout.xml
+1374674939672 122 a040701c5c1b18d3ac608e81fe1c817cf8dbe5b2 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-mdpi\ic_drawer.png
+1374674938628 54704 5cbfcf5e38649fb6d7e0567e245fbecf0daead4c C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_7.jpg
+1374674940458 195 1c5077b0c3b821c024b481c164bce56205ee9fd4 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-xhdpi\drawer_shadow.9.png
+1374674938645 55168 3131251aa7ee96ab03033a0908a5b80e848bff05 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\drawable-hdpi\sample_2.jpg
+1374684361989 3065 47e661debdf6e0bfd007126446dfa08630007830 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\image_view.xml
+1374684360712 9206 a0d1a9fae92c325aea3ac11b7abd3ebb51293fee C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\comment_list_item.xml
+1374684360712 952 73b5830c80b2240b1946c41fad0e2447ee376ce1 C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\build\res\all\debug\layout\activity_main.xml
