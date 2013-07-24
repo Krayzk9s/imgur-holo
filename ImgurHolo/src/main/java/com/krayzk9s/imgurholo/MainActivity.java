@@ -187,6 +187,13 @@ public class MainActivity extends FragmentActivity {
         return accessToken;
     }
 
+    public SharedPreferences getSettings()
+    {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        return settings;
+    }
+
+
     public void login() {
 
         AsyncTask<Void, Void, String> async = new AsyncTask<Void, Void, String>() {
