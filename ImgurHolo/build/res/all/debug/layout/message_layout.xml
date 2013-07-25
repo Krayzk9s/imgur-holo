@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="2dp"
+        >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/comment_item"
+                  android:orientation="horizontal"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:padding="2dp"
+            >
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical">
+
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:id="@+id/title"
+                          android:text="@string/menu_gallery"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginRight="5dip"
+                          android:textAppearance="?android:textAppearanceMedium"
+                        />
+
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:id="@+id/header"
+                          android:text="@string/menu_gallery"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginRight="5dip"
+                          android:textAppearance="?android:textAppearanceSmall"
+                          android:textColor="@color/DarkGray"
+                        />
+
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:id="@+id/body"
+                          android:text="@string/menu_gallery"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:minHeight="50dp"
+                          android:layout_marginRight="5dip"
+                          android:textAppearance="?android:textAppearanceSmall"
+                        />
+            </LinearLayout>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:orientation="horizontal"
+                          android:layout_width="wrap_content"
+                          android:layout_gravity="center_horizontal"
+                          android:layout_height="50dp"
+                    >
+
+                <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+"/>
+
+                <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-"/>
+
+                <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="User"/>
+
+                <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reply"/>
+
+                <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Report"/>
+            </LinearLayout>
+    </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="horizontal"
+                  android:layout_width="wrap_content"
+                  android:layout_gravity="center_horizontal"
+                  android:layout_height="50dp"
+                  android:id="@+id/comment_buttons"
+            >
+
+        <ImageButton
+                android:id="@+id/rating_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/social_reply"/>
+    </LinearLayout>
+</LinearLayout><!-- From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/layout/message_layout.xml -->

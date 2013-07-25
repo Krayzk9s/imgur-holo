@@ -387,6 +387,7 @@ public class MainActivity extends FragmentActivity {
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mDrawerList);
+        FragmentManager fragmentManager = getSupportFragmentManager();
         switch (position) {
             case 0:
                 if (!loggedin)
@@ -396,7 +397,6 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 1:
                 if (loggedin) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
                     AccountFragment accountFragment = new AccountFragment();
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, accountFragment)
@@ -405,7 +405,6 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 3:
                 if (loggedin) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
                     ImagesFragment imagesFragment = new ImagesFragment();
                     imagesFragment.setImageCall("3/account/me/images/0");
                     fragmentManager.beginTransaction()
@@ -416,7 +415,6 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 4:
                 if (loggedin) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
                     AlbumsFragment albumsFragment = new AlbumsFragment();
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, albumsFragment)
@@ -424,9 +422,27 @@ public class MainActivity extends FragmentActivity {
                     updateMenu();
                 }
                 break;
+            case 5:
+                if (loggedin) {
+                    ImagesFragment imagesFragment = new ImagesFragment();
+                    imagesFragment.setImageCall("3/account/me/likes");
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame_layout, imagesFragment)
+                            .commit();
+                    updateMenu();
+                }
+                break;
+            case 6:
+                if (loggedin) {
+                    MessagingFragment messagingFragment = new MessagingFragment();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame_layout, messagingFragment)
+                            .commit();
+                    updateMenu();
+                }
+                break;
             case 7:
                 if (loggedin) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
                     SettingsFragment settingsFragment = new SettingsFragment();
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, settingsFragment)
@@ -438,7 +454,7 @@ public class MainActivity extends FragmentActivity {
                 if (loggedin) {
                     SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.remove("AccessToken");
+                    //editor.remove("AccessToken");
                     //editor.remove("RefreshToken");
                     editor.commit();
                     loggedin = false;
@@ -485,6 +501,33 @@ public class MainActivity extends FragmentActivity {
         Log.d("Got data", data.toString());
         return data;
     }
+
+    public void makeSettingsPost(String accountSetting, Object settingValue, String username)
+    {
+        Token accessKey = getAccessToken();
+        Log.d("Making Call", accessKey.toString());
+        HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "/3/account/me/settings")
+                .header("accept", "application/json")
+                .header("X-Mashape-Authorization", MASHAPE_KEY)
+                .header("Authorization", "Bearer " + accessKey.getToken())
+                .field(accountSetting, settingValue)
+                .asJson();
+        Log.d("Getting Code", String.valueOf(response.getCode()));
+        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
+        int code = response.getCode();
+        if(code == 403)
+        {
+            accessKey = renewAccessToken();
+            Unirest.post(MASHAPE_URL + "/3/account/me/settings")
+                    .header("accept", "application/json")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Bearer " + accessKey.getToken())
+                    .field(accountSetting, settingValue)
+                    .field("username", username)
+                    .asJson();
+        }
+    }
+
 
     public void changeFragment(Fragment newFragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();

@@ -271,7 +271,8 @@
 1374748452994 1487 31cc61443020bfe6b0a05d28609f4f976691b83e C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-hdpi\social_reply.png
 1374748467592 1578 e898f602d7fcab0d07560a129aadcace46123b53 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-xhdpi\device_access_sd_storage.png
 1374748468543 1823 8e19af5aa44dacf7f5634c58696206241fed481e C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-xhdpi\hardware_gamepad.png
-1374751455171 9266 64ad2ca9955a129f5adec9411e02e7def11264bf C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\layout\comment_list_item.xml
+1374779626213 7826 fe84a4cff6225ed0d9469e21ae02a15aad10f1d6 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\layout\comment_list_item.xml
+1374780850201 4896 59784953848b4d8a03f9ea874ed8297181c89dfd C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\layout\message_layout.xml
 1374748455728 1225 d32000b0359ca852a140c20decbdc5dce66af827 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-mdpi\device_access_network_cell.png
 1374748459070 1525 1d185f3b5e0d2451049f89e5694fb2a67d16bd89 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-mdpi\social_cc_bcc.png
 1374748459782 1277 1100fa913d6930eb05d6b0ebcb616ec4cd9f7847 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-mdpi\av_fast_forward.png
@@ -314,7 +315,7 @@
 1374748455259 1581 68b66fe8372654362185e9d736e024bb5e0d62e4 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-mdpi\device_access_brightness_high.png
 1374748457643 1318 73921616f1df49dd784673ecce779ccbad932c8c C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-mdpi\action_help.png
 1374748470707 1691 587ed17fd3b27422cfe8e16f1b6d20d1be508ad8 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-xhdpi\social_send_now.png
-1374747126039 1934 a67c1819c16989f26621b4bd4d8a0f96e3dbe62a C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\values\arrays.xml
+1374777929607 2355 81e435825c95c4a951625d16e10891425f25e5bd C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\values\arrays.xml
 1374748459611 1581 03eb18093ab74adaf796b3376a90c119c4d0819f C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-mdpi\images_rotate_left.png
 1374748453257 1470 62d5428a93d9878a09b52de1a00c4838801f6c40 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-hdpi\images_crop.png
 1374748457809 1290 63d9a32c999a307e4123d8dc0a19badcd35bdc21 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-mdpi\rating_good.png
@@ -401,7 +402,7 @@
 1374748453715 1509 873d3819610a4daa9d1ecd0fc8d9906c58603d41 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-hdpi\av_previous.png
 1374748459102 1201 6cce655e7042e4bb7b95f435f7d8138d7ba20852 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-mdpi\social_chat.png
 1374748470909 1619 26c80bccebe635a4dad0a536e01de1a629aa5707 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-xhdpi\images_crop.png
-1374748907812 2001 0908ff6d40b83fde307de2f0261fc1f2c5495776 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\values\strings.xml
+1374777917714 2492 457bd4447b1eb1a06ecfe96e312deb0306503e76 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\values\strings.xml
 1374748467498 1629 73ea7b02e79cc8ee146c9d6b29fd045b314e3a4e C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-xhdpi\device_access_screen_locked_to_landscape.png
 1374748469948 1225 c0d2dc89783e5d33585c5a594b8b5f34c81095a8 C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-xhdpi\content_new.png
 1374748459135 1291 2ffb4851dabd072353921856fe282f3a8e67af2a C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-mdpi\social_forward.png

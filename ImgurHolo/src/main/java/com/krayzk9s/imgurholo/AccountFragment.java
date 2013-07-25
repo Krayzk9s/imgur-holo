@@ -1,5 +1,9 @@
 package com.krayzk9s.imgurholo;
 
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -56,6 +61,7 @@ public class AccountFragment extends Fragment {
                 JSONObject accountInfoJSON = activity.makeGetCall("3/account/me");
                 JSONObject statsJSON = activity.makeGetCall("3/account/me/stats");
                 JSONObject likesJSON = activity.makeGetCall("3/account/me/likes");
+                JSONObject settingsJSON = activity.makeGetCall("3/account/me/settings");
 
                 try {
                     accountInfoJSON = accountInfoJSON.getJSONObject("data");
@@ -82,6 +88,17 @@ public class AccountFragment extends Fragment {
                     JSONArray likesJSONArray = likesJSON.getJSONArray("data");
                     accountData.put("total_likes", String.valueOf(likesJSONArray.length()));
 
+                    settingsJSON = settingsJSON.getJSONObject("data");
+                    accountData.put("email", settingsJSON.getString("email"));
+                    accountData.put("album_privacy", settingsJSON.getString("album_privacy"));
+                    if(settingsJSON.getBoolean("public_images") == false)
+                        accountData.put("public_images", "private");
+                    else
+                        accountData.put("public_images", "public");
+                    if(settingsJSON.getBoolean("messaging_enabled") == false)
+                        accountData.put("messaging_enabled", "disabled");
+                    else
+                        accountData.put("messaging_enabled", "enabled");
                 } catch (Exception e) {
                     Log.e("Error!", e.toString());
                 }
@@ -97,12 +114,15 @@ public class AccountFragment extends Fragment {
                 //mMenuList[4] = mMenuList[4] + " (" + accountData.get("total_messages") + ")";
                 mMenuList[5] = mMenuList[5] + " " + accountData.get("created");
                 if(accountData.get("bio") != "null")
-                    mMenuList[6] = mMenuList[6] + " " + accountData.get("bio");
+                    mMenuList[6] = accountData.get("bio");
                 else
                     mMenuList[6] = "No Biography";
-                //mMenuList[7] is settings
-                mMenuList[8] = mMenuList[8] + " - " + accountData.get("disk_used");
-                mMenuList[9] = mMenuList[9] + " - " + accountData.get("bandwidth_used");
+                mMenuList[7] = "Your imgur e-mail is " + accountData.get("email");
+                mMenuList[8] = "Your albums are " + accountData.get("album_privacy");
+                mMenuList[9] = "Your images are " + accountData.get("public_images");
+                mMenuList[10] = "Your messaging is " + accountData.get("messaging_enabled");
+                mMenuList[11] = mMenuList[11] + " - " + accountData.get("disk_used");
+                mMenuList[12] = mMenuList[12] + " - " + accountData.get("bandwidth_used");
                 adapter.notifyDataSetChanged();
             }
         };
@@ -111,7 +131,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void selectItem(int position) {
-        MainActivity activity = (MainActivity) getActivity();
+        final MainActivity activity = (MainActivity) getActivity();
         ImagesFragment imagesFragment;
         switch(position) {
             case 0:
@@ -128,10 +148,140 @@ public class AccountFragment extends Fragment {
                 imagesFragment.setImageCall("3/account/me/likes");
                 activity.changeFragment(imagesFragment);
                 break;
+            case 6:
+                MessagingFragment messagingFragment = new MessagingFragment();
+                activity.changeFragment(messagingFragment);
+                break;
+            case 7:
+                final EditText input = new EditText(activity);
+                new AlertDialog.Builder(activity).setTitle("Set e-mail")
+                        .setView(input).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        SettingsAsync settingsAsync = new SettingsAsync("email", input.getText(), accountData.get("name"));
+                        settingsAsync.execute();
+                        mMenuList[7] = "Your imgur email is " + input.getText();
+                        adapter.notifyDataSetChanged();
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Do nothing.
+                    }
+                }).show();
+                break;
+            case 8:
+                new AlertDialog.Builder(activity).setTitle("Set Album Privacy")
+                        .setItems(R.array.privacy, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                MainActivity activity = (MainActivity) getActivity();
+                                SharedPreferences settings = activity.getSettings();
+                                SharedPreferences.Editor editor = settings.edit();
+                                int privacy = 0;
+                                switch (whichButton) {
+                                    case 0:
+                                        privacy = 1;
+                                        mMenuList[8] = "Your albums are private";
+                                        break;
+                                    case 1:
+                                        privacy = 0;
+                                        mMenuList[8] = "Your albums are public";
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                SettingsAsync settingsAsync = new SettingsAsync("album_privacy", privacy, accountData.get("name"));
+                                settingsAsync.execute();
+                                adapter.notifyDataSetChanged();
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Do nothing.
+                    }
+                }).show();
+                break;
+            case 9:
+                new AlertDialog.Builder(activity).setTitle("Set Image Privacy")
+                        .setItems(R.array.privacy, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                MainActivity activity = (MainActivity) getActivity();
+                                SharedPreferences settings = activity.getSettings();
+                                SharedPreferences.Editor editor = settings.edit();
+                                int privacy = 0;
+                                switch (whichButton) {
+                                    case 0:
+                                        privacy = 0;
+                                        mMenuList[9] = "Your images are private";
+                                        break;
+                                    case 1:
+                                        privacy = 1;
+                                        mMenuList[9] = "Your images are public";
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                SettingsAsync settingsAsync = new SettingsAsync("public_images", privacy, accountData.get("name"));
+                                settingsAsync.execute();
+                                adapter.notifyDataSetChanged();
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Do nothing.
+                    }
+                }).show();
+                break;
+            case 10:
+                new AlertDialog.Builder(activity).setTitle("Enable/Disable Messaging")
+                        .setItems(R.array.messaging, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                MainActivity activity = (MainActivity) getActivity();
+                                SharedPreferences settings = activity.getSettings();
+                                SharedPreferences.Editor editor = settings.edit();
+                                int enable = 0;
+                                switch (whichButton) {
+                                    case 0:
+                                        enable = 1;
+                                        mMenuList[10] = "Your messaging is enabled";
+                                        break;
+                                    case 1:
+                                        enable = 0;
+                                        mMenuList[10] = "Your messaging is disabled";
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                SettingsAsync settingsAsync = new SettingsAsync("messaging_enabled", enable, accountData.get("name"));
+                                settingsAsync.execute();
+                                adapter.notifyDataSetChanged();
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Do nothing.
+                    }
+                }).show();
+                break;
             default:
-                return;
+                break;
         }
     }
+
+    private class SettingsAsync extends AsyncTask<Void, Void, Void>
+    {
+        private Object data;
+        private String settingName;
+        private String username;
+        public SettingsAsync(String _settingName, Object _data, String _username)
+        {
+            data = _data;
+            settingName =_settingName;
+            username = _username;
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            MainActivity activity = (MainActivity) getActivity();
+            activity.makeSettingsPost(settingName, data, username);
+            return null;
+        }
+    }
+
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override

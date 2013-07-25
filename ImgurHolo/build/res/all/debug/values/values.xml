@@ -10,7 +10,10 @@
         <item>@string/menu_messages</item>
         <item>@string/menu_account_creation</item>
         <item>@string/menu_bio</item>
-        <item>@string/menu_account_settings</item>
+        <item>@string/menu_email</item>
+        <item>@string/album_privacy</item>
+        <item>@string/public_images</item>
+        <item>@string/messaging_enabled</item>
         <item>@string/menu_disk_used</item>
         <item>@string/menu_bandwidth_used</item>
     </array>
@@ -42,10 +45,13 @@
         <item>@string/menu_gallery</item>
         <item>@string/menu_settings</item>
     </array>
-    <array name="settings">
-        <item>@string/hot</item>
-        <item>@string/top</item>
-        <item>@string/newsort</item>
+    <array name="messaging">
+        <item>@string/enable_messaging</item>
+        <item>@string/disable_messaging</item>
+    </array>
+    <array name="privacy">
+        <item>@string/private_string</item>
+        <item>@string/public_string</item>
     </array>
     <array name="singleImageList">
         <item>@string/image_type</item>
@@ -206,11 +212,14 @@
     <string name="action_settings">Settings</string>
     <string name="action_share">Share</string>
     <string name="action_upload">Upload</string>
-    <string name="all">0</string>
+    <string name="album_privacy">Change Album Privacy</string>
+    <string name="all">All</string>
     <string name="app_name">Imgur Holo</string>
     <string name="app_not_available">App Not Available</string>
+    <string name="disable_messaging">Disable Messaging</string>
     <string name="drawer_close">Closing Drawer</string>
     <string name="drawer_open">Opening Drawer</string>
+    <string name="enable_messaging">Enable Messaging</string>
     <string name="fifty">50</string>
     <string name="hot">hot</string>
     <string name="image_type">Image Type</string>
@@ -222,6 +231,7 @@
     <string name="menu_bio">Biography</string>
     <string name="menu_comments">Your Comments</string>
     <string name="menu_disk_used">Disk Used</string>
+    <string name="menu_email">Change Email</string>
     <string name="menu_favorites">Favorites</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_images">Your Images</string>
@@ -231,8 +241,12 @@
     <string name="menu_messages">Messages</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_upload">Upload Images</string>
+    <string name="messaging_enabled">Enable/Disable Messaging</string>
     <string name="newsort">new</string>
     <string name="one_hundred">100</string>
+    <string name="private_string">Private</string>
+    <string name="public_images">Change Image Privacy</string>
+    <string name="public_string">Public</string>
     <string name="size">Size</string>
     <string name="top">top</string>
     <string name="two_hundred">200</string>

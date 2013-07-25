@@ -127,40 +127,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:orientation="horizontal"
-                      android:layout_width="wrap_content"
-                      android:layout_gravity="center_horizontal"
-                      android:layout_height="50dp"
-                >
-
-            <Button xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="+"/>
-
-            <Button xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="-"/>
-
-            <Button xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="User"/>
-
-            <Button xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Reply"/>
-
-            <Button xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Report"/>
-        </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -171,29 +137,35 @@
                   android:id="@+id/comment_buttons"
             >
 
-        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+        <ImageButton
+                android:id="@+id/rating_good"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+"/>
+                android:src="@drawable/rating_good"/>
 
-        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+        <ImageButton
+                android:id="@+id/rating_bad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-"/>
+                android:src="@drawable/rating_bad"/>
 
-        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+        <ImageButton
+                android:id="@+id/rating_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User"/>
+                android:src="@drawable/content_discard"
+                android:visibility="gone"/>
 
-        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+        <ImageButton
+                android:id="@+id/rating_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reply"/>
+                android:src="@drawable/social_reply"/>
 
-        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+        <ImageButton
+                android:id="@+id/rating_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Report"/>
+                android:src="@drawable/alerts_and_states_warning"/>
     </LinearLayout>
 </LinearLayout>

@@ -29,6 +29,10 @@
     <string name="menu_disk_used">Disk Used</string>
     <string name="menu_bio">Biography</string>
     <string name="menu_account_creation">Created On</string>
+    <string name="menu_email">Change Email</string>
+    <string name="album_privacy">Change Album Privacy</string>
+    <string name="public_images">Change Image Privacy</string>
+    <string name="messaging_enabled">Enable/Disable Messaging</string>
     <string name="menu_bandwidth_used">Bandwidth Used</string>
     <string name="menu_account_settings">Settings</string>
 
@@ -46,6 +50,13 @@
     <string name="fifty">50</string>
     <string name="one_hundred">100</string>
     <string name="two_hundred">200</string>
-    <string name="all">0</string>
+    <string name="all">All</string>
+
+    <string name="private_string">Private</string>
+    <string name="public_string">Public</string>
+
+    <string name="enable_messaging">Enable Messaging</string>
+    <string name="disable_messaging">Disable Messaging</string>
+
 
 </resources>

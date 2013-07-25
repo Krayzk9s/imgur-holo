@@ -17,8 +17,9 @@ public final class R {
         public static final int galleryOptions=0x7f040003;
         public static final int imgurMenuListLoggedIn=0x7f040004;
         public static final int imgurMenuListLoggedOut=0x7f040005;
-        public static final int settings=0x7f040006;
-        public static final int singleImageList=0x7f040007;
+        public static final int messaging=0x7f040006;
+        public static final int privacy=0x7f040007;
+        public static final int singleImageList=0x7f040008;
     }
     public static final class attr {
     }
@@ -333,21 +334,21 @@ public final class R {
     public static final class id {
         public static final int account_layout=0x7f0a0000;
         public static final int account_list=0x7f0a0001;
-        public static final int action_copy=0x7f0a0019;
-        public static final int action_delete=0x7f0a001a;
-        public static final int action_download=0x7f0a001c;
-        public static final int action_search=0x7f0a001d;
-        public static final int action_share=0x7f0a001b;
-        public static final int action_upload=0x7f0a001e;
+        public static final int action_copy=0x7f0a001a;
+        public static final int action_delete=0x7f0a001b;
+        public static final int action_download=0x7f0a001d;
+        public static final int action_search=0x7f0a001e;
+        public static final int action_share=0x7f0a001c;
+        public static final int action_upload=0x7f0a001f;
         public static final int body=0x7f0a000d;
         public static final int comment_buttons=0x7f0a000e;
         public static final int comment_item=0x7f0a0005;
-        public static final int comment_thread=0x7f0a0018;
+        public static final int comment_thread=0x7f0a0019;
         public static final int drawer_layout=0x7f0a0002;
         public static final int frame_layout=0x7f0a0003;
         public static final int header=0x7f0a000c;
-        public static final int image_buttons=0x7f0a0014;
-        public static final int image_layout=0x7f0a0010;
+        public static final int image_buttons=0x7f0a0017;
+        public static final int image_layout=0x7f0a0013;
         public static final int left_drawer=0x7f0a0004;
         public static final int margin_1=0x7f0a0006;
         public static final int margin_2=0x7f0a0007;
@@ -355,13 +356,14 @@ public final class R {
         public static final int margin_4=0x7f0a0009;
         public static final int margin_5=0x7f0a000a;
         public static final int margin_6=0x7f0a000b;
-        public static final int picture=0x7f0a000f;
-        public static final int rating_bad=0x7f0a0016;
-        public static final int rating_favorite=0x7f0a0017;
-        public static final int rating_good=0x7f0a0015;
-        public static final int single_image_details=0x7f0a0013;
-        public static final int single_image_title=0x7f0a0011;
-        public static final int single_image_view=0x7f0a0012;
+        public static final int picture=0x7f0a0012;
+        public static final int rating_bad=0x7f0a0010;
+        public static final int rating_favorite=0x7f0a0011;
+        public static final int rating_good=0x7f0a000f;
+        public static final int single_image_details=0x7f0a0016;
+        public static final int single_image_title=0x7f0a0014;
+        public static final int single_image_view=0x7f0a0015;
+        public static final int title=0x7f0a0018;
     }
     public static final class layout {
         public static final int account_layout=0x7f030000;
@@ -371,7 +373,8 @@ public final class R {
         public static final int image_card=0x7f030004;
         public static final int image_layout=0x7f030005;
         public static final int image_view=0x7f030006;
-        public static final int single_image_layout=0x7f030007;
+        public static final int message_layout=0x7f030007;
+        public static final int single_image_layout=0x7f030008;
     }
     public static final class menu {
         public static final int imagecontext=0x7f090000;
@@ -387,37 +390,45 @@ public final class R {
         public static final int action_settings=0x7f070004;
         public static final int action_share=0x7f070005;
         public static final int action_upload=0x7f070006;
-        public static final int all=0x7f070007;
-        public static final int app_name=0x7f070008;
-        public static final int app_not_available=0x7f070009;
-        public static final int drawer_close=0x7f07000a;
-        public static final int drawer_open=0x7f07000b;
-        public static final int fifty=0x7f07000c;
-        public static final int hot=0x7f07000d;
-        public static final int image_type=0x7f07000e;
-        public static final int menu_account=0x7f07000f;
-        public static final int menu_account_creation=0x7f070010;
-        public static final int menu_account_settings=0x7f070011;
-        public static final int menu_albums=0x7f070012;
-        public static final int menu_bandwidth_used=0x7f070013;
-        public static final int menu_bio=0x7f070014;
-        public static final int menu_comments=0x7f070015;
-        public static final int menu_disk_used=0x7f070016;
-        public static final int menu_favorites=0x7f070017;
-        public static final int menu_gallery=0x7f070018;
-        public static final int menu_images=0x7f070019;
-        public static final int menu_likes=0x7f07001a;
-        public static final int menu_login=0x7f07001b;
-        public static final int menu_logout=0x7f07001c;
-        public static final int menu_messages=0x7f07001d;
-        public static final int menu_settings=0x7f07001e;
-        public static final int menu_upload=0x7f07001f;
-        public static final int newsort=0x7f070020;
-        public static final int one_hundred=0x7f070021;
-        public static final int size=0x7f070022;
-        public static final int top=0x7f070023;
-        public static final int two_hundred=0x7f070024;
-        public static final int views=0x7f070025;
+        public static final int album_privacy=0x7f070007;
+        public static final int all=0x7f070008;
+        public static final int app_name=0x7f070009;
+        public static final int app_not_available=0x7f07000a;
+        public static final int disable_messaging=0x7f07000b;
+        public static final int drawer_close=0x7f07000c;
+        public static final int drawer_open=0x7f07000d;
+        public static final int enable_messaging=0x7f07000e;
+        public static final int fifty=0x7f07000f;
+        public static final int hot=0x7f070010;
+        public static final int image_type=0x7f070011;
+        public static final int menu_account=0x7f070012;
+        public static final int menu_account_creation=0x7f070013;
+        public static final int menu_account_settings=0x7f070014;
+        public static final int menu_albums=0x7f070015;
+        public static final int menu_bandwidth_used=0x7f070016;
+        public static final int menu_bio=0x7f070017;
+        public static final int menu_comments=0x7f070018;
+        public static final int menu_disk_used=0x7f070019;
+        public static final int menu_email=0x7f07001a;
+        public static final int menu_favorites=0x7f07001b;
+        public static final int menu_gallery=0x7f07001c;
+        public static final int menu_images=0x7f07001d;
+        public static final int menu_likes=0x7f07001e;
+        public static final int menu_login=0x7f07001f;
+        public static final int menu_logout=0x7f070020;
+        public static final int menu_messages=0x7f070021;
+        public static final int menu_settings=0x7f070022;
+        public static final int menu_upload=0x7f070023;
+        public static final int messaging_enabled=0x7f070024;
+        public static final int newsort=0x7f070025;
+        public static final int one_hundred=0x7f070026;
+        public static final int private_string=0x7f070027;
+        public static final int public_images=0x7f070028;
+        public static final int public_string=0x7f070029;
+        public static final int size=0x7f07002a;
+        public static final int top=0x7f07002b;
+        public static final int two_hundred=0x7f07002c;
+        public static final int views=0x7f07002d;
     }
     public static final class style {
         /**  From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/values/styles.xml 
