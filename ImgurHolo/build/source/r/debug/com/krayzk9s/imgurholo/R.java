@@ -9,20 +9,21 @@ package com.krayzk9s.imgurholo;
 
 public final class R {
     public static final class array {
-        /**  From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/arrays.xml 
+        /**  From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/values/arrays.xml 
          */
         public static final int accountMenu=0x7f040000;
-        public static final int emptyList=0x7f040001;
-        public static final int galleryOptions=0x7f040002;
-        public static final int imgurMenuListLoggedIn=0x7f040003;
-        public static final int imgurMenuListLoggedOut=0x7f040004;
-        public static final int settings=0x7f040005;
-        public static final int singleImageList=0x7f040006;
+        public static final int commentCounts=0x7f040001;
+        public static final int emptyList=0x7f040002;
+        public static final int galleryOptions=0x7f040003;
+        public static final int imgurMenuListLoggedIn=0x7f040004;
+        public static final int imgurMenuListLoggedOut=0x7f040005;
+        public static final int settings=0x7f040006;
+        public static final int singleImageList=0x7f040007;
     }
     public static final class attr {
     }
     public static final class color {
-        /**  From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/colors.xml 
+        /**  From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/values/colors.xml 
          */
         public static final int AliceBlue=0x7f050000;
         public static final int AntiqueWhite=0x7f050001;
@@ -166,40 +167,186 @@ public final class R {
         public static final int YellowGreen=0x7f05008b;
     }
     public static final class dimen {
-        /**  From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/dimens.xml 
- From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values-sw720dp-land/dimens.xml 
+        /**  From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/values/dimens.xml 
+ From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/values-sw720dp-land/dimens.xml 
          */
         public static final int activity_horizontal_margin=0x7f060000;
         public static final int activity_vertical_margin=0x7f060001;
     }
     public static final class drawable {
-        public static final int drawer_shadow=0x7f020000;
-        public static final int ic_drawer=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int icon=0x7f020003;
-        public static final int sample_0=0x7f020004;
-        public static final int sample_1=0x7f020005;
-        public static final int sample_2=0x7f020006;
-        public static final int sample_3=0x7f020007;
-        public static final int sample_4=0x7f020008;
-        public static final int sample_5=0x7f020009;
-        public static final int sample_6=0x7f02000a;
-        public static final int sample_7=0x7f02000b;
-        public static final int selector=0x7f02000c;
+        public static final int action_about=0x7f020000;
+        public static final int action_help=0x7f020001;
+        public static final int action_search=0x7f020002;
+        public static final int action_settings=0x7f020003;
+        public static final int alerts_and_states_airplane_mode_off=0x7f020004;
+        public static final int alerts_and_states_airplane_mode_on=0x7f020005;
+        public static final int alerts_and_states_error=0x7f020006;
+        public static final int alerts_and_states_warning=0x7f020007;
+        public static final int av_add_to_queue=0x7f020008;
+        public static final int av_download=0x7f020009;
+        public static final int av_fast_forward=0x7f02000a;
+        public static final int av_full_screen=0x7f02000b;
+        public static final int av_make_available_offline=0x7f02000c;
+        public static final int av_next=0x7f02000d;
+        public static final int av_pause=0x7f02000e;
+        public static final int av_pause_over_video=0x7f02000f;
+        public static final int av_play=0x7f020010;
+        public static final int av_play_over_video=0x7f020011;
+        public static final int av_previous=0x7f020012;
+        public static final int av_repeat=0x7f020013;
+        public static final int av_replay=0x7f020014;
+        public static final int av_return_from_full_screen=0x7f020015;
+        public static final int av_rewind=0x7f020016;
+        public static final int av_shuffle=0x7f020017;
+        public static final int av_stop=0x7f020018;
+        public static final int av_upload=0x7f020019;
+        public static final int collections_cloud=0x7f02001a;
+        public static final int collections_collection=0x7f02001b;
+        public static final int collections_go_to_today=0x7f02001c;
+        public static final int collections_labels=0x7f02001d;
+        public static final int collections_new_label=0x7f02001e;
+        public static final int collections_sort_by_size=0x7f02001f;
+        public static final int collections_view_as_grid=0x7f020020;
+        public static final int collections_view_as_list=0x7f020021;
+        public static final int content_attachment=0x7f020022;
+        public static final int content_backspace=0x7f020023;
+        public static final int content_copy=0x7f020024;
+        public static final int content_cut=0x7f020025;
+        public static final int content_discard=0x7f020026;
+        public static final int content_edit=0x7f020027;
+        public static final int content_email=0x7f020028;
+        public static final int content_event=0x7f020029;
+        public static final int content_import_export=0x7f02002a;
+        public static final int content_merge=0x7f02002b;
+        public static final int content_new=0x7f02002c;
+        public static final int content_new_attachment=0x7f02002d;
+        public static final int content_new_email=0x7f02002e;
+        public static final int content_new_event=0x7f02002f;
+        public static final int content_new_picture=0x7f020030;
+        public static final int content_paste=0x7f020031;
+        public static final int content_picture=0x7f020032;
+        public static final int content_read=0x7f020033;
+        public static final int content_remove=0x7f020034;
+        public static final int content_save=0x7f020035;
+        public static final int content_select_all=0x7f020036;
+        public static final int content_split=0x7f020037;
+        public static final int content_undo=0x7f020038;
+        public static final int content_unread=0x7f020039;
+        public static final int device_access_accounts=0x7f02003a;
+        public static final int device_access_add_alarm=0x7f02003b;
+        public static final int device_access_alarms=0x7f02003c;
+        public static final int device_access_battery=0x7f02003d;
+        public static final int device_access_bightness_low=0x7f02003e;
+        public static final int device_access_bluetooth=0x7f02003f;
+        public static final int device_access_bluetooth_connected=0x7f020040;
+        public static final int device_access_bluetooth_searching=0x7f020041;
+        public static final int device_access_brightness_auto=0x7f020042;
+        public static final int device_access_brightness_high=0x7f020043;
+        public static final int device_access_brightness_medium=0x7f020044;
+        public static final int device_access_call=0x7f020045;
+        public static final int device_access_camera=0x7f020046;
+        public static final int device_access_data_usage=0x7f020047;
+        public static final int device_access_dial_pad=0x7f020048;
+        public static final int device_access_end_call=0x7f020049;
+        public static final int device_access_flash_automatic=0x7f02004a;
+        public static final int device_access_flash_off=0x7f02004b;
+        public static final int device_access_flash_on=0x7f02004c;
+        public static final int device_access_location_found=0x7f02004d;
+        public static final int device_access_location_off=0x7f02004e;
+        public static final int device_access_location_searching=0x7f02004f;
+        public static final int device_access_mic=0x7f020050;
+        public static final int device_access_mic_muted=0x7f020051;
+        public static final int device_access_network_cell=0x7f020052;
+        public static final int device_access_network_wifi=0x7f020053;
+        public static final int device_access_new_account=0x7f020054;
+        public static final int device_access_not_secure=0x7f020055;
+        public static final int device_access_ring_volume=0x7f020056;
+        public static final int device_access_screen_locked_to_landscape=0x7f020057;
+        public static final int device_access_screen_locked_to_portrait=0x7f020058;
+        public static final int device_access_screen_rotation=0x7f020059;
+        public static final int device_access_sd_storage=0x7f02005a;
+        public static final int device_access_secure=0x7f02005b;
+        public static final int device_access_storage=0x7f02005c;
+        public static final int device_access_switch_camera=0x7f02005d;
+        public static final int device_access_switch_video=0x7f02005e;
+        public static final int device_access_time=0x7f02005f;
+        public static final int device_access_usb=0x7f020060;
+        public static final int device_access_video=0x7f020061;
+        public static final int device_access_volume_muted=0x7f020062;
+        public static final int device_access_volume_on=0x7f020063;
+        public static final int drawer_shadow=0x7f020064;
+        public static final int hardware_computer=0x7f020065;
+        public static final int hardware_dock=0x7f020066;
+        public static final int hardware_gamepad=0x7f020067;
+        public static final int hardware_headphones=0x7f020068;
+        public static final int hardware_headset=0x7f020069;
+        public static final int hardware_keyboard=0x7f02006a;
+        public static final int hardware_mouse=0x7f02006b;
+        public static final int hardware_phone=0x7f02006c;
+        public static final int ic_drawer=0x7f02006d;
+        public static final int ic_launcher=0x7f02006e;
+        public static final int icon=0x7f02006f;
+        public static final int images_crop=0x7f020070;
+        public static final int images_rotate_left=0x7f020071;
+        public static final int images_rotate_right=0x7f020072;
+        public static final int images_slideshow=0x7f020073;
+        public static final int location_directions=0x7f020074;
+        public static final int location_map=0x7f020075;
+        public static final int location_place=0x7f020076;
+        public static final int location_web_site=0x7f020077;
+        public static final int navigation_accept=0x7f020078;
+        public static final int navigation_back=0x7f020079;
+        public static final int navigation_cancel=0x7f02007a;
+        public static final int navigation_collapse=0x7f02007b;
+        public static final int navigation_expand=0x7f02007c;
+        public static final int navigation_forward=0x7f02007d;
+        public static final int navigation_next_item=0x7f02007e;
+        public static final int navigation_previous_item=0x7f02007f;
+        public static final int navigation_refresh=0x7f020080;
+        public static final int rating_bad=0x7f020081;
+        public static final int rating_favorite=0x7f020082;
+        public static final int rating_good=0x7f020083;
+        public static final int rating_half_important=0x7f020084;
+        public static final int rating_important=0x7f020085;
+        public static final int rating_not_important=0x7f020086;
+        public static final int sample_=0x7f020087;
+        public static final int sample_0=0x7f020088;
+        public static final int sample_2=0x7f020089;
+        public static final int sample_3=0x7f02008a;
+        public static final int sample_4=0x7f02008b;
+        public static final int sample_5=0x7f02008c;
+        public static final int sample_6=0x7f02008d;
+        public static final int sample_7=0x7f02008e;
+        public static final int selector=0x7f02008f;
+        public static final int social_add_group=0x7f020090;
+        public static final int social_add_person=0x7f020091;
+        public static final int social_cc_bcc=0x7f020092;
+        public static final int social_chat=0x7f020093;
+        public static final int social_forward=0x7f020094;
+        public static final int social_group=0x7f020095;
+        public static final int social_person=0x7f020096;
+        public static final int social_reply=0x7f020097;
+        public static final int social_reply_all=0x7f020098;
+        public static final int social_send_now=0x7f020099;
+        public static final int social_share=0x7f02009a;
     }
     public static final class id {
         public static final int account_layout=0x7f0a0000;
         public static final int account_list=0x7f0a0001;
-        public static final int action_copy=0x7f0a0015;
-        public static final int action_delete=0x7f0a0016;
-        public static final int action_settings=0x7f0a0017;
+        public static final int action_copy=0x7f0a0019;
+        public static final int action_delete=0x7f0a001a;
+        public static final int action_download=0x7f0a001c;
+        public static final int action_search=0x7f0a001d;
+        public static final int action_share=0x7f0a001b;
+        public static final int action_upload=0x7f0a001e;
         public static final int body=0x7f0a000d;
         public static final int comment_buttons=0x7f0a000e;
         public static final int comment_item=0x7f0a0005;
-        public static final int comment_thread=0x7f0a0014;
+        public static final int comment_thread=0x7f0a0018;
         public static final int drawer_layout=0x7f0a0002;
         public static final int frame_layout=0x7f0a0003;
         public static final int header=0x7f0a000c;
+        public static final int image_buttons=0x7f0a0014;
         public static final int image_layout=0x7f0a0010;
         public static final int left_drawer=0x7f0a0004;
         public static final int margin_1=0x7f0a0006;
@@ -209,6 +356,9 @@ public final class R {
         public static final int margin_5=0x7f0a000a;
         public static final int margin_6=0x7f0a000b;
         public static final int picture=0x7f0a000f;
+        public static final int rating_bad=0x7f0a0016;
+        public static final int rating_favorite=0x7f0a0017;
+        public static final int rating_good=0x7f0a0015;
         public static final int single_image_details=0x7f0a0013;
         public static final int single_image_title=0x7f0a0011;
         public static final int single_image_view=0x7f0a0012;
@@ -228,47 +378,55 @@ public final class R {
         public static final int main=0x7f090001;
     }
     public static final class string {
-        /**  From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/strings.xml 
+        /**  From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/values/strings.xml 
          */
         public static final int action_copy=0x7f070000;
         public static final int action_delete=0x7f070001;
-        public static final int action_settings=0x7f070002;
-        public static final int app_name=0x7f070003;
-        public static final int app_not_available=0x7f070004;
-        public static final int drawer_close=0x7f070005;
-        public static final int drawer_open=0x7f070006;
-        public static final int hot=0x7f070007;
-        public static final int image_type=0x7f070008;
-        public static final int menu_account=0x7f070009;
-        public static final int menu_account_creation=0x7f07000a;
-        public static final int menu_account_settings=0x7f07000b;
-        public static final int menu_albums=0x7f07000c;
-        public static final int menu_bandwidth_used=0x7f07000d;
-        public static final int menu_bio=0x7f07000e;
-        public static final int menu_comments=0x7f07000f;
-        public static final int menu_disk_used=0x7f070010;
-        public static final int menu_favorites=0x7f070011;
-        public static final int menu_gallery=0x7f070012;
-        public static final int menu_images=0x7f070013;
-        public static final int menu_likes=0x7f070014;
-        public static final int menu_login=0x7f070015;
-        public static final int menu_logout=0x7f070016;
-        public static final int menu_messages=0x7f070017;
-        public static final int menu_settings=0x7f070018;
-        public static final int menu_upload=0x7f070019;
-        public static final int newsort=0x7f07001a;
-        public static final int size=0x7f07001b;
-        public static final int top=0x7f07001c;
-        public static final int views=0x7f07001d;
+        public static final int action_download=0x7f070002;
+        public static final int action_search=0x7f070003;
+        public static final int action_settings=0x7f070004;
+        public static final int action_share=0x7f070005;
+        public static final int action_upload=0x7f070006;
+        public static final int all=0x7f070007;
+        public static final int app_name=0x7f070008;
+        public static final int app_not_available=0x7f070009;
+        public static final int drawer_close=0x7f07000a;
+        public static final int drawer_open=0x7f07000b;
+        public static final int fifty=0x7f07000c;
+        public static final int hot=0x7f07000d;
+        public static final int image_type=0x7f07000e;
+        public static final int menu_account=0x7f07000f;
+        public static final int menu_account_creation=0x7f070010;
+        public static final int menu_account_settings=0x7f070011;
+        public static final int menu_albums=0x7f070012;
+        public static final int menu_bandwidth_used=0x7f070013;
+        public static final int menu_bio=0x7f070014;
+        public static final int menu_comments=0x7f070015;
+        public static final int menu_disk_used=0x7f070016;
+        public static final int menu_favorites=0x7f070017;
+        public static final int menu_gallery=0x7f070018;
+        public static final int menu_images=0x7f070019;
+        public static final int menu_likes=0x7f07001a;
+        public static final int menu_login=0x7f07001b;
+        public static final int menu_logout=0x7f07001c;
+        public static final int menu_messages=0x7f07001d;
+        public static final int menu_settings=0x7f07001e;
+        public static final int menu_upload=0x7f07001f;
+        public static final int newsort=0x7f070020;
+        public static final int one_hundred=0x7f070021;
+        public static final int size=0x7f070022;
+        public static final int top=0x7f070023;
+        public static final int two_hundred=0x7f070024;
+        public static final int views=0x7f070025;
     }
     public static final class style {
-        /**  From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/styles.xml 
+        /**  From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/values/styles.xml 
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         
- From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values-v11/styles.xml 
+ From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/values-v11/styles.xml 
  API 11 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f080000;

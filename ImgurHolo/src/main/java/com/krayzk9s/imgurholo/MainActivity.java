@@ -4,15 +4,21 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore.Images;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +29,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.support.v4.app.Fragment;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -35,6 +40,8 @@ import org.scribe.builder.api.ImgUr3Api;
 import org.scribe.model.Token;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
+
+import java.io.ByteArrayOutputStream;
 
 public class MainActivity extends FragmentActivity {
 
@@ -67,6 +74,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         if (settings.contains("RefreshToken")) {
@@ -100,6 +108,8 @@ public class MainActivity extends FragmentActivity {
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        if(savedInstanceState == null)
+            loadDefaultPage();
     }
 
     public void updateMenu() {
@@ -122,10 +132,120 @@ public class MainActivity extends FragmentActivity {
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
     }
 
+    private class SendImage extends AsyncTask<Void, Void, Void>
+    {
+        Intent intent;
+        public SendImage(Intent _intent)
+        {
+            intent = _intent;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Token accessKey = getAccessToken();
+            Uri uri = (Uri) intent.getExtras().get("android.intent.extra.STREAM");
+            Cursor cursor = getContentResolver().query( uri, null, null, null, null );
+            cursor.moveToFirst();
+            final String filePath = cursor.getString(cursor.getColumnIndexOrThrow(Images.Media.DATA));
+            Bitmap thumbnail = BitmapFactory.decodeFile(filePath);
+            Log.d("Image Upload", filePath);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            thumbnail.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            if(byteArray == null)
+                Log.d("Image Upload", "NULL :(");
+            String image = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            Log.d("Image Upload", image);
+            HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "3/image")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Bearer " + accessKey.getToken())
+                    .field("image", image)
+                    .field("type", "binary")
+                    .asJson();
+            Log.d("Getting Code", String.valueOf(response.getCode()));
+            JSONObject data = response.getBody().getObject();
+            Log.d("Image Upload", data.toString());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+        }
+    }
+
+
+    void handleSendImage(Intent intent) {
+        SendImage async = new SendImage(intent);
+        async.execute();
+    }
+
+    private void loadDefaultPage()
+    {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        if(!settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery"))
+        {
+            GalleryFragment galleryFragment = new GalleryFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.frame_layout, galleryFragment)
+                    .commit();
+        }
+        else if(settings.getString("DefaultPage", "").equals("Your Albums"))
+        {
+            AlbumsFragment albumsFragment = new AlbumsFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.frame_layout, albumsFragment)
+                    .commit();
+        }
+        else if(settings.getString("DefaultPage", "").equals("Your Images"))
+        {
+            ImagesFragment imagesFragment = new ImagesFragment();
+            imagesFragment.setImageCall("3/account/me/images/0");
+            fragmentManager.beginTransaction()
+                    .add(R.id.frame_layout, imagesFragment)
+                    .commit();
+        }
+        else if(settings.getString("DefaultPage", "").equals("Your Favorites"))
+        {
+            ImagesFragment imagesFragment = new ImagesFragment();
+            imagesFragment.setImageCall("3/account/me/images/0");
+            fragmentManager.beginTransaction()
+                    .add(R.id.frame_layout, imagesFragment)
+                    .commit();
+        }
+        else if(settings.getString("DefaultPage", "").equals("Your Likes"))
+        {
+            ImagesFragment imagesFragment = new ImagesFragment();
+            imagesFragment.setImageCall("3/account/me/likes");
+            fragmentManager.beginTransaction()
+                    .add(R.id.frame_layout, imagesFragment)
+                    .commit();
+        }
+        else if(settings.getString("DefaultPage", "").equals("Your Likes"))
+        {
+            AccountFragment accountFragment = new AccountFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.frame_layout, accountFragment)
+                    .commit();
+        }
+    }
+
+
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d("URI", intent.toString());
+        Log.d("New Intent", intent.toString());
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if (type.startsWith("image/")) {
+                handleSendImage(intent); // Handle single image being sent
+                return;
+            }
+        }
         Uri uri = intent.getData();
         Log.d("URI", "resumed2!");
         String uripath = "";
@@ -154,6 +274,7 @@ public class MainActivity extends FragmentActivity {
 
                 @Override
                 protected void onPostExecute(Void aVoid) {
+                    loggedin = true;
                     updateMenu();
                 }
             };
@@ -384,9 +505,5 @@ public class MainActivity extends FragmentActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    public Token getToken() {
-        return accessToken;
     }
 }

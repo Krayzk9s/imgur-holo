@@ -34,6 +34,8 @@ public class SettingsFragment extends Fragment{
             SharedPreferences.Editor editor = settings.edit();
             if(!settings.contains("MaxComments"))
                 editor.putInt("MaxComments", 50);
+            if(!settings.contains("DefaultPage"))
+                editor.putString("DefaultPage", "");
 
             editor.commit();
             ArrayList<String> mSettingList= new ArrayList<String>();
@@ -63,16 +65,17 @@ public class SettingsFragment extends Fragment{
                 adapter.add("Load " + settings.getInt("MaxComments", 50) + " Comments");
             else
                 adapter.add("Load All Comments");
+            if(!settings.getString("DefaultPage", "").equals(""))
+                adapter.add("Default Page is " + settings.getString("DefaultPage", ""));
+            else
+                adapter.add("No Default Page");
             adapter.notifyDataSetChanged();
         }
 
         private void selectItem(int position) {
+            MainActivity activity = (MainActivity) getActivity();
             switch(position) {
                 case 0:
-                    // 1. Instantiate an AlertDialog.Builder with its constructor
-                    MainActivity activity = (MainActivity) getActivity();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    // 2. Chain together various setter methods to set the dialog characteristics
                     new AlertDialog.Builder(activity).setTitle("Set Maximum Comments to Load")
                             .setItems(R.array.commentCounts, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -102,9 +105,43 @@ public class SettingsFragment extends Fragment{
                             // Do nothing.
                         }
                     }).show();
-
-                    // 3. Get the AlertDialog from create()
-                    AlertDialog dialog = builder.create();
+                    break;
+                case 1:
+                    new AlertDialog.Builder(activity).setTitle("Set Page as Default")
+                            .setItems(R.array.commentCounts, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    MainActivity activity = (MainActivity) getActivity();
+                                    SharedPreferences settings = activity.getSettings();
+                                    SharedPreferences.Editor editor = settings.edit();
+                                    String defaultPage = "";
+                                    switch (whichButton) {
+                                        case 0:
+                                            defaultPage = "Gallery";
+                                            break;
+                                        case 1:
+                                            defaultPage = "Your Albums";
+                                            break;
+                                        case 2:
+                                            defaultPage = "Your Images";
+                                            break;
+                                        case 3:
+                                            defaultPage = "Your Favorites";
+                                            break;
+                                        case 4:
+                                            defaultPage = "Your Account";
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    editor.putString("DefaultPage", defaultPage);
+                                    editor.commit();
+                                    refreshAdapter();
+                                }
+                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Do nothing.
+                        }
+                    }).show();
                     break;
                 default:
                     break;

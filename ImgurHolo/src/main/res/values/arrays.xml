@@ -53,9 +53,10 @@
     </array>
 
     <array
-            name="settings">
-        <item>@string/hot</item>
-        <item>@string/top</item>
-        <item>@string/newsort</item>
+            name="commentCounts">
+        <item>@string/fifty</item>
+        <item>@string/one_hundred</item>
+        <item>@string/two_hundred</item>
+        <item>@string/all</item>
     </array>
 </resources>

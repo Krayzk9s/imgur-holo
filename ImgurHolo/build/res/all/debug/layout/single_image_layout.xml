@@ -5,14 +5,15 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <ListView android:id="@+id/comment_thread"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:divider="@null"
-              android:transcriptMode="disabled"
-              android:fastScrollEnabled="true"
-              android:persistentDrawingCache="scrolling"
-              android:scrollingCache="false"
+    <ListView
+            android:id="@+id/comment_thread"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:transcriptMode="disabled"
+            android:fastScrollEnabled="true"
+            android:persistentDrawingCache="scrolling"
+            android:scrollingCache="false"
             />
 
-</LinearLayout><!-- From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/layout/single_image_layout.xml -->
+</LinearLayout><!-- From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/layout/single_image_layout.xml -->

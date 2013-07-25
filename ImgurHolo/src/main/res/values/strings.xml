@@ -3,6 +3,10 @@
 
     <string name="app_name">Imgur Holo</string>
     <string name="action_settings">Settings</string>
+    <string name="action_upload">Upload</string>
+    <string name="action_share">Share</string>
+    <string name="action_download">Download</string>
+    <string name="action_search">Search</string>
 
     <string name="drawer_open">Opening Drawer</string>
     <string name="drawer_close">Closing Drawer</string>
@@ -38,5 +42,10 @@
 
     <string name="action_copy">Copy URLs</string>
     <string name="action_delete">Delete Images</string>
+
+    <string name="fifty">50</string>
+    <string name="one_hundred">100</string>
+    <string name="two_hundred">200</string>
+    <string name="all">0</string>
 
 </resources>

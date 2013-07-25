@@ -5,12 +5,13 @@
               android:layout_height="wrap_content"
               android:padding="2dp"
         >
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:id="@+id/comment_item"
                   android:orientation="horizontal"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-            android:padding="2dp"
+                  android:padding="2dp"
             >
 
         <View xmlns:android="http://schemas.android.com/apk/res/android"
@@ -20,6 +21,7 @@
               android:layout_width="5dp"
               android:background="@color/Blue"
               android:layout_height="fill_parent"/>
+
         <View xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/margin_2"
               android:layout_marginLeft="2dp"
@@ -27,6 +29,7 @@
               android:background="@color/Red"
               android:layout_width="5dp"
               android:layout_height="fill_parent"/>
+
         <View xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/margin_3"
               android:layout_marginLeft="2dp"
@@ -34,6 +37,7 @@
               android:background="@color/Yellow"
               android:layout_width="5dp"
               android:layout_height="fill_parent"/>
+
         <View xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/margin_4"
               android:layout_marginLeft="2dp"
@@ -41,6 +45,7 @@
               android:background="@color/Purple"
               android:layout_width="5dp"
               android:layout_height="fill_parent"/>
+
         <View xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/margin_5"
               android:layout_marginLeft="2dp"
@@ -48,6 +53,7 @@
               android:background="@color/Orange"
               android:layout_width="5dp"
               android:layout_height="fill_parent"/>
+
         <View xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/margin_6"
               android:layout_marginLeft="2dp"
@@ -55,55 +61,65 @@
               android:background="@color/Green"
               android:layout_width="5dp"
               android:layout_height="fill_parent"/>
-        <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-                       android:layout_width="fill_parent"
-                       android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-            <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-                           android:layout_width="fill_parent"
-                           android:layout_height="wrap_content"
-                           android:orientation="vertical">
-            <TextView  xmlns:android="http://schemas.android.com/apk/res/android"
-                       android:id="@+id/header"
-                       android:text="@string/menu_gallery"
-                       android:layout_width="fill_parent"
-                       android:layout_height="wrap_content"
-                       android:layout_marginRight="5dip"
-                       android:textAppearance="?android:textAppearanceSmall"
-                       android:textColor="@color/DarkGray"
-                    />
-            <TextView  xmlns:android="http://schemas.android.com/apk/res/android"
-                       android:id="@+id/body"
-                       android:text="@string/menu_gallery"
-                       android:layout_width="fill_parent"
-                       android:layout_height="wrap_content"
-                       android:minHeight="50dp"
-                       android:layout_marginRight="5dip"
-                       android:textAppearance="?android:textAppearanceSmall"
-                    />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical">
+
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:id="@+id/header"
+                          android:text="@string/menu_gallery"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginRight="5dip"
+                          android:textAppearance="?android:textAppearanceSmall"
+                          android:textColor="@color/DarkGray"
+                        />
+
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:id="@+id/body"
+                          android:text="@string/menu_gallery"
+                          android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:minHeight="50dp"
+                          android:layout_marginRight="5dip"
+                          android:textAppearance="?android:textAppearanceSmall"
+                        />
             </LinearLayout>
+
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                           android:orientation="horizontal"
                           android:layout_width="wrap_content"
                           android:layout_gravity="center_horizontal"
                           android:layout_height="50dp"
                     >
+
                 <Button xmlns:android="http://schemas.android.com/apk/res/android"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="+"/>
+
                 <Button xmlns:android="http://schemas.android.com/apk/res/android"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="-"/>
+
                 <Button xmlns:android="http://schemas.android.com/apk/res/android"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="User"/>
+
                 <Button xmlns:android="http://schemas.android.com/apk/res/android"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Reply"/>
+
                 <Button xmlns:android="http://schemas.android.com/apk/res/android"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -111,28 +127,34 @@
             </LinearLayout>
 
         </LinearLayout>
+
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                       android:orientation="horizontal"
                       android:layout_width="wrap_content"
                       android:layout_gravity="center_horizontal"
                       android:layout_height="50dp"
                 >
+
             <Button xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="+"/>
+
             <Button xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="-"/>
+
             <Button xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="User"/>
+
             <Button xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Reply"/>
+
             <Button xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -140,6 +162,7 @@
         </LinearLayout>
 
     </LinearLayout>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="horizontal"
                   android:layout_width="wrap_content"
@@ -147,25 +170,30 @@
                   android:layout_height="50dp"
                   android:id="@+id/comment_buttons"
             >
-    <Button xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+"/>
-    <Button xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="-"/>
-    <Button xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="User"/>
-    <Button xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reply"/>
-    <Button xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Report"/>
+
+        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+"/>
+
+        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"/>
+
+        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User"/>
+
+        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reply"/>
+
+        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Report"/>
     </LinearLayout>
 </LinearLayout>

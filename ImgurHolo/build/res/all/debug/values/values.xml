@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/arrays.xml -->
+    <!-- From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/values/arrays.xml -->
     <array name="accountMenu">
         <item>@string/menu_albums</item>
         <item>@string/menu_images</item>
@@ -13,6 +13,12 @@
         <item>@string/menu_account_settings</item>
         <item>@string/menu_disk_used</item>
         <item>@string/menu_bandwidth_used</item>
+    </array>
+    <array name="commentCounts">
+        <item>@string/fifty</item>
+        <item>@string/one_hundred</item>
+        <item>@string/two_hundred</item>
+        <item>@string/all</item>
     </array>
     <array name="emptyList"></array>
     <array name="galleryOptions">
@@ -48,7 +54,7 @@
         <item>@string/menu_account_creation</item>
         <item>@string/menu_bandwidth_used</item>
     </array>
-    <!-- From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/colors.xml -->
+    <!-- From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/values/colors.xml -->
     <color name="AliceBlue">#F0F8FF</color>
     <color name="AntiqueWhite">#FAEBD7</color>
     <color name="Aqua">#00FFFF</color>
@@ -189,17 +195,23 @@
     <color name="WhiteSmoke">#F5F5F5</color>
     <color name="Yellow">#FFFF00</color>
     <color name="YellowGreen">#9ACD32</color>
-    <!-- From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/dimens.xml -->
+    <!-- From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/values/dimens.xml -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <!-- From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/values/strings.xml -->
     <string name="action_copy">Copy URLs</string>
     <string name="action_delete">Delete Images</string>
+    <string name="action_download">Download</string>
+    <string name="action_search">Search</string>
     <string name="action_settings">Settings</string>
+    <string name="action_share">Share</string>
+    <string name="action_upload">Upload</string>
+    <string name="all">0</string>
     <string name="app_name">Imgur Holo</string>
     <string name="app_not_available">App Not Available</string>
     <string name="drawer_close">Closing Drawer</string>
     <string name="drawer_open">Opening Drawer</string>
+    <string name="fifty">50</string>
     <string name="hot">hot</string>
     <string name="image_type">Image Type</string>
     <string name="menu_account">Your Account</string>
@@ -220,10 +232,12 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_upload">Upload Images</string>
     <string name="newsort">new</string>
+    <string name="one_hundred">100</string>
     <string name="size">Size</string>
     <string name="top">top</string>
+    <string name="two_hundred">200</string>
     <string name="views">Views</string>
-    <!-- From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/values/styles.xml -->
+    <!-- From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/values/styles.xml -->
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--
             Theme customizations available in newer API levels can go in

@@ -11,12 +11,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
     </FrameLayout>
-    <ListView android:id="@+id/left_drawer"
-              android:layout_width="240dp"
-              android:layout_height="match_parent"
-              android:layout_gravity="start"
-              android:choiceMode="singleChoice"
-              android:background="#FFFFFF"/>
+
+    <ListView
+            android:id="@+id/left_drawer"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:background="#FFFFFF"/>
 
 </android.support.v4.widget.DrawerLayout>
-<!-- From: file:/C:/Users/kuzimmer/AndroidStudioProjects/ImgurHoloProject/ImgurHolo/src/main/res/layout/activity_main.xml -->
+<!-- From: file:/C:/Users/Kurt%20Zimmer/Documents/GitHub/imgur-holo/ImgurHolo/src/main/res/layout/activity_main.xml -->

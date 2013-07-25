@@ -4,6 +4,7 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content">
+
     <TextView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/single_image_title"
@@ -14,6 +15,7 @@
             android:layout_gravity="center_horizontal"
             android:textAppearance="?android:textAppearanceLarge"
             />
+
     <ImageView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/single_image_view"
@@ -22,6 +24,7 @@
             android:maxHeight="200dp"
             android:layout_gravity="center_horizontal"
             />
+
     <TextView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/single_image_details"
@@ -31,31 +34,44 @@
             android:textColor="@color/DarkGray"
             android:textAppearance="?android:textAppearanceSmall"
             />
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/image_buttons"
                   android:orientation="horizontal"
                   android:layout_width="wrap_content"
                   android:layout_gravity="center_horizontal"
+                  android:visibility="gone"
                   android:layout_height="50dp"
-                    >
-        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+            >
+
+        <ImageButton
+                android:id="@+id/rating_good"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+"/>
-        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:src="@drawable/rating_good"/>
+
+        <ImageButton
+                android:id="@+id/rating_bad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-"/>
-        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:src="@drawable/rating_bad"/>
+
+        <ImageButton
+                android:id="@+id/rating_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User"/>
-        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:src="@drawable/rating_favorite"/>
+
+        <ImageButton
+                android:id="@+id/rating_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reply"/>
-        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:src="@drawable/social_reply"/>
+
+        <ImageButton
+                android:id="@+id/rating_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Report"/>
+                android:src="@drawable/alerts_and_states_warning"/>
     </LinearLayout>
 </LinearLayout>

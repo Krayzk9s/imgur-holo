@@ -60,6 +60,10 @@ public class SingleImageFragment extends Fragment {
         MainActivity activity = (MainActivity)getActivity();
         LinearLayout imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
         ImageView imageView = (ImageView) imageLayoutView.findViewById(R.id.single_image_view);
+        if(inGallery) {
+            LinearLayout layout = (LinearLayout)imageLayoutView.findViewById(R.id.image_buttons);
+            layout.setVisibility(View.VISIBLE);
+        }
         ArrayAdapter<String> tempAdapter = new ArrayAdapter<String>(mainView.getContext(),
                 R.layout.drawer_list_item, mMenuList);
 
