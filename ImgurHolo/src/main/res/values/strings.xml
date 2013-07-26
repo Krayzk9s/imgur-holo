@@ -7,6 +7,8 @@
     <string name="action_share">Share</string>
     <string name="action_download">Download</string>
     <string name="action_search">Search</string>
+    <string name="action_message">New Message</string>
+    <string name="action_new">New</string>
 
     <string name="drawer_open">Opening Drawer</string>
     <string name="drawer_close">Closing Drawer</string>
@@ -57,6 +59,13 @@
 
     <string name="enable_messaging">Enable Messaging</string>
     <string name="disable_messaging">Disable Messaging</string>
+
+    <string name="link">Link</string>
+    <string name="direct_link">Direct Link</string>
+    <string name="html_link">HTML Image</string>
+    <string name="bbcode_link">BBCode (Forums)</string>
+    <string name="linked_bbcode_link">Linked BBCode</string>
+    <string name="markdown_link">Markdown Link (Reddit)</string>
 
 
 </resources>

@@ -72,4 +72,21 @@
         <item>@string/enable_messaging</item>
         <item>@string/disable_messaging</item>
     </array>
+    <array
+            name="defaultArray">
+        <item>@string/menu_gallery</item>
+        <item>@string/menu_albums</item>
+        <item>@string/menu_images</item>
+        <item>@string/menu_favorites</item>
+        <item>@string/menu_account</item>
+    </array>
+    <array
+            name="copyTypes">
+        <item>@string/link</item>
+        <item>@string/direct_link</item>
+        <item>@string/html_link</item>
+        <item>@string/bbcode_link</item>
+        <item>@string/linked_bbcode_link</item>
+        <item>@string/markdown_link</item>
+    </array>
 </resources>

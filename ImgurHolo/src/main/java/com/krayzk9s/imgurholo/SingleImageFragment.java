@@ -1,11 +1,19 @@
 package com.krayzk9s.imgurholo;
 
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -45,6 +53,87 @@ public class SingleImageFragment extends Fragment {
 
     public void setGallery(Boolean gallery) {
         inGallery = gallery;
+    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(
+        Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        menu.findItem(R.id.action_share).setVisible(true);
+        menu.findItem(R.id.action_copy).setVisible(true);
+        menu.findItem(R.id.action_upload).setVisible(false);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        MainActivity activity = (MainActivity) getActivity();
+        switch (item.getItemId()) {
+            case R.id.action_copy:
+                new AlertDialog.Builder(activity).setTitle("Set Link Type to Copy")
+                        .setItems(R.array.copyTypes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                MainActivity activity = (MainActivity) getActivity();
+                                ClipboardManager clipboard = (ClipboardManager)
+                                        activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                                try {
+                                    String link = "";
+                                    switch (whichButton) {
+                                        case 0:
+                                            link = "http://imgur.com/" + imageData.getString("id");
+                                            break;
+                                        case 1:
+                                            link = imageData.getString("link");
+                                            break;
+                                        case 2:
+                                            link = "<a href=\"http://imgur.com/" + imageData.getString("id") + "\"><img src=\"" + imageData.getString("link") +"\" title=\"Hosted by imgur.com\"/></a>";
+                                            break;
+                                        case 3:
+                                            link = "[IMG]" + imageData.getString("link") + "[/IMG]";
+                                            break;
+                                        case 4:
+                                            link = "[URL=http://imgur.com/" + imageData.getString("id") + "][IMG]" + imageData.getString("link") + "[/IMG][/URL]";
+                                            break;
+                                        case 5:
+                                            link = "[Imgur](http://i.imgur.com/" + imageData.getString("id") + ")";
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    ClipData clip = ClipData.newPlainText("imgur Link", link);
+                                        clipboard.setPrimaryClip(clip);
+                                }
+                                catch (Exception e)
+                                {
+                                    Log.e("Error!", "No link in image data!");
+                                }
+
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Do nothing.
+                    }
+                }).show();
+                return true;
+            case R.id.action_share:
+                Intent intent=new Intent(android.content.Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                try {
+                    intent.putExtra(Intent.EXTRA_TEXT, imageData.getString("link"));
+                }
+                catch(Exception e) {
+                    Log.e("Error!", "bad link to share");
+                }
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,13 +34,44 @@ public class ImagesFragment extends Fragment {
     ImageAdapter imageAdapter;
     AsyncTask<Void, Void, Void> async;
     String imageCall;
+    boolean isAlbum;
 
     public ImagesFragment() {
 
     }
 
-    public void setImageCall(String _imageCall) {
+    public void setImageCall(boolean _isAlbum, String _imageCall) {
+        isAlbum = _isAlbum;
         imageCall = _imageCall;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        menu.findItem(R.id.action_upload).setVisible(false);
+        if(isAlbum)
+        {
+            menu.findItem(R.id.action_new).setVisible(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_new:
+                //select image
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

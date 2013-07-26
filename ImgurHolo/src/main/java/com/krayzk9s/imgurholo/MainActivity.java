@@ -182,8 +182,6 @@ public class MainActivity extends FragmentActivity {
     private void loadDefaultPage()
     {
         FragmentManager fragmentManager = getSupportFragmentManager();
-
-
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         if(!settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery"))
         {
@@ -202,7 +200,7 @@ public class MainActivity extends FragmentActivity {
         else if(settings.getString("DefaultPage", "").equals("Your Images"))
         {
             ImagesFragment imagesFragment = new ImagesFragment();
-            imagesFragment.setImageCall("3/account/me/images/0");
+            imagesFragment.setImageCall(false, "3/account/me/images/0");
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
                     .commit();
@@ -210,20 +208,12 @@ public class MainActivity extends FragmentActivity {
         else if(settings.getString("DefaultPage", "").equals("Your Favorites"))
         {
             ImagesFragment imagesFragment = new ImagesFragment();
-            imagesFragment.setImageCall("3/account/me/images/0");
+            imagesFragment.setImageCall(false, "3/account/me/likes");
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
                     .commit();
         }
-        else if(settings.getString("DefaultPage", "").equals("Your Likes"))
-        {
-            ImagesFragment imagesFragment = new ImagesFragment();
-            imagesFragment.setImageCall("3/account/me/likes");
-            fragmentManager.beginTransaction()
-                    .add(R.id.frame_layout, imagesFragment)
-                    .commit();
-        }
-        else if(settings.getString("DefaultPage", "").equals("Your Likes"))
+        else if(settings.getString("DefaultPage", "").equals("Your Account"))
         {
             AccountFragment accountFragment = new AccountFragment();
             fragmentManager.beginTransaction()
@@ -406,7 +396,7 @@ public class MainActivity extends FragmentActivity {
             case 3:
                 if (loggedin) {
                     ImagesFragment imagesFragment = new ImagesFragment();
-                    imagesFragment.setImageCall("3/account/me/images/0");
+                    imagesFragment.setImageCall(false, "3/account/me/images/0");
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)
                             .commit();
@@ -425,7 +415,7 @@ public class MainActivity extends FragmentActivity {
             case 5:
                 if (loggedin) {
                     ImagesFragment imagesFragment = new ImagesFragment();
-                    imagesFragment.setImageCall("3/account/me/likes");
+                    imagesFragment.setImageCall(false, "3/account/me/likes");
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)
                             .commit();
@@ -524,6 +514,35 @@ public class MainActivity extends FragmentActivity {
                     .header("Authorization", "Bearer " + accessKey.getToken())
                     .field(accountSetting, settingValue)
                     .field("username", username)
+                    .asJson();
+        }
+    }
+
+    public void makeMessagePost(String header, String body, String username)
+    {
+        Token accessKey = getAccessToken();
+        Log.d("Making Call", accessKey.toString());
+        HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "/3/message")
+                .header("accept", "application/json")
+                .header("X-Mashape-Authorization", MASHAPE_KEY)
+                .header("Authorization", "Bearer " + accessKey.getToken())
+                .field("subject", header)
+                .field("body", body)
+                .field("recipient", username)
+                .asJson();
+        Log.d("Getting Code", String.valueOf(response.getCode()));
+        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
+        int code = response.getCode();
+        if(code == 403)
+        {
+            accessKey = renewAccessToken();
+            Unirest.post(MASHAPE_URL + "/3/message")
+                    .header("accept", "application/json")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Bearer " + accessKey.getToken())
+                    .field("subject", header)
+                    .field("body", body)
+                    .field("recipient", username)
                     .asJson();
         }
     }

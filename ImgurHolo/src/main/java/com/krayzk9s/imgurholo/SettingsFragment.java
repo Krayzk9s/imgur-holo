@@ -108,7 +108,7 @@ public class SettingsFragment extends Fragment{
                     break;
                 case 1:
                     new AlertDialog.Builder(activity).setTitle("Set Page as Default")
-                            .setItems(R.array.commentCounts, new DialogInterface.OnClickListener() {
+                            .setItems(R.array.defaultArray, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     MainActivity activity = (MainActivity) getActivity();
                                     SharedPreferences settings = activity.getSettings();

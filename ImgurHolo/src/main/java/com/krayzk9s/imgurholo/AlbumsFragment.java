@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,6 +37,32 @@ public class AlbumsFragment extends Fragment {
     public AlbumsFragment()
     {
 
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        menu.findItem(R.id.action_new).setVisible(true);
+        menu.findItem(R.id.action_upload).setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_new:
+                //select images
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -112,7 +141,7 @@ public class AlbumsFragment extends Fragment {
     public void selectItem(int position) {
         String id = ids.get(position);
         ImagesFragment fragment = new ImagesFragment();
-        fragment.setImageCall("/3/album/" + id + "/images");
+        fragment.setImageCall(true, "/3/album/" + id + "/images");
         MainActivity activity = (MainActivity) getActivity();
         activity.changeFragment(fragment);
     }
