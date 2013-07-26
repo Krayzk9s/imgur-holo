@@ -92,40 +92,6 @@
                           android:textAppearance="?android:textAppearanceSmall"
                         />
             </LinearLayout>
-
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:orientation="horizontal"
-                          android:layout_width="wrap_content"
-                          android:layout_gravity="center_horizontal"
-                          android:layout_height="50dp"
-                    >
-
-                <Button xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="+"/>
-
-                <Button xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="-"/>
-
-                <Button xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="User"/>
-
-                <Button xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Reply"/>
-
-                <Button xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Report"/>
-            </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
 
@@ -150,20 +116,20 @@
                 android:src="@drawable/rating_bad"/>
 
         <ImageButton
-                android:id="@+id/rating_favorite"
+                android:id="@+id/delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/content_discard"
                 android:visibility="gone"/>
 
         <ImageButton
-                android:id="@+id/rating_favorite"
+                android:id="@+id/reply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/social_reply"/>
 
         <ImageButton
-                android:id="@+id/rating_favorite"
+                android:id="@+id/report"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/alerts_and_states_warning"/>

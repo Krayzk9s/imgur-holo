@@ -10,7 +10,5 @@
           android:verticalSpacing="10dp"
           android:horizontalSpacing="10dp"
           android:scaleType="fitCenter"
-          android:drawSelectorOnTop="true"
-          android:listSelector="@drawable/selector"
           android:gravity="center">
 </GridView>

@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -54,6 +56,7 @@ public class SingleImageFragment extends Fragment {
     public void setGallery(Boolean gallery) {
         inGallery = gallery;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,12 +65,13 @@ public class SingleImageFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(
-        Menu menu, MenuInflater inflater) {
+            Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         menu.findItem(R.id.action_share).setVisible(true);
         menu.findItem(R.id.action_copy).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
@@ -90,7 +94,7 @@ public class SingleImageFragment extends Fragment {
                                             link = imageData.getString("link");
                                             break;
                                         case 2:
-                                            link = "<a href=\"http://imgur.com/" + imageData.getString("id") + "\"><img src=\"" + imageData.getString("link") +"\" title=\"Hosted by imgur.com\"/></a>";
+                                            link = "<a href=\"http://imgur.com/" + imageData.getString("id") + "\"><img src=\"" + imageData.getString("link") + "\" title=\"Hosted by imgur.com\"/></a>";
                                             break;
                                         case 3:
                                             link = "[IMG]" + imageData.getString("link") + "[/IMG]";
@@ -105,10 +109,8 @@ public class SingleImageFragment extends Fragment {
                                             break;
                                     }
                                     ClipData clip = ClipData.newPlainText("imgur Link", link);
-                                        clipboard.setPrimaryClip(clip);
-                                }
-                                catch (Exception e)
-                                {
+                                    clipboard.setPrimaryClip(clip);
+                                } catch (Exception e) {
                                     Log.e("Error!", "No link in image data!");
                                 }
 
@@ -120,13 +122,12 @@ public class SingleImageFragment extends Fragment {
                 }).show();
                 return true;
             case R.id.action_share:
-                Intent intent=new Intent(android.content.Intent.ACTION_SEND);
+                Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                 try {
                     intent.putExtra(Intent.EXTRA_TEXT, imageData.getString("link"));
-                }
-                catch(Exception e) {
+                } catch (Exception e) {
                     Log.e("Error!", "bad link to share");
                 }
                 startActivity(intent);
@@ -146,27 +147,25 @@ public class SingleImageFragment extends Fragment {
         commentAdapter = new CommentAdapter(mainView.getContext(),
                 R.id.comment_item);
         commentLayout = (ListView) mainView.findViewById(R.id.comment_thread);
-        MainActivity activity = (MainActivity)getActivity();
+        MainActivity activity = (MainActivity) getActivity();
         LinearLayout imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
         ImageView imageView = (ImageView) imageLayoutView.findViewById(R.id.single_image_view);
-        if(inGallery) {
-            LinearLayout layout = (LinearLayout)imageLayoutView.findViewById(R.id.image_buttons);
+        if (inGallery) {
+            LinearLayout layout = (LinearLayout) imageLayoutView.findViewById(R.id.image_buttons);
             layout.setVisibility(View.VISIBLE);
         }
         ArrayAdapter<String> tempAdapter = new ArrayAdapter<String>(mainView.getContext(),
                 R.layout.drawer_list_item, mMenuList);
 
 
-
         Log.d("URI", "YO I'M IN YOUR SINGLE FRAGMENT gallery:" + inGallery);
         try {
             UrlImageViewHelper.setUrlDrawable(imageView, imageData.getString("link"), R.drawable.icon);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.e("drawable Error!", e.toString());
         }
-        TextView imageDetails = (TextView)imageLayoutView.findViewById(R.id.single_image_details);
-        TextView imageTitle = (TextView)imageLayoutView.findViewById(R.id.single_image_title);
+        TextView imageDetails = (TextView) imageLayoutView.findViewById(R.id.single_image_details);
+        TextView imageTitle = (TextView) imageLayoutView.findViewById(R.id.single_image_title);
         try {
             String size = String.valueOf(imageData.getInt("width")) + "x" + String.valueOf(imageData.getInt("height")) + " (" + String.valueOf(imageData.getInt("size")) + " bytes)";
             Calendar accountCreationDate = Calendar.getInstance();
@@ -174,24 +173,20 @@ public class SingleImageFragment extends Fragment {
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
             String accountCreated = sdf.format(accountCreationDate.getTime());
             imageDetails.setText(imageData.getString("type") + " | " + size + " | Views: " + String.valueOf(imageData.getInt("views")));
-            if(imageData.getString("title") != "null")
+            if (imageData.getString("title") != "null")
                 imageTitle.setText(imageData.getString("title"));
             commentLayout.addHeaderView(imageLayoutView);
             commentLayout.setAdapter(tempAdapter);
-    }
-    catch (Exception e) {
-        Log.e("Text Error!", e.toString());
-    }
-
-
+        } catch (Exception e) {
+            Log.e("Text Error!", e.toString());
+        }
         AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
                 MainActivity activity = (MainActivity) getActivity();
-                if(inGallery)
-                {
+                if (inGallery) {
                     try {
-                    commentData = activity.makeGetCall("3/gallery/image/" + imageData.getString("id") + "/comments");
+                        commentData = activity.makeGetCall("3/gallery/image/" + imageData.getString("id") + "/comments");
                     } catch (Exception e) {
                         Log.e("Error!", e.toString());
                     }
@@ -203,13 +198,14 @@ public class SingleImageFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 try {
-                    if(inGallery) {
+                    if (inGallery) {
                         AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                             @Override
                             protected Void doInBackground(Void... voids) {
                                 addComments();
                                 return null;
                             }
+
                             @Override
                             protected void onPostExecute(Void aVoid) {
                                 commentAdapter.notifyDataSetChanged();
@@ -226,18 +222,15 @@ public class SingleImageFragment extends Fragment {
             }
         };
         async.execute();
-
         return mainView;
     }
 
-    private void addComments()
-    {
+    private void addComments() {
         try {
             Log.d("getting data", commentData.toString());
             JSONArray commentArray = commentData.getJSONArray("data");
             Log.d("calling indent function", commentArray.toString());
-            for(int i = 0; i < commentArray.length(); i++)
-            {
+            for (int i = 0; i < commentArray.length(); i++) {
                 getIndents(commentArray.getJSONObject(i), 0);
             }
 
@@ -246,54 +239,62 @@ public class SingleImageFragment extends Fragment {
         }
     }
 
-
-    private void getIndents(JSONObject comment, int currentIndent)
-    {
+    private void getIndents(JSONObject comment, int currentIndent) {
         JSONArray children;
         try {
             Log.d("Putting Indent", comment.toString());
             comment.put("indent", currentIndent);
-            if(comment.has("children"))
-            {
+            if (comment.has("children")) {
                 children = comment.getJSONArray("children");
                 Log.d("Got children", children.toString());
-                for(int i = 0; i < children.length(); i++) {
+                for (int i = 0; i < children.length(); i++) {
                     JSONObject child = children.getJSONObject(i);
                     Log.d("Got child", child.toString());
                     getIndents(child, currentIndent++);
                 }
                 comment.remove("children");
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e("Error!", e.toString());
         }
         commentAdapter.add(comment);
     }
 
+    private static class ViewHolder {
+        public TextView header;
+        public TextView body;
+        public View[] indentViews;
+        public LinearLayout buttons;
+        public String id;
+        public ImageButton upvote;
+        public ImageButton downvote;
+        public ImageButton reply;
+        public ImageButton report;
+    }
 
-    public class CommentAdapter extends ArrayAdapter<JSONObject>
-    {
+    public class CommentAdapter extends ArrayAdapter<JSONObject> {
         private LayoutInflater mInflater;
 
-        public CommentAdapter(Context context, int textViewResourceId)
-        {
+        public CommentAdapter(Context context, int textViewResourceId) {
             super(context, textViewResourceId);
-            mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
+
         @Override
-        public View getView(int position, View convertView, ViewGroup parent)
-        {
+        public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            if(convertView == null)
-            {
+            if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.comment_list_item, null);
                 holder = new ViewHolder();
-                holder.body = (TextView)convertView.findViewById(R.id.body);
-                holder.header = (TextView)convertView.findViewById(R.id.header);
-                holder.buttons = (LinearLayout)convertView.findViewById(R.id.comment_buttons);
-                holder.indentViews = new View[] {
+                holder.body = (TextView) convertView.findViewById(R.id.body);
+                holder.header = (TextView) convertView.findViewById(R.id.header);
+                holder.buttons = (LinearLayout) convertView.findViewById(R.id.comment_buttons);
+                holder.upvote = (ImageButton) holder.buttons.findViewById(R.id.rating_good);
+                holder.downvote = (ImageButton) holder.buttons.findViewById(R.id.rating_bad);
+                holder.reply = (ImageButton) holder.buttons.findViewById(R.id.reply);
+                holder.report = (ImageButton) holder.buttons.findViewById(R.id.report);
+                holder.id = "";
+                holder.indentViews = new View[]{
                         convertView.findViewById(R.id.margin_1),
                         convertView.findViewById(R.id.margin_2),
                         convertView.findViewById(R.id.margin_3),
@@ -303,32 +304,118 @@ public class SingleImageFragment extends Fragment {
                 };
                 convertView.setTag(holder);
             } else {
-                holder = (ViewHolder)convertView.getTag();
+                holder = (ViewHolder) convertView.getTag();
             }
             JSONObject viewData = this.getItem(position);
             try {
+                holder.id = viewData.getString("id");
                 int indentLevel = viewData.getInt("indent");
                 holder.buttons.setVisibility(View.GONE);
-                for (int i = 0; i < indentLevel && i < holder.indentViews.length; i++) {
-                    holder.indentViews[i].setVisibility(View.VISIBLE);
+                int indentPosition = Math.min(indentLevel, holder.indentViews.length - 1);
+                for (int i = 0; i < indentPosition - 1; i++) {
+                    holder.indentViews[i].setVisibility(View.INVISIBLE);
                 }
-                for (int i = indentLevel; i < holder.indentViews.length; i++) {
+                if (indentPosition > 0)
+                    holder.indentViews[indentPosition - 1].setVisibility(View.VISIBLE);
+                for (int i = indentPosition; i < holder.indentViews.length; i++) {
                     holder.indentViews[i].setVisibility(View.GONE);
                 }
                 holder.body.setText(viewData.getString("comment"));
                 holder.header.setText(viewData.getString("author") + " " + viewData.getString("points") + "pts (" + viewData.getString("ups") + "/" + viewData.getString("downs") + ")");
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ViewHolder viewHolder = (ViewHolder) view.getTag();
+                        if (viewHolder.buttons.getVisibility() == View.GONE)
+                            viewHolder.buttons.setVisibility(View.VISIBLE);
+                        else
+                            viewHolder.buttons.setVisibility(View.GONE);
+                    }
+                });
+                holder.reply.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        LinearLayout layout = (LinearLayout) view.getParent().getParent();
+                        final ViewHolder dataHolder = (ViewHolder) layout.getTag();
+                        try {
+                            MainActivity activity = (MainActivity) getActivity();
+                            final EditText newBody = new EditText(activity);
+                            newBody.setHint("Body");
+                            new AlertDialog.Builder(activity).setTitle("Send Message")
+                                    .setView(newBody).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                                        @Override
+                                        protected Void doInBackground(Void... voids) {
+                                            MainActivity activity = (MainActivity) getActivity();
+                                            try {
+                                                Log.d("comment", dataHolder.id + newBody.getText().toString() + imageData.getString("id"));
+                                                activity.makeGalleryReply(dataHolder.id, newBody.getText().toString(), imageData.getString("id"));
+                                            } catch (Exception e) {
+                                                Log.e("Error!", "oops, some text fields missing values" + e.toString());
+                                            }
+                                            return null;
+                                        }
+                                    };
+                                    async.execute();
+                                }
+                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    // Do nothing.
+                                }
+                            }).show();
+                        } catch (Exception e) {
+                            Log.e("Error!", "missing data");
+                        }
+                    }
+                });
+                holder.upvote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        LinearLayout layout = (LinearLayout) view.getParent().getParent();
+                        final ViewHolder dataHolder = (ViewHolder) layout.getTag();
+                        dataHolder.upvote.setImageResource(R.drawable.green_rating_good);
+                        dataHolder.downvote.setImageResource(R.drawable.rating_bad);
+                        AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... voids) {
+                                MainActivity activity = (MainActivity) getActivity();
+                                activity.makePostCall("/3/comment/" + dataHolder.id + "/vote/up");
+                                return null;
+                            }
+                        };
+                        async.execute();
+                    }
+                });
+                holder.downvote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        LinearLayout layout = (LinearLayout) view.getParent().getParent();
+                        final ViewHolder dataHolder = (ViewHolder) layout.getTag();
+                        dataHolder.upvote.setImageResource(R.drawable.rating_good);
+                        dataHolder.downvote.setImageResource(R.drawable.red_rating_bad);
+                        AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... voids) {
+                                MainActivity activity = (MainActivity) getActivity();
+                                activity.makePostCall("/3/comment/" + dataHolder.id + "/vote/down");
+                                return null;
+                            }
+                        };
+                        async.execute();
+                    }
+                });
+                holder.report.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
                 convertView.setTag(holder);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.e("Error!", e.toString());
             }
             return convertView;
         }
-    }
-    private static class ViewHolder {
-        public TextView header;
-        public TextView body;
-        public View[] indentViews;
-        public LinearLayout buttons;
     }
 }

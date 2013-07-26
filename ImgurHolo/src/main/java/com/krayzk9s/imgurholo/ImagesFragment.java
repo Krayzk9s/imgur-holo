@@ -56,8 +56,7 @@ public class ImagesFragment extends Fragment {
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         menu.findItem(R.id.action_upload).setVisible(false);
-        if(isAlbum)
-        {
+        if (isAlbum) {
             menu.findItem(R.id.action_new).setVisible(true);
         }
     }
@@ -110,11 +109,6 @@ public class ImagesFragment extends Fragment {
         };
         async.execute();
         return gridview;
-    }
-
-    private void copySelectedItems()
-    {
-        return;
     }
 
     public class ImageAdapter extends BaseAdapter {

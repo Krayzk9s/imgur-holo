@@ -34,8 +34,7 @@ public class AlbumsFragment extends Fragment {
     ImageAdapter imageAdapter;
     AsyncTask<Void, Void, Void> async;
 
-    public AlbumsFragment()
-    {
+    public AlbumsFragment() {
 
     }
 
@@ -101,6 +100,7 @@ public class AlbumsFragment extends Fragment {
         async.execute();
         return gridview;
     }
+
     public class ImageAdapter extends BaseAdapter {
         private Context mContext;
 
@@ -131,6 +131,7 @@ public class AlbumsFragment extends Fragment {
         }
 
     }
+
     private class GridItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

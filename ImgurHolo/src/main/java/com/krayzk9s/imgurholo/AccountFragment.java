@@ -37,8 +37,7 @@ public class AccountFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle save)
-    {
+    public void onCreate(Bundle save) {
         super.onCreate(save);
         setRetainInstance(true);
     }
@@ -91,11 +90,11 @@ public class AccountFragment extends Fragment {
                     settingsJSON = settingsJSON.getJSONObject("data");
                     accountData.put("email", settingsJSON.getString("email"));
                     accountData.put("album_privacy", settingsJSON.getString("album_privacy"));
-                    if(settingsJSON.getBoolean("public_images") == false)
+                    if (settingsJSON.getBoolean("public_images") == false)
                         accountData.put("public_images", "private");
                     else
                         accountData.put("public_images", "public");
-                    if(settingsJSON.getBoolean("messaging_enabled") == false)
+                    if (settingsJSON.getBoolean("messaging_enabled") == false)
                         accountData.put("messaging_enabled", "disabled");
                     else
                         accountData.put("messaging_enabled", "enabled");
@@ -113,7 +112,7 @@ public class AccountFragment extends Fragment {
                 //mMenuList[3] = mMenuList[3] + " (" + accountData.get("total_comments") + ")";
                 //mMenuList[4] = mMenuList[4] + " (" + accountData.get("total_messages") + ")";
                 mMenuList[5] = mMenuList[5] + " " + accountData.get("created");
-                if(accountData.get("bio") != "null")
+                if (accountData.get("bio") != "null")
                     mMenuList[6] = accountData.get("bio");
                 else
                     mMenuList[6] = "No Biography";
@@ -133,7 +132,7 @@ public class AccountFragment extends Fragment {
     private void selectItem(int position) {
         final MainActivity activity = (MainActivity) getActivity();
         ImagesFragment imagesFragment;
-        switch(position) {
+        switch (position) {
             case 0:
                 AlbumsFragment albumsFragment = new AlbumsFragment();
                 activity.changeFragment(albumsFragment);
@@ -263,17 +262,17 @@ public class AccountFragment extends Fragment {
         }
     }
 
-    private class SettingsAsync extends AsyncTask<Void, Void, Void>
-    {
+    private class SettingsAsync extends AsyncTask<Void, Void, Void> {
         private Object data;
         private String settingName;
         private String username;
-        public SettingsAsync(String _settingName, Object _data, String _username)
-        {
+
+        public SettingsAsync(String _settingName, Object _data, String _username) {
             data = _data;
-            settingName =_settingName;
+            settingName = _settingName;
             username = _username;
         }
+
         @Override
         protected Void doInBackground(Void... voids) {
             MainActivity activity = (MainActivity) getActivity();

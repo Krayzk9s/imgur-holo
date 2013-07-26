@@ -27,9 +27,10 @@ import org.json.JSONObject;
 /**
  * Created by Kurt Zimmer on 7/24/13.
  */
-public class MessagingFragment extends Fragment{
+public class MessagingFragment extends Fragment {
     MessageAdapter messageAdapter;
     ListView mDrawerList;
+
     public MessagingFragment() {
 
     }
@@ -60,7 +61,6 @@ public class MessagingFragment extends Fragment{
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -81,6 +81,7 @@ public class MessagingFragment extends Fragment{
                 JSONObject messages = activity.makeGetCall("/3/account/me/notifications/messages?new=false");
                 return messages;
             }
+
             @Override
             protected void onPostExecute(JSONObject messages) {
                 addMessages(messages);
@@ -90,130 +91,33 @@ public class MessagingFragment extends Fragment{
         return view;
     }
 
-    private void addMessages(JSONObject messages)
-    {
+    private void addMessages(JSONObject messages) {
         try {
             JSONArray data = messages.getJSONArray("data");
-            for(int i = 0; i < data.length(); i++) {
+            for (int i = 0; i < data.length(); i++) {
                 JSONObject message = data.getJSONObject(i);
                 messageAdapter.add(message);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e("Error!", e.toString());
         }
         mDrawerList.setAdapter(messageAdapter);
         messageAdapter.notifyDataSetChanged();
     }
 
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.d("clicked!", "clicked!");
-            selectItem(position);
-        }
-    }
-
     private void selectItem(int position) {
     }
 
-    public class MessageAdapter extends ArrayAdapter<JSONObject>
-    {
-        JSONObject messageData;
-        JSONObject messageContent;
-        private LayoutInflater mInflater;
-        public MessageAdapter(Context context, int textViewResourceId)
-        {
-            super(context, textViewResourceId);
-            mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent)
-        {
-            ViewHolder holder;
-            if(convertView == null)
-            {
-                convertView = mInflater.inflate(R.layout.message_layout, null);
-                holder = new ViewHolder();
-                holder.body = (TextView)convertView.findViewById(R.id.body);
-                holder.title = (TextView)convertView.findViewById(R.id.title);
-                holder.header = (TextView)convertView.findViewById(R.id.header);
-                holder.reply = (ImageButton)convertView.findViewById(R.id.reply);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder)convertView.getTag();
-            }
-            messageData = this.getItem(position);
-            try {
-                messageContent = messageData.getJSONObject("content");
-                holder.body.setText(messageContent.getString("body"));
-                holder.title.setText(messageContent.getString("subject"));
-                holder.header.setText(messageContent.getString("from") + ", " + messageContent.getString("timestamp"));
-                holder.from = messageContent.getString("from");
-                holder.reply.setOnClickListener( new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        LinearLayout layout = (LinearLayout)v.getParent().getParent();
-                        ViewHolder dataHolder = (ViewHolder)layout.getTag();
-                        try {
-                            buildSendMessage(dataHolder.from , dataHolder.title.getText().toString());
-                        }
-                        catch (Exception e)
-                        {
-                            Log.e("Error!", "missing data");
-                        }
-                    }
-                }
-                );
-                convertView.setTag(holder);
-            }
-            catch (Exception e) {
-                Log.e("Error!", e.toString());
-            }
-            return convertView;
-        }
-    }
-    private static class ViewHolder {
-        public TextView header;
-        public TextView body;
-        public TextView title;
-        public ImageButton reply;
-        public String from;
-    }
-
-    private class MessagingAsync extends AsyncTask<Void, Void, Void>
-    {
-        private String header;
-        private String body;
-        private String username;
-        public MessagingAsync(String _header, String _body, String _username)
-        {
-            header = _header;
-            body =_body;
-            username = _username;
-        }
-        @Override
-        protected Void doInBackground(Void... voids) {
-            MainActivity activity = (MainActivity) getActivity();
-            activity.makeMessagePost(header, body, username);
-            return null;
-        }
-    }
-
-    private void buildSendMessage(String username, String title)
-    {
+    private void buildSendMessage(String username, String title) {
         MainActivity activity = (MainActivity) getActivity();
 
         final EditText newHeader = new EditText(activity);
         newHeader.setSingleLine();
         final EditText newUsername = new EditText(activity);
         newUsername.setSingleLine();
-        if(username != null)
+        if (username != null)
             newUsername.setText(username);
-        if(title != null)
+        if (title != null)
             newHeader.setText("RE: " + title);
         newHeader.setHint("Subject");
         final EditText newBody = new EditText(activity);
@@ -230,8 +134,7 @@ public class MessagingFragment extends Fragment{
                     Log.d("Header", newHeader.getText().toString());
                     MessagingAsync messagingAsync = new MessagingAsync(newHeader.getText().toString(), newBody.getText().toString(), newUsername.getText().toString());
                     messagingAsync.execute();
-                }
-                catch(Exception e) {
+                } catch (Exception e) {
                     Log.e("Error!", "oops, some text fields missing values");
                 }
 
@@ -241,6 +144,179 @@ public class MessagingFragment extends Fragment{
                 // Do nothing.
             }
         }).show();
+    }
+
+    private static class ViewHolder {
+        public TextView header;
+        public TextView body;
+        public TextView title;
+        public ImageButton reply;
+        public ImageButton delete;
+        public ImageButton report;
+        public String from;
+        public String id;
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Log.d("clicked!", "clicked!");
+            selectItem(position);
+        }
+    }
+
+    public class MessageAdapter extends ArrayAdapter<JSONObject> {
+        JSONObject messageData;
+        JSONObject messageContent;
+        private LayoutInflater mInflater;
+
+        public MessageAdapter(Context context, int textViewResourceId) {
+            super(context, textViewResourceId);
+            mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.message_layout, null);
+                holder = new ViewHolder();
+                holder.body = (TextView) convertView.findViewById(R.id.body);
+                holder.title = (TextView) convertView.findViewById(R.id.title);
+                holder.header = (TextView) convertView.findViewById(R.id.header);
+                holder.reply = (ImageButton) convertView.findViewById(R.id.reply);
+                holder.delete = (ImageButton) convertView.findViewById(R.id.delete);
+                holder.report = (ImageButton) convertView.findViewById(R.id.report);
+                holder.id = "";
+                holder.from = "";
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            messageData = this.getItem(position);
+            try {
+                messageContent = messageData.getJSONObject("content");
+                holder.body.setText(messageContent.getString("body"));
+                holder.title.setText(messageContent.getString("subject"));
+                holder.header.setText(messageContent.getString("from") + ", " + messageContent.getString("timestamp"));
+                holder.from = messageContent.getString("from");
+                holder.id = messageContent.getString("id");
+                holder.reply.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinearLayout layout = (LinearLayout) v.getParent().getParent();
+                        ViewHolder dataHolder = (ViewHolder) layout.getTag();
+                        try {
+                            buildSendMessage(dataHolder.from, dataHolder.title.getText().toString());
+                        } catch (Exception e) {
+                            Log.e("Error!", "missing data");
+                        }
+                    }
+                }
+                );
+                holder.report.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinearLayout layout = (LinearLayout) v.getParent().getParent();
+                        final ViewHolder dataHolder = (ViewHolder) layout.getTag();
+                        MainActivity activity = (MainActivity) getActivity();
+                        new AlertDialog.Builder(activity).setTitle("Send Message").setMessage("Are you sure you want to report this user and block them?")
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        try {
+                                            ReportAsync reportAsync = new ReportAsync(dataHolder.from);
+                                            reportAsync.execute();
+                                        } catch (Exception e) {
+                                            Log.e("Error!", "missing data" + dataHolder.toString());
+                                        }
+                                    }
+                                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // Do nothing.
+                            }
+                        }).show();
+
+                    }
+                }
+                );
+                holder.delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinearLayout layout = (LinearLayout) v.getParent().getParent();
+                        final ViewHolder dataHolder = (ViewHolder) layout.getTag();
+                        MainActivity activity = (MainActivity) getActivity();
+                        try {
+                            new AlertDialog.Builder(activity).setTitle("Send Message").setMessage("Are you sure you want to delete this message?")
+                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            DeleteAsync deleteAsync = new DeleteAsync(dataHolder.id);
+                                            deleteAsync.execute();
+                                        }
+                                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    // Do nothing.
+                                }
+                            }).show();
+                        } catch (Exception e) {
+                            Log.e("Error!", "missing data");
+                        }
+                    }
+                });
+                convertView.setTag(holder);
+            } catch (Exception e) {
+                Log.e("Error!", e.toString());
+            }
+            return convertView;
+        }
+    }
+
+    private class MessagingAsync extends AsyncTask<Void, Void, Void> {
+        private String header;
+        private String body;
+        private String username;
+
+        public MessagingAsync(String _header, String _body, String _username) {
+            header = _header;
+            body = _body;
+            username = _username;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            MainActivity activity = (MainActivity) getActivity();
+            activity.makeMessagePost(header, body, username);
+            return null;
+        }
+    }
+
+    private class DeleteAsync extends AsyncTask<Void, Void, Void> {
+        private String id;
+
+        public DeleteAsync(String _id) {
+            id = _id;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            MainActivity activity = (MainActivity) getActivity();
+            activity.deletePost(id);
+            return null;
+        }
+    }
+
+    private class ReportAsync extends AsyncTask<Void, Void, Void> {
+        private String username;
+
+        public ReportAsync(String _username) {
+            username = _username;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            MainActivity activity = (MainActivity) getActivity();
+            activity.reportPost(username);
+            return null;
+        }
     }
 
 }
