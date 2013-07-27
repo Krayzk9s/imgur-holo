@@ -430,6 +430,7 @@ public class GalleryFragment extends Fragment {
                     else
                         firstPass++;
                     Log.d("URI2", String.valueOf(firstPass));
+                    makeGallery();
                 }
                 Log.d("URI3", String.valueOf(firstPass));
                 return true;

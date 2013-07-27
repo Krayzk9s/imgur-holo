@@ -30,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -38,8 +39,8 @@ import java.util.Calendar;
 public class SingleImageFragment extends Fragment {
 
     String[] mMenuList;
-    JSONObject imageData;
-    JSONObject commentData;
+    JSONParcelable imageData;
+    JSONParcelable commentData;
     Boolean inGallery;
     CommentAdapter commentAdapter;
     View mainView;
@@ -49,13 +50,15 @@ public class SingleImageFragment extends Fragment {
     ImageButton imageFavorite;
     ImageButton imageComment;
     ImageButton imageReport;
+    ArrayList<JSONParcelable> commentArray;
 
     public SingleImageFragment() {
         inGallery = false;
     }
 
     public void setParams(JSONObject _params) {
-        imageData = _params;
+        imageData = new JSONParcelable();
+        imageData.setJSONObject(_params);
     }
 
     public void setGallery(Boolean gallery) {
@@ -93,22 +96,22 @@ public class SingleImageFragment extends Fragment {
                                     String link = "";
                                     switch (whichButton) {
                                         case 0:
-                                            link = "http://imgur.com/" + imageData.getString("id");
+                                            link = "http://imgur.com/" + imageData.getJSONObject().getString("id");
                                             break;
                                         case 1:
-                                            link = imageData.getString("link");
+                                            link = imageData.getJSONObject().getString("link");
                                             break;
                                         case 2:
-                                            link = "<a href=\"http://imgur.com/" + imageData.getString("id") + "\"><img src=\"" + imageData.getString("link") + "\" title=\"Hosted by imgur.com\"/></a>";
+                                            link = "<a href=\"http://imgur.com/" + imageData.getJSONObject().getString("id") + "\"><img src=\"" + imageData.getJSONObject().getString("link") + "\" title=\"Hosted by imgur.com\"/></a>";
                                             break;
                                         case 3:
-                                            link = "[IMG]" + imageData.getString("link") + "[/IMG]";
+                                            link = "[IMG]" + imageData.getJSONObject().getString("link") + "[/IMG]";
                                             break;
                                         case 4:
-                                            link = "[URL=http://imgur.com/" + imageData.getString("id") + "][IMG]" + imageData.getString("link") + "[/IMG][/URL]";
+                                            link = "[URL=http://imgur.com/" + imageData.getJSONObject().getString("id") + "][IMG]" + imageData.getJSONObject().getString("link") + "[/IMG][/URL]";
                                             break;
                                         case 5:
-                                            link = "[Imgur](http://i.imgur.com/" + imageData.getString("id") + ")";
+                                            link = "[Imgur](http://i.imgur.com/" + imageData.getJSONObject().getString("id") + ")";
                                             break;
                                         default:
                                             break;
@@ -131,7 +134,7 @@ public class SingleImageFragment extends Fragment {
                 intent.setType("text/plain");
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                 try {
-                    intent.putExtra(Intent.EXTRA_TEXT, imageData.getString("link"));
+                    intent.putExtra(Intent.EXTRA_TEXT, imageData.getJSONObject().getString("link"));
                 } catch (Exception e) {
                     Log.e("Error!", "bad link to share");
                 }
@@ -153,6 +156,9 @@ public class SingleImageFragment extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         LinearLayout imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
         ImageView imageView = (ImageView) imageLayoutView.findViewById(R.id.single_image_view);
+        if(savedInstanceState != null) {
+            imageData = savedInstanceState.getParcelable("imageData");
+        }
         if (inGallery) {
             LinearLayout layout = (LinearLayout) imageLayoutView.findViewById(R.id.image_buttons);
             layout.setVisibility(View.VISIBLE);
@@ -162,11 +168,11 @@ public class SingleImageFragment extends Fragment {
             imageComment = (ImageButton) imageLayoutView.findViewById(R.id.comment);
             imageReport = (ImageButton) imageLayoutView.findViewById(R.id.report);
             try {
-                if(imageData.getString("vote") != null && imageData.getString("vote").equals("up"))
+                if(imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
                     imageUpvote.setImageResource(R.drawable.green_rating_good);
-                else if (imageData.getString("vote") != null && imageData.getString("vote").equals("down"))
+                else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
                     imageDownvote.setImageResource(R.drawable.red_rating_bad);
-                if(imageData.getBoolean("favorite"))
+                if(imageData.getJSONObject().getBoolean("favorite"))
                     imageFavorite.setImageResource(R.drawable.green_rating_favorite);
             }
             catch (Exception e)
@@ -182,7 +188,7 @@ public class SingleImageFragment extends Fragment {
                         protected Void doInBackground(Void... voids) {
                             MainActivity activity = (MainActivity) getActivity();
                             try {
-                                activity.makePostCall("3/image/" + imageData.getString("id") + "/favorite");
+                                activity.makePostCall("3/image/" + imageData.getJSONObject().getString("id") + "/favorite");
                             }
                             catch (Exception e)
                             {
@@ -209,7 +215,7 @@ public class SingleImageFragment extends Fragment {
                                     protected Void doInBackground(Void... voids) {
                                         MainActivity activity = (MainActivity) getActivity();
                                         try {
-                                            activity.makeGalleryReply(imageData.getString("id"), newBody.getText().toString(), null);
+                                            activity.makeGalleryReply(imageData.getJSONObject().getString("id"), newBody.getText().toString(), null);
                                         } catch (Exception e) {
                                             Log.e("Error!", "oops, some text fields missing values" + e.toString());
                                         }
@@ -238,7 +244,7 @@ public class SingleImageFragment extends Fragment {
                         protected Void doInBackground(Void... voids) {
                             MainActivity activity = (MainActivity) getActivity();
                             try {
-                                activity.makePostCall("3/gallery/" + imageData.getString("id") + "/vote/up");
+                                activity.makePostCall("3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/up");
                             }
                             catch (Exception e)
                             {
@@ -260,7 +266,7 @@ public class SingleImageFragment extends Fragment {
                         protected Void doInBackground(Void... voids) {
                             MainActivity activity = (MainActivity) getActivity();
                             try {
-                                activity.makePostCall("3/gallery/" + imageData.getString("id") + "/vote/down");
+                                activity.makePostCall("3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/down");
                             } catch (Exception e) {
                                 Log.e("Error!", e.toString());
                             }
@@ -277,33 +283,36 @@ public class SingleImageFragment extends Fragment {
 
         Log.d("URI", "YO I'M IN YOUR SINGLE FRAGMENT gallery:" + inGallery);
         try {
-            UrlImageViewHelper.setUrlDrawable(imageView, imageData.getString("link"), R.drawable.icon);
+            UrlImageViewHelper.setUrlDrawable(imageView, imageData.getJSONObject().getString("link"), R.drawable.icon);
         } catch (Exception e) {
             Log.e("drawable Error!", e.toString());
         }
         TextView imageDetails = (TextView) imageLayoutView.findViewById(R.id.single_image_details);
         TextView imageTitle = (TextView) imageLayoutView.findViewById(R.id.single_image_title);
         try {
-            String size = String.valueOf(imageData.getInt("width")) + "x" + String.valueOf(imageData.getInt("height")) + " (" + String.valueOf(imageData.getInt("size")) + " bytes)";
+            String size = String.valueOf(imageData.getJSONObject().getInt("width")) + "x" + String.valueOf(imageData.getJSONObject().getInt("height")) + " (" + String.valueOf(imageData.getJSONObject().getInt("size")) + " bytes)";
             Calendar accountCreationDate = Calendar.getInstance();
-            accountCreationDate.setTimeInMillis((long) imageData.getInt("datetime") * 1000);
+            accountCreationDate.setTimeInMillis((long) imageData.getJSONObject().getInt("datetime") * 1000);
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
             String accountCreated = sdf.format(accountCreationDate.getTime());
-            imageDetails.setText(imageData.getString("type") + " | " + size + " | Views: " + String.valueOf(imageData.getInt("views")));
-            if (imageData.getString("title") != "null")
-                imageTitle.setText(imageData.getString("title"));
+            imageDetails.setText(imageData.getJSONObject().getString("type") + " | " + size + " | Views: " + String.valueOf(imageData.getJSONObject().getInt("views")));
+            if (imageData.getJSONObject().getString("title") != "null")
+                imageTitle.setText(imageData.getJSONObject().getString("title"));
             commentLayout.addHeaderView(imageLayoutView);
             commentLayout.setAdapter(tempAdapter);
         } catch (Exception e) {
             Log.e("Text Error!", e.toString());
         }
+
+        if(savedInstanceState == null) {
         AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
                 MainActivity activity = (MainActivity) getActivity();
                 if (inGallery) {
                     try {
-                        commentData = activity.makeGetCall("3/gallery/image/" + imageData.getString("id") + "/comments");
+                        commentData = new JSONParcelable();
+                        commentData.setJSONObject(activity.makeGetCall("3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments"));
                     } catch (Exception e) {
                         Log.e("Error!", e.toString());
                     }
@@ -339,18 +348,26 @@ public class SingleImageFragment extends Fragment {
             }
         };
         async.execute();
+        }
+        else {
+            commentArray = savedInstanceState.getParcelableArrayList("commentData");
+            commentAdapter.addAll(commentArray);
+            commentLayout.setAdapter(commentAdapter);
+            commentAdapter.notifyDataSetChanged();
+        }
         return mainView;
     }
 
     private void addComments() {
         try {
             Log.d("getting data", commentData.toString());
-            JSONArray commentArray = commentData.getJSONArray("data");
-            Log.d("calling indent function", commentArray.toString());
-            for (int i = 0; i < commentArray.length(); i++) {
-                getIndents(commentArray.getJSONObject(i), 0);
+            JSONArray commentJSONArray = commentData.getJSONObject().getJSONArray("data");
+            commentArray = new ArrayList<JSONParcelable>();
+            Log.d("calling indent function", commentJSONArray.toString());
+            for (int i = 0; i < commentJSONArray.length(); i++) {
+                getIndents(commentJSONArray.getJSONObject(i), 0);
             }
-
+           commentAdapter.addAll(commentArray);
         } catch (Exception e) {
             Log.e("Error!", e.toString());
         }
@@ -360,21 +377,29 @@ public class SingleImageFragment extends Fragment {
         JSONArray children;
         try {
             Log.d("Putting Indent", comment.toString());
+            Log.d("Indent", "" + currentIndent);
             comment.put("indent", currentIndent);
+            Log.d("Put Indent", comment.toString());
+            children = null;
             if (comment.has("children")) {
                 children = comment.getJSONArray("children");
+                comment.remove("children");
+            }
+            JSONParcelable commentParse = new JSONParcelable();
+            commentParse.setJSONObject(comment);
+            commentArray.add(commentParse);
+            if (children != null) {
                 Log.d("Got children", children.toString());
                 for (int i = 0; i < children.length(); i++) {
                     JSONObject child = children.getJSONObject(i);
                     Log.d("Got child", child.toString());
-                    getIndents(child, currentIndent++);
+                    getIndents(child, currentIndent + 1);
                 }
-                comment.remove("children");
+
             }
         } catch (Exception e) {
             Log.e("Error!", e.toString());
         }
-        commentAdapter.add(comment);
     }
 
     private static class ViewHolder {
@@ -389,7 +414,7 @@ public class SingleImageFragment extends Fragment {
         public ImageButton report;
     }
 
-    public class CommentAdapter extends ArrayAdapter<JSONObject> {
+    public class CommentAdapter extends ArrayAdapter<JSONParcelable> {
         private LayoutInflater mInflater;
 
         public CommentAdapter(Context context, int textViewResourceId) {
@@ -423,7 +448,7 @@ public class SingleImageFragment extends Fragment {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            JSONObject viewData = this.getItem(position);
+            JSONObject viewData = this.getItem(position).getJSONObject();
             try {
                 holder.id = viewData.getString("id");
                 int indentLevel = viewData.getInt("indent");
@@ -449,9 +474,9 @@ public class SingleImageFragment extends Fragment {
                             viewHolder.buttons.setVisibility(View.GONE);
                     }
                 });
-                if(imageData.getString("vote") != null && imageData.getString("vote").equals("up"))
+                if(imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
                     holder.upvote.setImageResource(R.drawable.green_rating_good);
-                else if(imageData.getString("vote") != null && imageData.getString("vote").equals("down"))
+                else if(imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
                     holder.downvote.setImageResource(R.drawable.red_rating_bad);
                 holder.reply.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -470,8 +495,8 @@ public class SingleImageFragment extends Fragment {
                                         protected Void doInBackground(Void... voids) {
                                             MainActivity activity = (MainActivity) getActivity();
                                             try {
-                                                Log.d("comment", dataHolder.id + newBody.getText().toString() + imageData.getString("id"));
-                                                activity.makeGalleryReply(imageData.getString("id"), newBody.getText().toString(), dataHolder.id);
+                                                Log.d("comment", dataHolder.id + newBody.getText().toString() + imageData.getJSONObject().getString("id"));
+                                                activity.makeGalleryReply(imageData.getJSONObject().getString("id"), newBody.getText().toString(), dataHolder.id);
                                             } catch (Exception e) {
                                                 Log.e("Error!", "oops, some text fields missing values" + e.toString());
                                             }
@@ -538,5 +563,12 @@ public class SingleImageFragment extends Fragment {
             }
             return convertView;
         }
+    }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelable("imageData", imageData);
+        savedInstanceState.putParcelableArrayList("commentData", commentArray);
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 }
