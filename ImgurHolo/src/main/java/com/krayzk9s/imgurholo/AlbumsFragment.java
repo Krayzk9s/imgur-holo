@@ -67,37 +67,47 @@ public class AlbumsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        urls = new ArrayList<String>();
-        ids = new ArrayList<String>();
+        if(savedInstanceState == null)
+        {
+            urls = new ArrayList<String>();
+            ids = new ArrayList<String>();
+        }
+        else {
+            urls = savedInstanceState.getStringArrayList("urls");
+            ids = savedInstanceState.getStringArrayList("ids");
+        }
         View view = inflater.inflate(R.layout.image_layout, container, false);
         GridView gridview = (GridView) view;
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());
-        async = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                MainActivity activity = (MainActivity) getActivity();
-                JSONObject imagesData = activity.makeGetCall("3/account/me/albums");
-                try {
-                    JSONArray imageArray = imagesData.getJSONArray("data");
-                    for (int i = 0; i < imageArray.length(); i++) {
-                        JSONObject imageData = imageArray.getJSONObject(i);
-                        urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
-                        ids.add(imageData.getString("id"));
+        if(savedInstanceState == null)
+        {
+            async = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    MainActivity activity = (MainActivity) getActivity();
+                    JSONObject imagesData = activity.makeGetCall("3/account/me/albums");
+                    try {
+                        JSONArray imageArray = imagesData.getJSONArray("data");
+                        for (int i = 0; i < imageArray.length(); i++) {
+                            JSONObject imageData = imageArray.getJSONObject(i);
+                            urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
+                            ids.add(imageData.getString("id"));
+                        }
+                    } catch (Exception e) {
+                        Log.e("Error!", e.toString());
                     }
-                } catch (Exception e) {
-                    Log.e("Error!", e.toString());
+                    return null;
                 }
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                imageAdapter.notifyDataSetChanged();
-            }
-        };
-        async.execute();
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    imageAdapter.notifyDataSetChanged();
+                }
+            };
+            async.execute();
+        }
         return gridview;
     }
 
@@ -146,10 +156,18 @@ public class AlbumsFragment extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         activity.changeFragment(fragment);
     }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putStringArrayList("urls", urls);
+        savedInstanceState.putStringArrayList("ids", ids);
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        async.cancel(true);
+        if(async != null)
+            async.cancel(true);
     }
 }

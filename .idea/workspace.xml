@@ -30,9 +30,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd7191f9-071f-4e7c-a8f1-8f8b811e97ef" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/JSONParcelable.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ImgurHolo.iws" />
@@ -97,47 +102,26 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="527" column="9" selection-start="21371" selection-end="21371" vertical-scroll-proportion="-115.42308" vertical-offset="5261" max-vertical-offset="11067">
+            <state line="683" column="56" selection-start="28776" selection-end="28776" vertical-scroll-proportion="0.7432886" vertical-offset="10471" max-vertical-offset="11067">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SingleImageFragment.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
+      <file leaf-file-name="GalleryFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="177" column="48" selection-start="8001" selection-end="8001" vertical-scroll-proportion="0.32933104" vertical-offset="2137" max-vertical-offset="7055">
+            <state line="379" column="5" selection-start="15437" selection-end="16165" vertical-scroll-proportion="-43.923077" vertical-offset="5063" max-vertical-offset="7361">
               <folding>
-                <element signature="docComment;class#SingleImageFragment#0" expanded="false" />
-                <element signature="method#SingleImageFragment#0;class#SingleImageFragment#0" expanded="false" />
-                <element signature="method#setParams#0;class#SingleImageFragment#0" expanded="false" />
-                <element signature="e#7898#8869#0" expanded="true" />
-                <element signature="e#8854#8855#0" expanded="true" />
-                <element signature="e#10971#12012#0" expanded="true" />
-                <element signature="e#11997#11998#0" expanded="true" />
-                <element signature="e#12060#13045#0" expanded="true" />
-                <element signature="e#13030#13031#0" expanded="true" />
-                <element signature="e#13117#13125#0" expanded="true" />
-                <element signature="method#addComments#0;class#SingleImageFragment#0" expanded="false" />
-                <element signature="method#getIndents#0;class#SingleImageFragment#0" expanded="false" />
-                <element signature="class#ViewHolder#0;class#SingleImageFragment#0" expanded="false" />
-                <element signature="method#CommentAdapter#0;class#CommentAdapter#0;class#SingleImageFragment#0" expanded="false" />
+                <element signature="imports" expanded="true" />
+                <element signature="class#GridItemClickListener#0;class#GalleryFragment#0" expanded="false" />
+                <element signature="method#onPause#0;class#GalleryFragment#0" expanded="false" />
+                <element signature="e#16755#18594#0" expanded="true" />
+                <element signature="e#18583#18584#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="image_view.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="39" selection-start="2823" selection-end="2823" vertical-scroll-proportion="-17.4" vertical-offset="772" max-vertical-offset="1394">
-              <folding />
             </state>
           </provider>
         </entry>
@@ -145,19 +129,46 @@
       <file leaf-file-name="ImagesFragment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="76" column="13" selection-start="1957" selection-end="1957" vertical-scroll-proportion="0.0" vertical-offset="220" max-vertical-offset="816">
+            <state line="98" column="60" selection-start="3189" selection-end="3299" vertical-scroll-proportion="-9.9" vertical-offset="1171" max-vertical-offset="3196">
               <folding>
-                <element signature="method#ImagesFragment#0;class#ImagesFragment#0" expanded="false" />
-                <element signature="method#setImageCall#0;class#ImagesFragment#0" expanded="false" />
-                <element signature="method#onCreate#0;class#ImagesFragment#0" expanded="false" />
-                <element signature="method#onCreateOptionsMenu#0;class#ImagesFragment#0" expanded="false" />
-                <element signature="method#onOptionsItemSelected#0;class#ImagesFragment#0" expanded="false" />
-                <element signature="method#onCreateView#0;class#ImagesFragment#0" expanded="false" />
-                <element signature="class#ImageAdapter#0;class#ImagesFragment#0" expanded="false" />
-                <element signature="class#GridItemClickListener#0;class#ImagesFragment#0" expanded="false" />
-                <element signature="method#selectItem#0;class#ImagesFragment#0" expanded="false" />
-                <element signature="method#onDestroyView#0;class#ImagesFragment#0" expanded="false" />
+                <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SingleImageFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="451" column="99" selection-start="21662" selection-end="21662" vertical-scroll-proportion="0.0" vertical-offset="3667" max-vertical-offset="7820">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AlbumsFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="164" column="5" selection-start="5456" selection-end="5456" vertical-scroll-proportion="0.0" vertical-offset="2073" max-vertical-offset="2669">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MessagingFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="336" column="5" selection-start="14037" selection-end="14335" vertical-scroll-proportion="-12.769231" vertical-offset="4615" max-vertical-offset="5185">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AccountFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="116" column="25" selection-start="5305" selection-end="5305" vertical-scroll-proportion="0.0" vertical-offset="4164" max-vertical-offset="4760">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -217,22 +228,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/ImgurHolo/.gitignore" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SettingsFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_layout.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/message_layout.xml" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/comment_list_item.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/menu/main.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/JSONParcelable.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SettingsFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" />
       </list>
     </option>
   </component>
@@ -275,6 +286,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -435,8 +448,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -662,7 +673,6 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17929563" sideWeight="0.6895787" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35698447" sideWeight="0.49733192" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3104213" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
@@ -682,6 +692,7 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17929563" sideWeight="0.6895787" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -774,68 +785,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/drawable-hdpi/green_rating_favorite.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="124" column="45" selection-start="4310" selection-end="4310" vertical-scroll-proportion="-0.10616438" vertical-offset="2201" max-vertical-offset="5576">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2328#2336#0" expanded="true" />
-            <element signature="e#4642#5222#0" expanded="true" />
-            <element signature="e#5211#5212#0" expanded="true" />
-            <element signature="e#5252#5421#0" expanded="true" />
-            <element signature="e#5410#5411#0" expanded="true" />
-            <element signature="e#7996#8577#0" expanded="true" />
-            <element signature="e#8558#8559#0" expanded="true" />
-            <element signature="e#8646#10164#0" expanded="true" />
-            <element signature="e#9217#9851#0" expanded="true" />
-            <element signature="e#9816#9817#0" expanded="true" />
-            <element signature="e#9881#10114#0" expanded="true" />
-            <element signature="e#10087#10088#0" expanded="true" />
-            <element signature="e#10145#10146#0" expanded="true" />
-            <element signature="e#10233#11684#0" expanded="true" />
-            <element signature="e#10830#11221#0" expanded="true" />
-            <element signature="e#11182#11183#0" expanded="true" />
-            <element signature="e#11251#11500#0" expanded="true" />
-            <element signature="e#11469#11470#0" expanded="true" />
-            <element signature="e#11665#11666#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/drawable-hdpi/collections_sort_by_size.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="38" selection-start="2056" selection-end="2056" vertical-scroll-proportion="0.0" vertical-offset="441" max-vertical-offset="1394">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/menu/main.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="49" selection-start="3216" selection-end="3216" vertical-scroll-proportion="0.0" vertical-offset="390" max-vertical-offset="1666">
-          <folding>
-            <element signature="e#133#157#0" expanded="false" />
-            <element signature="e#133#157#0" expanded="false" />
-            <element signature="e#391#411#0" expanded="false" />
-            <element signature="e#641#663#0" expanded="false" />
-            <element signature="e#893#914#0" expanded="false" />
-            <element signature="e#1148#1173#0" expanded="false" />
-            <element signature="e#1658#1679#0" expanded="false" />
-            <element signature="e#3328#3347#0" expanded="false" />
-            <element signature="e#3578#3601#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/comment_list_item.xml">
       <provider editor-type-id="android-designer">
         <state />
@@ -855,52 +804,7 @@
     </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/android/widget/ArrayAdapter.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="11" selection-start="366" selection-end="366" vertical-scroll-proportion="0.22818792" vertical-offset="0" max-vertical-offset="1037">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="348" column="68" selection-start="15056" selection-end="15056" vertical-scroll-proportion="0.25438598" vertical-offset="5771" max-vertical-offset="6596">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2746#3141#0" expanded="true" />
-            <element signature="e#3122#3123#0" expanded="true" />
-            <element signature="e#3171#3372#0" expanded="true" />
-            <element signature="e#3353#3354#0" expanded="true" />
-            <element signature="e#14927#16147#0" expanded="true" />
-            <element signature="e#16136#16137#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SettingsFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="107" column="19" selection-start="4481" selection-end="4481" vertical-scroll-proportion="1.283557" vertical-offset="816" max-vertical-offset="2329">
-          <folding>
-            <element signature="e#2891#4198#0" expanded="true" />
-            <element signature="e#4171#4172#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="76" column="13" selection-start="1957" selection-end="1957" vertical-scroll-proportion="0.0" vertical-offset="220" max-vertical-offset="816">
-          <folding>
-            <element signature="method#ImagesFragment#0;class#ImagesFragment#0" expanded="false" />
-            <element signature="method#setImageCall#0;class#ImagesFragment#0" expanded="false" />
-            <element signature="method#onCreate#0;class#ImagesFragment#0" expanded="false" />
-            <element signature="method#onCreateOptionsMenu#0;class#ImagesFragment#0" expanded="false" />
-            <element signature="method#onOptionsItemSelected#0;class#ImagesFragment#0" expanded="false" />
-            <element signature="method#onCreateView#0;class#ImagesFragment#0" expanded="false" />
-            <element signature="class#ImageAdapter#0;class#ImagesFragment#0" expanded="false" />
-            <element signature="class#GridItemClickListener#0;class#ImagesFragment#0" expanded="false" />
-            <element signature="method#selectItem#0;class#ImagesFragment#0" expanded="false" />
-            <element signature="method#onDestroyView#0;class#ImagesFragment#0" expanded="false" />
-          </folding>
-        </state>
+        <state line="9" column="11" selection-start="366" selection-end="366" vertical-scroll-proportion="0.22818792" vertical-offset="0" max-vertical-offset="1037" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_layout.xml">
@@ -923,42 +827,91 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/java/lang/String.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="26" selection-start="2323" selection-end="2323" vertical-scroll-proportion="0.33221477" vertical-offset="822" max-vertical-offset="3145" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml">
       <provider editor-type-id="android-designer">
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="39" selection-start="2823" selection-end="2823" vertical-scroll-proportion="-17.4" vertical-offset="772" max-vertical-offset="1394">
+        <state line="71" column="39" selection-start="2823" selection-end="2823" vertical-scroll-proportion="0.7618214" vertical-offset="772" max-vertical-offset="1394">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="379" column="5" selection-start="15437" selection-end="16165" vertical-scroll-proportion="-43.923077" vertical-offset="5063" max-vertical-offset="7361">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="class#GridItemClickListener#0;class#GalleryFragment#0" expanded="false" />
+            <element signature="method#onPause#0;class#GalleryFragment#0" expanded="false" />
+            <element signature="e#16755#18594#0" expanded="true" />
+            <element signature="e#18583#18584#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SettingsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="147" column="5" selection-start="6598" selection-end="6598" vertical-scroll-proportion="0.7718121" vertical-offset="1699" max-vertical-offset="2295">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/JSONParcelable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="16" selection-start="609" selection-end="617" vertical-scroll-proportion="-1.2070175" vertical-offset="1181" max-vertical-offset="1751">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="451" column="99" selection-start="21662" selection-end="21662" vertical-scroll-proportion="0.0" vertical-offset="3667" max-vertical-offset="7820">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="164" column="5" selection-start="5456" selection-end="5456" vertical-scroll-proportion="0.0" vertical-offset="2073" max-vertical-offset="2669">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="98" column="60" selection-start="3189" selection-end="3299" vertical-scroll-proportion="-9.9" vertical-offset="1171" max-vertical-offset="3196">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="336" column="5" selection-start="14037" selection-end="14335" vertical-scroll-proportion="-12.769231" vertical-offset="4615" max-vertical-offset="5185">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="116" column="25" selection-start="5305" selection-end="5305" vertical-scroll-proportion="0.0" vertical-offset="4164" max-vertical-offset="4760">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="527" column="9" selection-start="21371" selection-end="21371" vertical-scroll-proportion="-115.42308" vertical-offset="5261" max-vertical-offset="11067">
+        <state line="683" column="56" selection-start="28776" selection-end="28776" vertical-scroll-proportion="0.7432886" vertical-offset="10471" max-vertical-offset="11067">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="177" column="48" selection-start="8001" selection-end="8001" vertical-scroll-proportion="0.32933104" vertical-offset="2137" max-vertical-offset="7055">
-          <folding>
-            <element signature="docComment;class#SingleImageFragment#0" expanded="false" />
-            <element signature="method#SingleImageFragment#0;class#SingleImageFragment#0" expanded="false" />
-            <element signature="method#setParams#0;class#SingleImageFragment#0" expanded="false" />
-            <element signature="e#7898#8869#0" expanded="true" />
-            <element signature="e#8854#8855#0" expanded="true" />
-            <element signature="e#10971#12012#0" expanded="true" />
-            <element signature="e#11997#11998#0" expanded="true" />
-            <element signature="e#12060#13045#0" expanded="true" />
-            <element signature="e#13030#13031#0" expanded="true" />
-            <element signature="e#13117#13125#0" expanded="true" />
-            <element signature="method#addComments#0;class#SingleImageFragment#0" expanded="false" />
-            <element signature="method#getIndents#0;class#SingleImageFragment#0" expanded="false" />
-            <element signature="class#ViewHolder#0;class#SingleImageFragment#0" expanded="false" />
-            <element signature="method#CommentAdapter#0;class#CommentAdapter#0;class#SingleImageFragment#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>

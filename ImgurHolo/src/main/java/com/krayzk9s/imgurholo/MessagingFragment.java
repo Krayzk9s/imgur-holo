@@ -24,12 +24,15 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Created by Kurt Zimmer on 7/24/13.
  */
 public class MessagingFragment extends Fragment {
     MessageAdapter messageAdapter;
     ListView mDrawerList;
+    ArrayList<JSONParcelable> messageDataArray;
 
     public MessagingFragment() {
 
@@ -73,33 +76,46 @@ public class MessagingFragment extends Fragment {
                 R.layout.message_layout, mMenuList);
         mDrawerList.setAdapter(tempAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        if(savedInstanceState == null)
+        {
+            AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
+                @Override
+                protected JSONObject doInBackground(Void... voids) {
+                    MainActivity activity = (MainActivity) getActivity();
+                    JSONObject messages = activity.makeGetCall("/3/account/me/notifications/messages?new=false");
+                    return messages;
+                }
 
-        AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
-            @Override
-            protected JSONObject doInBackground(Void... voids) {
-                MainActivity activity = (MainActivity) getActivity();
-                JSONObject messages = activity.makeGetCall("/3/account/me/notifications/messages?new=false");
-                return messages;
-            }
-
-            @Override
-            protected void onPostExecute(JSONObject messages) {
-                addMessages(messages);
-            }
-        };
-        async.execute();
+                @Override
+                protected void onPostExecute(JSONObject messages) {
+                    addMessages(messages);
+                }
+            };
+            async.execute();
+        }
+        else
+        {
+            messageDataArray = savedInstanceState.getParcelableArrayList("content");
+            messageAdapter.addAll(messageDataArray);
+            mDrawerList.setAdapter(messageAdapter);
+            messageAdapter.notifyDataSetChanged();
+        }
         return view;
     }
 
     private void addMessages(JSONObject messages) {
         try {
+            messageDataArray = new ArrayList<JSONParcelable>();
             JSONArray data = messages.getJSONArray("data");
             for (int i = 0; i < data.length(); i++) {
                 JSONObject message = data.getJSONObject(i);
-                messageAdapter.add(message);
+                JSONParcelable dataParcel = new JSONParcelable();
+                dataParcel.setJSONObject(message);
+                messageDataArray.add(dataParcel);
             }
+            messageAdapter.addAll(messageDataArray);
         } catch (Exception e) {
-            Log.e("Error!", e.toString());
+            Log.e("Error!", "adding messages" + e.toString());
         }
         mDrawerList.setAdapter(messageAdapter);
         messageAdapter.notifyDataSetChanged();
@@ -165,7 +181,7 @@ public class MessagingFragment extends Fragment {
         }
     }
 
-    public class MessageAdapter extends ArrayAdapter<JSONObject> {
+    public class MessageAdapter extends ArrayAdapter<JSONParcelable> {
         JSONObject messageData;
         JSONObject messageContent;
         private LayoutInflater mInflater;
@@ -193,8 +209,9 @@ public class MessagingFragment extends Fragment {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            messageData = this.getItem(position);
+            messageData = this.getItem(position).getJSONObject();
             try {
+
                 messageContent = messageData.getJSONObject("content");
                 holder.body.setText(messageContent.getString("body"));
                 holder.title.setText(messageContent.getString("subject"));
@@ -264,7 +281,7 @@ public class MessagingFragment extends Fragment {
                 });
                 convertView.setTag(holder);
             } catch (Exception e) {
-                Log.e("Error!", e.toString());
+                Log.e("Error!", "error in getting view" + e.toString());
             }
             return convertView;
         }
@@ -318,5 +335,10 @@ public class MessagingFragment extends Fragment {
             return null;
         }
     }
-
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelableArrayList("content", messageDataArray);
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
 }

@@ -39,7 +39,6 @@ public class AccountFragment extends Fragment {
     @Override
     public void onCreate(Bundle save) {
         super.onCreate(save);
-        setRetainInstance(true);
     }
 
     @Override
@@ -52,6 +51,7 @@ public class AccountFragment extends Fragment {
                 R.layout.drawer_list_item, mMenuList);
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        if(savedInstanceState == null) {
         accountData = new HashMap<String, String>();
         AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -106,27 +106,37 @@ public class AccountFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                mMenuList[0] = mMenuList[0] + " (" + accountData.get("total_albums") + ")";
-                mMenuList[1] = mMenuList[1] + " (" + accountData.get("total_images") + ")";
-                mMenuList[2] = mMenuList[2] + " (" + accountData.get("total_likes") + ")";
-                //mMenuList[3] = mMenuList[3] + " (" + accountData.get("total_comments") + ")";
-                //mMenuList[4] = mMenuList[4] + " (" + accountData.get("total_messages") + ")";
-                mMenuList[5] = mMenuList[5] + " " + accountData.get("created");
-                if (accountData.get("bio") != "null")
-                    mMenuList[6] = accountData.get("bio");
-                else
-                    mMenuList[6] = "No Biography";
-                mMenuList[7] = "Your imgur e-mail is " + accountData.get("email");
-                mMenuList[8] = "Your albums are " + accountData.get("album_privacy");
-                mMenuList[9] = "Your images are " + accountData.get("public_images");
-                mMenuList[10] = "Your messaging is " + accountData.get("messaging_enabled");
-                mMenuList[11] = mMenuList[11] + " - " + accountData.get("disk_used");
-                mMenuList[12] = mMenuList[12] + " - " + accountData.get("bandwidth_used");
-                adapter.notifyDataSetChanged();
+               updateData();
             }
         };
         async.execute();
+        }
+        else {
+            Bundle extras = savedInstanceState.getBundle("accountData");
+            accountData = (HashMap<String, String>) extras.getSerializable("HashMap");
+            updateData();
+        }
         return view;
+    }
+
+    private void updateData() {
+        mMenuList[0] = mMenuList[0] + " (" + accountData.get("total_albums") + ")";
+        mMenuList[1] = mMenuList[1] + " (" + accountData.get("total_images") + ")";
+        mMenuList[2] = mMenuList[2] + " (" + accountData.get("total_likes") + ")";
+        //mMenuList[3] = mMenuList[3] + " (" + accountData.get("total_comments") + ")";
+        //mMenuList[4] = mMenuList[4] + " (" + accountData.get("total_messages") + ")";
+        mMenuList[5] = mMenuList[5] + " " + accountData.get("created");
+        if (accountData.get("bio") != "null")
+            mMenuList[6] = accountData.get("bio");
+        else
+            mMenuList[6] = "No Biography";
+        mMenuList[7] = "Your imgur e-mail is " + accountData.get("email");
+        mMenuList[8] = "Your albums are " + accountData.get("album_privacy");
+        mMenuList[9] = "Your images are " + accountData.get("public_images");
+        mMenuList[10] = "Your messaging is " + accountData.get("messaging_enabled");
+        mMenuList[11] = mMenuList[11] + " - " + accountData.get("disk_used");
+        mMenuList[12] = mMenuList[12] + " - " + accountData.get("bandwidth_used");
+        adapter.notifyDataSetChanged();
     }
 
     private void selectItem(int position) {
@@ -287,5 +297,14 @@ public class AccountFragment extends Fragment {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        Bundle extras = new Bundle();
+        extras.putSerializable("HashMap",accountData);
+        savedInstanceState.putBundle("accountData", extras);
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 }

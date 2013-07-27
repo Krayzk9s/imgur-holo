@@ -39,7 +39,7 @@ import java.util.List;
 public class GalleryFragment extends Fragment {
 
     private ArrayList<String> urls;
-    private ArrayList<JSONObject> ids;
+    private ArrayList<JSONParcelable> ids;
     ImageAdapter imageAdapter;
     String sort;
     String gallery;
@@ -50,6 +50,8 @@ public class GalleryFragment extends Fragment {
     String window;
     ArrayAdapter<CharSequence> mSpinnerAdapter;
     ActionBar actionBar;
+    int firstPass = 0;
+    int selectedIndex;
 
     public GalleryFragment() {
 
@@ -136,15 +138,37 @@ public class GalleryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        page = 0;
-        subreddit = "pics";
-        memeType = "top";
-        gallery = "hot";
-        sort = "viral";
-        window = "day";
+        if(savedInstanceState != null)
+        {
+
+            gallery = savedInstanceState.getString("gallery");
+            sort = savedInstanceState.getString("sort");
+            window = savedInstanceState.getString("window");
+            subreddit = savedInstanceState.getString("subreddit");
+            urls = savedInstanceState.getStringArrayList("urls");
+            try {
+                ids = savedInstanceState.getParcelableArrayList("ids");
+            }
+            catch (Exception e)
+            {
+                Log.e("Error!", e.toString());
+            }
+            page = savedInstanceState.getInt("page");
+            selectedIndex = savedInstanceState.getInt("selectedIndex");
+        }
+        else {
+            page = 0;
+            subreddit = "pics";
+            memeType = "top";
+            gallery = "hot";
+            sort = "viral";
+            window = "day";
+            urls = new ArrayList<String>();
+            ids = new ArrayList<JSONParcelable>();
+            selectedIndex = 0;
+        }
         setupActionBar(false);
-        urls = new ArrayList<String>();
-        ids = new ArrayList<JSONObject>();
+        Log.d("NOT HERE EITHER", gallery);
         View view = inflater.inflate(R.layout.image_layout, container, false);
         GridView gridview = (GridView) view;
         imageAdapter = new ImageAdapter(view.getContext());
@@ -216,7 +240,7 @@ public class GalleryFragment extends Fragment {
 
     private void makeGallery() {
         urls = new ArrayList<String>();
-        ids = new ArrayList<JSONObject>();
+        ids = new ArrayList<JSONParcelable>();
         imageAdapter.notifyDataSetChanged();
         MainActivity activity = (MainActivity) getActivity();
         activity.invalidateOptionsMenu();
@@ -241,7 +265,7 @@ public class GalleryFragment extends Fragment {
                 try {
                     Log.d("URI", imagesData.toString());
                     urls = new ArrayList<String>();
-                    ids = new ArrayList<JSONObject>();
+                    ids = new ArrayList<JSONParcelable>();
                     JSONArray imageArray = imagesData.getJSONArray("data");
                     int imageLength = Math.min(30, imageArray.length());
                     for (int i = 0; i < imageLength; i++) {
@@ -250,7 +274,9 @@ public class GalleryFragment extends Fragment {
                         if (imageData.has("is_album") && imageData.getBoolean("is_album"))
                             continue;
                         urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
-                        ids.add(imageData);
+                        JSONParcelable dataParcel = new JSONParcelable();
+                        dataParcel.setJSONObject(imageData);
+                        ids.add(dataParcel);
                     }
                 } catch (Exception e) {
                     Log.e("Error!", e.toString());
@@ -305,7 +331,7 @@ public class GalleryFragment extends Fragment {
     }
 
     public void selectItem(int position) {
-        JSONObject id = ids.get(position);
+        JSONObject id = ids.get(position).getJSONObject();
         SingleImageFragment fragment = new SingleImageFragment();
         fragment.setGallery(true);
         fragment.setParams(id);
@@ -324,16 +350,33 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(gallery.equals("subreddit"))
-            setupActionBar(true);
-        else
-            setupActionBar(false);
+        //if(gallery.equals("subreddit"))
+           // setupActionBar(true);
+        //else
+            //setupActionBar(false);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        async.cancel(true);
+        if(async != null)
+            async.cancel(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putString("gallery", gallery);
+        savedInstanceState.putString("sort", sort);
+        savedInstanceState.putString("window", window);
+        savedInstanceState.putString("subreddit", subreddit);
+        savedInstanceState.putStringArrayList("urls", urls);
+        savedInstanceState.putParcelableArrayList("ids", ids);
+        savedInstanceState.putInt("page", page);
+        savedInstanceState.putInt("selectedIndex", selectedIndex);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     private void setupActionBar(boolean subreddit) {
@@ -347,7 +390,9 @@ public class GalleryFragment extends Fragment {
         ActionBar.OnNavigationListener mNavigationCallback = new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int i, long l) {
+                Log.d("URI", String.valueOf(firstPass));
                 page = 0;
+                if(firstPass > 1) {
                 switch (i) {
                     case 0:
                         gallery = "hot";
@@ -369,15 +414,29 @@ public class GalleryFragment extends Fragment {
                         gallery = "random";
                         break;
                 }
+                    selectedIndex = i;
                 if(mSpinnerAdapter.getCount() > 5 && !gallery.equals("subreddit"))
                     mSpinnerAdapter.remove(mSpinnerAdapter.getItem(5));
                 Log.d("URI", gallery);
                 Log.d("URI", "" + i);
-                Log.d("URI", "" + l);
                 makeGallery();
+                }
+                else {
+                    Log.d("URI4", String.valueOf(firstPass));
+                    Log.d("index", String.valueOf(selectedIndex));
+                    actionBar.setSelectedNavigationItem(selectedIndex);
+                    if(selectedIndex == 0)
+                        firstPass += 2;
+                    else
+                        firstPass++;
+                    Log.d("URI2", String.valueOf(firstPass));
+                }
+                Log.d("URI3", String.valueOf(firstPass));
                 return true;
             }
         };
         actionBar.setListNavigationCallbacks(mSpinnerAdapter, mNavigationCallback);
     }
+
+
 }

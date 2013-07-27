@@ -449,6 +449,10 @@ public class SingleImageFragment extends Fragment {
                             viewHolder.buttons.setVisibility(View.GONE);
                     }
                 });
+                if(imageData.getString("vote") != null && imageData.getString("vote").equals("up"))
+                    holder.upvote.setImageResource(R.drawable.green_rating_good);
+                else if(imageData.getString("vote") != null && imageData.getString("vote").equals("down"))
+                    holder.downvote.setImageResource(R.drawable.red_rating_bad);
                 holder.reply.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

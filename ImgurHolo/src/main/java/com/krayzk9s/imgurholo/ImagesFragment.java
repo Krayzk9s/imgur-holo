@@ -30,7 +30,7 @@ import java.util.ArrayList;
 public class ImagesFragment extends Fragment {
 
     private ArrayList<String> urls;
-    private ArrayList<JSONObject> ids;
+    private ArrayList<JSONParcelable> ids;
     ImageAdapter imageAdapter;
     AsyncTask<Void, Void, Void> async;
     String imageCall;
@@ -77,13 +77,14 @@ public class ImagesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         urls = new ArrayList<String>();
-        ids = new ArrayList<JSONObject>();
+        ids = new ArrayList<JSONParcelable>();
         View view = inflater.inflate(R.layout.image_layout, container, false);
         GridView gridview = (GridView) view;
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());
-
+        if(savedInstanceState == null)
+        {
         async = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -94,7 +95,9 @@ public class ImagesFragment extends Fragment {
                     for (int i = 0; i < imageArray.length(); i++) {
                         JSONObject imageData = imageArray.getJSONObject(i);
                         urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
-                        ids.add(imageData);
+                        JSONParcelable dataParcel = new JSONParcelable();
+                        dataParcel.setJSONObject(imageData);
+                        ids.add(dataParcel);
                     }
                 } catch (Exception e) {
                     Log.e("Error!", e.toString());
@@ -108,6 +111,12 @@ public class ImagesFragment extends Fragment {
             }
         };
         async.execute();
+        }
+        else
+        {
+            urls = savedInstanceState.getStringArrayList("urls");
+            ids = savedInstanceState.getParcelableArrayList("ids");
+        }
         return gridview;
     }
 
@@ -150,7 +159,7 @@ public class ImagesFragment extends Fragment {
     }
 
     public void selectItem(int position) {
-        JSONObject id = ids.get(position);
+        JSONObject id = ids.get(position).getJSONObject();
         SingleImageFragment fragment = new SingleImageFragment();
         fragment.setParams(id);
         MainActivity activity = (MainActivity) getActivity();
@@ -160,6 +169,14 @@ public class ImagesFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        async.cancel(true);
+        if(async != null)
+            async.cancel(true);
+    }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putStringArrayList("urls", urls);
+        savedInstanceState.putParcelableArrayList("ids", ids);
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 }
