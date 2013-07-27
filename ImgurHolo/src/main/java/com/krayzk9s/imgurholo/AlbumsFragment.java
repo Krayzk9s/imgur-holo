@@ -1,6 +1,8 @@
 package com.krayzk9s.imgurholo;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,8 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -55,9 +59,34 @@ public class AlbumsFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
+        MainActivity activity = (MainActivity) getActivity();
         switch (item.getItemId()) {
             case R.id.action_new:
-                //select images
+                final EditText newTitle = new EditText(activity);
+                newTitle.setSingleLine();
+                final EditText newDescription = new EditText(activity);
+                newDescription.setHint("Body");
+                LinearLayout linearLayout = new LinearLayout(activity);
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+                linearLayout.addView(newTitle);
+                linearLayout.addView(newDescription);
+                new AlertDialog.Builder(activity).setTitle("New Album")
+                        .setView(linearLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        try {
+                            Log.d("Header", newTitle.getText().toString());
+                            NewAlbumAsync messagingAsync = new NewAlbumAsync(newTitle.getText().toString(), newDescription.getText().toString());
+                            messagingAsync.execute();
+                        } catch (Exception e) {
+                            Log.e("Error!", "oops, some text fields missing values");
+                        }
+
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Do nothing.
+                    }
+                }).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -152,6 +181,7 @@ public class AlbumsFragment extends Fragment {
     public void selectItem(int position) {
         String id = ids.get(position);
         ImagesFragment fragment = new ImagesFragment();
+        fragment.albumId = id;
         fragment.setImageCall(true, "/3/album/" + id + "/images");
         MainActivity activity = (MainActivity) getActivity();
         activity.changeFragment(fragment);
@@ -169,5 +199,22 @@ public class AlbumsFragment extends Fragment {
         super.onDestroyView();
         if(async != null)
             async.cancel(true);
+    }
+
+    private class NewAlbumAsync extends AsyncTask<Void, Void, Void> {
+        private String title;
+        private String description;
+
+        public NewAlbumAsync(String _title, String _description) {
+            title = _title;
+            description = _description;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            MainActivity activity = (MainActivity) getActivity();
+            activity.makeNewAlbum(title, description);
+            return null;
+        }
     }
 }

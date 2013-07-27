@@ -9,12 +9,9 @@
     <string name="action_search">Search</string>
     <string name="action_message">New Message</string>
     <string name="action_new">New</string>
-
     <string name="drawer_open">Opening Drawer</string>
     <string name="drawer_close">Closing Drawer</string>
-
     <string name="app_not_available">App Not Available</string>
-
     <string name="menu_account">Your Account</string>
     <string name="menu_login">Login</string>
     <string name="menu_gallery">Gallery</string>
@@ -25,7 +22,6 @@
     <string name="menu_messages">Messages</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_logout">Logout</string>
-
     <string name="menu_comments">Your Comments</string>
     <string name="menu_likes">Your Likes</string>
     <string name="menu_disk_used">Disk Used</string>
@@ -37,40 +33,33 @@
     <string name="messaging_enabled">Enable/Disable Messaging</string>
     <string name="menu_bandwidth_used">Bandwidth Used</string>
     <string name="menu_account_settings">Settings</string>
-
     <string name="image_type">Image Type</string>
     <string name="size">Size</string>
     <string name="views">Views</string>
-
     <string name="hot">hot</string>
     <string name="top">top</string>
     <string name="random">random</string>
     <string name="user_submitted">user</string>
     <string name="memes">memes</string>
-
     <string name="subreddit">SubReddit</string>
-
     <string name="action_copy">Copy URLs</string>
     <string name="action_delete">Delete Images</string>
     <string name="action_sort">Sort Gallery</string>
-
     <string name="fifty">50</string>
     <string name="one_hundred">100</string>
     <string name="two_hundred">200</string>
     <string name="all">All</string>
-
     <string name="private_string">Private</string>
     <string name="public_string">Public</string>
-
     <string name="enable_messaging">Enable Messaging</string>
     <string name="disable_messaging">Disable Messaging</string>
-
     <string name="link">Link</string>
     <string name="direct_link">Direct Link</string>
     <string name="html_link">HTML Image</string>
     <string name="bbcode_link">BBCode (Forums)</string>
     <string name="linked_bbcode_link">Linked BBCode</string>
     <string name="markdown_link">Markdown Link (Reddit)</string>
-
+    <string name="title_activity_image_select">ImageSelectActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -39,6 +40,20 @@ public class AccountFragment extends Fragment {
     @Override
     public void onCreate(Bundle save) {
         super.onCreate(save);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        MainActivity activity = (MainActivity) getActivity();
+        switch (item.getItemId()) {
+            case R.id.action_new:
+                Log.d("Adding", "new images to album");
+                break;
+            default:
+                Log.d("Error!", "no action for that...");
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

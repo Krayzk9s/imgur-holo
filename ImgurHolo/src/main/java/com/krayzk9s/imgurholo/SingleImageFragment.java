@@ -487,7 +487,7 @@ public class SingleImageFragment extends Fragment {
                             MainActivity activity = (MainActivity) getActivity();
                             final EditText newBody = new EditText(activity);
                             newBody.setHint("Body");
-                            new AlertDialog.Builder(activity).setTitle("Send Message")
+                            new AlertDialog.Builder(activity).setTitle("Reply to Comment")
                                     .setView(newBody).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {

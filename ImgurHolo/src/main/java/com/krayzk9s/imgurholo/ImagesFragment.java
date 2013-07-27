@@ -1,10 +1,12 @@
 package com.krayzk9s.imgurholo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Checkable;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -35,6 +39,11 @@ public class ImagesFragment extends Fragment {
     AsyncTask<Void, Void, Void> async;
     String imageCall;
     boolean isAlbum;
+    GridView gridview;
+    public boolean selecting = false;
+    MultiChoiceModeListener multiChoiceModeListener;
+    ArrayList<String> intentReturn;
+    String albumId;
 
     public ImagesFragment() {
 
@@ -66,10 +75,27 @@ public class ImagesFragment extends Fragment {
         // handle item selection
         switch (item.getItemId()) {
             case R.id.action_new:
+                Intent i = new Intent(this.getActivity().getApplicationContext(), ImageSelectActivity.class);
+                startActivityForResult(i, 1);
                 //select image
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode,int resultCode, Intent data)
+    {
+        AddImagesToAlbum imageAsync;
+        ArrayList<String> imageIds;
+        switch(requestCode) {
+            case 1:
+                super.onActivityResult(requestCode, resultCode, data);
+                imageIds = data.getStringArrayListExtra("data");
+                Log.d("Ids!", imageIds.toString());
+                imageAsync = new AddImagesToAlbum(imageIds, true);
+                imageAsync.execute();
+                break;
         }
     }
 
@@ -79,10 +105,13 @@ public class ImagesFragment extends Fragment {
         urls = new ArrayList<String>();
         ids = new ArrayList<JSONParcelable>();
         View view = inflater.inflate(R.layout.image_layout, container, false);
-        GridView gridview = (GridView) view;
+        gridview = (GridView) view;
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());
+        gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
+        multiChoiceModeListener = new MultiChoiceModeListener();
+        gridview.setMultiChoiceModeListener(multiChoiceModeListener);
         if(savedInstanceState == null)
         {
         async = new AsyncTask<Void, Void, Void>() {
@@ -117,10 +146,13 @@ public class ImagesFragment extends Fragment {
             urls = savedInstanceState.getStringArrayList("urls");
             ids = savedInstanceState.getParcelableArrayList("ids");
         }
+
         return gridview;
     }
 
     public class ImageAdapter extends BaseAdapter {
+        CheckableLayout l;
+        SquareImageView i;
         private Context mContext;
 
         public ImageAdapter(Context c) {
@@ -142,13 +174,19 @@ public class ImagesFragment extends Fragment {
 
         // create a new ImageView for each item referenced by the Adapter
         public View getView(int position, View convertView, ViewGroup parent) {
-            final ImageView imageView = new SquareImageView(mContext);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            UrlImageViewHelper.setUrlDrawable(imageView, urls.get(position), R.drawable.icon);
-            return imageView;
+            if (convertView == null) {
+                i = new SquareImageView(mContext);
+                i.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                l = new CheckableLayout((MainActivity)getActivity());
+                l.setPadding(8,8,8,8);
+                l.addView(i);
+            } else {
+                l = (CheckableLayout) convertView;
+                i = (SquareImageView) l.getChildAt(0);
+            }
+            UrlImageViewHelper.setUrlDrawable(i, urls.get(position), R.drawable.icon);
+            return l;
         }
-
     }
 
     private class GridItemClickListener implements ListView.OnItemClickListener {
@@ -159,11 +197,14 @@ public class ImagesFragment extends Fragment {
     }
 
     public void selectItem(int position) {
+        if(!selecting) {
+
         JSONObject id = ids.get(position).getJSONObject();
         SingleImageFragment fragment = new SingleImageFragment();
         fragment.setParams(id);
         MainActivity activity = (MainActivity) getActivity();
         activity.changeFragment(fragment);
+        }
     }
 
     @Override
@@ -178,5 +219,107 @@ public class ImagesFragment extends Fragment {
         savedInstanceState.putParcelableArrayList("ids", ids);
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public class MultiChoiceModeListener implements GridView.MultiChoiceModeListener {
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.setTitle("Select Items");
+            mode.setSubtitle("One item selected");
+            return true;
+        }
+
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.images_multi, menu);
+            return true;
+        }
+
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            return true;
+        }
+
+        public void onDestroyActionMode(ActionMode mode) {
+
+
+            if (selecting) {
+                Intent intent = new Intent();
+                intent.putExtra("data", intentReturn);
+                ImageSelectActivity imageSelectActivity = (ImageSelectActivity) getActivity();
+                imageSelectActivity.setResult(imageSelectActivity.RESULT_OK, intent);
+                imageSelectActivity.finish();
+            }
+        }
+
+        private void getChecked() {
+            intentReturn = new ArrayList<String>();
+            try {
+                for(int i = 0; i < gridview.getCount(); i++) {
+                    if(gridview.isItemChecked(i))
+                        intentReturn.add(ids.get(i).getJSONObject().getString("id"));
+                }
+            }
+            catch (Exception e) {
+                Log.e("Error!", e.toString());
+            }
+        }
+
+        public void onItemCheckedStateChanged(ActionMode mode, int position, long id,
+                                              boolean checked) {
+            int selectCount = gridview.getCheckedItemCount();
+            Log.d("count", "" + selectCount);
+            switch (selectCount) {
+                case 1:
+                    mode.setSubtitle("One item selected");
+                    break;
+                default:
+                    mode.setSubtitle("" + selectCount + " items selected");
+                    break;
+            }
+        }
+    }
+    public class CheckableLayout extends FrameLayout implements Checkable {
+        private boolean mChecked;
+
+        public CheckableLayout(Context context) {
+            super(context);
+        }
+
+        public void setChecked(boolean checked) {
+            mChecked = checked;
+            setBackgroundDrawable(checked ?
+                    getResources().getDrawable(R.drawable.select_background)
+                    : null);
+        }
+
+        public boolean isChecked() {
+            return mChecked;
+        }
+
+        public void toggle() {
+            setChecked(!mChecked);
+        }
+
+    }
+
+    private class AddImagesToAlbum extends AsyncTask<Void, Void, Void> {
+        private ArrayList<String> imageIDsAsync;
+        boolean add;
+
+        public AddImagesToAlbum(ArrayList<String> _imageIDs, boolean _add) {
+            imageIDsAsync = _imageIDs;
+            add = _add;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            MainActivity activity = (MainActivity) getActivity();
+            String albumids = "";
+            for(int i = 0; i < imageIDsAsync.size(); i++) {
+                albumids += imageIDsAsync.get(i);
+            }
+            activity.editAlbum(albumids, albumId);
+            return null;
+        }
+
     }
 }

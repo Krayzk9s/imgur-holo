@@ -134,6 +134,7 @@ public class MainActivity extends FragmentActivity {
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
     }
 
+
     private class SendImage extends AsyncTask<Void, Void, Void> {
         Intent intent;
 
@@ -584,6 +585,56 @@ public class MainActivity extends FragmentActivity {
                     .header("X-Mashape-Authorization", MASHAPE_KEY)
                     .header("Authorization", "Bearer " + accessKey.getToken())
                     .field(accountSetting, settingValue)
+                    .asJson();
+        }
+    }
+
+    public void makeNewAlbum(String title, String description) {
+        Token accessKey = getAccessToken();
+        Log.d("Making Call", accessKey.toString());
+        HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "3/album/")
+                .header("accept", "application/json")
+                .header("X-Mashape-Authorization", MASHAPE_KEY)
+                .header("Authorization", "Bearer " + accessKey.getToken())
+                .field("title", title)
+                .field("description", description)
+                .asJson();
+        Log.d("Getting Code", String.valueOf(response.getCode()));
+        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
+        int code = response.getCode();
+        if (code == 403) {
+            accessKey = renewAccessToken();
+            Unirest.post(MASHAPE_URL + "3/album/")
+                    .header("accept", "application/json")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Bearer " + accessKey.getToken())
+                    .field("title", title)
+                    .field("description", description)
+                    .asJson();
+        }
+    }
+    public void editAlbum(String ids, String id) {
+        Token accessKey = getAccessToken();
+        Log.d("Making Call", accessKey.toString());
+        HttpResponse<JsonNode> response;
+           response = Unirest.post(MASHAPE_URL + "3/album/")
+                .header("accept", "application/json")
+                .header("X-Mashape-Authorization", MASHAPE_KEY)
+                .header("Authorization", "Bearer " + accessKey.getToken())
+                .field("ids", ids)
+                .field("id", id)
+                .asJson();
+        Log.d("Getting Code", String.valueOf(response.getCode()));
+        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
+        int code = response.getCode();
+        if (code == 403) {
+            accessKey = renewAccessToken();
+            Unirest.post(MASHAPE_URL + "3/album/")
+                    .header("accept", "application/json")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Bearer " + accessKey.getToken())
+                    .field("ids", ids)
+                    .field("id", id)
                     .asJson();
         }
     }
