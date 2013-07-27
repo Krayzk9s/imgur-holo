@@ -117,7 +117,9 @@ public class MainActivity extends FragmentActivity {
             mMenuList = getResources().getStringArray(R.array.imgurMenuListLoggedIn);
         else
             mMenuList = getResources().getStringArray(R.array.imgurMenuListLoggedOut);
-        mTitle = mDrawerTitle = getTitle();
+        mDrawerTitle = getTitle();
+        if(mTitle == null)
+            mTitle = "imgur Holo";
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         adapter = new ArrayAdapter<String>(this,
@@ -182,28 +184,33 @@ public class MainActivity extends FragmentActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         if (!settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery")) {
+            setTitle("Gallery");
             GalleryFragment galleryFragment = new GalleryFragment();
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, galleryFragment)
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Your Albums")) {
+            setTitle("Your Albums");
             AlbumsFragment albumsFragment = new AlbumsFragment();
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, albumsFragment)
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Your Images")) {
+            setTitle("Your Images");
             ImagesFragment imagesFragment = new ImagesFragment();
             imagesFragment.setImageCall(false, "3/account/me/images/0");
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Your Favorites")) {
+            setTitle("Your Favorites");
             ImagesFragment imagesFragment = new ImagesFragment();
             imagesFragment.setImageCall(false, "3/account/me/likes");
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Your Account")) {
+            setTitle("Your Account");
             AccountFragment accountFragment = new AccountFragment();
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, accountFragment)
@@ -352,14 +359,6 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    private void createGallery() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        GalleryFragment galleryFragment = new GalleryFragment();
-        fragmentManager.beginTransaction()
-                .replace(R.id.frame_layout, galleryFragment)
-                .commit();
-    }
-
     private void selectItem(int position) {
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
@@ -370,10 +369,15 @@ public class MainActivity extends FragmentActivity {
                 if (!loggedin)
                     login();
                 else
-                    createGallery();
+                    setTitle("Gallery");
+                    GalleryFragment galleryFragment = new GalleryFragment();
+                    fragmentManager.beginTransaction()
+                        .replace(R.id.frame_layout, galleryFragment)
+                        .commit();
                 break;
             case 1:
                 if (loggedin) {
+                    setTitle("Your Account");
                     AccountFragment accountFragment = new AccountFragment();
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, accountFragment)
@@ -382,6 +386,7 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 3:
                 if (loggedin) {
+                    setTitle("Your Images");
                     ImagesFragment imagesFragment = new ImagesFragment();
                     imagesFragment.setImageCall(false, "3/account/me/images/0");
                     fragmentManager.beginTransaction()
@@ -392,6 +397,7 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 4:
                 if (loggedin) {
+                    setTitle("Your Albums");
                     AlbumsFragment albumsFragment = new AlbumsFragment();
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, albumsFragment)
@@ -401,6 +407,7 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 5:
                 if (loggedin) {
+                    setTitle("Your Favorites");
                     ImagesFragment imagesFragment = new ImagesFragment();
                     imagesFragment.setImageCall(false, "3/account/me/likes");
                     fragmentManager.beginTransaction()
@@ -411,6 +418,7 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 6:
                 if (loggedin) {
+                    setTitle("Your Messages");
                     MessagingFragment messagingFragment = new MessagingFragment();
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, messagingFragment)
@@ -420,6 +428,7 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 7:
                 if (loggedin) {
+                    setTitle("Your Settings");
                     SettingsFragment settingsFragment = new SettingsFragment();
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, settingsFragment)
@@ -431,8 +440,8 @@ public class MainActivity extends FragmentActivity {
                 if (loggedin) {
                     SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                     SharedPreferences.Editor editor = settings.edit();
-                    //editor.remove("AccessToken");
-                    //editor.remove("RefreshToken");
+                    editor.remove("AccessToken");
+                    editor.remove("RefreshToken");
                     editor.commit();
                     loggedin = false;
                     updateMenu();
@@ -503,7 +512,10 @@ public class MainActivity extends FragmentActivity {
     public JSONObject makeGalleryReply(String imageId, String comment, String commentId) {
         Token accessKey = getAccessToken();
         Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "3/comment/")
+        HttpResponse<JsonNode> response;
+        if(commentId != null)
+        {
+            response = Unirest.post(MASHAPE_URL + "3/comment/")
                 .header("accept", "application/json")
                 .header("X-Mashape-Authorization", MASHAPE_KEY)
                 .header("Authorization", "Bearer " + accessKey.getToken())
@@ -511,18 +523,42 @@ public class MainActivity extends FragmentActivity {
                 .field("image_id", imageId)
                 .field("parent_id", commentId)
                 .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            Unirest.post(MASHAPE_URL + "3/comment")
+        }
+        else
+        {
+            response = Unirest.post(MASHAPE_URL + "3/comment/")
                     .header("accept", "application/json")
                     .header("X-Mashape-Authorization", MASHAPE_KEY)
                     .header("Authorization", "Bearer " + accessKey.getToken())
                     .field("comment", comment)
                     .field("image_id", imageId)
-                    .field("parent_id", commentId)
                     .asJson();
+        }
+        Log.d("Getting Code", String.valueOf(response.getCode()));
+        int code = response.getCode();
+        if (code == 403) {
+            accessKey = renewAccessToken();
+            if(commentId != null)
+            {
+                Unirest.post(MASHAPE_URL + "3/comment/")
+                        .header("accept", "application/json")
+                        .header("X-Mashape-Authorization", MASHAPE_KEY)
+                        .header("Authorization", "Bearer " + accessKey.getToken())
+                        .field("comment", comment)
+                        .field("image_id", imageId)
+                        .field("parent_id", commentId)
+                        .asJson();
+            }
+            else
+            {
+                Unirest.post(MASHAPE_URL + "3/comment/")
+                        .header("accept", "application/json")
+                        .header("X-Mashape-Authorization", MASHAPE_KEY)
+                        .header("Authorization", "Bearer " + accessKey.getToken())
+                        .field("comment", comment)
+                        .field("image_id", imageId)
+                        .asJson();
+            }
         }
         JSONObject data = response.getBody().getObject();
         Log.d("Got data", data.toString());

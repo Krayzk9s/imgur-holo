@@ -44,6 +44,11 @@ public class SingleImageFragment extends Fragment {
     CommentAdapter commentAdapter;
     View mainView;
     ListView commentLayout;
+    ImageButton imageUpvote;
+    ImageButton imageDownvote;
+    ImageButton imageFavorite;
+    ImageButton imageComment;
+    ImageButton imageReport;
 
     public SingleImageFragment() {
         inGallery = false;
@@ -141,8 +146,6 @@ public class SingleImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mainView = inflater.inflate(R.layout.single_image_layout, container, false);
-
-
         mMenuList = getResources().getStringArray(R.array.emptyList);
         commentAdapter = new CommentAdapter(mainView.getContext(),
                 R.id.comment_item);
@@ -153,6 +156,120 @@ public class SingleImageFragment extends Fragment {
         if (inGallery) {
             LinearLayout layout = (LinearLayout) imageLayoutView.findViewById(R.id.image_buttons);
             layout.setVisibility(View.VISIBLE);
+            imageUpvote = (ImageButton) imageLayoutView.findViewById(R.id.rating_good);
+            imageDownvote = (ImageButton) imageLayoutView.findViewById(R.id.rating_bad);
+            imageFavorite = (ImageButton) imageLayoutView.findViewById(R.id.rating_favorite);
+            imageComment = (ImageButton) imageLayoutView.findViewById(R.id.comment);
+            imageReport = (ImageButton) imageLayoutView.findViewById(R.id.report);
+            try {
+                if(imageData.getString("vote") != null && imageData.getString("vote").equals("up"))
+                    imageUpvote.setImageResource(R.drawable.green_rating_good);
+                else if (imageData.getString("vote") != null && imageData.getString("vote").equals("down"))
+                    imageDownvote.setImageResource(R.drawable.red_rating_bad);
+                if(imageData.getBoolean("favorite"))
+                    imageFavorite.setImageResource(R.drawable.green_rating_favorite);
+            }
+            catch (Exception e)
+            {
+                Log.e("Error!", e.toString());
+            }
+            imageFavorite.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imageFavorite.setImageResource(R.drawable.green_rating_favorite);
+                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            MainActivity activity = (MainActivity) getActivity();
+                            try {
+                                activity.makePostCall("3/image/" + imageData.getString("id") + "/favorite");
+                            }
+                            catch (Exception e)
+                            {
+                                Log.e("Error!", e.toString());
+                            }
+                            return null;
+                        }
+                    };
+                    async.execute();
+                }
+            });
+            imageComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        MainActivity activity = (MainActivity) getActivity();
+                        final EditText newBody = new EditText(activity);
+                        newBody.setHint("Body");
+                        new AlertDialog.Builder(activity).setTitle("Comment on Image")
+                                .setView(newBody).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                                    @Override
+                                    protected Void doInBackground(Void... voids) {
+                                        MainActivity activity = (MainActivity) getActivity();
+                                        try {
+                                            activity.makeGalleryReply(imageData.getString("id"), newBody.getText().toString(), null);
+                                        } catch (Exception e) {
+                                            Log.e("Error!", "oops, some text fields missing values" + e.toString());
+                                        }
+                                        return null;
+                                    }
+                                };
+                                async.execute();
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // Do nothing.
+                            }
+                        }).show();
+                    } catch (Exception e) {
+                        Log.e("Error!", "missing data");
+                    }
+                }
+            });
+            imageUpvote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imageUpvote.setImageResource(R.drawable.green_rating_good);
+                    imageDownvote.setImageResource(R.drawable.rating_bad);
+                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            MainActivity activity = (MainActivity) getActivity();
+                            try {
+                                activity.makePostCall("3/gallery/" + imageData.getString("id") + "/vote/up");
+                            }
+                            catch (Exception e)
+                            {
+                                Log.e("Error!", e.toString());
+                            }
+                            return null;
+                        }
+                    };
+                    async.execute();
+                }
+            });
+            imageDownvote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imageUpvote.setImageResource(R.drawable.rating_good);
+                    imageDownvote.setImageResource(R.drawable.red_rating_bad);
+                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            MainActivity activity = (MainActivity) getActivity();
+                            try {
+                                activity.makePostCall("3/gallery/" + imageData.getString("id") + "/vote/down");
+                            } catch (Exception e) {
+                                Log.e("Error!", e.toString());
+                            }
+                            return null;
+                        }
+                    };
+                    async.execute();
+                }
+            });
         }
         ArrayAdapter<String> tempAdapter = new ArrayAdapter<String>(mainView.getContext(),
                 R.layout.drawer_list_item, mMenuList);
@@ -350,7 +467,7 @@ public class SingleImageFragment extends Fragment {
                                             MainActivity activity = (MainActivity) getActivity();
                                             try {
                                                 Log.d("comment", dataHolder.id + newBody.getText().toString() + imageData.getString("id"));
-                                                activity.makeGalleryReply(dataHolder.id, newBody.getText().toString(), imageData.getString("id"));
+                                                activity.makeGalleryReply(imageData.getString("id"), newBody.getText().toString(), dataHolder.id);
                                             } catch (Exception e) {
                                                 Log.e("Error!", "oops, some text fields missing values" + e.toString());
                                             }

@@ -63,13 +63,13 @@
                 android:src="@drawable/rating_favorite"/>
 
         <ImageButton
-                android:id="@+id/rating_favorite"
+                android:id="@+id/comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/social_reply"/>
 
         <ImageButton
-                android:id="@+id/rating_favorite"
+                android:id="@+id/report"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/alerts_and_states_warning"/>
