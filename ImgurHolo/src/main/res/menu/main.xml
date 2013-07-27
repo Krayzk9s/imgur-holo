@@ -35,10 +35,58 @@
           android:icon="@drawable/action_search"
           android:showAsAction="always"
           android:visible="false" />
+    <item android:id="@+id/action_sort"
+          android:title="@string/action_sort"
+          android:orderInCategory="100"
+          android:icon="@drawable/collections_sort_by_size"
+          android:showAsAction="always"
+          android:visible="false" >
+        <menu
+                android:id="@+id/menu_sort">
+            <group android:checkableBehavior="single">
+                <item
+                        android:id="@+id/menuSortPopularity"
+                        android:title="Popularity" />
+                <item
+                        android:id="@+id/menuSortNewest"
+                        android:title="Newest" />
+                <item
+                        android:id="@+id/menuSortTop"
+                        android:title="Top" />
+                <item
+                        android:id="@+id/menuSortDay"
+                        android:title="Day"
+                        android:visible="false"/>
+                <item
+                        android:id="@+id/menuSortWeek"
+                        android:title="Week"
+                        android:visible="false"/>
+                <item
+                        android:id="@+id/menuSortMonth"
+                        android:title="Month"
+                        android:visible="false"/>
+                <item
+                        android:id="@+id/menuSortYear"
+                        android:title="Year"
+                        android:visible="false"/>
+                <item
+                        android:id="@+id/menuSortAll"
+                        android:title="All"
+                        android:visible="false"/>
+            </group>
+        </menu>
+    </item>
+    <item android:id="@+id/subreddit"
+          android:title="@string/subreddit"
+          android:orderInCategory="100"
+          android:icon="@drawable/subredditlogo"
+          android:showAsAction="always"
+          android:visible="false" />
     <item android:id="@+id/action_upload"
         android:title="@string/action_upload"
         android:orderInCategory="100"
         android:icon="@drawable/av_upload"
-        android:showAsAction="always" />
+        android:showAsAction="always"
+        android:visible="false"/>
 
 </menu>

@@ -52,7 +52,19 @@
             name="galleryOptions">
         <item>@string/hot</item>
         <item>@string/top</item>
-        <item>@string/newsort</item>
+        <item>@string/user_submitted</item>
+        <item>@string/memes</item>
+        <item>@string/random</item>
+    </array>
+
+    <array
+            name="galleryOptionsSubreddit">
+        <item>@string/hot</item>
+        <item>@string/top</item>
+        <item>@string/user_submitted</item>
+        <item>@string/memes</item>
+        <item>@string/random</item>
+        <item>@string/subreddit</item>
     </array>
 
     <array
