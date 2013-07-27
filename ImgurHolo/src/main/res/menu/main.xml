@@ -23,6 +23,12 @@
           android:icon="@drawable/content_copy"
           android:showAsAction="always"
           android:visible="false" />
+    <item android:id="@+id/action_delete"
+          android:title="@string/action_delete"
+          android:orderInCategory="100"
+          android:icon="@drawable/content_discard"
+          android:showAsAction="always"
+          android:visible="false" />
     <item android:id="@+id/action_download"
           android:title="@string/action_download"
           android:orderInCategory="100"

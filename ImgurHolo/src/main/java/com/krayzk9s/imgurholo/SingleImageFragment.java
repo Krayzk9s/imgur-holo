@@ -75,6 +75,8 @@ public class SingleImageFragment extends Fragment {
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
+        if(!inGallery)
+            menu.findItem(R.id.action_delete).setVisible(true);
         menu.findItem(R.id.action_share).setVisible(true);
         menu.findItem(R.id.action_copy).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
@@ -85,6 +87,38 @@ public class SingleImageFragment extends Fragment {
         // handle item selection
         MainActivity activity = (MainActivity) getActivity();
         switch (item.getItemId()) {
+            case R.id.action_delete:
+                new AlertDialog.Builder(activity).setTitle("Delete Image?")
+                        .setMessage("Are you sure you want to delete this image? This cannot be undone")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                                    @Override
+                                    protected Void doInBackground(Void... voids) {
+                                        try {
+                                            String deletehash = imageData.getJSONObject().getString("deletehash");
+                                            MainActivity activity = (MainActivity) getActivity();
+                                            activity.deleteImage(deletehash);
+                                        }
+                                        catch (Exception e) {
+                                            Log.e("Error!", e.toString());
+                                        }
+                                        return null;
+                                    }
+                                    @Override
+                                    protected void onPostExecute(Void aVoid) {
+                                        finishActivity();
+                                    }
+                                };
+                                async.execute();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Do nothing.
+                    }
+                }).show();
+                return true;
             case R.id.action_copy:
                 new AlertDialog.Builder(activity).setTitle("Set Link Type to Copy")
                         .setItems(R.array.copyTypes, new DialogInterface.OnClickListener() {
@@ -144,6 +178,11 @@ public class SingleImageFragment extends Fragment {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public void finishActivity() {
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
