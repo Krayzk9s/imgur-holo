@@ -1,4 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_comments"
+          android:title="@string/action_comments"
+          android:orderInCategory="100"
+          android:icon="@drawable/social_cc_bcc"
+          android:showAsAction="always"
+          android:visible="false" />
     <item android:id="@+id/action_message"
           android:title="@string/action_message"
           android:orderInCategory="100"

@@ -182,7 +182,7 @@ public class AlbumsFragment extends Fragment {
         String id = ids.get(position);
         ImagesFragment fragment = new ImagesFragment();
         fragment.albumId = id;
-        fragment.setImageCall(true, "/3/album/" + id + "/images");
+        fragment.setImageCall(true, "/3/album/" + id + "/images", null);
         MainActivity activity = (MainActivity) getActivity();
         activity.changeFragment(fragment);
     }

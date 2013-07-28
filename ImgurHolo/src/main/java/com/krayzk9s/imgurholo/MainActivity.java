@@ -199,14 +199,14 @@ public class MainActivity extends FragmentActivity {
         } else if (settings.getString("DefaultPage", "").equals("Your Images")) {
             setTitle("Your Images");
             ImagesFragment imagesFragment = new ImagesFragment();
-            imagesFragment.setImageCall(false, "3/account/me/images/0");
+            imagesFragment.setImageCall(false, "3/account/me/images/0", null);
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Your Favorites")) {
             setTitle("Your Favorites");
             ImagesFragment imagesFragment = new ImagesFragment();
-            imagesFragment.setImageCall(false, "3/account/me/likes");
+            imagesFragment.setImageCall(false, "3/account/me/likes", null);
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
                     .commit();
@@ -389,7 +389,7 @@ public class MainActivity extends FragmentActivity {
                 if (loggedin) {
                     setTitle("Your Images");
                     ImagesFragment imagesFragment = new ImagesFragment();
-                    imagesFragment.setImageCall(false, "3/account/me/images/0");
+                    imagesFragment.setImageCall(false, "3/account/me/images/0", null);
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)
                             .commit();
@@ -410,7 +410,7 @@ public class MainActivity extends FragmentActivity {
                 if (loggedin) {
                     setTitle("Your Favorites");
                     ImagesFragment imagesFragment = new ImagesFragment();
-                    imagesFragment.setImageCall(false, "3/account/me/likes");
+                    imagesFragment.setImageCall(false, "3/account/me/likes", null);
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)
                             .commit();

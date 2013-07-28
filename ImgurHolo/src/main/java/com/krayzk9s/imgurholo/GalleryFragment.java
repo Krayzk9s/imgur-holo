@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -52,6 +53,7 @@ public class GalleryFragment extends Fragment {
     ActionBar actionBar;
     int firstPass = 0;
     int selectedIndex;
+    JSONObject imagesData;
 
     public GalleryFragment() {
 
@@ -174,6 +176,42 @@ public class GalleryFragment extends Fragment {
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());
+        gridview.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int lastInScreen = firstVisibleItem + visibleItemCount;
+                if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0) {
+                    try {
+                        Log.d("Extending", "Getting more images!");
+                        JSONArray imageArray = imagesData.getJSONArray("data");
+                        int imageLength = Math.min(urls.size() + 30, imageArray.length());
+                        for (int i = urls.size(); i < imageLength; i++) {
+                            JSONObject imageData = imageArray.getJSONObject(i);
+                            Log.d("Data", imageData.toString());
+                            if (imageData.has("is_album") && imageData.getBoolean("is_album"))
+                            {
+                                if(!urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png"))
+                                    urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
+                            }
+                            if(!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png"))
+                                urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
+                            JSONParcelable dataParcel = new JSONParcelable();
+                            dataParcel.setJSONObject(imageData);
+                            ids.add(dataParcel);
+                            imageAdapter.notifyDataSetChanged();
+                        }
+                    }
+                    catch (Exception e) {
+                        Log.e("Error!", e.toString());
+                    }
+                }
+            }
+        });
         return gridview;
     }
 
@@ -251,7 +289,7 @@ public class GalleryFragment extends Fragment {
                 ActionBar actionBar = activity.getActionBar();
                 Token accessKey = activity.getAccessToken();
                 Log.d("Key", accessKey.getToken());
-                JSONObject imagesData = new JSONObject();
+                imagesData = new JSONObject();
                 if (gallery.equals("hot") || gallery.equals("top") || gallery.equals("user")) {
                     imagesData = activity.makeGetCall("3/gallery/" + gallery + "/" + sort + "/" + window + "/" + page);
                 } else if (gallery.equals("memes")) {
@@ -272,7 +310,10 @@ public class GalleryFragment extends Fragment {
                         JSONObject imageData = imageArray.getJSONObject(i);
                         Log.d("Data", imageData.toString());
                         if (imageData.has("is_album") && imageData.getBoolean("is_album"))
-                            continue;
+                        {
+                            if(!urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png"))
+                                urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
+                        }
                         urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
                         JSONParcelable dataParcel = new JSONParcelable();
                         dataParcel.setJSONObject(imageData);
@@ -316,7 +357,6 @@ public class GalleryFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             final ImageView imageView = new SquareImageView(mContext);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
             UrlImageViewHelper.setUrlDrawable(imageView, urls.get(position), R.drawable.icon);
             return imageView;
         }
@@ -332,11 +372,24 @@ public class GalleryFragment extends Fragment {
 
     public void selectItem(int position) {
         JSONObject id = ids.get(position).getJSONObject();
-        SingleImageFragment fragment = new SingleImageFragment();
-        fragment.setGallery(true);
-        fragment.setParams(id);
-        MainActivity activity = (MainActivity) getActivity();
-        activity.changeFragment(fragment);
+        try {
+        if(id.getBoolean("is_album")) {
+            ImagesFragment fragment = new ImagesFragment();
+            fragment.setImageCall(true, "3/album/" + id.getString("id"), id);
+            MainActivity activity = (MainActivity) getActivity();
+            activity.changeFragment(fragment);
+        }
+        else {
+            SingleImageFragment fragment = new SingleImageFragment();
+            fragment.setGallery(true);
+            fragment.setParams(id);
+            MainActivity activity = (MainActivity) getActivity();
+            activity.changeFragment(fragment);
+        }
+        }
+        catch (Exception e) {
+            Log.e("Error!", e.toString());
+        }
     }
 
     @Override

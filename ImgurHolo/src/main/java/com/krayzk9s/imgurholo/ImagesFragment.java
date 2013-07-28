@@ -44,14 +44,17 @@ public class ImagesFragment extends Fragment {
     MultiChoiceModeListener multiChoiceModeListener;
     ArrayList<String> intentReturn;
     String albumId;
+    JSONObject galleryAlbumData;
+    JSONObject imageParam;
 
     public ImagesFragment() {
 
     }
 
-    public void setImageCall(boolean _isAlbum, String _imageCall) {
+    public void setImageCall(boolean _isAlbum, String _imageCall, JSONObject _data) {
         isAlbum = _isAlbum;
         imageCall = _imageCall;
+        galleryAlbumData = _data;
     }
 
     @Override
@@ -65,8 +68,11 @@ public class ImagesFragment extends Fragment {
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         menu.findItem(R.id.action_upload).setVisible(false);
-        if (isAlbum) {
+        if (isAlbum && galleryAlbumData == null) {
             menu.findItem(R.id.action_new).setVisible(true);
+        }
+        if (isAlbum && galleryAlbumData != null) {
+            menu.findItem(R.id.action_comments).setVisible(true);
         }
     }
 
@@ -79,10 +85,44 @@ public class ImagesFragment extends Fragment {
                 startActivityForResult(i, 1);
                 //select image
                 return true;
+            case R.id.action_comments:
+
+                    async = new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            MainActivity activity = (MainActivity) getActivity();
+                            try {
+                                imageParam = activity.makeGetCall("3/image/" + galleryAlbumData.getString("cover")).getJSONObject("data");
+                                Log.d("Params", imageParam.toString());
+                                galleryAlbumData.put("width", imageParam.getInt("width"));
+                                galleryAlbumData.put("type", imageParam.getString("type"));
+                                galleryAlbumData.put("height", imageParam.getInt("height"));
+                                galleryAlbumData.put("size", imageParam.getInt("size"));
+                                Log.d("Params w/ new data", galleryAlbumData.toString());
+                            }
+                            catch (Exception e) {
+                                Log.e("Error!", "bad single image call" + e.toString());
+                            }
+                            return null;
+                        }
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            Log.d("Sending Params w/ new data", galleryAlbumData.toString());
+                            SingleImageFragment fragment = new SingleImageFragment();
+                            fragment.setParams(galleryAlbumData);
+                            fragment.setGallery(true);
+                            MainActivity activity = (MainActivity) getActivity();
+                            activity.changeFragment(fragment);
+                        }
+                    };
+                async.execute();
+
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
     @Override
     public void onActivityResult(int requestCode,int resultCode, Intent data)
     {
@@ -120,7 +160,12 @@ public class ImagesFragment extends Fragment {
                 MainActivity activity = (MainActivity) getActivity();
                 JSONObject imagesData = activity.makeGetCall(imageCall);
                 try {
-                    JSONArray imageArray = imagesData.getJSONArray("data");
+                    JSONArray imageArray;
+                    if(imagesData.optJSONObject("data") != null)
+                        imageArray = imagesData.getJSONObject("data").getJSONArray("images");
+                    else
+                        imageArray = imagesData.getJSONArray("data");
+                    Log.d("single image array", imageArray.toString());
                     for (int i = 0; i < imageArray.length(); i++) {
                         JSONObject imageData = imageArray.getJSONObject(i);
                         urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
@@ -129,7 +174,7 @@ public class ImagesFragment extends Fragment {
                         ids.add(dataParcel);
                     }
                 } catch (Exception e) {
-                    Log.e("Error!", e.toString());
+                    Log.e("Error!", "bad image array data" + e.toString());
                 }
                 return null;
             }

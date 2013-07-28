@@ -41,7 +41,7 @@ public class SingleImageFragment extends Fragment {
     String[] mMenuList;
     JSONParcelable imageData;
     JSONParcelable commentData;
-    Boolean inGallery;
+    boolean inGallery;
     CommentAdapter commentAdapter;
     View mainView;
     ListView commentLayout;
@@ -61,7 +61,7 @@ public class SingleImageFragment extends Fragment {
         imageData.setJSONObject(_params);
     }
 
-    public void setGallery(Boolean gallery) {
+    public void setGallery(boolean gallery) {
         inGallery = gallery;
     }
 
@@ -105,8 +105,7 @@ public class SingleImageFragment extends Fragment {
                                         }
                                         return null;
                                     }
-                                    @Override
-                                    protected void onPostExecute(Void aVoid) {
+                                    protected void onPostExecute(Void... voids) {
                                         finishActivity();
                                     }
                                 };
@@ -180,7 +179,7 @@ public class SingleImageFragment extends Fragment {
     }
 
     public void finishActivity() {
-        getActivity().getSupportFragmentManager().popBackStack();
+        getActivity().getFragmentManager().popBackStack();
     }
 
 
@@ -322,13 +321,19 @@ public class SingleImageFragment extends Fragment {
 
         Log.d("URI", "YO I'M IN YOUR SINGLE FRAGMENT gallery:" + inGallery);
         try {
-            UrlImageViewHelper.setUrlDrawable(imageView, imageData.getJSONObject().getString("link"), R.drawable.icon);
+            Log.d("Cover", "" + imageData.getJSONObject().has("cover"));
+            Log.d("Cover URL", "http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png");
+            if(imageData.getJSONObject().has("cover"))
+                UrlImageViewHelper.setUrlDrawable(imageView, "http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png", R.drawable.icon);
+            else
+                UrlImageViewHelper.setUrlDrawable(imageView, imageData.getJSONObject().getString("link"), R.drawable.icon);
         } catch (Exception e) {
             Log.e("drawable Error!", e.toString());
         }
         TextView imageDetails = (TextView) imageLayoutView.findViewById(R.id.single_image_details);
         TextView imageTitle = (TextView) imageLayoutView.findViewById(R.id.single_image_title);
         try {
+            Log.d("imagedata", imageData.getJSONObject().toString());
             String size = String.valueOf(imageData.getJSONObject().getInt("width")) + "x" + String.valueOf(imageData.getJSONObject().getInt("height")) + " (" + String.valueOf(imageData.getJSONObject().getInt("size")) + " bytes)";
             Calendar accountCreationDate = Calendar.getInstance();
             accountCreationDate.setTimeInMillis((long) imageData.getJSONObject().getInt("datetime") * 1000);

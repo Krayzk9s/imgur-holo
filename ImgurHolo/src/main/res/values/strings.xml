@@ -8,6 +8,7 @@
     <string name="action_download">Download</string>
     <string name="action_search">Search</string>
     <string name="action_message">New Message</string>
+    <string name="action_comments">Go to Comments</string>
     <string name="action_new">New</string>
     <string name="drawer_open">Opening Drawer</string>
     <string name="drawer_close">Closing Drawer</string>
