@@ -76,8 +76,7 @@ public class MessagingFragment extends Fragment {
                 R.layout.message_layout, mMenuList);
         mDrawerList.setAdapter(tempAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        if(savedInstanceState == null)
-        {
+        if (savedInstanceState == null) {
             AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
                 @Override
                 protected JSONObject doInBackground(Void... voids) {
@@ -92,9 +91,7 @@ public class MessagingFragment extends Fragment {
                 }
             };
             async.execute();
-        }
-        else
-        {
+        } else {
             messageDataArray = savedInstanceState.getParcelableArrayList("content");
             messageAdapter.addAll(messageDataArray);
             mDrawerList.setAdapter(messageAdapter);
@@ -335,6 +332,7 @@ public class MessagingFragment extends Fragment {
             return null;
         }
     }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelableArrayList("content", messageDataArray);

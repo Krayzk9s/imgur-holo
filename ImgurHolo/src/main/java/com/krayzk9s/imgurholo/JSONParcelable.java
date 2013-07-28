@@ -17,10 +17,12 @@ public class JSONParcelable implements Parcelable {
      * Standard basic constructor for non-parcel
      * object creation
      */
-    public JSONParcelable() {  };
+    public JSONParcelable() {
+    }
+
+    ;
 
     /**
-     *
      * Constructor to use when re-constructing object
      * from a parcel
      *
@@ -47,12 +49,12 @@ public class JSONParcelable implements Parcelable {
     public void setJSONObject(JSONObject object) {
         jsonData = object;
     }
+
     public JSONObject getJSONObject() {
         return jsonData;
     }
 
     /**
-     *
      * Called from the constructor to create this
      * object from a parcel.
      *
@@ -64,25 +66,22 @@ public class JSONParcelable implements Parcelable {
         // field in the order that it was
         // written to the parcel
         try {
-        jsonData = new JSONObject(in.readString());
-        }
-        catch (Exception e) {
+            jsonData = new JSONObject(in.readString());
+        } catch (Exception e) {
             Log.d("Error!", e.toString());
         }
     }
 
     /**
-     *
      * This field is needed for Android to be able to
      * create new objects, individually or as arrays.
-     *
+     * <p/>
      * This also means that you can use use the default
      * constructor to create the object and use another
      * method to hyrdate it as necessary.
-     *
+     * <p/>
      * I just find it easier to use the constructor.
      * It makes sense for the way my brain thinks ;-)
-     *
      */
     public static final Parcelable.Creator CREATOR =
             new Parcelable.Creator() {

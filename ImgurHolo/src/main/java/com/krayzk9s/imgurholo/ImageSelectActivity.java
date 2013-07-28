@@ -25,6 +25,7 @@ public class ImageSelectActivity extends MainActivity {
     public void onNewIntent(Intent intent) {
 
     }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
@@ -39,5 +40,5 @@ public class ImageSelectActivity extends MainActivity {
         getMenuInflater().inflate(R.menu.image_select, menu);
         return true;
     }
-    
+
 }

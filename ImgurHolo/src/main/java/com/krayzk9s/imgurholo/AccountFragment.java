@@ -66,67 +66,66 @@ public class AccountFragment extends Fragment {
                 R.layout.drawer_list_item, mMenuList);
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        if(savedInstanceState == null) {
-        accountData = new HashMap<String, String>();
-        AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                MainActivity activity = (MainActivity) getActivity();
-                JSONObject accountInfoJSON = activity.makeGetCall("3/account/me");
-                JSONObject statsJSON = activity.makeGetCall("3/account/me/stats");
-                JSONObject likesJSON = activity.makeGetCall("3/account/me/likes");
-                JSONObject settingsJSON = activity.makeGetCall("3/account/me/settings");
+        if (savedInstanceState == null) {
+            accountData = new HashMap<String, String>();
+            AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    MainActivity activity = (MainActivity) getActivity();
+                    JSONObject accountInfoJSON = activity.makeGetCall("3/account/me");
+                    JSONObject statsJSON = activity.makeGetCall("3/account/me/stats");
+                    JSONObject likesJSON = activity.makeGetCall("3/account/me/likes");
+                    JSONObject settingsJSON = activity.makeGetCall("3/account/me/settings");
 
-                try {
-                    accountInfoJSON = accountInfoJSON.getJSONObject("data");
-                    Log.d("URI", accountInfoJSON.toString());
-                    Log.d("URI", Integer.toString(accountInfoJSON.getInt("id")));
-                    accountData.put("id", Integer.toString(accountInfoJSON.getInt("id")));
-                    accountData.put("reputation", Integer.toString(accountInfoJSON.getInt("reputation")));
-                    Calendar accountCreationDate = Calendar.getInstance();
-                    accountCreationDate.setTimeInMillis((long) accountInfoJSON.getInt("created") * 1000);
-                    Log.d("URI", accountInfoJSON.getInt("created") + "");
-                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                    String accountcreated = sdf.format(accountCreationDate.getTime());
-                    Log.d("URI", accountcreated);
-                    accountData.put("created", accountcreated);
-                    accountData.put("bio", accountInfoJSON.getString("bio"));
-                    accountData.put("name", accountInfoJSON.getString("url"));
+                    try {
+                        accountInfoJSON = accountInfoJSON.getJSONObject("data");
+                        Log.d("URI", accountInfoJSON.toString());
+                        Log.d("URI", Integer.toString(accountInfoJSON.getInt("id")));
+                        accountData.put("id", Integer.toString(accountInfoJSON.getInt("id")));
+                        accountData.put("reputation", Integer.toString(accountInfoJSON.getInt("reputation")));
+                        Calendar accountCreationDate = Calendar.getInstance();
+                        accountCreationDate.setTimeInMillis((long) accountInfoJSON.getInt("created") * 1000);
+                        Log.d("URI", accountInfoJSON.getInt("created") + "");
+                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                        String accountcreated = sdf.format(accountCreationDate.getTime());
+                        Log.d("URI", accountcreated);
+                        accountData.put("created", accountcreated);
+                        accountData.put("bio", accountInfoJSON.getString("bio"));
+                        accountData.put("name", accountInfoJSON.getString("url"));
 
-                    statsJSON = statsJSON.getJSONObject("data");
-                    accountData.put("total_images", Integer.toString(statsJSON.getInt("total_images")));
-                    accountData.put("total_albums", Integer.toString(statsJSON.getInt("total_albums")));
-                    accountData.put("disk_used", statsJSON.getString("disk_used"));
-                    accountData.put("bandwidth_used", statsJSON.getString("bandwidth_used"));
+                        statsJSON = statsJSON.getJSONObject("data");
+                        accountData.put("total_images", Integer.toString(statsJSON.getInt("total_images")));
+                        accountData.put("total_albums", Integer.toString(statsJSON.getInt("total_albums")));
+                        accountData.put("disk_used", statsJSON.getString("disk_used"));
+                        accountData.put("bandwidth_used", statsJSON.getString("bandwidth_used"));
 
-                    JSONArray likesJSONArray = likesJSON.getJSONArray("data");
-                    accountData.put("total_likes", String.valueOf(likesJSONArray.length()));
+                        JSONArray likesJSONArray = likesJSON.getJSONArray("data");
+                        accountData.put("total_likes", String.valueOf(likesJSONArray.length()));
 
-                    settingsJSON = settingsJSON.getJSONObject("data");
-                    accountData.put("email", settingsJSON.getString("email"));
-                    accountData.put("album_privacy", settingsJSON.getString("album_privacy"));
-                    if (settingsJSON.getBoolean("public_images") == false)
-                        accountData.put("public_images", "private");
-                    else
-                        accountData.put("public_images", "public");
-                    if (settingsJSON.getBoolean("messaging_enabled") == false)
-                        accountData.put("messaging_enabled", "disabled");
-                    else
-                        accountData.put("messaging_enabled", "enabled");
-                } catch (Exception e) {
-                    Log.e("Error!", e.toString());
+                        settingsJSON = settingsJSON.getJSONObject("data");
+                        accountData.put("email", settingsJSON.getString("email"));
+                        accountData.put("album_privacy", settingsJSON.getString("album_privacy"));
+                        if (settingsJSON.getBoolean("public_images") == false)
+                            accountData.put("public_images", "private");
+                        else
+                            accountData.put("public_images", "public");
+                        if (settingsJSON.getBoolean("messaging_enabled") == false)
+                            accountData.put("messaging_enabled", "disabled");
+                        else
+                            accountData.put("messaging_enabled", "enabled");
+                    } catch (Exception e) {
+                        Log.e("Error!", e.toString());
+                    }
+                    return null;
                 }
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-               updateData();
-            }
-        };
-        async.execute();
-        }
-        else {
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    updateData();
+                }
+            };
+            async.execute();
+        } else {
             Bundle extras = savedInstanceState.getBundle("accountData");
             accountData = (HashMap<String, String>) extras.getSerializable("HashMap");
             updateData();
@@ -317,7 +316,7 @@ public class AccountFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         Bundle extras = new Bundle();
-        extras.putSerializable("HashMap",accountData);
+        extras.putSerializable("HashMap", accountData);
         savedInstanceState.putBundle("accountData", extras);
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);

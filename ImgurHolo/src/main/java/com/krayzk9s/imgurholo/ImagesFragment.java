@@ -76,7 +76,7 @@ public class ImagesFragment extends Fragment {
         if (albumId != null && galleryAlbumData != null) {
             menu.findItem(R.id.action_comments).setVisible(true);
         }
-        if(albumId != null) {
+        if (albumId != null) {
             menu.findItem(R.id.action_copy).setVisible(true);
             menu.findItem(R.id.action_share).setVisible(true);
         }
@@ -93,8 +93,7 @@ public class ImagesFragment extends Fragment {
                             activity.getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("imgur Link", "http://imgur.com/a/" + albumId);
                     clipboard.setPrimaryClip(clip);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Log.e("Error!", e.toString());
                 }
                 return true;
@@ -115,34 +114,34 @@ public class ImagesFragment extends Fragment {
                 //select image
                 return true;
             case R.id.action_comments:
-                    async = new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... voids) {
-                            MainActivity activity = (MainActivity) getActivity();
-                            try {
-                                imageParam = activity.makeGetCall("3/image/" + galleryAlbumData.getString("cover")).getJSONObject("data");
-                                Log.d("Params", imageParam.toString());
-                                galleryAlbumData.put("width", imageParam.getInt("width"));
-                                galleryAlbumData.put("type", imageParam.getString("type"));
-                                galleryAlbumData.put("height", imageParam.getInt("height"));
-                                galleryAlbumData.put("size", imageParam.getInt("size"));
-                                Log.d("Params w/ new data", galleryAlbumData.toString());
-                            }
-                            catch (Exception e) {
-                                Log.e("Error!", "bad single image call" + e.toString());
-                            }
-                            return null;
+                async = new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        MainActivity activity = (MainActivity) getActivity();
+                        try {
+                            imageParam = activity.makeGetCall("3/image/" + galleryAlbumData.getString("cover")).getJSONObject("data");
+                            Log.d("Params", imageParam.toString());
+                            galleryAlbumData.put("width", imageParam.getInt("width"));
+                            galleryAlbumData.put("type", imageParam.getString("type"));
+                            galleryAlbumData.put("height", imageParam.getInt("height"));
+                            galleryAlbumData.put("size", imageParam.getInt("size"));
+                            Log.d("Params w/ new data", galleryAlbumData.toString());
+                        } catch (Exception e) {
+                            Log.e("Error!", "bad single image call" + e.toString());
                         }
-                        @Override
-                        protected void onPostExecute(Void aVoid) {
-                            Log.d("Sending Params w/ new data", galleryAlbumData.toString());
-                            SingleImageFragment fragment = new SingleImageFragment();
-                            fragment.setParams(galleryAlbumData);
-                            fragment.setGallery(true);
-                            MainActivity activity = (MainActivity) getActivity();
-                            activity.changeFragment(fragment);
-                        }
-                    };
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        Log.d("Sending Params w/ new data", galleryAlbumData.toString());
+                        SingleImageFragment fragment = new SingleImageFragment();
+                        fragment.setParams(galleryAlbumData);
+                        fragment.setGallery(true);
+                        MainActivity activity = (MainActivity) getActivity();
+                        activity.changeFragment(fragment);
+                    }
+                };
                 async.execute();
 
 
@@ -152,11 +151,10 @@ public class ImagesFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode,int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         AddImagesToAlbum imageAsync;
         ArrayList<String> imageIds;
-        switch(requestCode) {
+        switch (requestCode) {
             case 1:
                 super.onActivityResult(requestCode, resultCode, data);
                 imageIds = data.getStringArrayListExtra("data");
@@ -180,42 +178,39 @@ public class ImagesFragment extends Fragment {
         gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         multiChoiceModeListener = new MultiChoiceModeListener();
         gridview.setMultiChoiceModeListener(multiChoiceModeListener);
-        if(savedInstanceState == null)
-        {
-        async = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                MainActivity activity = (MainActivity) getActivity();
-                imagesData = activity.makeGetCall(imageCall);
-                try {
-                    JSONArray imageArray;
-                    if(imagesData.optJSONObject("data") != null)
-                        imageArray = imagesData.getJSONObject("data").getJSONArray("images");
-                    else
-                        imageArray = imagesData.getJSONArray("data");
-                    Log.d("single image array", imageArray.toString());
-                    for (int i = 0; i < imageArray.length(); i++) {
-                        JSONObject imageData = imageArray.getJSONObject(i);
-                        urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
-                        JSONParcelable dataParcel = new JSONParcelable();
-                        dataParcel.setJSONObject(imageData);
-                        ids.add(dataParcel);
+        if (savedInstanceState == null) {
+            async = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    MainActivity activity = (MainActivity) getActivity();
+                    imagesData = activity.makeGetCall(imageCall);
+                    try {
+                        JSONArray imageArray;
+                        if (imagesData.optJSONObject("data") != null)
+                            imageArray = imagesData.getJSONObject("data").getJSONArray("images");
+                        else
+                            imageArray = imagesData.getJSONArray("data");
+                        Log.d("single image array", imageArray.toString());
+                        for (int i = 0; i < imageArray.length(); i++) {
+                            JSONObject imageData = imageArray.getJSONObject(i);
+                            urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
+                            JSONParcelable dataParcel = new JSONParcelable();
+                            dataParcel.setJSONObject(imageData);
+                            ids.add(dataParcel);
+                        }
+                    } catch (Exception e) {
+                        Log.e("Error!", "bad image array data" + e.toString());
                     }
-                } catch (Exception e) {
-                    Log.e("Error!", "bad image array data" + e.toString());
+                    return null;
                 }
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                imageAdapter.notifyDataSetChanged();
-            }
-        };
-        async.execute();
-        }
-        else
-        {
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    imageAdapter.notifyDataSetChanged();
+                }
+            };
+            async.execute();
+        } else {
             urls = savedInstanceState.getStringArrayList("urls");
             ids = savedInstanceState.getParcelableArrayList("ids");
         }
@@ -250,8 +245,8 @@ public class ImagesFragment extends Fragment {
             if (convertView == null) {
                 i = new SquareImageView(mContext);
                 i.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                l = new CheckableLayout((MainActivity)getActivity());
-                l.setPadding(8,8,8,8);
+                l = new CheckableLayout((MainActivity) getActivity());
+                l.setPadding(8, 8, 8, 8);
                 l.addView(i);
             } else {
                 l = (CheckableLayout) convertView;
@@ -270,22 +265,23 @@ public class ImagesFragment extends Fragment {
     }
 
     public void selectItem(int position) {
-        if(!selecting) {
+        if (!selecting) {
 
-        JSONObject id = ids.get(position).getJSONObject();
-        SingleImageFragment fragment = new SingleImageFragment();
-        fragment.setParams(id);
-        MainActivity activity = (MainActivity) getActivity();
-        activity.changeFragment(fragment);
+            JSONObject id = ids.get(position).getJSONObject();
+            SingleImageFragment fragment = new SingleImageFragment();
+            fragment.setParams(id);
+            MainActivity activity = (MainActivity) getActivity();
+            activity.changeFragment(fragment);
         }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(async != null)
+        if (async != null)
             async.cancel(true);
     }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putStringArrayList("urls", urls);
@@ -308,7 +304,7 @@ public class ImagesFragment extends Fragment {
         }
 
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch(item.getItemId()) {
+            switch (item.getItemId()) {
                 case R.id.action_delete:
                     getChecked();
                     async = new AsyncTask<Void, Void, Void>() {
@@ -340,12 +336,11 @@ public class ImagesFragment extends Fragment {
         private void getChecked() {
             intentReturn = new ArrayList<String>();
             try {
-                for(int i = 0; i < gridview.getCount(); i++) {
-                    if(gridview.isItemChecked(i))
+                for (int i = 0; i < gridview.getCount(); i++) {
+                    if (gridview.isItemChecked(i))
                         intentReturn.add(ids.get(i).getJSONObject().getString("id"));
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.e("Error!", e.toString());
             }
         }
@@ -364,6 +359,7 @@ public class ImagesFragment extends Fragment {
             }
         }
     }
+
     public class CheckableLayout extends FrameLayout implements Checkable {
         private boolean mChecked;
 
@@ -401,7 +397,7 @@ public class ImagesFragment extends Fragment {
         protected Void doInBackground(Void... voids) {
             MainActivity activity = (MainActivity) getActivity();
             String albumids = "";
-            for(int i = 0; i < imageIDsAsync.size(); i++) {
+            for (int i = 0; i < imageIDsAsync.size(); i++) {
                 albumids += imageIDsAsync.get(i);
             }
             activity.editAlbum(albumids, albumId);

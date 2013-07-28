@@ -122,7 +122,7 @@ public class MainActivity extends FragmentActivity {
         else
             mMenuList = getResources().getStringArray(R.array.imgurMenuListLoggedOut);
         mDrawerTitle = getTitle();
-        if(mTitle == null)
+        if (mTitle == null)
             mTitle = "imgur Holo";
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -154,7 +154,7 @@ public class MainActivity extends FragmentActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             Token accessKey = getAccessToken();
-            if(uri != null) {
+            if (uri != null) {
                 Log.d("URI", uri.toString());
                 Cursor cursor = getContentResolver().query(uri, null, null, null, null);
                 cursor.moveToFirst();
@@ -190,7 +190,7 @@ public class MainActivity extends FragmentActivity {
     private void loadDefaultPage() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        if(!loggedin)
+        if (!loggedin)
             return;
         else if (!settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery")) {
             setTitle("Gallery");
@@ -346,6 +346,7 @@ public class MainActivity extends FragmentActivity {
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         return super.onPrepareOptionsMenu(menu);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("intent", data.toString());
@@ -362,7 +363,6 @@ public class MainActivity extends FragmentActivity {
             return;
         }
     }
-
 
 
     @Override
@@ -398,8 +398,8 @@ public class MainActivity extends FragmentActivity {
                     login();
                 else
                     setTitle("Gallery");
-                    GalleryFragment galleryFragment = new GalleryFragment();
-                    fragmentManager.beginTransaction()
+                GalleryFragment galleryFragment = new GalleryFragment();
+                fragmentManager.beginTransaction()
                         .replace(R.id.frame_layout, galleryFragment)
                         .commit();
                 break;
@@ -434,7 +434,7 @@ public class MainActivity extends FragmentActivity {
                                                         }
                                                     };
                                                     async.execute();
-                                            }
+                                                }
                                             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int whichButton) {
                                                     // Do nothing.
@@ -619,19 +619,16 @@ public class MainActivity extends FragmentActivity {
         Token accessKey = getAccessToken();
         Log.d("Making Call", accessKey.toString());
         HttpResponse<JsonNode> response;
-        if(commentId != null)
-        {
+        if (commentId != null) {
             response = Unirest.post(MASHAPE_URL + "3/comment/")
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .field("comment", comment)
-                .field("image_id", imageId)
-                .field("parent_id", commentId)
-                .asJson();
-        }
-        else
-        {
+                    .header("accept", "application/json")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Bearer " + accessKey.getToken())
+                    .field("comment", comment)
+                    .field("image_id", imageId)
+                    .field("parent_id", commentId)
+                    .asJson();
+        } else {
             response = Unirest.post(MASHAPE_URL + "3/comment/")
                     .header("accept", "application/json")
                     .header("X-Mashape-Authorization", MASHAPE_KEY)
@@ -644,8 +641,7 @@ public class MainActivity extends FragmentActivity {
         int code = response.getCode();
         if (code == 403) {
             accessKey = renewAccessToken();
-            if(commentId != null)
-            {
+            if (commentId != null) {
                 Unirest.post(MASHAPE_URL + "3/comment/")
                         .header("accept", "application/json")
                         .header("X-Mashape-Authorization", MASHAPE_KEY)
@@ -654,9 +650,7 @@ public class MainActivity extends FragmentActivity {
                         .field("image_id", imageId)
                         .field("parent_id", commentId)
                         .asJson();
-            }
-            else
-            {
+            } else {
                 Unirest.post(MASHAPE_URL + "3/comment/")
                         .header("accept", "application/json")
                         .header("X-Mashape-Authorization", MASHAPE_KEY)
@@ -718,11 +712,12 @@ public class MainActivity extends FragmentActivity {
                     .asJson();
         }
     }
+
     public void editAlbum(String ids, String id) {
         Token accessKey = getAccessToken();
         Log.d("Making Call", accessKey.toString());
         HttpResponse<JsonNode> response;
-           response = Unirest.post(MASHAPE_URL + "3/album/")
+        response = Unirest.post(MASHAPE_URL + "3/album/")
                 .header("accept", "application/json")
                 .header("X-Mashape-Authorization", MASHAPE_KEY)
                 .header("Authorization", "Bearer " + accessKey.getToken())
@@ -740,6 +735,32 @@ public class MainActivity extends FragmentActivity {
                     .header("Authorization", "Bearer " + accessKey.getToken())
                     .field("ids", ids)
                     .field("id", id)
+                    .asJson();
+        }
+    }
+
+    public void editImage(String id, String title, String description) {
+        Token accessKey = getAccessToken();
+        Log.d("Making Call", accessKey.toString());
+        HttpResponse<JsonNode> response;
+        response = Unirest.post(MASHAPE_URL + "3/image/" + id)
+                .header("accept", "application/json")
+                .header("X-Mashape-Authorization", MASHAPE_KEY)
+                .header("Authorization", "Bearer " + accessKey.getToken())
+                .field("title", title)
+                .field("description", description)
+                .asJson();
+        Log.d("Getting Code", String.valueOf(response.getCode()));
+        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
+        int code = response.getCode();
+        if (code == 403) {
+            accessKey = renewAccessToken();
+            Unirest.post(MASHAPE_URL + "3/image/" + id)
+                    .header("accept", "application/json")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Bearer " + accessKey.getToken())
+                    .field("title", title)
+                    .field("description", description)
                     .asJson();
         }
     }
@@ -770,7 +791,7 @@ public class MainActivity extends FragmentActivity {
         Token accessKey = getAccessToken();
         Log.d("Making Call", accessKey.toString());
         HttpResponse<JsonNode> response;
-        for(int i = 0; i < deleteImages.size(); i++) {
+        for (int i = 0; i < deleteImages.size(); i++) {
             response = Unirest.get(MASHAPE_URL + "3/image/" + deleteImages.get(i))
                     .header("accept", "application/json")
                     .header("X-Mashape-Authorization", MASHAPE_KEY)
@@ -788,7 +809,7 @@ public class MainActivity extends FragmentActivity {
                         .asJson();
             }
             try {
-            String deletehash = response.getBody().getObject().getJSONObject("data").getString("deletehash");
+                String deletehash = response.getBody().getObject().getJSONObject("data").getString("deletehash");
                 response = Unirest.delete(MASHAPE_URL + "3/image/" + deletehash)
                         .header("accept", "application/json")
                         .header("X-Mashape-Authorization", MASHAPE_KEY)
@@ -805,8 +826,7 @@ public class MainActivity extends FragmentActivity {
                             .header("Authorization", "Bearer " + accessKey.getToken())
                             .asJson();
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.e("Error!", e.toString());
             }
         }

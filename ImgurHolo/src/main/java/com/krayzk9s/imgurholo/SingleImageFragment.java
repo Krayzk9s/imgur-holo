@@ -91,9 +91,10 @@ public class SingleImageFragment extends Fragment {
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        if(!inGallery)
+        if (!inGallery)
             menu.findItem(R.id.action_delete).setVisible(true);
         menu.findItem(R.id.action_share).setVisible(true);
+        menu.findItem(R.id.action_edit).setVisible(true);
         menu.findItem(R.id.action_download).setVisible(true);
         menu.findItem(R.id.action_copy).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
@@ -104,6 +105,46 @@ public class SingleImageFragment extends Fragment {
         // handle item selection
         final MainActivity activity = (MainActivity) getActivity();
         switch (item.getItemId()) {
+            case R.id.action_edit:
+                try {
+                    final EditText newTitle = new EditText(activity);
+                    newTitle.setSingleLine();
+                    if (imageData.getJSONObject().getString("title") != "null")
+                        newTitle.setText(imageData.getJSONObject().getString("title"));
+                    final EditText newBody = new EditText(activity);
+                    newBody.setHint("Description");
+                    if (imageData.getJSONObject().getString("description") != "null")
+                        newBody.setText(imageData.getJSONObject().getString("description"));
+                    LinearLayout linearLayout = new LinearLayout(activity);
+                    linearLayout.setOrientation(LinearLayout.VERTICAL);
+                    linearLayout.addView(newTitle);
+                    linearLayout.addView(newBody);
+                    new AlertDialog.Builder(activity).setTitle("Edit Image Details")
+                            .setView(linearLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                            AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                                @Override
+                                protected Void doInBackground(Void... voids) {
+                                    try {
+                                        activity.editImage(imageData.getJSONObject().getString("id"), newTitle.getText().toString(), newBody.getText().toString());
+                                    } catch (Exception e) {
+                                        Log.e("Error!", "oops, some text fields missing values" + e.toString());
+                                    }
+                                    return null;
+                                }
+                            };
+                            async.execute();
+                        }
+                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Do nothing.
+                        }
+                    }).show();
+                } catch (Exception e) {
+                    Log.e("Error!", "oops, some image fields missing values" + e.toString());
+                }
+                return true;
             case R.id.action_download:
                 AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                     @Override
@@ -125,8 +166,7 @@ public class SingleImageFragment extends Fragment {
                             fos.close();
                             activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                                     + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))));
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             Log.e("Error!", e.toString());
                         }
                         return null;
@@ -146,12 +186,12 @@ public class SingleImageFragment extends Fragment {
                                             String deletehash = imageData.getJSONObject().getString("deletehash");
                                             MainActivity activity = (MainActivity) getActivity();
                                             activity.deleteImage(deletehash);
-                                        }
-                                        catch (Exception e) {
+                                        } catch (Exception e) {
                                             Log.e("Error!", e.toString());
                                         }
                                         return null;
                                     }
+
                                     protected void onPostExecute(Void... voids) {
                                         finishActivity();
                                     }
@@ -160,10 +200,10 @@ public class SingleImageFragment extends Fragment {
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Do nothing.
-                    }
-                }).show();
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // Do nothing.
+                            }
+                        }).show();
                 return true;
             case R.id.action_copy:
                 new AlertDialog.Builder(activity).setTitle("Set Link Type to Copy")
@@ -241,7 +281,7 @@ public class SingleImageFragment extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         LinearLayout imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
         WebView imageView = (WebView) imageLayoutView.findViewById(R.id.single_image_view);
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             imageData = savedInstanceState.getParcelable("imageData");
         }
         if (inGallery) {
@@ -253,18 +293,16 @@ public class SingleImageFragment extends Fragment {
             imageComment = (ImageButton) imageLayoutView.findViewById(R.id.comment);
             imageReport = (ImageButton) imageLayoutView.findViewById(R.id.report);
             try {
-                if(imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
+                if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
                     imageUpvote.setImageResource(R.drawable.green_rating_good);
                 else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
                     imageDownvote.setImageResource(R.drawable.red_rating_bad);
-                if(imageData.getJSONObject().getBoolean("favorite"))
+                if (imageData.getJSONObject().getBoolean("favorite"))
                     imageFavorite.setImageResource(R.drawable.green_rating_favorite);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Log.e("Error!", e.toString());
             }
-            imageFavorite.setOnClickListener( new View.OnClickListener() {
+            imageFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     imageFavorite.setImageResource(R.drawable.green_rating_favorite);
@@ -274,9 +312,7 @@ public class SingleImageFragment extends Fragment {
                             MainActivity activity = (MainActivity) getActivity();
                             try {
                                 activity.makePostCall("3/image/" + imageData.getJSONObject().getString("id") + "/favorite");
-                            }
-                            catch (Exception e)
-                            {
+                            } catch (Exception e) {
                                 Log.e("Error!", e.toString());
                             }
                             return null;
@@ -330,9 +366,7 @@ public class SingleImageFragment extends Fragment {
                             MainActivity activity = (MainActivity) getActivity();
                             try {
                                 activity.makePostCall("3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/up");
-                            }
-                            catch (Exception e)
-                            {
+                            } catch (Exception e) {
                                 Log.e("Error!", e.toString());
                             }
                             return null;
@@ -374,7 +408,7 @@ public class SingleImageFragment extends Fragment {
             imageView.loadUrl(imageData.getJSONObject().getString("link"));
             int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("height"), getResources().getDisplayMetrics());
             int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("width"), getResources().getDisplayMetrics());
-            if(width < size.x)
+            if (width < size.x)
                 imageView.setLayoutParams(new TableRow.LayoutParams(
                         width, height));
             else
@@ -406,52 +440,51 @@ public class SingleImageFragment extends Fragment {
             Log.e("Text Error!", e.toString());
         }
 
-        if(savedInstanceState == null) {
-        AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                MainActivity activity = (MainActivity) getActivity();
-                if (inGallery) {
+        if (savedInstanceState == null) {
+            AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    MainActivity activity = (MainActivity) getActivity();
+                    if (inGallery) {
+                        try {
+                            commentData = new JSONParcelable();
+                            commentData.setJSONObject(activity.makeGetCall("3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments"));
+                        } catch (Exception e) {
+                            Log.e("Error!", e.toString());
+                        }
+                        Log.d("Gallery Image", "Getting comments..." + commentData.toString());
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
                     try {
-                        commentData = new JSONParcelable();
-                        commentData.setJSONObject(activity.makeGetCall("3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments"));
+                        if (inGallery) {
+                            AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                                @Override
+                                protected Void doInBackground(Void... voids) {
+                                    addComments();
+                                    return null;
+                                }
+
+                                @Override
+                                protected void onPostExecute(Void aVoid) {
+                                    commentAdapter.notifyDataSetChanged();
+                                    commentLayout.setAdapter(commentAdapter);
+                                    Log.d("Gallery Image", "Data set changed");
+                                }
+                            };
+                            async.execute();
+                        }
+
                     } catch (Exception e) {
                         Log.e("Error!", e.toString());
                     }
-                    Log.d("Gallery Image", "Getting comments..." + commentData.toString());
                 }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                try {
-                    if (inGallery) {
-                        AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Void... voids) {
-                                addComments();
-                                return null;
-                            }
-
-                            @Override
-                            protected void onPostExecute(Void aVoid) {
-                                commentAdapter.notifyDataSetChanged();
-                                commentLayout.setAdapter(commentAdapter);
-                                Log.d("Gallery Image", "Data set changed");
-                            }
-                        };
-                        async.execute();
-                    }
-
-                } catch (Exception e) {
-                    Log.e("Error!", e.toString());
-                }
-            }
-        };
-        async.execute();
-        }
-        else {
+            };
+            async.execute();
+        } else {
             commentArray = savedInstanceState.getParcelableArrayList("commentData");
             commentAdapter.addAll(commentArray);
             commentLayout.setAdapter(commentAdapter);
@@ -469,7 +502,7 @@ public class SingleImageFragment extends Fragment {
             for (int i = 0; i < commentJSONArray.length(); i++) {
                 getIndents(commentJSONArray.getJSONObject(i), 0);
             }
-           commentAdapter.addAll(commentArray);
+            commentAdapter.addAll(commentArray);
         } catch (Exception e) {
             Log.e("Error!", e.toString());
         }
@@ -576,9 +609,9 @@ public class SingleImageFragment extends Fragment {
                             viewHolder.buttons.setVisibility(View.GONE);
                     }
                 });
-                if(imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
+                if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
                     holder.upvote.setImageResource(R.drawable.green_rating_good);
-                else if(imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
+                else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
                     holder.downvote.setImageResource(R.drawable.red_rating_bad);
                 holder.reply.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -666,6 +699,7 @@ public class SingleImageFragment extends Fragment {
             return convertView;
         }
     }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelable("imageData", imageData);

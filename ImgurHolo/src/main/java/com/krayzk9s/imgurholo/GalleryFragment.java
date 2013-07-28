@@ -139,8 +139,7 @@ public class GalleryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        if(savedInstanceState != null)
-        {
+        if (savedInstanceState != null) {
 
             gallery = savedInstanceState.getString("gallery");
             sort = savedInstanceState.getString("sort");
@@ -149,15 +148,12 @@ public class GalleryFragment extends Fragment {
             urls = savedInstanceState.getStringArrayList("urls");
             try {
                 ids = savedInstanceState.getParcelableArrayList("ids");
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Log.e("Error!", e.toString());
             }
             page = savedInstanceState.getInt("page");
             selectedIndex = savedInstanceState.getInt("selectedIndex");
-        }
-        else {
+        } else {
             page = 0;
             subreddit = "pics";
             memeType = "top";
@@ -192,20 +188,18 @@ public class GalleryFragment extends Fragment {
                         for (int i = urls.size(); i < imageLength; i++) {
                             JSONObject imageData = imageArray.getJSONObject(i);
                             Log.d("Data", imageData.toString());
-                            if (imageData.has("is_album") && imageData.getBoolean("is_album"))
-                            {
-                                if(!urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png"))
+                            if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
+                                if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png"))
                                     urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
                             }
-                            if(!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png"))
+                            if (!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png"))
                                 urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
                             JSONParcelable dataParcel = new JSONParcelable();
                             dataParcel.setJSONObject(imageData);
                             ids.add(dataParcel);
                             imageAdapter.notifyDataSetChanged();
                         }
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         Log.e("Error!", e.toString());
                     }
                 }
@@ -216,19 +210,19 @@ public class GalleryFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        if(sort.equals("viral") && !gallery.equals("top"))
+        if (sort.equals("viral") && !gallery.equals("top"))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setChecked(true);
-        else if(sort.equals("time") && !gallery.equals("top"))
+        else if (sort.equals("time") && !gallery.equals("top"))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortNewest).setChecked(true);
-        else if(window.equals("day"))
+        else if (window.equals("day"))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortDay).setChecked(true);
-        else if(window.equals("week"))
+        else if (window.equals("week"))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortWeek).setChecked(true);
-        else if(window.equals("month"))
+        else if (window.equals("month"))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortMonth).setChecked(true);
-        else if(window.equals("year"))
+        else if (window.equals("year"))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortYear).setChecked(true);
-        else if(window.equals("all"))
+        else if (window.equals("all"))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortAll).setChecked(true);
 
         if (gallery.equals("hot") || gallery.equals("user")) {
@@ -248,8 +242,7 @@ public class GalleryFragment extends Fragment {
             //menu.findItem(R.id.action_sort).setVisible(true);
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(true);
             //menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setVisible(true);
-            if(sort.equals("top"))
-            {
+            if (sort.equals("top")) {
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(false);
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortDay).setVisible(true);
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortWeek).setVisible(true);
@@ -263,8 +256,7 @@ public class GalleryFragment extends Fragment {
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(true);
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setVisible(false);
             //menu.findItem(R.id.action_sort).setVisible(true);
-            if(sort.equals("top"))
-            {
+            if (sort.equals("top")) {
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(false);
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortDay).setVisible(true);
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortWeek).setVisible(true);
@@ -306,9 +298,8 @@ public class GalleryFragment extends Fragment {
                     for (int i = 0; i < imageLength; i++) {
                         JSONObject imageData = imageArray.getJSONObject(i);
                         Log.d("Data", imageData.toString());
-                        if (imageData.has("is_album") && imageData.getBoolean("is_album"))
-                        {
-                            if(!urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png"))
+                        if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
+                            if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png"))
                                 urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
                         }
                         urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
@@ -370,21 +361,19 @@ public class GalleryFragment extends Fragment {
     public void selectItem(int position) {
         JSONObject id = ids.get(position).getJSONObject();
         try {
-        if(id.getBoolean("is_album")) {
-            ImagesFragment fragment = new ImagesFragment();
-            fragment.setImageCall(id.getString("id"), "3/album/" + id.getString("id"), id);
-            MainActivity activity = (MainActivity) getActivity();
-            activity.changeFragment(fragment);
-        }
-        else {
-            SingleImageFragment fragment = new SingleImageFragment();
-            fragment.setGallery(true);
-            fragment.setParams(id);
-            MainActivity activity = (MainActivity) getActivity();
-            activity.changeFragment(fragment);
-        }
-        }
-        catch (Exception e) {
+            if (id.getBoolean("is_album")) {
+                ImagesFragment fragment = new ImagesFragment();
+                fragment.setImageCall(id.getString("id"), "3/album/" + id.getString("id"), id);
+                MainActivity activity = (MainActivity) getActivity();
+                activity.changeFragment(fragment);
+            } else {
+                SingleImageFragment fragment = new SingleImageFragment();
+                fragment.setGallery(true);
+                fragment.setParams(id);
+                MainActivity activity = (MainActivity) getActivity();
+                activity.changeFragment(fragment);
+            }
+        } catch (Exception e) {
             Log.e("Error!", e.toString());
         }
     }
@@ -401,15 +390,15 @@ public class GalleryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         //if(gallery.equals("subreddit"))
-           // setupActionBar(true);
+        // setupActionBar(true);
         //else
-            //setupActionBar(false);
+        //setupActionBar(false);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(async != null)
+        if (async != null)
             async.cancel(true);
     }
 
@@ -436,46 +425,45 @@ public class GalleryFragment extends Fragment {
         Resources res = activity.getResources();
         List<CharSequence> options = new ArrayList(Arrays.asList(res.getStringArray(R.array.galleryOptions)));
         mSpinnerAdapter = new ArrayAdapter<CharSequence>(activity, android.R.layout.simple_spinner_dropdown_item
-              ,options);
+                , options);
         ActionBar.OnNavigationListener mNavigationCallback = new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int i, long l) {
                 Log.d("URI", String.valueOf(firstPass));
                 page = 0;
-                if(firstPass > 1) {
-                switch (i) {
-                    case 0:
-                        gallery = "hot";
-                        sort = "viral";
-                        break;
-                    case 1:
-                        gallery = "top";
-                        sort = "day";
-                        break;
-                    case 2:
-                        gallery = "user";
-                        sort = "viral";
-                        break;
-                    case 3:
-                        gallery = "memes";
-                        sort = "viral";
-                        break;
-                    case 4:
-                        gallery = "random";
-                        break;
-                }
+                if (firstPass > 1) {
+                    switch (i) {
+                        case 0:
+                            gallery = "hot";
+                            sort = "viral";
+                            break;
+                        case 1:
+                            gallery = "top";
+                            sort = "day";
+                            break;
+                        case 2:
+                            gallery = "user";
+                            sort = "viral";
+                            break;
+                        case 3:
+                            gallery = "memes";
+                            sort = "viral";
+                            break;
+                        case 4:
+                            gallery = "random";
+                            break;
+                    }
                     selectedIndex = i;
-                if(mSpinnerAdapter.getCount() > 5 && !gallery.equals("subreddit"))
-                    mSpinnerAdapter.remove(mSpinnerAdapter.getItem(5));
-                Log.d("URI", gallery);
-                Log.d("URI", "" + i);
-                makeGallery();
-                }
-                else {
+                    if (mSpinnerAdapter.getCount() > 5 && !gallery.equals("subreddit"))
+                        mSpinnerAdapter.remove(mSpinnerAdapter.getItem(5));
+                    Log.d("URI", gallery);
+                    Log.d("URI", "" + i);
+                    makeGallery();
+                } else {
                     Log.d("URI4", String.valueOf(firstPass));
                     Log.d("index", String.valueOf(selectedIndex));
                     actionBar.setSelectedNavigationItem(selectedIndex);
-                    if(selectedIndex == 0)
+                    if (selectedIndex == 0)
                         firstPass += 2;
                     else
                         firstPass++;

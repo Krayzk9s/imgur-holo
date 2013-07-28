@@ -11,6 +11,11 @@
           android:icon="@drawable/content_new_email"
           android:showAsAction="always"
           android:visible="false" />
+    <item android:id="@+id/action_edit"
+          android:title="@string/action_edit"
+          android:orderInCategory="50"
+          android:icon="@drawable/content_edit"
+          android:visible="false" />
     <item android:id="@+id/action_new"
           android:title="@string/action_new"
           android:orderInCategory="100"
