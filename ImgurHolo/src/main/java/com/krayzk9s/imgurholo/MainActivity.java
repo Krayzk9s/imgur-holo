@@ -1,6 +1,8 @@
 package com.krayzk9s.imgurholo;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -27,6 +29,7 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -138,15 +141,27 @@ public class MainActivity extends FragmentActivity {
 
     private class SendImage extends AsyncTask<Void, Void, Void> {
         Intent intent;
+        boolean isResult;
 
-        public SendImage(Intent _intent) {
+        public SendImage(Intent _intent, boolean _isResult) {
             intent = _intent;
+            isResult = _isResult;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
             Token accessKey = getAccessToken();
-            Uri uri = (Uri) intent.getExtras().get("android.intent.extra.STREAM");
+            Uri uri;
+            if(!isResult)
+            {
+                uri = (Uri) intent.getExtras().get("android.intent.extra.STREAM");
+            }
+            else
+            {
+                uri = (Uri) intent.getData();
+            }
+            Log.d("URI", uri.toString());
+
             Cursor cursor = getContentResolver().query(uri, null, null, null, null);
             cursor.moveToFirst();
             final String filePath = cursor.getString(cursor.getColumnIndexOrThrow(Images.Media.DATA));
@@ -176,11 +191,6 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-
-    void handleSendImage(Intent intent) {
-        SendImage async = new SendImage(intent);
-        async.execute();
-    }
 
     private void loadDefaultPage() {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -230,7 +240,8 @@ public class MainActivity extends FragmentActivity {
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/")) {
-                handleSendImage(intent); // Handle single image being sent
+                SendImage async = new SendImage(intent, false);
+                async.execute();
                 return;
             }
         }
@@ -338,6 +349,16 @@ public class MainActivity extends FragmentActivity {
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         return super.onPrepareOptionsMenu(menu);
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 3 && resultCode == -1) {
+            SendImage async = new SendImage(data, true);
+            async.execute(); // Handle single image being sent
+            return;
+        }
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -384,6 +405,54 @@ public class MainActivity extends FragmentActivity {
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, accountFragment)
                             .commit();
+                }
+                break;
+            case 2:
+                if (loggedin) {
+                    new AlertDialog.Builder(this).setTitle("Upload Options")
+                            .setItems(R.array.upload_options, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    switch (whichButton) {
+                                        case 0:
+                                            MainActivity activity = MainActivity.this;
+                                            final EditText urlText = new EditText(activity);
+                                            urlText.setSingleLine();
+                                            new AlertDialog.Builder(activity).setTitle("Enter URL").setView(urlText).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                                                        @Override
+                                                        protected Void doInBackground(Void... voids) {
+                                                            MainActivity activity = MainActivity.this;
+                                                            activity.uploadURL(urlText.getText().toString());
+                                                            return null;
+                                                        }
+                                                    };
+                                                    async.execute();
+                                            }
+                                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    // Do nothing.
+                                                }
+                                            }).show();
+                                            break;
+                                        case 1:
+                                            Intent intent = new Intent();
+                                            intent.setType("image/*");
+                                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                                            startActivityForResult(Intent.createChooser(intent,
+                                                    "Select Picture"), 3);
+                                            break;
+                                        case 2:
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Do nothing.
+                        }
+                    }).show();
                 }
                 break;
             case 3:
@@ -464,6 +533,33 @@ public class MainActivity extends FragmentActivity {
      * When using the ActionBarDrawerToggle, you must call it during
      * onPostCreate() and onConfigurationChanged()...
      */
+
+    public JSONObject uploadURL(String url) {
+        Token accessKey = getAccessToken();
+        Log.d("Making Call", accessKey.toString());
+        HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "3/image")
+                .header("accept", "application/json")
+                .header("X-Mashape-Authorization", MASHAPE_KEY)
+                .header("Authorization", "Bearer " + accessKey.getToken())
+                .field("image", url)
+                .field("type", "URL")
+                .asJson();
+        Log.d("Getting Code", String.valueOf(response.getCode()));
+        int code = response.getCode();
+        if (code == 403) {
+            accessKey = renewAccessToken();
+            response = Unirest.post(MASHAPE_URL + "3/image")
+                    .header("accept", "application/json")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Bearer " + accessKey.getToken())
+                    .field("image", url)
+                    .field("type", "URL")
+                    .asJson();
+        }
+        JSONObject data = response.getBody().getObject();
+        Log.d("Got data", data.toString());
+        return data;
+    }
 
     public JSONObject makeGetCall(String url) {
         Token accessKey = getAccessToken();

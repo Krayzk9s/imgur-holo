@@ -101,4 +101,11 @@
         <item>@string/linked_bbcode_link</item>
         <item>@string/markdown_link</item>
     </array>
+
+    <array
+            name="upload_options">
+        <item>@string/upload_url</item>
+        <item>@string/upload_gallery</item>
+        <item>@string/upload_camera</item>
+    </array>
 </resources>
