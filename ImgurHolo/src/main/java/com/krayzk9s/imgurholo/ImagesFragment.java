@@ -168,8 +168,10 @@ public class ImagesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        urls = new ArrayList<String>();
-        ids = new ArrayList<JSONParcelable>();
+        if(urls == null) {
+            urls = new ArrayList<String>();
+            ids = new ArrayList<JSONParcelable>();
+        }
         View view = inflater.inflate(R.layout.image_layout, container, false);
         gridview = (GridView) view;
         imageAdapter = new ImageAdapter(view.getContext());
@@ -178,7 +180,8 @@ public class ImagesFragment extends Fragment {
         gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         multiChoiceModeListener = new MultiChoiceModeListener();
         gridview.setMultiChoiceModeListener(multiChoiceModeListener);
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && urls.size() == 0) {
+
             async = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... voids) {
@@ -210,7 +213,7 @@ public class ImagesFragment extends Fragment {
                 }
             };
             async.execute();
-        } else {
+        } else if (savedInstanceState != null) {
             urls = savedInstanceState.getStringArrayList("urls");
             ids = savedInstanceState.getParcelableArrayList("ids");
         }

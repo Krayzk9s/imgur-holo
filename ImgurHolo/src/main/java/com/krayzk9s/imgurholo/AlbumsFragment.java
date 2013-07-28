@@ -96,10 +96,12 @@ public class AlbumsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        if (savedInstanceState == null) {
+        boolean newData = false;
+        if (savedInstanceState == null && urls == null) {
             urls = new ArrayList<String>();
             ids = new ArrayList<String>();
-        } else {
+            newData = true;
+        } else if (savedInstanceState != null) {
             urls = savedInstanceState.getStringArrayList("urls");
             ids = savedInstanceState.getStringArrayList("ids");
         }
@@ -108,7 +110,7 @@ public class AlbumsFragment extends Fragment {
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());
-        if (savedInstanceState == null) {
+        if (newData) {
             async = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... voids) {

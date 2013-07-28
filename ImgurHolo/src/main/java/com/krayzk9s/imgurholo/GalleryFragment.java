@@ -173,8 +173,8 @@ public class GalleryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        boolean newData = false;
         if (savedInstanceState != null) {
-
             gallery = savedInstanceState.getString("gallery");
             sort = savedInstanceState.getString("sort");
             window = savedInstanceState.getString("window");
@@ -198,6 +198,7 @@ public class GalleryFragment extends Fragment {
             urls = new ArrayList<String>();
             ids = new ArrayList<JSONParcelable>();
             selectedIndex = 0;
+            newData = true;
         }
 
 
@@ -240,8 +241,10 @@ public class GalleryFragment extends Fragment {
                 }
             }
         });
+        if(!newData)
+            firstPass = 0;
         setupActionBar();
-        if(savedInstanceState == null)
+        if(newData)
             makeGallery();
         return gridview;
     }

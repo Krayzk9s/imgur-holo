@@ -66,7 +66,7 @@ public class AccountFragment extends Fragment {
                 R.layout.drawer_list_item, mMenuList);
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && accountData == null) {
             accountData = new HashMap<String, String>();
             AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                 @Override
@@ -125,9 +125,12 @@ public class AccountFragment extends Fragment {
                 }
             };
             async.execute();
-        } else {
+        } else if(savedInstanceState != null) {
             Bundle extras = savedInstanceState.getBundle("accountData");
             accountData = (HashMap<String, String>) extras.getSerializable("HashMap");
+            updateData();
+        } else
+        {
             updateData();
         }
         return view;
