@@ -424,6 +424,7 @@ public class SingleImageFragment extends Fragment {
         }
         TextView imageDetails = (TextView) imageLayoutView.findViewById(R.id.single_image_details);
         TextView imageTitle = (TextView) imageLayoutView.findViewById(R.id.single_image_title);
+        TextView imageDescription = (TextView) imageLayoutView.findViewById(R.id.single_image_description);
         try {
             Log.d("imagedata", imageData.getJSONObject().toString());
             String size = String.valueOf(imageData.getJSONObject().getInt("width")) + "x" + String.valueOf(imageData.getJSONObject().getInt("height")) + " (" + String.valueOf(imageData.getJSONObject().getInt("size")) + " bytes)";
@@ -434,6 +435,8 @@ public class SingleImageFragment extends Fragment {
             imageDetails.setText(imageData.getJSONObject().getString("type") + " | " + size + " | Views: " + String.valueOf(imageData.getJSONObject().getInt("views")));
             if (imageData.getJSONObject().getString("title") != "null")
                 imageTitle.setText(imageData.getJSONObject().getString("title"));
+            if (imageData.getJSONObject().getString("description") != "null")
+                imageDescription.setText(imageData.getJSONObject().getString("description"));
             commentLayout.addHeaderView(imageLayoutView);
             commentLayout.setAdapter(tempAdapter);
         } catch (Exception e) {

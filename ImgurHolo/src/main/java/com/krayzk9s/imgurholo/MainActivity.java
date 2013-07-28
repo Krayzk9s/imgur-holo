@@ -12,7 +12,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore.Images;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -158,7 +159,7 @@ public class MainActivity extends FragmentActivity {
                 Log.d("URI", uri.toString());
                 Cursor cursor = getContentResolver().query(uri, null, null, null, null);
                 cursor.moveToFirst();
-                final String filePath = cursor.getString(cursor.getColumnIndexOrThrow(Images.Media.DATA));
+                final String filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
                 Log.d("Image Upload", filePath);
                 photo = BitmapFactory.decodeFile(filePath);
             }
@@ -239,10 +240,25 @@ public class MainActivity extends FragmentActivity {
             if (type.startsWith("image/")) {
                 SendImage async = new SendImage((Uri) intent.getExtras().get("android.intent.extra.STREAM"));
                 async.execute();
-                return;
+                finish();
             }
         }
-        Uri uri = intent.getData();
+
+        if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+            Log.d("sending", "sending multiple");
+            ArrayList<Parcelable> list =
+                    intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+                for (Parcelable parcel : list) {
+                    Uri uri = (Uri) parcel;
+                    Log.d("sending", uri.toString());
+                    SendImage async = new SendImage(uri);
+                    async.execute();
+                /// do things here with each image source path.
+            }
+            finish();
+        }
+
+    Uri uri = intent.getData();
         Log.d("URI", "resumed2!");
         String uripath = "";
         if (uri != null)
@@ -349,7 +365,8 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("intent", data.toString());
+        if(resultCode == -1)
+            Log.d("intent", data.toString());
         if (requestCode == 3 && resultCode == -1) {
             SendImage async = new SendImage((Uri) data.getData());
             async.execute(); // Handle single image being sent
@@ -445,6 +462,7 @@ public class MainActivity extends FragmentActivity {
                                             intent = new Intent();
                                             intent.setType("image/*");
                                             intent.setAction(Intent.ACTION_GET_CONTENT);
+                                            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                                             startActivityForResult(Intent.createChooser(intent,
                                                     "Select Picture"), 3);
                                             break;
