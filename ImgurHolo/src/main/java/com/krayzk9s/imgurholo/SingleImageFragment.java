@@ -7,8 +7,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.TypedValue;
@@ -20,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -28,11 +31,17 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.webkit.WebSettings.LayoutAlgorithm;
 
+import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -85,6 +94,7 @@ public class SingleImageFragment extends Fragment {
         if(!inGallery)
             menu.findItem(R.id.action_delete).setVisible(true);
         menu.findItem(R.id.action_share).setVisible(true);
+        menu.findItem(R.id.action_download).setVisible(true);
         menu.findItem(R.id.action_copy).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
     }
@@ -92,8 +102,38 @@ public class SingleImageFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
-        MainActivity activity = (MainActivity) getActivity();
+        final MainActivity activity = (MainActivity) getActivity();
         switch (item.getItemId()) {
+            case R.id.action_download:
+                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        try {
+                            URL url = new URL(imageData.getJSONObject().getString("link"));
+                            String type = imageData.getJSONObject().getString("link").split("/")[3];
+                            File file = new File(android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + imageData.getJSONObject().getString("id") + "." + type);
+                            URLConnection ucon = url.openConnection();
+                            InputStream is = ucon.getInputStream();
+                            BufferedInputStream bis = new BufferedInputStream(is);
+                            ByteArrayBuffer baf = new ByteArrayBuffer(50);
+                            int current = 0;
+                            while ((current = bis.read()) != -1) {
+                                baf.append((byte) current);
+                            }
+                            FileOutputStream fos = new FileOutputStream(file);
+                            fos.write(baf.toByteArray());
+                            fos.close();
+                            activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                                    + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))));
+                        }
+                        catch (Exception e) {
+                            Log.e("Error!", e.toString());
+                        }
+                        return null;
+                    }
+                };
+                async.execute();
+                return true;
             case R.id.action_delete:
                 new AlertDialog.Builder(activity).setTitle("Delete Image?")
                         .setMessage("Are you sure you want to delete this image? This cannot be undone")

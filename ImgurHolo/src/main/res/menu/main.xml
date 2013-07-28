@@ -33,13 +33,11 @@
           android:title="@string/action_delete"
           android:orderInCategory="100"
           android:icon="@drawable/content_discard"
-          android:showAsAction="always"
           android:visible="false" />
     <item android:id="@+id/action_download"
           android:title="@string/action_download"
           android:orderInCategory="100"
           android:icon="@drawable/av_download"
-          android:showAsAction="always"
           android:visible="false" />
     <item android:id="@+id/action_search"
           android:title="@string/action_search"

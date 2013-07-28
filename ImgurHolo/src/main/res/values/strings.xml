@@ -44,7 +44,7 @@
     <string name="memes">memes</string>
     <string name="subreddit">SubReddit</string>
     <string name="action_copy">Copy URLs</string>
-    <string name="action_delete">Delete Images</string>
+    <string name="action_delete">Delete</string>
     <string name="action_sort">Sort Gallery</string>
     <string name="fifty">50</string>
     <string name="one_hundred">100</string>
