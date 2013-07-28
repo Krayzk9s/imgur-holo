@@ -355,7 +355,7 @@ public class GalleryFragment extends Fragment {
 
         // create a new ImageView for each item referenced by the Adapter
         public View getView(int position, View convertView, ViewGroup parent) {
-            final ImageView imageView = new SquareImageView(mContext);
+            ImageView imageView = new SquareImageView(mContext);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             UrlImageViewHelper.setUrlDrawable(imageView, urls.get(position), R.drawable.icon);
             return imageView;

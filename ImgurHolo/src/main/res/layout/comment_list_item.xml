@@ -90,6 +90,7 @@
                           android:minHeight="50dp"
                           android:layout_marginRight="5dip"
                           android:textAppearance="?android:textAppearanceSmall"
+                          android:autoLink="web"
                         />
             </LinearLayout>
         </LinearLayout>

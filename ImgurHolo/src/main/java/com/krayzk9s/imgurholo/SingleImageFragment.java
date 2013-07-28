@@ -6,25 +6,29 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TableRow;
 import android.widget.TextView;
-
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import android.webkit.WebSettings.LayoutAlgorithm;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,6 +36,8 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by Kurt Zimmer on 7/22/13.
@@ -51,6 +57,7 @@ public class SingleImageFragment extends Fragment {
     ImageButton imageComment;
     ImageButton imageReport;
     ArrayList<JSONParcelable> commentArray;
+    PhotoViewAttacher mAttacher;
 
     public SingleImageFragment() {
         inGallery = false;
@@ -193,7 +200,7 @@ public class SingleImageFragment extends Fragment {
         commentLayout = (ListView) mainView.findViewById(R.id.comment_thread);
         MainActivity activity = (MainActivity) getActivity();
         LinearLayout imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
-        ImageView imageView = (ImageView) imageLayoutView.findViewById(R.id.single_image_view);
+        WebView imageView = (WebView) imageLayoutView.findViewById(R.id.single_image_view);
         if(savedInstanceState != null) {
             imageData = savedInstanceState.getParcelable("imageData");
         }
@@ -321,12 +328,23 @@ public class SingleImageFragment extends Fragment {
 
         Log.d("URI", "YO I'M IN YOUR SINGLE FRAGMENT gallery:" + inGallery);
         try {
-            Log.d("Cover", "" + imageData.getJSONObject().has("cover"));
-            Log.d("Cover URL", "http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png");
+            Display display = ((WindowManager) activity.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            imageView.loadUrl(imageData.getJSONObject().getString("link"));
+            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("height"), getResources().getDisplayMetrics());
+            int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("width"), getResources().getDisplayMetrics());
+            if(width < size.x)
+                imageView.setLayoutParams(new TableRow.LayoutParams(
+                        width, height));
+            else
+                imageView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+            /*
             if(imageData.getJSONObject().has("cover"))
                 UrlImageViewHelper.setUrlDrawable(imageView, "http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png", R.drawable.icon);
             else
                 UrlImageViewHelper.setUrlDrawable(imageView, imageData.getJSONObject().getString("link"), R.drawable.icon);
+            mAttacher = new PhotoViewAttacher(imageView);*/
         } catch (Exception e) {
             Log.e("drawable Error!", e.toString());
         }

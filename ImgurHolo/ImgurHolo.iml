@@ -75,6 +75,7 @@
     <orderEntry type="library" name="httpcore-nio-4.2.2" level="project" />
     <orderEntry type="library" name="httpasyncclient-4.0-beta3" level="project" />
     <orderEntry type="library" name="urlimageviewhelper-1.0.4" level="project" />
+    <orderEntry type="library" name="library-1.2.1" level="project" />
   </component>
 </module>
 

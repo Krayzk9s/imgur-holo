@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     compile 'com.android.support:support-v4:13.0.+'
+    compile 'com.github.chrisbanes.photoview:library:1.2.1'
     compile 'com.mashape.unirest:unirest-java:1.1.1'
     compile 'org.apache.httpcomponents:httpmime:4.2.3'
     compile 'org.apache.httpcomponents:httpclient:4.2.3'
