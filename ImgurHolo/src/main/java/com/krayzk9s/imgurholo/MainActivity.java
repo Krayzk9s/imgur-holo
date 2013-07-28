@@ -42,6 +42,7 @@ import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity {
 
@@ -199,14 +200,14 @@ public class MainActivity extends FragmentActivity {
         } else if (settings.getString("DefaultPage", "").equals("Your Images")) {
             setTitle("Your Images");
             ImagesFragment imagesFragment = new ImagesFragment();
-            imagesFragment.setImageCall(false, "3/account/me/images/0", null);
+            imagesFragment.setImageCall(null, "3/account/me/images/0", null);
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Your Favorites")) {
             setTitle("Your Favorites");
             ImagesFragment imagesFragment = new ImagesFragment();
-            imagesFragment.setImageCall(false, "3/account/me/likes", null);
+            imagesFragment.setImageCall(null, "3/account/me/likes", null);
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
                     .commit();
@@ -389,7 +390,7 @@ public class MainActivity extends FragmentActivity {
                 if (loggedin) {
                     setTitle("Your Images");
                     ImagesFragment imagesFragment = new ImagesFragment();
-                    imagesFragment.setImageCall(false, "3/account/me/images/0", null);
+                    imagesFragment.setImageCall(null, "3/account/me/images/0", null);
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)
                             .commit();
@@ -410,7 +411,7 @@ public class MainActivity extends FragmentActivity {
                 if (loggedin) {
                     setTitle("Your Favorites");
                     ImagesFragment imagesFragment = new ImagesFragment();
-                    imagesFragment.setImageCall(false, "3/account/me/likes", null);
+                    imagesFragment.setImageCall(null, "3/account/me/likes", null);
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)
                             .commit();
@@ -658,6 +659,52 @@ public class MainActivity extends FragmentActivity {
                     .header("X-Mashape-Authorization", MASHAPE_KEY)
                     .header("Authorization", "Bearer " + accessKey.getToken())
                     .asJson();
+        }
+    }
+
+    public void deleteImages(ArrayList<String> deleteImages) {
+        Token accessKey = getAccessToken();
+        Log.d("Making Call", accessKey.toString());
+        HttpResponse<JsonNode> response;
+        for(int i = 0; i < deleteImages.size(); i++) {
+            response = Unirest.get(MASHAPE_URL + "3/image/" + deleteImages.get(i))
+                    .header("accept", "application/json")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Bearer " + accessKey.getToken())
+                    .asJson();
+            Log.d("Getting Code", String.valueOf(response.getCode()));
+            Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
+            int code = response.getCode();
+            if (code == 403) {
+                accessKey = renewAccessToken();
+                Unirest.get(MASHAPE_URL + "3/image/" + deleteImages.get(i))
+                        .header("accept", "application/json")
+                        .header("X-Mashape-Authorization", MASHAPE_KEY)
+                        .header("Authorization", "Bearer " + accessKey.getToken())
+                        .asJson();
+            }
+            try {
+            String deletehash = response.getBody().getObject().getJSONObject("data").getString("deletehash");
+                response = Unirest.delete(MASHAPE_URL + "3/image/" + deletehash)
+                        .header("accept", "application/json")
+                        .header("X-Mashape-Authorization", MASHAPE_KEY)
+                        .header("Authorization", "Bearer " + accessKey.getToken())
+                        .asJson();
+                Log.d("Getting Code", String.valueOf(response.getCode()));
+                Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
+                code = response.getCode();
+                if (code == 403) {
+                    accessKey = renewAccessToken();
+                    Unirest.delete(MASHAPE_URL + "3/image/" + deletehash)
+                            .header("accept", "application/json")
+                            .header("X-Mashape-Authorization", MASHAPE_KEY)
+                            .header("Authorization", "Bearer " + accessKey.getToken())
+                            .asJson();
+                }
+            }
+            catch (Exception e) {
+                Log.e("Error!", e.toString());
+            }
         }
     }
 

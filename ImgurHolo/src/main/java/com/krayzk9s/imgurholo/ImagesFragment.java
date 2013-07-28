@@ -1,5 +1,7 @@
 package com.krayzk9s.imgurholo;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -38,7 +40,6 @@ public class ImagesFragment extends Fragment {
     ImageAdapter imageAdapter;
     AsyncTask<Void, Void, Void> async;
     String imageCall;
-    boolean isAlbum;
     GridView gridview;
     public boolean selecting = false;
     MultiChoiceModeListener multiChoiceModeListener;
@@ -46,13 +47,14 @@ public class ImagesFragment extends Fragment {
     String albumId;
     JSONObject galleryAlbumData;
     JSONObject imageParam;
+    JSONObject imagesData;
 
     public ImagesFragment() {
 
     }
 
-    public void setImageCall(boolean _isAlbum, String _imageCall, JSONObject _data) {
-        isAlbum = _isAlbum;
+    public void setImageCall(String _Album, String _imageCall, JSONObject _data) {
+        albumId = _Album;
         imageCall = _imageCall;
         galleryAlbumData = _data;
     }
@@ -68,25 +70,51 @@ public class ImagesFragment extends Fragment {
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         menu.findItem(R.id.action_upload).setVisible(false);
-        if (isAlbum && galleryAlbumData == null) {
+        if (albumId != null && galleryAlbumData == null) {
             menu.findItem(R.id.action_new).setVisible(true);
         }
-        if (isAlbum && galleryAlbumData != null) {
+        if (albumId != null && galleryAlbumData != null) {
             menu.findItem(R.id.action_comments).setVisible(true);
+        }
+        if(albumId != null) {
+            menu.findItem(R.id.action_copy).setVisible(true);
+            menu.findItem(R.id.action_share).setVisible(true);
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
+        MainActivity activity = (MainActivity) getActivity();
         switch (item.getItemId()) {
+            case R.id.action_copy:
+                try {
+                    ClipboardManager clipboard = (ClipboardManager)
+                            activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("imgur Link", "http://imgur.com/a/" + albumId);
+                    clipboard.setPrimaryClip(clip);
+                }
+                catch (Exception e) {
+                    Log.e("Error!", e.toString());
+                }
+                return true;
+            case R.id.action_share:
+                Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                try {
+                    intent.putExtra(Intent.EXTRA_TEXT, "http://imgur.com/a/" + albumId);
+                } catch (Exception e) {
+                    Log.e("Error!", "bad link to share");
+                }
+                startActivity(intent);
+                return true;
             case R.id.action_new:
                 Intent i = new Intent(this.getActivity().getApplicationContext(), ImageSelectActivity.class);
                 startActivityForResult(i, 1);
                 //select image
                 return true;
             case R.id.action_comments:
-
                     async = new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... voids) {
@@ -158,7 +186,7 @@ public class ImagesFragment extends Fragment {
             @Override
             protected Void doInBackground(Void... voids) {
                 MainActivity activity = (MainActivity) getActivity();
-                JSONObject imagesData = activity.makeGetCall(imageCall);
+                imagesData = activity.makeGetCall(imageCall);
                 try {
                     JSONArray imageArray;
                     if(imagesData.optJSONObject("data") != null)
@@ -280,12 +308,26 @@ public class ImagesFragment extends Fragment {
         }
 
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch(item.getItemId()) {
+                case R.id.action_delete:
+                    getChecked();
+                    async = new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            MainActivity activity = (MainActivity) getActivity();
+                            activity.deleteImages(intentReturn);
+                            return null;
+                        }
+                    };
+                    async.execute();
+                    break;
+                default:
+                    break;
+            }
             return true;
         }
 
         public void onDestroyActionMode(ActionMode mode) {
-
-
             if (selecting) {
                 Intent intent = new Intent();
                 intent.putExtra("data", intentReturn);

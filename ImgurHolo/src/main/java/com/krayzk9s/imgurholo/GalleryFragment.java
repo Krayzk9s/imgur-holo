@@ -375,7 +375,7 @@ public class GalleryFragment extends Fragment {
         try {
         if(id.getBoolean("is_album")) {
             ImagesFragment fragment = new ImagesFragment();
-            fragment.setImageCall(true, "3/album/" + id.getString("id"), id);
+            fragment.setImageCall(id.getString("id"), "3/album/" + id.getString("id"), id);
             MainActivity activity = (MainActivity) getActivity();
             activity.changeFragment(fragment);
         }

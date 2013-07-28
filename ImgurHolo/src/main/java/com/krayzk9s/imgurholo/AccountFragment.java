@@ -164,12 +164,12 @@ public class AccountFragment extends Fragment {
                 break;
             case 1:
                 imagesFragment = new ImagesFragment();
-                imagesFragment.setImageCall(false, "3/account/me/images/0", null);
+                imagesFragment.setImageCall(null, "3/account/me/images/0", null);
                 activity.changeFragment(imagesFragment);
                 break;
             case 2:
                 imagesFragment = new ImagesFragment();
-                imagesFragment.setImageCall(false, "3/account/me/likes", null);
+                imagesFragment.setImageCall(null, "3/account/me/likes", null);
                 activity.changeFragment(imagesFragment);
                 break;
             case 6:
