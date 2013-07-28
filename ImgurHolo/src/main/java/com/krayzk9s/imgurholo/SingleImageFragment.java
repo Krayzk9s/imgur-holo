@@ -612,9 +612,9 @@ public class SingleImageFragment extends Fragment {
                             viewHolder.buttons.setVisibility(View.GONE);
                     }
                 });
-                if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
+                if (viewData.getString("vote") != null && viewData.getString("vote").equals("up"))
                     holder.upvote.setImageResource(R.drawable.green_rating_good);
-                else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
+                else if (viewData.getString("vote") != null && viewData.getString("vote").equals("down"))
                     holder.downvote.setImageResource(R.drawable.red_rating_bad);
                 holder.reply.setOnClickListener(new View.OnClickListener() {
                     @Override

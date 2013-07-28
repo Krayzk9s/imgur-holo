@@ -877,6 +877,27 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    public void deleteComment(String commentId) {
+        Token accessKey = getAccessToken();
+        Log.d("Making Call", accessKey.toString());
+        HttpResponse<JsonNode> response = Unirest.delete(MASHAPE_URL + "/3/comment/" + commentId)
+                .header("accept", "application/json")
+                .header("X-Mashape-Authorization", MASHAPE_KEY)
+                .header("Authorization", "Bearer " + accessKey.getToken())
+                .asJson();
+        Log.d("Getting Code", String.valueOf(response.getCode()));
+        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
+        int code = response.getCode();
+        if (code == 403) {
+            accessKey = renewAccessToken();
+            Unirest.delete(MASHAPE_URL + "/3/comment/" + commentId)
+                    .header("accept", "application/json")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Bearer " + accessKey.getToken())
+                    .asJson();
+        }
+    }
+
     public void reportPost(String username) {
         Token accessKey = getAccessToken();
         Log.d("Making Call", accessKey.toString());

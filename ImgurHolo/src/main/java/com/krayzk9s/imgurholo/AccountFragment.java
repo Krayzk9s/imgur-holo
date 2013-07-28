@@ -171,6 +171,10 @@ public class AccountFragment extends Fragment {
                 imagesFragment.setImageCall(null, "3/account/me/likes", null);
                 activity.changeFragment(imagesFragment);
                 break;
+            case 3:
+                CommentsFragment commentsFragment = new CommentsFragment();;
+                activity.changeFragment(commentsFragment);
+                break;
             case 6:
                 MessagingFragment messagingFragment = new MessagingFragment();
                 activity.changeFragment(messagingFragment);
