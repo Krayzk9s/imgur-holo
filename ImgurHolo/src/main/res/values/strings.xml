@@ -64,7 +64,7 @@
     <string name="hello_world">Hello world!</string>
 
     <string name="upload_url">Upload From Web</string>
-    <string name="upload_gallery">Upload From Gallery</string>
+    <string name="upload_gallery">Upload From Phone</string>
     <string name="upload_camera">Take a Picture With the Camera</string>
 
 </resources>

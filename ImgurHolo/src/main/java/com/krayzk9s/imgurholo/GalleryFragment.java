@@ -28,7 +28,6 @@ import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.scribe.model.Token;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -287,8 +286,6 @@ public class GalleryFragment extends Fragment {
             protected Void doInBackground(Void... voids) {
                 MainActivity activity = (MainActivity) getActivity();
                 ActionBar actionBar = activity.getActionBar();
-                Token accessKey = activity.getAccessToken();
-                Log.d("Key", accessKey.getToken());
                 imagesData = new JSONObject();
                 if (gallery.equals("hot") || gallery.equals("top") || gallery.equals("user")) {
                     imagesData = activity.makeGetCall("3/gallery/" + gallery + "/" + sort + "/" + window + "/" + page);

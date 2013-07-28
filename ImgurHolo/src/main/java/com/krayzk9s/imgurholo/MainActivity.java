@@ -140,35 +140,30 @@ public class MainActivity extends FragmentActivity {
 
 
     private class SendImage extends AsyncTask<Void, Void, Void> {
-        Intent intent;
-        boolean isResult;
+        Uri uri;
+        Bitmap photo;
 
-        public SendImage(Intent _intent, boolean _isResult) {
-            intent = _intent;
-            isResult = _isResult;
+        public SendImage(Uri _uri) {
+            uri = _uri;
+        }
+
+        public SendImage(Bitmap _photo) {
+            photo = _photo;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
             Token accessKey = getAccessToken();
-            Uri uri;
-            if(!isResult)
-            {
-                uri = (Uri) intent.getExtras().get("android.intent.extra.STREAM");
+            if(uri != null) {
+                Log.d("URI", uri.toString());
+                Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+                cursor.moveToFirst();
+                final String filePath = cursor.getString(cursor.getColumnIndexOrThrow(Images.Media.DATA));
+                Log.d("Image Upload", filePath);
+                photo = BitmapFactory.decodeFile(filePath);
             }
-            else
-            {
-                uri = (Uri) intent.getData();
-            }
-            Log.d("URI", uri.toString());
-
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            cursor.moveToFirst();
-            final String filePath = cursor.getString(cursor.getColumnIndexOrThrow(Images.Media.DATA));
-            Bitmap thumbnail = BitmapFactory.decodeFile(filePath);
-            Log.d("Image Upload", filePath);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            thumbnail.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] byteArray = stream.toByteArray();
             if (byteArray == null)
                 Log.d("Image Upload", "NULL :(");
@@ -195,7 +190,9 @@ public class MainActivity extends FragmentActivity {
     private void loadDefaultPage() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        if (!settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery")) {
+        if(!loggedin)
+            return;
+        else if (!settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery")) {
             setTitle("Gallery");
             GalleryFragment galleryFragment = new GalleryFragment();
             fragmentManager.beginTransaction()
@@ -240,7 +237,7 @@ public class MainActivity extends FragmentActivity {
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/")) {
-                SendImage async = new SendImage(intent, false);
+                SendImage async = new SendImage((Uri) intent.getExtras().get("android.intent.extra.STREAM"));
                 async.execute();
                 return;
             }
@@ -351,8 +348,16 @@ public class MainActivity extends FragmentActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("intent", data.toString());
         if (requestCode == 3 && resultCode == -1) {
-            SendImage async = new SendImage(data, true);
+            SendImage async = new SendImage((Uri) data.getData());
+            async.execute(); // Handle single image being sent
+            return;
+        }
+        if (requestCode == 4 && resultCode == -1) {
+            Log.d("intent extras", data.getExtras().toString());
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            SendImage async = new SendImage(photo);
             async.execute(); // Handle single image being sent
             return;
         }
@@ -412,6 +417,7 @@ public class MainActivity extends FragmentActivity {
                     new AlertDialog.Builder(this).setTitle("Upload Options")
                             .setItems(R.array.upload_options, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
+                                    Intent intent;
                                     switch (whichButton) {
                                         case 0:
                                             MainActivity activity = MainActivity.this;
@@ -436,13 +442,15 @@ public class MainActivity extends FragmentActivity {
                                             }).show();
                                             break;
                                         case 1:
-                                            Intent intent = new Intent();
+                                            intent = new Intent();
                                             intent.setType("image/*");
                                             intent.setAction(Intent.ACTION_GET_CONTENT);
                                             startActivityForResult(Intent.createChooser(intent,
                                                     "Select Picture"), 3);
                                             break;
                                         case 2:
+                                            intent = new Intent("android.media.action.IMAGE_CAPTURE");
+                                            startActivityForResult(intent, 4);
                                             break;
                                         default:
                                             break;
