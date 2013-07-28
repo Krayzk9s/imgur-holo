@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
@@ -53,6 +54,10 @@ public class GalleryFragment extends Fragment {
     int firstPass = 0;
     int selectedIndex;
     JSONObject imagesData;
+    SearchView mSearchView;
+    MenuItem searchItem;
+    String search;
+    CharSequence spinner;
 
     public GalleryFragment() {
 
@@ -71,6 +76,33 @@ public class GalleryFragment extends Fragment {
         menu.findItem(R.id.action_sort).setVisible(true);
         menu.findItem(R.id.subreddit).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
+
+        menu.findItem(R.id.action_search).setVisible(true);
+
+        searchItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) searchItem.getActionView();
+       SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Do nothing
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("searching", mSearchView.getQuery() + "");
+                mSpinnerAdapter.add("search: " + mSearchView.getQuery());
+                if (mSpinnerAdapter.getCount() > 6)
+                    mSpinnerAdapter.remove(mSpinnerAdapter.getItem(5));
+                gallery = "search";
+                search = mSearchView.getQuery() + "";
+                searchItem.collapseActionView();
+                actionBar.setSelectedNavigationItem(5);
+                makeGallery();
+                return true;
+            }
+        };
+        mSearchView.setOnQueryTextListener(queryTextListener);
         menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(false);
         menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setVisible(true);
     }
@@ -90,9 +122,11 @@ public class GalleryFragment extends Fragment {
                 new AlertDialog.Builder(activity).setTitle("Choose SubReddit").setView(subredditText).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         subreddit = subredditText.getText().toString();
-                        mSpinnerAdapter.add("subreddit");
+                        mSpinnerAdapter.add("/r/" + subreddit);
+                        if (mSpinnerAdapter.getCount() > 6)
+                            mSpinnerAdapter.remove(mSpinnerAdapter.getItem(5));
+                        mSpinnerAdapter.notifyDataSetChanged();
                         actionBar.setSelectedNavigationItem(5);
-                        makeGallery();
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -153,7 +187,8 @@ public class GalleryFragment extends Fragment {
             }
             page = savedInstanceState.getInt("page");
             selectedIndex = savedInstanceState.getInt("selectedIndex");
-        } else {
+            spinner = savedInstanceState.getCharSequence("spinner");
+        } else if (subreddit == null) {
             page = 0;
             subreddit = "pics";
             memeType = "top";
@@ -164,7 +199,8 @@ public class GalleryFragment extends Fragment {
             ids = new ArrayList<JSONParcelable>();
             selectedIndex = 0;
         }
-        setupActionBar(false);
+
+
         Log.d("NOT HERE EITHER", gallery);
         View view = inflater.inflate(R.layout.image_layout, container, false);
         GridView gridview = (GridView) view;
@@ -176,7 +212,6 @@ public class GalleryFragment extends Fragment {
             public void onScrollStateChanged(AbsListView absListView, int i) {
 
             }
-
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 int lastInScreen = firstVisibleItem + visibleItemCount;
@@ -205,6 +240,9 @@ public class GalleryFragment extends Fragment {
                 }
             }
         });
+        setupActionBar();
+        if(savedInstanceState == null)
+            makeGallery();
         return gridview;
     }
 
@@ -277,7 +315,6 @@ public class GalleryFragment extends Fragment {
             @Override
             protected Void doInBackground(Void... voids) {
                 MainActivity activity = (MainActivity) getActivity();
-                ActionBar actionBar = activity.getActionBar();
                 imagesData = new JSONObject();
                 if (gallery.equals("hot") || gallery.equals("top") || gallery.equals("user")) {
                     imagesData = activity.makeGetCall("3/gallery/" + gallery + "/" + sort + "/" + window + "/" + page);
@@ -286,8 +323,9 @@ public class GalleryFragment extends Fragment {
                 } else if (gallery.equals("random")) {
                     imagesData = activity.makeGetCall("3/gallery/random/random/" + page);
                 } else if (gallery.equals("subreddit")) {
-                    Log.d("SORT", sort);
                     imagesData = activity.makeGetCall("3/gallery/r/" + subreddit + "/" + sort + "/" + window + "/" + page);
+                } else if (gallery.equals("search")) {
+                    imagesData = activity.makeGetCall("3/gallery/search?q=" + search);
                 }
                 try {
                     Log.d("URI", imagesData.toString());
@@ -379,25 +417,11 @@ public class GalleryFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroyView() {
+        super.onDestroyView();
         MainActivity activity = (MainActivity) getActivity();
         ActionBar actionBar = activity.getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //if(gallery.equals("subreddit"))
-        // setupActionBar(true);
-        //else
-        //setupActionBar(false);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
         if (async != null)
             async.cancel(true);
     }
@@ -413,12 +437,15 @@ public class GalleryFragment extends Fragment {
         savedInstanceState.putParcelableArrayList("ids", ids);
         savedInstanceState.putInt("page", page);
         savedInstanceState.putInt("selectedIndex", selectedIndex);
-
+        if(mSpinnerAdapter.getCount() > 5)
+            savedInstanceState.putCharSequence("spinner", mSpinnerAdapter.getItem(5));
+        else
+            savedInstanceState.putCharSequence("spinner", null);
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    private void setupActionBar(boolean subreddit) {
+    private void setupActionBar() {
         MainActivity activity = (MainActivity) getActivity();
         actionBar = activity.getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -426,6 +453,8 @@ public class GalleryFragment extends Fragment {
         List<CharSequence> options = new ArrayList(Arrays.asList(res.getStringArray(R.array.galleryOptions)));
         mSpinnerAdapter = new ArrayAdapter<CharSequence>(activity, android.R.layout.simple_spinner_dropdown_item
                 , options);
+        if(spinner != null)
+            mSpinnerAdapter.add(spinner);
         ActionBar.OnNavigationListener mNavigationCallback = new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int i, long l) {
@@ -454,7 +483,7 @@ public class GalleryFragment extends Fragment {
                             break;
                     }
                     selectedIndex = i;
-                    if (mSpinnerAdapter.getCount() > 5 && !gallery.equals("subreddit"))
+                    if (mSpinnerAdapter.getCount() > 5 && !gallery.equals("subreddit") && !gallery.equals("search"))
                         mSpinnerAdapter.remove(mSpinnerAdapter.getItem(5));
                     Log.d("URI", gallery);
                     Log.d("URI", "" + i);
@@ -462,19 +491,16 @@ public class GalleryFragment extends Fragment {
                 } else {
                     Log.d("URI4", String.valueOf(firstPass));
                     Log.d("index", String.valueOf(selectedIndex));
-                    actionBar.setSelectedNavigationItem(selectedIndex);
-                    if (selectedIndex == 0)
+
                         firstPass += 2;
-                    else
-                        firstPass++;
                     Log.d("URI2", String.valueOf(firstPass));
-                    makeGallery();
                 }
                 Log.d("URI3", String.valueOf(firstPass));
                 return true;
             }
         };
         actionBar.setListNavigationCallbacks(mSpinnerAdapter, mNavigationCallback);
+        actionBar.setSelectedNavigationItem(selectedIndex);
     }
 
 
