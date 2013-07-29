@@ -22,6 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
@@ -48,6 +49,7 @@ public class ImagesFragment extends Fragment {
     JSONObject galleryAlbumData;
     JSONObject imageParam;
     JSONObject imagesData;
+    TextView noImageView;
 
     public ImagesFragment() {
 
@@ -173,7 +175,8 @@ public class ImagesFragment extends Fragment {
             ids = new ArrayList<JSONParcelable>();
         }
         View view = inflater.inflate(R.layout.image_layout, container, false);
-        gridview = (GridView) view;
+        gridview = (GridView) view.findViewById(R.id.grid_layout);
+        noImageView = (TextView) view.findViewById(R.id.no_images);
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());
@@ -182,9 +185,9 @@ public class ImagesFragment extends Fragment {
         gridview.setMultiChoiceModeListener(multiChoiceModeListener);
         if (savedInstanceState == null && urls.size() == 0) {
 
-            async = new AsyncTask<Void, Void, Void>() {
+            AsyncTask<Void, Void, Boolean> imageAsync = new AsyncTask<Void, Void, Boolean>() {
                 @Override
-                protected Void doInBackground(Void... voids) {
+                protected Boolean doInBackground(Void... voids) {
                     MainActivity activity = (MainActivity) getActivity();
                     imagesData = activity.makeGetCall(imageCall);
                     try {
@@ -196,29 +199,38 @@ public class ImagesFragment extends Fragment {
                         Log.d("single image array", imageArray.toString());
                         for (int i = 0; i < imageArray.length(); i++) {
                             JSONObject imageData = imageArray.getJSONObject(i);
-                            urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
+                            Log.d("Data", imageData.toString());
+                            if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
+                                    urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
+                            }
+                            else {
+                                    urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
+                            }
                             JSONParcelable dataParcel = new JSONParcelable();
                             dataParcel.setJSONObject(imageData);
                             ids.add(dataParcel);
                         }
+                        return (imageArray.length() > 0);
                     } catch (Exception e) {
                         Log.e("Error!", "bad image array data" + e.toString());
                     }
-                    return null;
+                    return false;
                 }
-
                 @Override
-                protected void onPostExecute(Void aVoid) {
-                    imageAdapter.notifyDataSetChanged();
+                protected void onPostExecute(Boolean changed) {
+                    if(changed)
+                        imageAdapter.notifyDataSetChanged();
+                    else
+                        noImageView.setVisibility(View.VISIBLE);
                 }
             };
-            async.execute();
+            imageAsync.execute();
         } else if (savedInstanceState != null) {
             urls = savedInstanceState.getStringArrayList("urls");
             ids = savedInstanceState.getParcelableArrayList("ids");
         }
 
-        return gridview;
+        return view;
     }
 
     public class ImageAdapter extends BaseAdapter {
@@ -269,12 +281,24 @@ public class ImagesFragment extends Fragment {
 
     public void selectItem(int position) {
         if (!selecting) {
-
             JSONObject id = ids.get(position).getJSONObject();
-            SingleImageFragment fragment = new SingleImageFragment();
-            fragment.setParams(id);
-            MainActivity activity = (MainActivity) getActivity();
-            activity.changeFragment(fragment);
+            try {
+            if (id.getBoolean("is_album")) {
+                ImagesFragment fragment = new ImagesFragment();
+                fragment.setImageCall(id.getString("id"), "3/album/" + id.getString("id"), id);
+                MainActivity activity = (MainActivity) getActivity();
+                activity.changeFragment(fragment);
+            } else {
+                SingleImageFragment fragment = new SingleImageFragment();
+                fragment.setGallery(true);
+                fragment.setParams(id);
+                MainActivity activity = (MainActivity) getActivity();
+                activity.changeFragment(fragment);
+            }
+            }
+            catch (Exception e) {
+                Log.e("Error!", e.toString());
+            }
         }
     }
 

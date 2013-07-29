@@ -36,6 +36,16 @@
     </array>
 
     <array
+            name="accountMenuNotMe">
+        <item>@string/menu_albums</item>
+        <item>@string/menu_images</item>
+        <item>@string/menu_likes</item>
+        <item>@string/menu_comments</item>
+        <item>@string/menu_account_creation</item>
+        <item>@string/menu_bio</item>
+    </array>
+
+    <array
             name="emptyList">
     </array>
 

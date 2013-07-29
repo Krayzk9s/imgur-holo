@@ -201,7 +201,7 @@ public class MainActivity extends FragmentActivity {
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Your Albums")) {
             setTitle("Your Albums");
-            AlbumsFragment albumsFragment = new AlbumsFragment();
+            AlbumsFragment albumsFragment = new AlbumsFragment("me");
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, albumsFragment)
                     .commit();
@@ -221,7 +221,7 @@ public class MainActivity extends FragmentActivity {
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Your Account")) {
             setTitle("Your Account");
-            AccountFragment accountFragment = new AccountFragment();
+            AccountFragment accountFragment = new AccountFragment("me");
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, accountFragment)
                     .commit();
@@ -423,7 +423,7 @@ public class MainActivity extends FragmentActivity {
             case 1:
                 if (loggedin) {
                     setTitle("Your Account");
-                    AccountFragment accountFragment = new AccountFragment();
+                    AccountFragment accountFragment = new AccountFragment("me");
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, accountFragment)
                             .commit();
@@ -495,7 +495,7 @@ public class MainActivity extends FragmentActivity {
             case 4:
                 if (loggedin) {
                     setTitle("Your Albums");
-                    AlbumsFragment albumsFragment = new AlbumsFragment();
+                    AlbumsFragment albumsFragment = new AlbumsFragment("me");
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, albumsFragment)
                             .commit();

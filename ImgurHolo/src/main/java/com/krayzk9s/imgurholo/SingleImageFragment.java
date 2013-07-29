@@ -514,10 +514,7 @@ public class SingleImageFragment extends Fragment {
     private void getIndents(JSONObject comment, int currentIndent) {
         JSONArray children;
         try {
-            Log.d("Putting Indent", comment.toString());
-            Log.d("Indent", "" + currentIndent);
             comment.put("indent", currentIndent);
-            Log.d("Put Indent", comment.toString());
             children = null;
             if (comment.has("children")) {
                 children = comment.getJSONArray("children");
@@ -527,13 +524,10 @@ public class SingleImageFragment extends Fragment {
             commentParse.setJSONObject(comment);
             commentArray.add(commentParse);
             if (children != null) {
-                Log.d("Got children", children.toString());
                 for (int i = 0; i < children.length(); i++) {
                     JSONObject child = children.getJSONObject(i);
-                    Log.d("Got child", child.toString());
                     getIndents(child, currentIndent + 1);
                 }
-
             }
         } catch (Exception e) {
             Log.e("Error!", e.toString());
@@ -586,7 +580,7 @@ public class SingleImageFragment extends Fragment {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            JSONObject viewData = this.getItem(position).getJSONObject();
+            final JSONObject viewData = this.getItem(position).getJSONObject();
             try {
                 holder.id = viewData.getString("id");
                 int indentLevel = viewData.getInt("indent");
@@ -602,6 +596,20 @@ public class SingleImageFragment extends Fragment {
                 }
                 holder.body.setText(viewData.getString("comment"));
                 holder.header.setText(viewData.getString("author") + " " + viewData.getString("points") + "pts (" + viewData.getString("ups") + "/" + viewData.getString("downs") + ")");
+                holder.header.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                         AccountFragment accountFragment = new AccountFragment(viewData.getString("author"));
+                         MainActivity activity = (MainActivity) getActivity();
+                         activity.changeFragment(accountFragment);
+                        }
+                        catch (Exception e) {
+                            Log.e("Error!", e.toString());
+                        }
+
+                    }
+                });
                 convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

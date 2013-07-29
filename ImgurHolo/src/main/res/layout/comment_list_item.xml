@@ -79,7 +79,7 @@
                           android:layout_height="wrap_content"
                           android:layout_marginRight="5dip"
                           android:textAppearance="?android:textAppearanceSmall"
-                          android:textColor="@color/DarkGray"
+                          android:textColor="@color/SkyBlue"
                         />
 
                 <TextView xmlns:android="http://schemas.android.com/apk/res/android"

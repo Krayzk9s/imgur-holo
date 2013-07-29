@@ -33,9 +33,10 @@ public class CommentsFragment extends Fragment {
     MessageAdapter commentsAdapter;
     ListView mDrawerList;
     ArrayList<JSONParcelable> commentDataArray;
+    String username;
 
-    public CommentsFragment() {
-
+    public CommentsFragment(String _username) {
+        username = _username;
     }
 
     @Override
@@ -77,7 +78,7 @@ public class CommentsFragment extends Fragment {
                 @Override
                 protected JSONObject doInBackground(Void... voids) {
                     MainActivity activity = (MainActivity) getActivity();
-                    JSONObject comments = activity.makeGetCall("/3/account/me/comments");
+                    JSONObject comments = activity.makeGetCall("/3/account/" + username + "/comments");
                     try {
                         JSONArray data = comments.getJSONArray("data");
                         for (int i = 0; i < data.length(); i++) {
@@ -168,6 +169,8 @@ public class CommentsFragment extends Fragment {
                 holder.header.setText(accountCreated + " - " + commentContent.getString("points") + "pts (" + commentContent.getString("ups") + "/" + commentContent.getString("downs") +  ")");
                 holder.id = commentContent.getString("id");
                 holder.image_id = commentContent.getString("image_id");
+                if (!username.equals("me"))
+                    holder.delete.setVisibility(View.GONE);
                 holder.delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -20,6 +20,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
@@ -37,9 +38,11 @@ public class AlbumsFragment extends Fragment {
     private ArrayList<String> ids;
     ImageAdapter imageAdapter;
     AsyncTask<Void, Void, Void> async;
+    String username;
+    TextView noImageView;
 
-    public AlbumsFragment() {
-
+    public AlbumsFragment(String _username) {
+        username = _username;
     }
 
     @Override
@@ -106,37 +109,43 @@ public class AlbumsFragment extends Fragment {
             ids = savedInstanceState.getStringArrayList("ids");
         }
         View view = inflater.inflate(R.layout.image_layout, container, false);
-        GridView gridview = (GridView) view;
+        noImageView = (TextView) view.findViewById(R.id.no_images);
+        GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());
         if (newData) {
-            async = new AsyncTask<Void, Void, Void>() {
+            AsyncTask<Void, Void, Boolean> imageAsync = new AsyncTask<Void, Void, Boolean>() {
                 @Override
-                protected Void doInBackground(Void... voids) {
+                protected Boolean doInBackground(Void... voids) {
                     MainActivity activity = (MainActivity) getActivity();
-                    JSONObject imagesData = activity.makeGetCall("3/account/me/albums");
+                    JSONObject imagesData = activity.makeGetCall("3/account/" + username + "/albums");
                     try {
                         JSONArray imageArray = imagesData.getJSONArray("data");
                         for (int i = 0; i < imageArray.length(); i++) {
                             JSONObject imageData = imageArray.getJSONObject(i);
                             urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
                             ids.add(imageData.getString("id"));
+                            if(imageArray.length() > 0)
+                                return true;
+                            else return false;
                         }
                     } catch (Exception e) {
                         Log.e("Error!", e.toString());
                     }
-                    return null;
+                    return false;
                 }
-
                 @Override
-                protected void onPostExecute(Void aVoid) {
-                    imageAdapter.notifyDataSetChanged();
+                protected void onPostExecute(Boolean hasImages) {
+                    if(hasImages)
+                        imageAdapter.notifyDataSetChanged();
+                    else
+                        noImageView.setVisibility(View.VISIBLE);
                 }
             };
-            async.execute();
+            imageAsync.execute();
         }
-        return gridview;
+        return view;
     }
 
     public class ImageAdapter extends BaseAdapter {

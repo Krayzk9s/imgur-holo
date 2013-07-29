@@ -204,7 +204,7 @@ public class GalleryFragment extends Fragment {
 
         Log.d("NOT HERE EITHER", gallery);
         View view = inflater.inflate(R.layout.image_layout, container, false);
-        GridView gridview = (GridView) view;
+        GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());
@@ -228,8 +228,10 @@ public class GalleryFragment extends Fragment {
                                 if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png"))
                                     urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
                             }
-                            if (!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png"))
-                                urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
+                            else {
+                                if (!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png"))
+                                    urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
+                            }
                             JSONParcelable dataParcel = new JSONParcelable();
                             dataParcel.setJSONObject(imageData);
                             ids.add(dataParcel);
@@ -246,7 +248,7 @@ public class GalleryFragment extends Fragment {
         setupActionBar();
         if(newData)
             makeGallery();
-        return gridview;
+        return view;
     }
 
     @Override
@@ -343,7 +345,10 @@ public class GalleryFragment extends Fragment {
                             if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png"))
                                 urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
                         }
-                        urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
+                        else {
+                            if (!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png"))
+                                urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
+                        }
                         JSONParcelable dataParcel = new JSONParcelable();
                         dataParcel.setJSONObject(imageData);
                         ids.add(dataParcel);
