@@ -283,7 +283,7 @@ public class ImagesFragment extends Fragment {
         if (!selecting) {
             JSONObject id = ids.get(position).getJSONObject();
             try {
-            if (id.getBoolean("is_album")) {
+            if (id.has("is_album") && id.getBoolean("is_album")) {
                 ImagesFragment fragment = new ImagesFragment();
                 fragment.setImageCall(id.getString("id"), "3/album/" + id.getString("id"), id);
                 MainActivity activity = (MainActivity) getActivity();

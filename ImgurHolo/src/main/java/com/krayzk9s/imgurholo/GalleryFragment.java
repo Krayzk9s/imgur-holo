@@ -200,8 +200,6 @@ public class GalleryFragment extends Fragment {
             selectedIndex = 0;
             newData = true;
         }
-
-
         Log.d("NOT HERE EITHER", gallery);
         View view = inflater.inflate(R.layout.image_layout, container, false);
         GridView gridview = (GridView) view.findViewById(R.id.grid_layout);

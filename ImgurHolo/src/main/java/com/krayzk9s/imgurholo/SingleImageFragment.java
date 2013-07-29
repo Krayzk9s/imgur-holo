@@ -92,11 +92,11 @@ public class SingleImageFragment extends Fragment {
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        if (!inGallery)
+        if (!inGallery) {
             menu.findItem(R.id.action_delete).setVisible(true);
-        menu.findItem(R.id.action_share).setVisible(true);
-        if(!inGallery)
             menu.findItem(R.id.action_edit).setVisible(true);
+        }
+        menu.findItem(R.id.action_share).setVisible(true);
         menu.findItem(R.id.action_download).setVisible(true);
         menu.findItem(R.id.action_copy).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
@@ -271,10 +271,13 @@ public class SingleImageFragment extends Fragment {
         getActivity().getFragmentManager().popBackStack();
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        boolean newData = true;
+        if (commentData != null) {
+            newData = false;
+        }
         mainView = inflater.inflate(R.layout.single_image_layout, container, false);
         mMenuList = getResources().getStringArray(R.array.emptyList);
         commentAdapter = new CommentAdapter(mainView.getContext(),
@@ -283,8 +286,10 @@ public class SingleImageFragment extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         LinearLayout imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
         WebView imageView = (WebView) imageLayoutView.findViewById(R.id.single_image_view);
-        if (savedInstanceState != null) {
+
+        if (savedInstanceState != null && newData) {
             imageData = savedInstanceState.getParcelable("imageData");
+            inGallery = savedInstanceState.getBoolean("inGallery");
         }
         if (inGallery) {
             LinearLayout layout = (LinearLayout) imageLayoutView.findViewById(R.id.image_buttons);
@@ -360,8 +365,19 @@ public class SingleImageFragment extends Fragment {
             imageUpvote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    imageUpvote.setImageResource(R.drawable.green_rating_good);
-                    imageDownvote.setImageResource(R.drawable.rating_bad);
+                    try {
+                        if (!imageData.getJSONObject().getString("vote").equals("up")) {
+                            imageUpvote.setImageResource(R.drawable.green_rating_good);
+                            imageDownvote.setImageResource(R.drawable.rating_bad);
+                            imageData.getJSONObject().put("vote", "up");
+                        } else {
+                            imageUpvote.setImageResource(R.drawable.rating_good);
+                            imageDownvote.setImageResource(R.drawable.rating_bad);
+                            imageData.getJSONObject().put("vote", "none");
+                        }
+                    } catch (Exception e) {
+                        Log.e("Error!", e.toString());
+                    }
                     AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... voids) {
@@ -380,8 +396,19 @@ public class SingleImageFragment extends Fragment {
             imageDownvote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    imageUpvote.setImageResource(R.drawable.rating_good);
-                    imageDownvote.setImageResource(R.drawable.red_rating_bad);
+                    try {
+                        if (!imageData.getJSONObject().getString("vote").equals("down")) {
+                            imageUpvote.setImageResource(R.drawable.rating_good);
+                            imageDownvote.setImageResource(R.drawable.red_rating_bad);
+                            imageData.getJSONObject().put("vote", "down");
+                        } else {
+                            imageUpvote.setImageResource(R.drawable.rating_good);
+                            imageDownvote.setImageResource(R.drawable.rating_bad);
+                            imageData.getJSONObject().put("vote", "none");
+                        }
+                    } catch (Exception e) {
+                        Log.e("Error!", e.toString());
+                    }
                     AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... voids) {
@@ -407,7 +434,10 @@ public class SingleImageFragment extends Fragment {
             Display display = ((WindowManager) activity.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
-            imageView.loadUrl(imageData.getJSONObject().getString("link"));
+            if (imageData.getJSONObject().has("cover"))
+                imageView.loadUrl("http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png");
+            else
+                imageView.loadUrl(imageData.getJSONObject().getString("link"));
             int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("height"), getResources().getDisplayMetrics());
             int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("width"), getResources().getDisplayMetrics());
             if (width < size.x)
@@ -415,12 +445,6 @@ public class SingleImageFragment extends Fragment {
                         width, height));
             else
                 imageView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-            /*
-            if(imageData.getJSONObject().has("cover"))
-                UrlImageViewHelper.setUrlDrawable(imageView, "http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png", R.drawable.icon);
-            else
-                UrlImageViewHelper.setUrlDrawable(imageView, imageData.getJSONObject().getString("link"), R.drawable.icon);
-            mAttacher = new PhotoViewAttacher(imageView);*/
         } catch (Exception e) {
             Log.e("drawable Error!", e.toString());
         }
@@ -437,15 +461,18 @@ public class SingleImageFragment extends Fragment {
             imageDetails.setText(imageData.getJSONObject().getString("type") + " | " + size + " | Views: " + String.valueOf(imageData.getJSONObject().getInt("views")));
             if (imageData.getJSONObject().getString("title") != "null")
                 imageTitle.setText(imageData.getJSONObject().getString("title"));
+            else
+                imageTitle.setVisibility(View.GONE);
             if (imageData.getJSONObject().getString("description") != "null")
                 imageDescription.setText(imageData.getJSONObject().getString("description"));
+            else
+                imageDescription.setVisibility(View.GONE);
             commentLayout.addHeaderView(imageLayoutView);
             commentLayout.setAdapter(tempAdapter);
         } catch (Exception e) {
             Log.e("Text Error!", e.toString());
         }
-
-        if (savedInstanceState == null) {
+        if ((savedInstanceState == null || commentData == null) && newData) {
             AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... voids) {
@@ -489,8 +516,12 @@ public class SingleImageFragment extends Fragment {
                 }
             };
             async.execute();
-        } else {
+        } else if (newData) {
             commentArray = savedInstanceState.getParcelableArrayList("commentData");
+            commentAdapter.addAll(commentArray);
+            commentLayout.setAdapter(commentAdapter);
+            commentAdapter.notifyDataSetChanged();
+        } else {
             commentAdapter.addAll(commentArray);
             commentLayout.setAdapter(commentAdapter);
             commentAdapter.notifyDataSetChanged();
@@ -536,6 +567,51 @@ public class SingleImageFragment extends Fragment {
         }
     }
 
+    private void setDescendantsHidden(View view) {
+        LinearLayout convertView = (LinearLayout) view.getParent().getParent().getParent();
+        ViewHolder holder = (ViewHolder) convertView.getTag();
+        int position = holder.position;
+        JSONObject viewData = commentAdapter.getItem(position).getJSONObject();
+        try {
+            if (!viewData.has("hidden"))
+                viewData.put("hidden", ViewHolder.VIEW_VISIBLE);
+            boolean hiding;
+            int indentLevel = viewData.getInt("indent");
+            if (viewData.getInt("hidden") != ViewHolder.VIEW_HIDDEN) {
+                viewData.put("hidden", ViewHolder.VIEW_HIDDEN);
+                hiding = true;
+            } else {
+                viewData.put("hidden", ViewHolder.VIEW_VISIBLE);
+                hiding = false;
+            }
+            for (int i = position + 1; i < commentAdapter.getCount(); i++) {
+                JSONObject childViewData = commentAdapter.getItem(i).getJSONObject();
+                if (childViewData.getInt("indent") > indentLevel) {
+                    if (hiding) {
+                        childViewData.put("hidden", ViewHolder.VIEW_DESCENDANT);
+                        commentAdapter.addHiddenItem(i);
+                    } else {
+                        childViewData.put("hidden", ViewHolder.VIEW_VISIBLE);
+                        commentAdapter.removeHiddenItem(i);
+                    }
+                } else
+                    break;
+            }
+        } catch (Exception e) {
+            Log.e("Converting to Hidden Error!", e.toString());
+        }
+        commentAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelable("imageData", imageData);
+        savedInstanceState.putParcelableArrayList("commentData", commentArray);
+        savedInstanceState.putBoolean("inGallery", inGallery);
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
     private static class ViewHolder {
         static final int VIEW_VISIBLE = 0;
         static final int VIEW_HIDDEN = 1;
@@ -555,262 +631,265 @@ public class SingleImageFragment extends Fragment {
     }
 
     public class CommentAdapter extends ArrayAdapter<JSONParcelable> {
+        final static int HIDDEN_TYPE = 0;
+        final static int VISIBLE_TYPE = 1;
         private LayoutInflater mInflater;
+        private ArrayList<Integer> hiddenViews;
 
         public CommentAdapter(Context context, int textViewResourceId) {
             super(context, textViewResourceId);
+            hiddenViews = new ArrayList<Integer>();
             mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        public void addHiddenItem(int position) {
+            if (!hiddenViews.contains(Integer.valueOf(position)))
+                hiddenViews.add(Integer.valueOf(position));
+        }
+
+        public void removeHiddenItem(int position) {
+            hiddenViews.remove(Integer.valueOf(position));
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return hiddenViews.contains(Integer.valueOf(position)) ? HIDDEN_TYPE : VISIBLE_TYPE;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final JSONObject viewData = this.getItem(position).getJSONObject();
             ViewHolder holder;
-            try {
-                if(viewData.has("hidden") && viewData.getInt("hidden") == ViewHolder.VIEW_DESCENDANT) {
-                    holder = (ViewHolder) convertView.getTag();
-                    holder.position = position;
-                    convertView.setTag(holder);
-                    convertView = mInflater.inflate(R.layout.zerolayout, null);
-                    return convertView;
-                }
-            }
-            catch (Exception e) {
-                Log.e("Error!", "View Data Error" + e.toString());
-            }
+            int type = getItemViewType(position);
             if (convertView == null || convertView.getTag() == null) {
-                convertView = mInflater.inflate(R.layout.comment_list_item, null);
                 holder = new ViewHolder();
-                holder.body = (TextView) convertView.findViewById(R.id.body);
-                holder.username = (TextView) convertView.findViewById(R.id.username);
-                holder.points = (TextView) convertView.findViewById(R.id.points);
-                holder.buttons = (LinearLayout) convertView.findViewById(R.id.comment_buttons);
-                holder.upvote = (ImageButton) holder.buttons.findViewById(R.id.rating_good);
-                holder.downvote = (ImageButton) holder.buttons.findViewById(R.id.rating_bad);
-                holder.downvote = (ImageButton) holder.buttons.findViewById(R.id.rating_bad);
-                holder.reply = (ImageButton) holder.buttons.findViewById(R.id.reply);
-                holder.report = (ImageButton) holder.buttons.findViewById(R.id.report);
-                holder.header = (RelativeLayout) convertView.findViewById(R.id.header);
-                holder.id = "";
-                holder.position = position;
-                holder.indentViews = new View[]{
-                        convertView.findViewById(R.id.margin_1),
-                        convertView.findViewById(R.id.margin_2),
-                        convertView.findViewById(R.id.margin_3),
-                        convertView.findViewById(R.id.margin_4),
-                        convertView.findViewById(R.id.margin_5),
-                        convertView.findViewById(R.id.margin_6)
-                };
-                convertView.setTag(holder);
+                switch (type) {
+                    case HIDDEN_TYPE:
+                        convertView = mInflater.inflate(R.layout.zerolayout, null);
+                        return convertView;
+                    case VISIBLE_TYPE:
+                        convertView = mInflater.inflate(R.layout.comment_list_item, null);
+                        holder = new ViewHolder();
+                        holder.body = (TextView) convertView.findViewById(R.id.body);
+                        holder.username = (TextView) convertView.findViewById(R.id.username);
+                        holder.points = (TextView) convertView.findViewById(R.id.points);
+                        holder.buttons = (LinearLayout) convertView.findViewById(R.id.comment_buttons);
+                        holder.upvote = (ImageButton) holder.buttons.findViewById(R.id.rating_good);
+                        holder.downvote = (ImageButton) holder.buttons.findViewById(R.id.rating_bad);
+                        holder.reply = (ImageButton) holder.buttons.findViewById(R.id.reply);
+                        holder.report = (ImageButton) holder.buttons.findViewById(R.id.report);
+                        holder.header = (RelativeLayout) convertView.findViewById(R.id.header);
+                        holder.id = "";
+                        holder.position = position;
+                        holder.indentViews = new View[]{
+                                convertView.findViewById(R.id.margin_1),
+                                convertView.findViewById(R.id.margin_2),
+                                convertView.findViewById(R.id.margin_3),
+                                convertView.findViewById(R.id.margin_4),
+                                convertView.findViewById(R.id.margin_5),
+                                convertView.findViewById(R.id.margin_6)
+                        };
+                        convertView.setTag(holder);
+                        break;
+                }
+
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
+            switch (getItemViewType(position)) {
+                case VISIBLE_TYPE:
+                    try {
+                        holder.position = position;
+                        holder.id = viewData.getString("id");
+                        int indentLevel = viewData.getInt("indent");
+                        holder.buttons.setVisibility(View.GONE);
+                        int indentPosition = Math.min(indentLevel, holder.indentViews.length - 1);
 
-            try {
 
-                holder.position = position;
-                holder.id = viewData.getString("id");
-                int indentLevel = viewData.getInt("indent");
-                holder.buttons.setVisibility(View.GONE);
-                int indentPosition = Math.min(indentLevel, holder.indentViews.length - 1);
-
-
-                for (int i = 0; i < indentPosition - 1; i++) {
-                    holder.indentViews[i].setVisibility(View.INVISIBLE);
-                }
-                if (indentPosition > 0)
-                    holder.indentViews[indentPosition - 1].setVisibility(View.VISIBLE);
-                for (int i = indentPosition; i < holder.indentViews.length; i++) {
-                    holder.indentViews[i].setVisibility(View.GONE);
-                }
-                holder.body.setText(viewData.getString("comment"));
-
-                if(viewData.getString("author").length() < 25)
-                    holder.username.setText(viewData.getString("author"));
-                else
-                    holder.username.setText(viewData.getString("author").substring(0, 25) + "...");
-
-                holder.points.setText(viewData.getString("points") + "pts (" + viewData.getString("ups") + "/" + viewData.getString("downs") + ")");
-
-                holder.header.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        setDescendantsHidden(view);
-                    }
-                });
-                holder.username.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        try {
-                            AccountFragment accountFragment = new AccountFragment(viewData.getString("author"));
-                            MainActivity activity = (MainActivity) getActivity();
-                            activity.changeFragment(accountFragment);
-                        } catch (Exception e) {
-                            Log.e("Error!", e.toString());
+                        for (int i = 0; i < indentPosition - 1; i++) {
+                            holder.indentViews[i].setVisibility(View.INVISIBLE);
                         }
+                        if (indentPosition > 0)
+                            holder.indentViews[indentPosition - 1].setVisibility(View.VISIBLE);
+                        for (int i = indentPosition; i < holder.indentViews.length; i++) {
+                            holder.indentViews[i].setVisibility(View.GONE);
+                        }
+                        holder.body.setText(viewData.getString("comment"));
 
-                    }
-                });
-                convertView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ViewHolder viewHolder = (ViewHolder) view.getTag();
-                        if (viewHolder.buttons.getVisibility() == View.GONE)
-                            viewHolder.buttons.setVisibility(View.VISIBLE);
+                        if (viewData.getString("author").length() < 25)
+                            holder.username.setText(viewData.getString("author"));
                         else
-                            viewHolder.buttons.setVisibility(View.GONE);
-                    }
-                });
+                            holder.username.setText(viewData.getString("author").substring(0, 25) + "...");
 
-                holder.body.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        View convertView = (View) view.getParent().getParent().getParent();
-                        ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-                        if (viewHolder.buttons.getVisibility() == View.GONE)
-                            viewHolder.buttons.setVisibility(View.VISIBLE);
-                        else
-                            viewHolder.buttons.setVisibility(View.GONE);
-                    }
-                });
-                if (viewData.getString("vote") != null && viewData.getString("vote").equals("up"))
-                    holder.upvote.setImageResource(R.drawable.green_rating_good);
-                else if (viewData.getString("vote") != null && viewData.getString("vote").equals("down"))
-                    holder.downvote.setImageResource(R.drawable.red_rating_bad);
-                holder.reply.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        LinearLayout layout = (LinearLayout) view.getParent().getParent();
-                        final ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                        try {
-                            MainActivity activity = (MainActivity) getActivity();
-                            final EditText newBody = new EditText(activity);
-                            newBody.setHint("Body");
-                            new AlertDialog.Builder(activity).setTitle("Reply to Comment")
-                                    .setView(newBody).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                                        @Override
-                                        protected Void doInBackground(Void... voids) {
-                                            MainActivity activity = (MainActivity) getActivity();
-                                            try {
-                                                Log.d("comment", dataHolder.id + newBody.getText().toString() + imageData.getJSONObject().getString("id"));
-                                                activity.makeGalleryReply(imageData.getJSONObject().getString("id"), newBody.getText().toString(), dataHolder.id);
-                                            } catch (Exception e) {
-                                                Log.e("Error!", "oops, some text fields missing values" + e.toString());
-                                            }
-                                            return null;
+                        holder.points.setText(viewData.getString("points") + "pts (" + viewData.getString("ups") + "/" + viewData.getString("downs") + ")");
+
+                        holder.header.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                setDescendantsHidden(view);
+                            }
+                        });
+                        holder.username.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                try {
+                                    AccountFragment accountFragment = new AccountFragment(viewData.getString("author"));
+                                    MainActivity activity = (MainActivity) getActivity();
+                                    activity.changeFragment(accountFragment);
+                                } catch (Exception e) {
+                                    Log.e("Error!", e.toString());
+                                }
+
+                            }
+                        });
+                        convertView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ViewHolder viewHolder = (ViewHolder) view.getTag();
+                                if (viewHolder.buttons.getVisibility() == View.GONE)
+                                    viewHolder.buttons.setVisibility(View.VISIBLE);
+                                else
+                                    viewHolder.buttons.setVisibility(View.GONE);
+                            }
+                        });
+
+                        holder.body.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                View convertView = (View) view.getParent().getParent().getParent();
+                                ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+                                if (viewHolder.buttons.getVisibility() == View.GONE)
+                                    viewHolder.buttons.setVisibility(View.VISIBLE);
+                                else
+                                    viewHolder.buttons.setVisibility(View.GONE);
+                            }
+                        });
+                        if (viewData.getString("vote") != null && viewData.getString("vote").equals("up"))
+                            holder.upvote.setImageResource(R.drawable.green_rating_good);
+                        else if (viewData.getString("vote") != null && viewData.getString("vote").equals("down"))
+                            holder.downvote.setImageResource(R.drawable.red_rating_bad);
+                        holder.reply.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                LinearLayout layout = (LinearLayout) view.getParent().getParent();
+                                final ViewHolder dataHolder = (ViewHolder) layout.getTag();
+                                try {
+                                    MainActivity activity = (MainActivity) getActivity();
+                                    final EditText newBody = new EditText(activity);
+                                    newBody.setHint("Body");
+                                    new AlertDialog.Builder(activity).setTitle("Reply to Comment")
+                                            .setView(newBody).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                                                @Override
+                                                protected Void doInBackground(Void... voids) {
+                                                    MainActivity activity = (MainActivity) getActivity();
+                                                    try {
+                                                        Log.d("comment", dataHolder.id + newBody.getText().toString() + imageData.getJSONObject().getString("id"));
+                                                        activity.makeGalleryReply(imageData.getJSONObject().getString("id"), newBody.getText().toString(), dataHolder.id);
+                                                    } catch (Exception e) {
+                                                        Log.e("Error!", "oops, some text fields missing values" + e.toString());
+                                                    }
+                                                    return null;
+                                                }
+                                            };
+                                            async.execute();
                                         }
-                                    };
-                                    async.execute();
+                                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            // Do nothing.
+                                        }
+                                    }).show();
+                                } catch (Exception e) {
+                                    Log.e("Error!", "missing data" + e.toString());
                                 }
-                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    // Do nothing.
+                            }
+                        });
+                        holder.upvote.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                LinearLayout layout = (LinearLayout) view.getParent().getParent();
+                                final ViewHolder dataHolder = (ViewHolder) layout.getTag();
+                                try {
+                                    if (!viewData.getString("vote").equals("up")) {
+                                        dataHolder.upvote.setImageResource(R.drawable.green_rating_good);
+                                        dataHolder.downvote.setImageResource(R.drawable.rating_bad);
+                                        viewData.put("vote", "up");
+                                    } else {
+                                        dataHolder.upvote.setImageResource(R.drawable.rating_good);
+                                        dataHolder.downvote.setImageResource(R.drawable.rating_bad);
+                                        viewData.put("vote", "none");
+                                    }
                                 }
-                            }).show();
-                        } catch (Exception e) {
-                            Log.e("Error!", "missing data" + e.toString());
-                        }
-                    }
-                });
-                holder.upvote.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        LinearLayout layout = (LinearLayout) view.getParent().getParent();
-                        final ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                        dataHolder.upvote.setImageResource(R.drawable.green_rating_good);
-                        dataHolder.downvote.setImageResource(R.drawable.rating_bad);
-                        AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Void... voids) {
-                                MainActivity activity = (MainActivity) getActivity();
-                                activity.makePostCall("/3/comment/" + dataHolder.id + "/vote/up");
-                                return null;
+                                catch (Exception e) {
+                                    Log.e("Error!", e.toString());
+                                }
+                                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                                    @Override
+                                    protected Void doInBackground(Void... voids) {
+                                        MainActivity activity = (MainActivity) getActivity();
+                                        activity.makePostCall("/3/comment/" + dataHolder.id + "/vote/up");
+                                        return null;
+                                    }
+                                };
+                                async.execute();
                             }
-                        };
-                        async.execute();
-                    }
-                });
-                holder.downvote.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        LinearLayout layout = (LinearLayout) view.getParent().getParent();
-                        final ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                        dataHolder.upvote.setImageResource(R.drawable.rating_good);
-                        dataHolder.downvote.setImageResource(R.drawable.red_rating_bad);
-                        AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                        });
+                        holder.downvote.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            protected Void doInBackground(Void... voids) {
-                                MainActivity activity = (MainActivity) getActivity();
-                                activity.makePostCall("/3/comment/" + dataHolder.id + "/vote/down");
-                                return null;
+                            public void onClick(View view) {
+                                LinearLayout layout = (LinearLayout) view.getParent().getParent();
+                                final ViewHolder dataHolder = (ViewHolder) layout.getTag();
+                                try {
+                                    if (!viewData.getString("vote").equals("down")) {
+                                        dataHolder.upvote.setImageResource(R.drawable.rating_good);
+                                        dataHolder.downvote.setImageResource(R.drawable.red_rating_bad);
+                                        viewData.put("vote", "down");
+                                    } else {
+                                        dataHolder.upvote.setImageResource(R.drawable.rating_good);
+                                        dataHolder.downvote.setImageResource(R.drawable.rating_bad);
+                                        viewData.put("vote", "none");
+                                    }
+                                }
+                                catch (Exception e) {
+                                    Log.e("Error!", e.toString());
+                                }
+                                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                                    @Override
+                                    protected Void doInBackground(Void... voids) {
+                                        MainActivity activity = (MainActivity) getActivity();
+                                        activity.makePostCall("/3/comment/" + dataHolder.id + "/vote/down");
+                                        return null;
+                                    }
+                                };
+                                async.execute();
                             }
-                        };
-                        async.execute();
+                        });
+                        holder.report.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                            }
+                        });
+                        if (viewData.has("hidden") && viewData.getInt("hidden") == ViewHolder.VIEW_HIDDEN) {
+                            holder.body.setVisibility(View.GONE);
+                        } else
+                            holder.body.setVisibility(View.VISIBLE);
+                    } catch (Exception e) {
+                        Log.e("View Error!", e.toString());
                     }
-                });
-                holder.report.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                });
-                if(viewData.has("hidden") && viewData.getInt("hidden") == ViewHolder.VIEW_HIDDEN) {
-                    holder.body.setVisibility(View.GONE);
-                }
-                else
-                    holder.body.setVisibility(View.VISIBLE);
-            } catch (Exception e) {
-                Log.e("View Error!", e.toString());
-            }
-            convertView.setTag(holder);
-            return convertView;
-        }
-    }
-
-    private void setDescendantsHidden(View view) {
-        LinearLayout convertView = (LinearLayout) view.getParent().getParent().getParent();
-        ViewHolder holder = (ViewHolder) convertView.getTag();
-        int position = holder.position;
-        JSONObject viewData = commentAdapter.getItem(position).getJSONObject();
-        try {
-            if(!viewData.has("hidden"))
-                viewData.put("hidden", ViewHolder.VIEW_VISIBLE);
-            boolean hiding;
-            int indentLevel = viewData.getInt("indent");
-            if(viewData.getInt("hidden") != ViewHolder.VIEW_HIDDEN) {
-                viewData.put("hidden", ViewHolder.VIEW_HIDDEN);
-                hiding = true;
-            }
-            else {
-                viewData.put("hidden", ViewHolder.VIEW_VISIBLE);
-                hiding = false;
-            }
-            for(int i = position + 1; i < commentAdapter.getCount(); i++)
-            {
-                JSONObject childViewData = commentAdapter.getItem(i).getJSONObject();
-                if(childViewData.getInt("indent") > indentLevel) {
-                    if(hiding)
-                        childViewData.put("hidden", ViewHolder.VIEW_DESCENDANT);
-                    else
-                        childViewData.put("hidden", ViewHolder.VIEW_VISIBLE);
-                }
-                else
-                    break;
+                    convertView.setTag(holder);
+                    return convertView;
+                case HIDDEN_TYPE:
+                    return convertView;
+                default:
+                    return convertView;
             }
         }
-        catch (Exception e) {
-            Log.e("Converting to Hidden Error!", e.toString());
-        }
-        commentAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putParcelable("imageData", imageData);
-        savedInstanceState.putParcelableArrayList("commentData", commentArray);
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
     }
 }

@@ -55,7 +55,8 @@ public class AlbumsFragment extends Fragment {
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        menu.findItem(R.id.action_new).setVisible(true);
+        if(username.equals("me"))
+            menu.findItem(R.id.action_new).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
     }
 
