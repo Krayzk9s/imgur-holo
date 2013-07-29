@@ -407,7 +407,7 @@ public class GalleryFragment extends Fragment {
     public void selectItem(int position) {
         JSONObject id = ids.get(position).getJSONObject();
         try {
-            if (id.getBoolean("is_album")) {
+            if (id.has("is_album") && id.getBoolean("is_album")) {
                 ImagesFragment fragment = new ImagesFragment();
                 fragment.setImageCall(id.getString("id"), "3/album/" + id.getString("id"), id);
                 MainActivity activity = (MainActivity) getActivity();
@@ -445,7 +445,7 @@ public class GalleryFragment extends Fragment {
         savedInstanceState.putParcelableArrayList("ids", ids);
         savedInstanceState.putInt("page", page);
         savedInstanceState.putInt("selectedIndex", selectedIndex);
-        if(mSpinnerAdapter.getCount() > 5)
+        if(mSpinnerAdapter != null && mSpinnerAdapter.getCount() > 5)
             savedInstanceState.putCharSequence("spinner", mSpinnerAdapter.getItem(5));
         else
             savedInstanceState.putCharSequence("spinner", null);
@@ -510,6 +510,4 @@ public class GalleryFragment extends Fragment {
         actionBar.setListNavigationCallbacks(mSpinnerAdapter, mNavigationCallback);
         actionBar.setSelectedNavigationItem(selectedIndex);
     }
-
-
 }

@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -536,7 +537,12 @@ public class SingleImageFragment extends Fragment {
     }
 
     private static class ViewHolder {
-        public TextView header;
+        static final int VIEW_VISIBLE = 0;
+        static final int VIEW_HIDDEN = 1;
+        static final int VIEW_DESCENDANT = 2;
+        public RelativeLayout header;
+        public TextView username;
+        public TextView points;
         public TextView body;
         public View[] indentViews;
         public LinearLayout buttons;
@@ -545,6 +551,7 @@ public class SingleImageFragment extends Fragment {
         public ImageButton downvote;
         public ImageButton reply;
         public ImageButton report;
+        int position;
     }
 
     public class CommentAdapter extends ArrayAdapter<JSONParcelable> {
@@ -557,18 +564,35 @@ public class SingleImageFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            final JSONObject viewData = this.getItem(position).getJSONObject();
             ViewHolder holder;
-            if (convertView == null) {
+            try {
+                if(viewData.has("hidden") && viewData.getInt("hidden") == ViewHolder.VIEW_DESCENDANT) {
+                    holder = (ViewHolder) convertView.getTag();
+                    holder.position = position;
+                    convertView.setTag(holder);
+                    convertView = mInflater.inflate(R.layout.zerolayout, null);
+                    return convertView;
+                }
+            }
+            catch (Exception e) {
+                Log.e("Error!", "View Data Error" + e.toString());
+            }
+            if (convertView == null || convertView.getTag() == null) {
                 convertView = mInflater.inflate(R.layout.comment_list_item, null);
                 holder = new ViewHolder();
                 holder.body = (TextView) convertView.findViewById(R.id.body);
-                holder.header = (TextView) convertView.findViewById(R.id.header);
+                holder.username = (TextView) convertView.findViewById(R.id.username);
+                holder.points = (TextView) convertView.findViewById(R.id.points);
                 holder.buttons = (LinearLayout) convertView.findViewById(R.id.comment_buttons);
                 holder.upvote = (ImageButton) holder.buttons.findViewById(R.id.rating_good);
                 holder.downvote = (ImageButton) holder.buttons.findViewById(R.id.rating_bad);
+                holder.downvote = (ImageButton) holder.buttons.findViewById(R.id.rating_bad);
                 holder.reply = (ImageButton) holder.buttons.findViewById(R.id.reply);
                 holder.report = (ImageButton) holder.buttons.findViewById(R.id.report);
+                holder.header = (RelativeLayout) convertView.findViewById(R.id.header);
                 holder.id = "";
+                holder.position = position;
                 holder.indentViews = new View[]{
                         convertView.findViewById(R.id.margin_1),
                         convertView.findViewById(R.id.margin_2),
@@ -581,8 +605,9 @@ public class SingleImageFragment extends Fragment {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            final JSONObject viewData = this.getItem(position).getJSONObject();
             try {
+
+                holder.position = position;
                 holder.id = viewData.getString("id");
                 int indentLevel = viewData.getInt("indent");
                 holder.buttons.setVisibility(View.GONE);
@@ -596,16 +621,27 @@ public class SingleImageFragment extends Fragment {
                     holder.indentViews[i].setVisibility(View.GONE);
                 }
                 holder.body.setText(viewData.getString("comment"));
-                holder.header.setText(viewData.getString("author") + " " + viewData.getString("points") + "pts (" + viewData.getString("ups") + "/" + viewData.getString("downs") + ")");
+
+                if(viewData.getString("author").length() < 25)
+                    holder.username.setText(viewData.getString("author"));
+                else
+                    holder.username.setText(viewData.getString("author").substring(0, 25) + "...");
+                holder.points.setText(viewData.getString("points") + "pts (" + viewData.getString("ups") + "/" + viewData.getString("downs") + ")");
+
                 holder.header.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        setDescendantsHidden(view);
+                    }
+                });
+                holder.username.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
                         try {
-                         AccountFragment accountFragment = new AccountFragment(viewData.getString("author"));
-                         MainActivity activity = (MainActivity) getActivity();
-                         activity.changeFragment(accountFragment);
-                        }
-                        catch (Exception e) {
+                            AccountFragment accountFragment = new AccountFragment(viewData.getString("author"));
+                            MainActivity activity = (MainActivity) getActivity();
+                            activity.changeFragment(accountFragment);
+                        } catch (Exception e) {
                             Log.e("Error!", e.toString());
                         }
 
@@ -615,6 +651,18 @@ public class SingleImageFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         ViewHolder viewHolder = (ViewHolder) view.getTag();
+                        if (viewHolder.buttons.getVisibility() == View.GONE)
+                            viewHolder.buttons.setVisibility(View.VISIBLE);
+                        else
+                            viewHolder.buttons.setVisibility(View.GONE);
+                    }
+                });
+
+                holder.body.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        View convertView = (View) view.getParent().getParent().getParent();
+                        ViewHolder viewHolder = (ViewHolder) convertView.getTag();
                         if (viewHolder.buttons.getVisibility() == View.GONE)
                             viewHolder.buttons.setVisibility(View.VISIBLE);
                         else
@@ -658,7 +706,7 @@ public class SingleImageFragment extends Fragment {
                                 }
                             }).show();
                         } catch (Exception e) {
-                            Log.e("Error!", "missing data");
+                            Log.e("Error!", "missing data" + e.toString());
                         }
                     }
                 });
@@ -704,12 +752,54 @@ public class SingleImageFragment extends Fragment {
 
                     }
                 });
+                if(viewData.has("hidden") && viewData.getInt("hidden") == ViewHolder.VIEW_HIDDEN) {
+                    holder.body.setVisibility(View.GONE);
+                }
+                else
+                    holder.body.setVisibility(View.VISIBLE);
                 convertView.setTag(holder);
             } catch (Exception e) {
-                Log.e("Error!", e.toString());
+                Log.e("View Error!", e.toString());
             }
             return convertView;
         }
+    }
+
+    private void setDescendantsHidden(View view) {
+        LinearLayout convertView = (LinearLayout) view.getParent().getParent().getParent();
+        ViewHolder holder = (ViewHolder) convertView.getTag();
+        int position = holder.position;
+        JSONObject viewData = commentAdapter.getItem(position).getJSONObject();
+        try {
+            if(!viewData.has("hidden"))
+                viewData.put("hidden", ViewHolder.VIEW_VISIBLE);
+            boolean hiding;
+            int indentLevel = viewData.getInt("indent");
+            if(viewData.getInt("hidden") != ViewHolder.VIEW_HIDDEN) {
+                viewData.put("hidden", ViewHolder.VIEW_HIDDEN);
+                hiding = true;
+            }
+            else {
+                viewData.put("hidden", ViewHolder.VIEW_VISIBLE);
+                hiding = false;
+            }
+            for(int i = position + 1; i < commentAdapter.getCount(); i++)
+            {
+                JSONObject childViewData = commentAdapter.getItem(i).getJSONObject();
+                if(childViewData.getInt("indent") > indentLevel) {
+                    if(hiding)
+                        childViewData.put("hidden", ViewHolder.VIEW_DESCENDANT);
+                    else
+                        childViewData.put("hidden", ViewHolder.VIEW_VISIBLE);
+                }
+                else
+                    break;
+            }
+        }
+        catch (Exception e) {
+            Log.e("Converting to Hidden Error!", e.toString());
+        }
+        commentAdapter.notifyDataSetChanged();
     }
 
     @Override

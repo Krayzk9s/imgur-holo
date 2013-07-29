@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:descendantFocusability="blocksDescendants"
+        >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/comment_item"
+                  android:orientation="horizontal"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+            >
+
+        <View xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/margin_1"
+              android:layout_width="5dp"
+              android:background="@color/Blue"
+              android:layout_height="fill_parent"/>
+
+        <View xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/margin_2"
+              android:background="@color/Red"
+              android:layout_width="5dp"
+              android:layout_height="fill_parent"/>
+
+        <View xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/margin_3"
+              android:background="@color/Yellow"
+              android:layout_width="5dp"
+              android:layout_height="fill_parent"/>
+
+        <View xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/margin_4"
+              android:background="@color/Purple"
+              android:layout_width="5dp"
+              android:layout_height="fill_parent"/>
+
+        <View xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/margin_5"
+              android:background="@color/Orange"
+              android:layout_width="5dp"
+              android:layout_height="fill_parent"/>
+
+        <View xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/margin_6"
+              android:background="@color/Green"
+              android:layout_width="5dp"
+              android:layout_height="fill_parent"/>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+
+                >
+            <View xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="1dp"
+                  android:background="@color/LightGrey"/>
+            <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+                             android:layout_width="fill_parent"
+                             android:layout_height="wrap_content"
+                             android:orientation="horizontal"
+                             android:layout_margin="8dp"
+                             android:id="@+id/header">
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:id="@+id/username"
+                          android:text="@string/menu_gallery"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_gravity="left"
+                          android:textAppearance="?android:textAppearanceSmall"
+                          android:textColor="@color/SkyBlue"
+                        />
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:id="@+id/points"
+                          android:text="@string/menu_gallery"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_gravity="left"
+                          android:layout_marginLeft="8dip"
+                          android:layout_toRightOf="@+id/username"
+                          android:textAppearance="?android:textAppearanceSmall"
+                          android:textColor="@color/DarkGray"
+                        />
+                <Button
+                        android:id="@+id/collapse"
+                        android:clickable="false"
+                        android:text="-"
+                        android:layout_alignParentRight="true"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:layout_width="24dp"
+                        android:layout_height="16dp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

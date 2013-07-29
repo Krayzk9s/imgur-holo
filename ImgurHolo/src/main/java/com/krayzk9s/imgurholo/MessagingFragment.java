@@ -128,6 +128,7 @@ public class MessagingFragment extends Fragment {
         newHeader.setSingleLine();
         final EditText newUsername = new EditText(activity);
         newUsername.setSingleLine();
+        newUsername.setHint("Recipient");
         if (username != null)
             newUsername.setText(username);
         if (title != null)
