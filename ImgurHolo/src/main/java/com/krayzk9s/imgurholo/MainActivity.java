@@ -244,7 +244,7 @@ public class MainActivity extends FragmentActivity {
             }
         }
 
-        if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+        else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             Log.d("sending", "sending multiple");
             ArrayList<Parcelable> list =
                     intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
@@ -258,39 +258,68 @@ public class MainActivity extends FragmentActivity {
             finish();
         }
 
-    Uri uri = intent.getData();
-        Log.d("URI", "resumed2!");
-        String uripath = "";
-        if (uri != null)
-            uripath = uri.toString();
-        Log.d("URI", uripath);
-        Log.d("URI", "HERE");
-
-        if (uri != null && uripath.startsWith(OAUTH_CALLBACK_URL)) {
-            verifier = new Verifier(uri.getQueryParameter("code"));
-
-            AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+        else if(Intent.ACTION_VIEW.equals(action))
+        {
+            String uri = intent.getData().toString();
+            final String image = uri.split("/")[3].split("\\.")[0];
+            Log.d("image", image);
+            AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
                 @Override
-                protected Void doInBackground(Void... voids) {
-                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                    SharedPreferences.Editor editor = settings.edit();
-                    accessToken = service.getAccessToken(Token.empty(), verifier);
-                    Log.d("URI", verifier.toString());
-                    Log.d("URI", accessToken.getToken());
-                    Log.d("URI", accessToken.getSecret());
-                    editor.putString("RefreshToken", accessToken.getSecret());
-                    editor.putString("AccessToken", accessToken.getToken());
-                    editor.commit();
-                    return null;
+                protected JSONObject doInBackground(Void... voids) {
+                    JSONObject imageData = makeGetCall("/3/image/" + image);
+                    return imageData;
                 }
-
                 @Override
-                protected void onPostExecute(Void aVoid) {
-                    loggedin = true;
-                    updateMenu();
+                protected void onPostExecute(JSONObject imageData) {
+                    Log.d("data", imageData.toString());
+                    try {
+                    SingleImageFragment singleImageFragment = new SingleImageFragment();
+                    singleImageFragment.setParams(imageData.getJSONObject("data"));
+                    changeFragment(singleImageFragment);
+                    }
+                    catch (Exception e) {
+                        Log.e("Error!", e.toString());
+                    }
                 }
             };
             async.execute();
+
+        }
+        else {
+            Uri uri = intent.getData();
+            Log.d("URI", "resumed2!");
+            String uripath = "";
+            if (uri != null)
+                uripath = uri.toString();
+            Log.d("URI", uripath);
+            Log.d("URI", "HERE");
+
+            if (uri != null && uripath.startsWith(OAUTH_CALLBACK_URL)) {
+                verifier = new Verifier(uri.getQueryParameter("code"));
+
+                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                        SharedPreferences.Editor editor = settings.edit();
+                        accessToken = service.getAccessToken(Token.empty(), verifier);
+                        Log.d("URI", verifier.toString());
+                        Log.d("URI", accessToken.getToken());
+                        Log.d("URI", accessToken.getSecret());
+                        editor.putString("RefreshToken", accessToken.getSecret());
+                        editor.putString("AccessToken", accessToken.getToken());
+                        editor.commit();
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        loggedin = true;
+                        updateMenu();
+                    }
+                };
+                async.execute();
+            }
         }
     }
 
@@ -298,7 +327,6 @@ public class MainActivity extends FragmentActivity {
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
-
         accessToken = service.refreshAccessToken(accessToken);
         Log.d("URI", accessToken.getRawResponse());
         editor.putString("AccessToken", accessToken.getToken());

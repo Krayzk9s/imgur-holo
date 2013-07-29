@@ -29,17 +29,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd7191f9-071f-4e7c-a8f1-8f8b811e97ef" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/CommentsFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/CommentsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/comment_list_item.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/comment_list_item.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_layout.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ImgurHolo.iws" />
@@ -107,7 +99,7 @@
       <file leaf-file-name="AccountFragment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="75" column="25" selection-start="2549" selection-end="2549" vertical-scroll-proportion="0.0" vertical-offset="1709" max-vertical-offset="5763">
+            <state line="75" column="25" selection-start="2549" selection-end="2549" vertical-scroll-proportion="0.0" vertical-offset="3647" max-vertical-offset="5763">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -118,7 +110,7 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="353" column="25" selection-start="14096" selection-end="14104" vertical-scroll-proportion="-7.1538463" vertical-offset="5815" max-vertical-offset="16388">
+            <state line="330" column="51" selection-start="13725" selection-end="13725" vertical-scroll-proportion="-8.461538" vertical-offset="5390" max-vertical-offset="16864">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -126,10 +118,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ImagesFragment.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ImagesFragment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="202" column="96" selection-start="8408" selection-end="8408" vertical-scroll-proportion="0.51428574" vertical-offset="2653" max-vertical-offset="6953">
+            <state line="123" column="71" selection-start="4343" selection-end="4351" vertical-scroll-proportion="-7.1538463" vertical-offset="1412" max-vertical-offset="6953">
               <folding />
             </state>
           </provider>
@@ -160,11 +152,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SingleImageFragment.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="SingleImageFragment.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="529" column="17" selection-start="27425" selection-end="27425" vertical-scroll-proportion="-12.230769" vertical-offset="7111" max-vertical-offset="10302">
+            <state line="96" column="22" selection-start="2729" selection-end="2729" vertical-scroll-proportion="0.77835953" vertical-offset="404" max-vertical-offset="10319">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="45" column="47" selection-start="2014" selection-end="2014" vertical-scroll-proportion="0.0" vertical-offset="383" max-vertical-offset="1054">
+              <folding>
+                <element signature="e#2229#2266#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -272,7 +275,6 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/ImgurHolo/build.gradle" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/comment_layout.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/menu/main.xml" />
@@ -280,13 +282,14 @@
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/CommentsFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_layout.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" />
       </list>
     </option>
   </component>
@@ -398,32 +401,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ImgurHolo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ImgurHolo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="layout" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -867,13 +844,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="33" selection-start="401" selection-end="401" vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="918">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/message_layout.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="18" column="52" selection-start="0" selection-end="3615" vertical-scroll-proportion="-0.68" vertical-offset="289" max-vertical-offset="1377">
@@ -911,15 +881,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="353" column="25" selection-start="14096" selection-end="14104" vertical-scroll-proportion="-7.1538463" vertical-offset="5815" max-vertical-offset="16388">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/account_layout.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="561">
@@ -947,22 +908,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="75" column="25" selection-start="2549" selection-end="2549" vertical-scroll-proportion="0.0" vertical-offset="1709" max-vertical-offset="5763">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="529" column="17" selection-start="27425" selection-end="27425" vertical-scroll-proportion="-12.230769" vertical-offset="7111" max-vertical-offset="10302">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="420" column="13" selection-start="19247" selection-end="19247" vertical-scroll-proportion="-14.346154" vertical-offset="6699" max-vertical-offset="8772">
@@ -974,9 +919,43 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="45" column="47" selection-start="2014" selection-end="2014" vertical-scroll-proportion="0.0" vertical-offset="383" max-vertical-offset="1054">
+          <folding>
+            <element signature="e#2229#2266#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="75" column="25" selection-start="2549" selection-end="2549" vertical-scroll-proportion="0.0" vertical-offset="3647" max-vertical-offset="5763">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="202" column="96" selection-start="8408" selection-end="8408" vertical-scroll-proportion="0.51428574" vertical-offset="2653" max-vertical-offset="6953">
+        <state line="123" column="71" selection-start="4343" selection-end="4351" vertical-scroll-proportion="-7.1538463" vertical-offset="1412" max-vertical-offset="6953">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="330" column="51" selection-start="13725" selection-end="13725" vertical-scroll-proportion="-8.461538" vertical-offset="5390" max-vertical-offset="16864">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="96" column="22" selection-start="2729" selection-end="2729" vertical-scroll-proportion="0.77835953" vertical-offset="404" max-vertical-offset="10319">
           <folding />
         </state>
       </provider>

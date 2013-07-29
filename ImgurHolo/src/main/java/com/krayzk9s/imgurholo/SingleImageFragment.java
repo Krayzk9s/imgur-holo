@@ -94,7 +94,8 @@ public class SingleImageFragment extends Fragment {
         if (!inGallery)
             menu.findItem(R.id.action_delete).setVisible(true);
         menu.findItem(R.id.action_share).setVisible(true);
-        menu.findItem(R.id.action_edit).setVisible(true);
+        if(!inGallery)
+            menu.findItem(R.id.action_edit).setVisible(true);
         menu.findItem(R.id.action_download).setVisible(true);
         menu.findItem(R.id.action_copy).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
