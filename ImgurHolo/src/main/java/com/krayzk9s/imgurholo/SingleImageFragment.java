@@ -605,6 +605,7 @@ public class SingleImageFragment extends Fragment {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
+
             try {
 
                 holder.position = position;
@@ -612,6 +613,8 @@ public class SingleImageFragment extends Fragment {
                 int indentLevel = viewData.getInt("indent");
                 holder.buttons.setVisibility(View.GONE);
                 int indentPosition = Math.min(indentLevel, holder.indentViews.length - 1);
+
+
                 for (int i = 0; i < indentPosition - 1; i++) {
                     holder.indentViews[i].setVisibility(View.INVISIBLE);
                 }
@@ -626,6 +629,7 @@ public class SingleImageFragment extends Fragment {
                     holder.username.setText(viewData.getString("author"));
                 else
                     holder.username.setText(viewData.getString("author").substring(0, 25) + "...");
+
                 holder.points.setText(viewData.getString("points") + "pts (" + viewData.getString("ups") + "/" + viewData.getString("downs") + ")");
 
                 holder.header.setOnClickListener(new View.OnClickListener() {
@@ -757,10 +761,10 @@ public class SingleImageFragment extends Fragment {
                 }
                 else
                     holder.body.setVisibility(View.VISIBLE);
-                convertView.setTag(holder);
             } catch (Exception e) {
                 Log.e("View Error!", e.toString());
             }
+            convertView.setTag(holder);
             return convertView;
         }
     }

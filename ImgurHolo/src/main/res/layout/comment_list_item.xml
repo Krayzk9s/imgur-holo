@@ -3,7 +3,6 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:descendantFocusability="blocksDescendants"
     >
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -58,40 +57,32 @@
                       android:layout_width="fill_parent"
                       android:layout_height="1dp"
                       android:background="@color/LightGrey"/>
+
                 <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
                                android:layout_width="fill_parent"
                                android:layout_height="wrap_content"
                                android:orientation="horizontal"
                                android:layout_margin="8dp"
                                android:id="@+id/header">
+
                     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
                               android:id="@+id/username"
                               android:text="@string/menu_gallery"
                               android:layout_width="wrap_content"
                               android:layout_height="wrap_content"
-                              android:layout_gravity="left"
                               android:textAppearance="?android:textAppearanceSmall"
                               android:textColor="@color/SkyBlue"
                             />
+
                     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
                               android:id="@+id/points"
                               android:text="@string/menu_gallery"
                               android:layout_width="wrap_content"
                               android:layout_height="wrap_content"
-                              android:layout_gravity="left"
-                              android:layout_marginLeft="8dip"
                               android:layout_toRightOf="@+id/username"
+                              android:layout_marginLeft="8dp"
                               android:textAppearance="?android:textAppearanceSmall"
-                              android:textColor="@color/DarkGray"
                             />
-                    <Button
-                            android:id="@+id/collapse"
-                            android:clickable="false"
-                            android:text="-"
-                            android:layout_alignParentRight="true"
-                            android:textAppearance="?android:textAppearanceLarge"
-                            android:layout_width="24dp"
-                            android:layout_height="16dp" />
                 </RelativeLayout>
 
                 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
