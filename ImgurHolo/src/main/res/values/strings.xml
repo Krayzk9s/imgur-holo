@@ -67,5 +67,6 @@
     <string name="upload_url">Upload From Web</string>
     <string name="upload_gallery">Upload From Phone</string>
     <string name="upload_camera">Take a Picture With the Camera</string>
+    <string name="upload_explanation">Why Can\'t I Upload Multiple Pictures?</string>
 
 </resources>

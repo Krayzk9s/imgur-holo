@@ -113,7 +113,7 @@ public class MainActivity extends FragmentActivity {
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        if (savedInstanceState == null)
+        if (savedInstanceState == null && getCallingActivity() == null)
             loadDefaultPage();
     }
 
@@ -257,7 +257,6 @@ public class MainActivity extends FragmentActivity {
             }
             finish();
         }
-
         else if(Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http"))
         {
             String uri = intent.getData().toString();
@@ -393,6 +392,7 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("request code", requestCode + "");
         if(resultCode == -1)
             Log.d("intent", data.toString());
         if (requestCode == 3 && resultCode == -1) {
@@ -407,6 +407,7 @@ public class MainActivity extends FragmentActivity {
             async.execute(); // Handle single image being sent
             return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 
@@ -464,9 +465,9 @@ public class MainActivity extends FragmentActivity {
                             .setItems(R.array.upload_options, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     Intent intent;
+                                    MainActivity activity = MainActivity.this;
                                     switch (whichButton) {
                                         case 0:
-                                            MainActivity activity = MainActivity.this;
                                             final EditText urlText = new EditText(activity);
                                             urlText.setSingleLine();
                                             new AlertDialog.Builder(activity).setTitle("Enter URL").setView(urlText).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -499,6 +500,14 @@ public class MainActivity extends FragmentActivity {
                                             intent = new Intent("android.media.action.IMAGE_CAPTURE");
                                             startActivityForResult(intent, 4);
                                             break;
+                                        case 3:
+                                            new AlertDialog.Builder(activity).setTitle("Image Explanation").setMessage("You can! You just have to do it from the gallery or other app by multiselecting. :(" +
+                                                    "The ELI5 explanation is that basically the Android API is a bit weird in this area. More explicitly, I cannot determine a way to request multiple files via intent" +
+                                                    ", if you know a work around feel free to contact me on Google Play.").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                   //do nothing
+                                                }
+                                            }).show();
                                         default:
                                             break;
                                     }
@@ -761,10 +770,11 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void editAlbum(String ids, String id) {
+        Log.d("Editing Album", id + " " + ids);
         Token accessKey = getAccessToken();
         Log.d("Making Call", accessKey.toString());
         HttpResponse<JsonNode> response;
-        response = Unirest.post(MASHAPE_URL + "3/album/")
+        response = Unirest.post(MASHAPE_URL + "3/album/" + id)
                 .header("accept", "application/json")
                 .header("X-Mashape-Authorization", MASHAPE_KEY)
                 .header("Authorization", "Bearer " + accessKey.getToken())
@@ -776,7 +786,7 @@ public class MainActivity extends FragmentActivity {
         int code = response.getCode();
         if (code == 403) {
             accessKey = renewAccessToken();
-            Unirest.post(MASHAPE_URL + "3/album/")
+            Unirest.post(MASHAPE_URL + "3/album/" + id)
                     .header("accept", "application/json")
                     .header("X-Mashape-Authorization", MASHAPE_KEY)
                     .header("Authorization", "Bearer " + accessKey.getToken())

@@ -17,10 +17,9 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:columnWidth="90dp"
-              android:padding="5dp"
               android:numColumns="auto_fit"
-              android:verticalSpacing="10dp"
-              android:horizontalSpacing="10dp"
+              android:verticalSpacing="4dp"
+              android:horizontalSpacing="4dp"
               android:scaleType="fitCenter"
               android:gravity="center">
     </GridView>

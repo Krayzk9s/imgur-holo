@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -286,6 +287,13 @@ public class SingleImageFragment extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         LinearLayout imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
         WebView imageView = (WebView) imageLayoutView.findViewById(R.id.single_image_view);
+        imageView.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, String url){
+                // do your handling codes here, which url is the requested url
+                // probably you need to open that url rather than redirect:
+                return false; // then it is not handled by default action
+            }
+        });
 
         if (savedInstanceState != null && newData) {
             imageData = savedInstanceState.getParcelable("imageData");

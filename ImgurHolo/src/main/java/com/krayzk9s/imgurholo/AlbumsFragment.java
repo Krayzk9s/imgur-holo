@@ -34,12 +34,12 @@ import java.util.ArrayList;
  */
 public class AlbumsFragment extends Fragment {
 
-    private ArrayList<String> urls;
-    private ArrayList<String> ids;
     ImageAdapter imageAdapter;
     AsyncTask<Void, Void, Void> async;
     String username;
     TextView noImageView;
+    private ArrayList<String> urls;
+    private ArrayList<String> ids;
 
     public AlbumsFragment(String _username) {
         username = _username;
@@ -55,7 +55,7 @@ public class AlbumsFragment extends Fragment {
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        if(username.equals("me"))
+        if (username.equals("me"))
             menu.findItem(R.id.action_new).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
     }
@@ -68,8 +68,9 @@ public class AlbumsFragment extends Fragment {
             case R.id.action_new:
                 final EditText newTitle = new EditText(activity);
                 newTitle.setSingleLine();
+                newTitle.setHint("Album Title");
                 final EditText newDescription = new EditText(activity);
-                newDescription.setHint("Body");
+                newDescription.setHint("Description");
                 LinearLayout linearLayout = new LinearLayout(activity);
                 linearLayout.setOrientation(LinearLayout.VERTICAL);
                 linearLayout.addView(newTitle);
@@ -121,24 +122,28 @@ public class AlbumsFragment extends Fragment {
                 protected Boolean doInBackground(Void... voids) {
                     MainActivity activity = (MainActivity) getActivity();
                     JSONObject imagesData = activity.makeGetCall("3/account/" + username + "/albums");
+                    Log.d("album data", imagesData.toString());
                     try {
                         JSONArray imageArray = imagesData.getJSONArray("data");
                         for (int i = 0; i < imageArray.length(); i++) {
                             JSONObject imageData = imageArray.getJSONObject(i);
+                            Log.d("adding album...", imageData.getString("id"));
                             urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
                             ids.add(imageData.getString("id"));
-                            if(imageArray.length() > 0)
-                                return true;
-                            else return false;
                         }
+                        if (imageArray.length() > 0)
+                            return true;
+                        else return false;
+
                     } catch (Exception e) {
                         Log.e("Error!", e.toString());
                     }
                     return false;
                 }
+
                 @Override
                 protected void onPostExecute(Boolean hasImages) {
-                    if(hasImages)
+                    if (hasImages)
                         imageAdapter.notifyDataSetChanged();
                     else
                         noImageView.setVisibility(View.VISIBLE);
@@ -149,13 +154,36 @@ public class AlbumsFragment extends Fragment {
         return view;
     }
 
+    public void selectItem(int position) {
+        String id = ids.get(position);
+        ImagesFragment fragment = new ImagesFragment();
+        fragment.albumId = id;
+        fragment.setImageCall(id, "/3/album/" + id + "/images", null);
+        MainActivity activity = (MainActivity) getActivity();
+        activity.changeFragment(fragment);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putStringArrayList("urls", urls);
+        savedInstanceState.putStringArrayList("ids", ids);
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (async != null)
+            async.cancel(true);
+    }
+
     public class ImageAdapter extends BaseAdapter {
         private Context mContext;
 
         public ImageAdapter(Context c) {
             mContext = c;
         }
-
 
         public int getCount() {
             return urls.size();
@@ -185,30 +213,6 @@ public class AlbumsFragment extends Fragment {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
         }
-    }
-
-    public void selectItem(int position) {
-        String id = ids.get(position);
-        ImagesFragment fragment = new ImagesFragment();
-        fragment.albumId = id;
-        fragment.setImageCall(id, "/3/album/" + id + "/images", null);
-        MainActivity activity = (MainActivity) getActivity();
-        activity.changeFragment(fragment);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putStringArrayList("urls", urls);
-        savedInstanceState.putStringArrayList("ids", ids);
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (async != null)
-            async.cancel(true);
     }
 
     private class NewAlbumAsync extends AsyncTask<Void, Void, Void> {

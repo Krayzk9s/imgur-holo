@@ -145,8 +145,7 @@ public class ImagesFragment extends Fragment {
                     }
                 };
                 async.execute();
-
-
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -156,6 +155,9 @@ public class ImagesFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         AddImagesToAlbum imageAsync;
         ArrayList<String> imageIds;
+        Log.d("requestcode", requestCode + "");
+        Object bundle = data.getExtras().get("data");
+        Log.d("HELO", bundle.getClass().toString());
         switch (requestCode) {
             case 1:
                 super.onActivityResult(requestCode, resultCode, data);
@@ -261,7 +263,7 @@ public class ImagesFragment extends Fragment {
                 i = new SquareImageView(mContext);
                 i.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 l = new CheckableLayout((MainActivity) getActivity());
-                l.setPadding(8, 8, 8, 8);
+                l.setPadding(2, 2, 2, 2);
                 l.addView(i);
             } else {
                 l = (CheckableLayout) convertView;
@@ -353,6 +355,7 @@ public class ImagesFragment extends Fragment {
         public void onDestroyActionMode(ActionMode mode) {
             if (selecting) {
                 Intent intent = new Intent();
+                getChecked();
                 intent.putExtra("data", intentReturn);
                 ImageSelectActivity imageSelectActivity = (ImageSelectActivity) getActivity();
                 imageSelectActivity.setResult(imageSelectActivity.RESULT_OK, intent);
@@ -425,6 +428,8 @@ public class ImagesFragment extends Fragment {
             MainActivity activity = (MainActivity) getActivity();
             String albumids = "";
             for (int i = 0; i < imageIDsAsync.size(); i++) {
+                if(i != 0)
+                    albumids += ",";
                 albumids += imageIDsAsync.get(i);
             }
             activity.editAlbum(albumids, albumId);
