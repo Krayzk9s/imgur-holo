@@ -13,8 +13,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
-        android:label="imgur Holo"
-        android:theme="@style/AppTheme" >
+        android:label="imgur Holo" >
         <activity
             android:name="com.krayzk9s.imgurholo.MainActivity"
             android:label="imgur Holo"

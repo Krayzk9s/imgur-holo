@@ -72,7 +72,11 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
+        MainActivity activity = (MainActivity)getActivity();
+        if(activity.theme == activity.HOLO_LIGHT)
+            inflater.inflate(R.menu.main, menu);
+        else
+            inflater.inflate(R.menu.main_dark, menu);
         menu.findItem(R.id.action_sort).setVisible(true);
         menu.findItem(R.id.subreddit).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
@@ -356,9 +360,9 @@ public class GalleryFragment extends Fragment {
                 }
                 return null;
             }
-
             @Override
             protected void onPostExecute(Void aVoid) {
+                Log.d("returning", urls.size() + "");
                 imageAdapter.notifyDataSetChanged();
             }
         };
@@ -497,7 +501,6 @@ public class GalleryFragment extends Fragment {
                 } else {
                     Log.d("URI4", String.valueOf(firstPass));
                     Log.d("index", String.valueOf(selectedIndex));
-
                         firstPass += 2;
                     Log.d("URI2", String.valueOf(firstPass));
                 }

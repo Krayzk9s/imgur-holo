@@ -47,7 +47,11 @@ public class MessagingFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
+        MainActivity activity = (MainActivity)getActivity();
+        if(activity.theme == activity.HOLO_LIGHT)
+            inflater.inflate(R.menu.main, menu);
+        else
+            inflater.inflate(R.menu.main_dark, menu);
         menu.findItem(R.id.action_message).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
     }

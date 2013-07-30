@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_search"
+          android:title="@string/action_search"
+          android:icon="@drawable/dark_action_search"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:actionViewClass="android.widget.SearchView"
+          android:visible="false"/>
+    <item android:id="@+id/action_comments"
+          android:title="@string/action_comments"
+          android:orderInCategory="100"
+          android:icon="@drawable/dark_social_cc_bcc"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false" />
+    <item android:id="@+id/action_message"
+          android:title="@string/action_message"
+          android:orderInCategory="100"
+          android:icon="@drawable/dark_content_new_email"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false" />
+    <item android:id="@+id/action_edit"
+          android:title="@string/action_edit"
+          android:orderInCategory="50"
+          android:icon="@drawable/dark_content_edit"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false" />
+    <item android:id="@+id/action_new"
+          android:title="@string/action_new"
+          android:orderInCategory="50"
+          android:icon="@drawable/dark_content_new"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false" />
+    <item android:id="@+id/action_share"
+          android:title="@string/action_share"
+          android:orderInCategory="25"
+          android:icon="@drawable/dark_social_share"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false" />
+    <item android:id="@+id/action_copy"
+          android:title="@string/action_copy"
+          android:orderInCategory="75"
+          android:icon="@drawable/dark_content_copy"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false" />
+    <item android:id="@+id/action_delete"
+          android:title="@string/action_delete"
+          android:orderInCategory="25"
+          android:icon="@drawable/dark_content_discard"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false" />
+    <item android:id="@+id/action_download"
+          android:title="@string/action_download"
+          android:icon="@drawable/dark_av_download"
+          android:orderInCategory="25"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false" />
+    <item android:id="@+id/action_sort"
+          android:title="@string/action_sort"
+          android:orderInCategory="100"
+          android:icon="@drawable/dark_collections_sort_by_size"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false" >
+        <menu
+                android:id="@+id/menu_sort">
+            <group android:checkableBehavior="single">
+                <item
+                        android:id="@+id/menuSortPopularity"
+                        android:title="Popularity" />
+                <item
+                        android:id="@+id/menuSortNewest"
+                        android:title="Newest" />
+                <item
+                        android:id="@+id/menuSortTop"
+                        android:title="Top" />
+                <item
+                        android:id="@+id/menuSortDay"
+                        android:title="Day"
+                        android:visible="false"/>
+                <item
+                        android:id="@+id/menuSortWeek"
+                        android:title="Week"
+                        android:visible="false"/>
+                <item
+                        android:id="@+id/menuSortMonth"
+                        android:title="Month"
+                        android:visible="false"/>
+                <item
+                        android:id="@+id/menuSortYear"
+                        android:title="Year"
+                        android:visible="false"/>
+                <item
+                        android:id="@+id/menuSortAll"
+                        android:title="All"
+                        android:visible="false"/>
+            </group>
+        </menu>
+    </item>
+    <item android:id="@+id/subreddit"
+          android:title="@string/subreddit"
+          android:orderInCategory="75"
+          android:icon="@drawable/dark_subredditlogo"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false" />
+    <item android:id="@+id/action_upload"
+          android:title="@string/action_upload"
+          android:orderInCategory="25"
+          android:icon="@drawable/dark_av_upload"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false"/>
+
+</menu>

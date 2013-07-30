@@ -18,6 +18,6 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:choiceMode="singleChoice"
-            android:background="#FFFFFF"/>
+            android:background="?listBackground"/>
 
 </android.support.v4.widget.DrawerLayout>

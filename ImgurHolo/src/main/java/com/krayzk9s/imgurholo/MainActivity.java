@@ -2,10 +2,12 @@ package com.krayzk9s.imgurholo;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,16 +25,19 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -54,9 +59,12 @@ public class MainActivity extends FragmentActivity {
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    public static int HOLO_DARK = 0;
+    public static int HOLO_LIGHT = 1;
+    public int theme;
+
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mMenuList;
 
     String consumerkey = "4cd3f96f162ac80";
     String secretkey = "9cd3c621a4e064422e60aba4ccf84d6b149b4463";
@@ -78,15 +86,24 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        if(settings.contains("theme")) {
+            theme = settings.getInt("theme", HOLO_LIGHT);
+        }
+        else
+            theme = HOLO_LIGHT;
+
+        if(theme == HOLO_LIGHT)
+            setTheme(R.style.AppTheme);
+        else
+            setTheme(R.style.AppThemeDark);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         if (settings.contains("RefreshToken")) {
             loggedin = true;
         }
         updateMenu();
-
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         ActionBar actionBar = getActionBar();
@@ -118,25 +135,61 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void updateMenu() {
-        if (loggedin)
-            mMenuList = getResources().getStringArray(R.array.imgurMenuListLoggedIn);
+        DrawerAdapter drawerAdapter = new DrawerAdapter(this, R.layout.menu_item);
+        if (loggedin && theme == HOLO_DARK)
+            drawerAdapter.setMenu(R.array.imgurMenuListLoggedIn, R.array.imgurMenuListDarkIcons);
+        else if (!loggedin && theme == HOLO_DARK)
+            drawerAdapter.setMenu(R.array.imgurMenuListLoggedOut, R.array.imgurMenuListDarkIcons);
+        else if (loggedin && theme == HOLO_LIGHT)
+            drawerAdapter.setMenu(R.array.imgurMenuListLoggedIn, R.array.imgurMenuListIcons);
         else
-            mMenuList = getResources().getStringArray(R.array.imgurMenuListLoggedOut);
+            drawerAdapter.setMenu(R.array.imgurMenuListLoggedOut, R.array.imgurMenuListIcons);
         mDrawerTitle = getTitle();
         if (mTitle == null)
             mTitle = "imgur Holo";
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        adapter = new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mMenuList);
-        mDrawerList.setAdapter((ListAdapter) adapter);
-        adapter = new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mMenuList);
-        mDrawerList.setAdapter((ListAdapter) adapter);
+        mDrawerList.setAdapter(drawerAdapter);
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        // set up the drawer's list view with items and click listener
+        // set up the drawer's list
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+    }
+
+    public class DrawerAdapter extends ArrayAdapter<String> {
+        public String[] mMenuList;
+        public TypedArray mMenuIcons;
+        LayoutInflater mInflater;
+
+        public DrawerAdapter(Context context, int textViewResourceId) {
+            super(context, textViewResourceId);
+            mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        public void setMenu(int list, int array) {
+            mMenuList = getResources().getStringArray(list);
+            mMenuIcons = getResources().obtainTypedArray(array);
+        }
+
+        @Override
+        public int getCount() {
+            return mMenuList.length;
+        }
+
+        @Override
+        public long getItemId(int arg0) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = View.inflate(this.getContext(), R.layout.menu_item, null);
+            TextView menuItem = (TextView) convertView.findViewById(R.id.menu_text);
+            ImageView menuIcon = (ImageView) convertView.findViewById(R.id.menu_icon);
+            menuItem.setText(mMenuList[position]);
+            menuIcon.setImageDrawable(mMenuIcons.getDrawable(position));
+            return convertView;
+        }
     }
 
 
@@ -378,7 +431,10 @@ public class MainActivity extends FragmentActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+        if(theme == HOLO_LIGHT)
+            inflater.inflate(R.menu.main, menu);
+        else
+            inflater.inflate(R.menu.main_dark, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -438,6 +494,7 @@ public class MainActivity extends FragmentActivity {
         mDrawerList.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mDrawerList);
         FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         switch (position) {
             case 0:
                 if (!loggedin)

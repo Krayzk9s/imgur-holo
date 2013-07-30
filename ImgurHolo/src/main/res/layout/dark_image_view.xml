@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_horizontal">
+
+    <TextView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/single_image_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="30dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:adjustViewBounds="true"
+            />
+
+    <WebView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/single_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            />
+
+    <TextView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/single_image_description"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/DarkGray"
+            android:textAppearance="?android:textAppearanceMedium"
+            />
+    <TextView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/single_image_details"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/DarkGray"
+            android:textAppearance="?android:textAppearanceSmall"
+            />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/image_buttons"
+                  android:orientation="horizontal"
+                  android:layout_width="wrap_content"
+                  android:layout_gravity="center_horizontal"
+                  android:visibility="gone"
+                  android:layout_height="50dp"
+            >
+
+        <ImageButton
+                android:id="@+id/rating_good"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/dark_rating_good"/>
+
+        <ImageButton
+                android:id="@+id/rating_bad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/dark_rating_bad"/>
+
+        <ImageButton
+                android:id="@+id/rating_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/dark_rating_favorite"/>
+
+        <ImageButton
+                android:id="@+id/comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/dark_social_reply"/>
+
+        <ImageButton
+                android:id="@+id/report"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/dark_alerts_and_states_warning"/>
+    </LinearLayout>
+</LinearLayout>

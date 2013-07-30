@@ -12,11 +12,39 @@
         <item>@string/menu_settings</item>
         <item>@string/menu_logout</item>
     </array>
+
+    <array
+            name="imgurMenuListIcons">
+        <item>@drawable/social_group</item>
+        <item>@drawable/social_person</item>
+        <item>@drawable/av_upload</item>
+        <item>@drawable/content_picture</item>
+        <item>@drawable/collections_collection</item>
+        <item>@drawable/rating_favorite</item>
+        <item>@drawable/content_email</item>
+        <item>@drawable/action_settings</item>
+        <item>@drawable/content_remove</item>
+    </array>
+    <array
+            name="imgurMenuListDarkIcons">
+        <item>@drawable/dark_social_group</item>
+        <item>@drawable/dark_social_person</item>
+        <item>@drawable/dark_av_upload</item>
+        <item>@drawable/dark_content_picture</item>
+        <item>@drawable/dark_collections_collection</item>
+        <item>@drawable/dark_rating_favorite</item>
+        <item>@drawable/dark_content_email</item>
+        <item>@drawable/dark_action_settings</item>
+        <item>@drawable/dark_content_remove</item>
+    </array>
     <array
             name="imgurMenuListLoggedOut">
         <item>@string/menu_login</item>
-        <item>@string/menu_gallery</item>
-        <item>@string/menu_settings</item>
+    </array>
+    <array
+            name="themes">
+        <item>@string/light_theme</item>
+        <item>@string/dark_theme</item>
     </array>
     <array
         name="accountMenu">

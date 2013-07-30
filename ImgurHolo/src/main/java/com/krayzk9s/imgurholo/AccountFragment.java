@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -199,22 +198,6 @@ public class AccountFragment extends Fragment {
             case 6:
                 MessagingFragment messagingFragment = new MessagingFragment();
                 activity.changeFragment(messagingFragment);
-                break;
-            case 7:
-                final EditText input = new EditText(activity);
-                new AlertDialog.Builder(activity).setTitle("Set e-mail")
-                        .setView(input).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        SettingsAsync settingsAsync = new SettingsAsync("email", input.getText(), accountData.get("name"));
-                        settingsAsync.execute();
-                        mMenuList[7] = "Your imgur email is " + input.getText();
-                        adapter.notifyDataSetChanged();
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Do nothing.
-                    }
-                }).show();
                 break;
             case 8:
                 new AlertDialog.Builder(activity).setTitle("Set Album Privacy")

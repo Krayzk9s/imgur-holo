@@ -70,7 +70,11 @@ public class ImagesFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
+        MainActivity activity = (MainActivity)getActivity();
+        if(activity.theme == activity.HOLO_LIGHT)
+            inflater.inflate(R.menu.main, menu);
+        else
+            inflater.inflate(R.menu.main_dark, menu);
         menu.findItem(R.id.action_upload).setVisible(false);
         if (albumId != null && galleryAlbumData == null) {
             menu.findItem(R.id.action_new).setVisible(true);
@@ -335,16 +339,18 @@ public class ImagesFragment extends Fragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete:
-                    getChecked();
-                    async = new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... voids) {
-                            MainActivity activity = (MainActivity) getActivity();
-                            activity.deleteImages(intentReturn);
-                            return null;
-                        }
-                    };
-                    async.execute();
+                    if(albumId != null) {
+                        getChecked();
+                        async = new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... voids) {
+                                MainActivity activity = (MainActivity) getActivity();
+                                activity.deleteImages(intentReturn);
+                                return null;
+                            }
+                        };
+                        async.execute();
+                    }
                     break;
                 default:
                     break;

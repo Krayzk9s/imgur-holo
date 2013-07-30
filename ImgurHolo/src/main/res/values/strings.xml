@@ -69,4 +69,7 @@
     <string name="upload_camera">Take a Picture With the Camera</string>
     <string name="upload_explanation">Why Can\'t I Upload Multiple Pictures?</string>
 
+    <string name="light_theme">Holo Light</string>
+    <string name="dark_theme">Holo Dark</string>
+
 </resources>

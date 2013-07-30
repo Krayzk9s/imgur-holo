@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -92,7 +93,11 @@ public class SingleImageFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
+        MainActivity activity = (MainActivity)getActivity();
+        if(activity.theme == activity.HOLO_LIGHT)
+            inflater.inflate(R.menu.main, menu);
+        else
+            inflater.inflate(R.menu.main_dark, menu);
         if (!inGallery) {
             menu.findItem(R.id.action_delete).setVisible(true);
             menu.findItem(R.id.action_edit).setVisible(true);
@@ -275,17 +280,22 @@ public class SingleImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        final MainActivity activity = (MainActivity) getActivity();
         boolean newData = true;
         if (commentData != null) {
             newData = false;
         }
+
         mainView = inflater.inflate(R.layout.single_image_layout, container, false);
         mMenuList = getResources().getStringArray(R.array.emptyList);
         commentAdapter = new CommentAdapter(mainView.getContext(),
                 R.id.comment_item);
         commentLayout = (ListView) mainView.findViewById(R.id.comment_thread);
-        MainActivity activity = (MainActivity) getActivity();
-        LinearLayout imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
+        LinearLayout imageLayoutView;
+        if(activity.theme == activity.HOLO_LIGHT)
+            imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
+        else
+            imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.dark_image_view, null);
         WebView imageView = (WebView) imageLayoutView.findViewById(R.id.single_image_view);
         imageView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url){
@@ -375,12 +385,25 @@ public class SingleImageFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         if (!imageData.getJSONObject().getString("vote").equals("up")) {
-                            imageUpvote.setImageResource(R.drawable.green_rating_good);
-                            imageDownvote.setImageResource(R.drawable.rating_bad);
+                            if(activity.theme == activity.HOLO_LIGHT) {
+                                imageUpvote.setImageResource(R.drawable.green_rating_good);
+                                imageDownvote.setImageResource(R.drawable.rating_bad);
+                            }
+                            else {
+                                imageUpvote.setImageResource(R.drawable.green_rating_good);
+                                imageDownvote.setImageResource(R.drawable.dark_rating_bad);
+                            }
                             imageData.getJSONObject().put("vote", "up");
                         } else {
-                            imageUpvote.setImageResource(R.drawable.rating_good);
-                            imageDownvote.setImageResource(R.drawable.rating_bad);
+                            if(activity.theme == activity.HOLO_LIGHT) {
+                                imageUpvote.setImageResource(R.drawable.rating_good);
+                                imageDownvote.setImageResource(R.drawable.rating_bad);
+                            }
+                            else {
+                                imageUpvote.setImageResource(R.drawable.dark_rating_good);
+                                imageDownvote.setImageResource(R.drawable.dark_rating_bad);
+                            }
+
                             imageData.getJSONObject().put("vote", "none");
                         }
                     } catch (Exception e) {
@@ -406,12 +429,25 @@ public class SingleImageFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         if (!imageData.getJSONObject().getString("vote").equals("down")) {
-                            imageUpvote.setImageResource(R.drawable.rating_good);
-                            imageDownvote.setImageResource(R.drawable.red_rating_bad);
+                            if(activity.theme == activity.HOLO_LIGHT) {
+                                imageUpvote.setImageResource(R.drawable.rating_good);
+                                imageDownvote.setImageResource(R.drawable.red_rating_bad);
+                            }
+                            else {
+                                imageUpvote.setImageResource(R.drawable.dark_rating_good);
+                                imageDownvote.setImageResource(R.drawable.red_rating_bad);
+                            }
                             imageData.getJSONObject().put("vote", "down");
                         } else {
-                            imageUpvote.setImageResource(R.drawable.rating_good);
-                            imageDownvote.setImageResource(R.drawable.rating_bad);
+                            if(activity.theme == activity.HOLO_LIGHT) {
+                                imageUpvote.setImageResource(R.drawable.rating_good);
+                                imageDownvote.setImageResource(R.drawable.rating_bad);
+                            }
+                            else {
+                                imageUpvote.setImageResource(R.drawable.dark_rating_good);
+                                imageDownvote.setImageResource(R.drawable.dark_rating_bad);
+                            }
+
                             imageData.getJSONObject().put("vote", "none");
                         }
                     } catch (Exception e) {
@@ -681,7 +717,11 @@ public class SingleImageFragment extends Fragment {
                         convertView = mInflater.inflate(R.layout.zerolayout, null);
                         return convertView;
                     case VISIBLE_TYPE:
-                        convertView = mInflater.inflate(R.layout.comment_list_item, null);
+                        MainActivity activity = (MainActivity) getActivity();
+                        if(activity.theme == activity.HOLO_LIGHT)
+                            convertView = (LinearLayout) View.inflate(activity, R.layout.comment_list_item, null);
+                        else
+                            convertView = (LinearLayout) View.inflate(activity, R.layout.comment_list_item_dark, null);
                         holder = new ViewHolder();
                         holder.body = (TextView) convertView.findViewById(R.id.body);
                         holder.username = (TextView) convertView.findViewById(R.id.username);
@@ -734,7 +774,7 @@ public class SingleImageFragment extends Fragment {
                         else
                             holder.username.setText(viewData.getString("author").substring(0, 25) + "...");
 
-                        holder.points.setText(viewData.getString("points") + "pts (" + viewData.getString("ups") + "/" + viewData.getString("downs") + ")");
+                        holder.points.setText(Html.fromHtml(viewData.getString("points") + "pts (<font color=#89c624>" + viewData.getString("ups") + "</font>/<font color=#ee4444>" + viewData.getString("downs") + "</font>)"));
 
                         holder.header.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -821,16 +861,26 @@ public class SingleImageFragment extends Fragment {
                         holder.upvote.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                MainActivity activity = (MainActivity) getActivity();
                                 LinearLayout layout = (LinearLayout) view.getParent().getParent();
                                 final ViewHolder dataHolder = (ViewHolder) layout.getTag();
                                 try {
                                     if (!viewData.getString("vote").equals("up")) {
                                         dataHolder.upvote.setImageResource(R.drawable.green_rating_good);
-                                        dataHolder.downvote.setImageResource(R.drawable.rating_bad);
+                                        if(activity.theme == activity.HOLO_LIGHT)
+                                            dataHolder.downvote.setImageResource(R.drawable.rating_bad);
+                                        else
+                                            dataHolder.downvote.setImageResource(R.drawable.dark_rating_bad);
                                         viewData.put("vote", "up");
                                     } else {
-                                        dataHolder.upvote.setImageResource(R.drawable.rating_good);
-                                        dataHolder.downvote.setImageResource(R.drawable.rating_bad);
+                                        if(activity.theme == activity.HOLO_LIGHT) {
+                                            dataHolder.upvote.setImageResource(R.drawable.rating_good);
+                                            dataHolder.downvote.setImageResource(R.drawable.rating_bad);
+                                        }
+                                        else {
+                                            dataHolder.upvote.setImageResource(R.drawable.dark_rating_good);
+                                            dataHolder.downvote.setImageResource(R.drawable.dark_rating_bad);
+                                        }
                                         viewData.put("vote", "none");
                                     }
                                 }
@@ -851,16 +901,28 @@ public class SingleImageFragment extends Fragment {
                         holder.downvote.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                MainActivity activity = (MainActivity) getActivity();
                                 LinearLayout layout = (LinearLayout) view.getParent().getParent();
                                 final ViewHolder dataHolder = (ViewHolder) layout.getTag();
                                 try {
                                     if (!viewData.getString("vote").equals("down")) {
-                                        dataHolder.upvote.setImageResource(R.drawable.rating_good);
                                         dataHolder.downvote.setImageResource(R.drawable.red_rating_bad);
+                                        if(activity.theme == activity.HOLO_LIGHT) {
+                                            dataHolder.upvote.setImageResource(R.drawable.rating_good);
+                                        }
+                                        else {
+                                            dataHolder.upvote.setImageResource(R.drawable.dark_rating_good);
+                                        }
                                         viewData.put("vote", "down");
                                     } else {
-                                        dataHolder.upvote.setImageResource(R.drawable.rating_good);
-                                        dataHolder.downvote.setImageResource(R.drawable.rating_bad);
+                                        if(activity.theme == activity.HOLO_LIGHT) {
+                                            dataHolder.upvote.setImageResource(R.drawable.rating_good);
+                                            dataHolder.downvote.setImageResource(R.drawable.rating_bad);
+                                        }
+                                        else {
+                                            dataHolder.upvote.setImageResource(R.drawable.dark_rating_good);
+                                            dataHolder.downvote.setImageResource(R.drawable.dark_rating_bad);
+                                        }
                                         viewData.put("vote", "none");
                                     }
                                 }

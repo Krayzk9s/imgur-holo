@@ -68,6 +68,10 @@ public class SettingsFragment extends Fragment {
             adapter.add("Default Page is " + settings.getString("DefaultPage", ""));
         else
             adapter.add("No Default Page");
+        if (settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
+            adapter.add("Theme is Holo Light");
+        else
+            adapter.add("Theme is Holo Dark");
         adapter.notifyDataSetChanged();
     }
 
@@ -135,6 +139,39 @@ public class SettingsFragment extends Fragment {
                                 editor.putString("DefaultPage", defaultPage);
                                 editor.commit();
                                 refreshAdapter();
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Do nothing.
+                    }
+                }).show();
+                break;
+            case 2:
+                new AlertDialog.Builder(activity).setTitle("Set Theme")
+                        .setItems(R.array.themes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                MainActivity activity = (MainActivity) getActivity();
+                                SharedPreferences settings = activity.getSettings();
+                                SharedPreferences.Editor editor = settings.edit();
+                                switch (whichButton) {
+                                    case 0:
+                                        activity.theme = activity.HOLO_LIGHT;
+                                        break;
+                                    case 1:
+                                        activity.theme = activity.HOLO_DARK;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                editor.putInt("theme", activity.theme);
+                                editor.commit();
+                                refreshAdapter();
+                                new AlertDialog.Builder(activity).setTitle("Set Theme").setMessage("Restart app for changes to take effect").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        //nothing
+                                    }
+                                }).show();
                             }
                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
