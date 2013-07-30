@@ -13,10 +13,10 @@
     <string name="drawer_open">Opening Drawer</string>
     <string name="drawer_close">Closing Drawer</string>
     <string name="app_not_available">App Not Available</string>
-    <string name="menu_account">Your Account</string>
+    <string name="menu_account">Account</string>
     <string name="menu_login">Login</string>
     <string name="menu_gallery">Gallery</string>
-    <string name="menu_upload">Upload Images</string>
+    <string name="menu_upload">Upload</string>
     <string name="menu_images">Images</string>
     <string name="menu_albums">Albums</string>
     <string name="menu_favorites">Favorites</string>

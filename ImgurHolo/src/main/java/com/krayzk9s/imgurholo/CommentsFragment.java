@@ -15,9 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -79,16 +82,6 @@ public class CommentsFragment extends Fragment {
                 protected JSONObject doInBackground(Void... voids) {
                     MainActivity activity = (MainActivity) getActivity();
                     JSONObject comments = activity.makeGetCall("/3/account/" + username + "/comments");
-                    try {
-                        JSONArray data = comments.getJSONArray("data");
-                        for (int i = 0; i < data.length(); i++) {
-                            JSONObject imageData = activity.makeGetCall("/3/gallery/image/" + data.getJSONObject(i).getString("image_id"));
-                            data.getJSONObject(i).put("image_data", imageData.getJSONObject("data"));
-                        }
-                    }
-                    catch (Exception e) {
-                        Log.e("Error!", e.toString());
-                    }
                     return comments;
                 }
                 @Override
@@ -131,6 +124,8 @@ public class CommentsFragment extends Fragment {
         public ImageButton link;
         public String id;
         public String image_id;
+        public int position;
+        public ImageView image;
     }
 
     public class MessageAdapter extends ArrayAdapter<JSONParcelable> {
@@ -152,13 +147,14 @@ public class CommentsFragment extends Fragment {
                 holder.header = (TextView) convertView.findViewById(R.id.header);
                 holder.delete = (ImageButton) convertView.findViewById(R.id.delete);
                 holder.link = (ImageButton) convertView.findViewById(R.id.link);
+                holder.image = (ImageView) convertView.findViewById(R.id.comment_image);
                 holder.id = "";
                 holder.image_id = "";
+                holder.position = position;
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-
             try {
                 commentContent = this.getItem(position).getJSONObject();
                 Calendar accountCreationDate = Calendar.getInstance();
@@ -169,6 +165,7 @@ public class CommentsFragment extends Fragment {
                 holder.header.setText(accountCreated + " - " + commentContent.getString("points") + "pts (" + commentContent.getString("ups") + "/" + commentContent.getString("downs") +  ")");
                 holder.id = commentContent.getString("id");
                 holder.image_id = commentContent.getString("image_id");
+                UrlImageViewHelper.setUrlDrawable(holder.image, "http://imgur.com/" + commentContent.getString("image_id") + "t.png", R.drawable.icon);
                 if (!username.equals("me"))
                     holder.delete.setVisibility(View.GONE);
                 holder.delete.setOnClickListener(new View.OnClickListener() {
@@ -198,11 +195,29 @@ public class CommentsFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         try {
-                        SingleImageFragment singleImageFragment = new SingleImageFragment();
-                        singleImageFragment.setGallery(true);
-                        singleImageFragment.setParams(commentContent.getJSONObject("image_data"));
-                        MainActivity activity = (MainActivity) getActivity();
-                        activity.changeFragment(singleImageFragment);
+                            View convertView = (View) view.getParent().getParent();
+                            final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+                            AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
+                                @Override
+                                protected JSONObject doInBackground(Void... voids) {
+                                    try {
+                                    MainActivity activity = (MainActivity) getActivity();
+                                    JSONObject imageData = activity.makeGetCall("/3/gallery/image/" + viewHolder.image_id);
+                                    return imageData.getJSONObject("data");
+                                    } catch (Exception e) {
+                                        Log.e("Error!", "missing data");
+                                    }
+                                    return null;
+                                }
+                                protected void onPostExecute(JSONObject imageData) {
+                                    MainActivity activity = (MainActivity) getActivity();
+                                    SingleImageFragment singleImageFragment = new SingleImageFragment();
+                                    singleImageFragment.setGallery(true);
+                                    singleImageFragment.setParams(imageData);
+                                    activity.changeFragment(singleImageFragment);
+                                }
+                            };
+                            async.execute();
                         }
                         catch (Exception e) {
                             Log.e("Error!", e.toString());

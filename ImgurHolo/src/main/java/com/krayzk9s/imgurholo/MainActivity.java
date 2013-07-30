@@ -258,7 +258,7 @@ public class MainActivity extends FragmentActivity {
             finish();
         }
 
-        else if(Intent.ACTION_VIEW.equals(action))
+        else if(Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http"))
         {
             String uri = intent.getData().toString();
             final String image = uri.split("/")[3].split("\\.")[0];
@@ -441,12 +441,13 @@ public class MainActivity extends FragmentActivity {
             case 0:
                 if (!loggedin)
                     login();
-                else
+                else {
                     setTitle("Gallery");
-                GalleryFragment galleryFragment = new GalleryFragment();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.frame_layout, galleryFragment)
-                        .commit();
+                    GalleryFragment galleryFragment = new GalleryFragment();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame_layout, galleryFragment)
+                            .commit();
+                }
                 break;
             case 1:
                 if (loggedin) {
