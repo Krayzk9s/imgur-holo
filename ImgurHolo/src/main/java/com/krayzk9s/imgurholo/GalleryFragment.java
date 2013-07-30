@@ -255,7 +255,7 @@ public class GalleryFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        if (sort.equals("viral") && !gallery.equals("top"))
+        if (sort == null || (sort.equals("viral") && !gallery.equals("top")))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setChecked(true);
         else if (sort.equals("time") && !gallery.equals("top"))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortNewest).setChecked(true);
@@ -270,7 +270,7 @@ public class GalleryFragment extends Fragment {
         else if (window.equals("all"))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortAll).setChecked(true);
 
-        if (gallery.equals("hot") || gallery.equals("user")) {
+        if (gallery == null || gallery.equals("hot") || gallery.equals("user")) {
             menu.findItem(R.id.action_sort).setVisible(true);
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(false);
             //menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setVisible(true);
