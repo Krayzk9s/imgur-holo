@@ -327,6 +327,7 @@ public class MainActivity extends FragmentActivity {
                     try {
                     SingleImageFragment singleImageFragment = new SingleImageFragment();
                     singleImageFragment.setParams(imageData.getJSONObject("data"));
+                    singleImageFragment.setGallery(true);
                     changeFragment(singleImageFragment);
                     }
                     catch (Exception e) {

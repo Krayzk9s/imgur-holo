@@ -309,7 +309,7 @@ public class SingleImageFragment extends Fragment {
             imageData = savedInstanceState.getParcelable("imageData");
             inGallery = savedInstanceState.getBoolean("inGallery");
         }
-        if (inGallery) {
+        if (inGallery && imageData.getJSONObject().has("vote")) {
             LinearLayout layout = (LinearLayout) imageLayoutView.findViewById(R.id.image_buttons);
             layout.setVisibility(View.VISIBLE);
             imageUpvote = (ImageButton) imageLayoutView.findViewById(R.id.rating_good);
@@ -565,7 +565,7 @@ public class SingleImageFragment extends Fragment {
             commentAdapter.addAll(commentArray);
             commentLayout.setAdapter(commentAdapter);
             commentAdapter.notifyDataSetChanged();
-        } else {
+        } else if(commentArray != null) {
             commentAdapter.addAll(commentArray);
             commentLayout.setAdapter(commentAdapter);
             commentAdapter.notifyDataSetChanged();

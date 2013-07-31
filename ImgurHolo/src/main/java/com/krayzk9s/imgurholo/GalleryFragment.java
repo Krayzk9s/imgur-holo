@@ -408,22 +408,24 @@ public class GalleryFragment extends Fragment {
 
     public void selectItem(int position) {
         JSONObject id = ids.get(position).getJSONObject();
-        try {
-            if (id.has("is_album") && id.getBoolean("is_album")) {
-                ImagesFragment fragment = new ImagesFragment();
-                fragment.setImageCall(id.getString("id"), "3/album/" + id.getString("id"), id);
-                MainActivity activity = (MainActivity) getActivity();
-                activity.changeFragment(fragment);
-            } else {
-                SingleImageFragment fragment = new SingleImageFragment();
+        //try {
+            //if (id.has("is_album") && id.getBoolean("is_album")) {
+            //    ImagesFragment fragment = new ImagesFragment();
+            //    fragment.setImageCall(id.getString("id"), "3/album/" + id.getString("id"), id);
+            //    MainActivity activity = (MainActivity) getActivity();
+            //    activity.changeFragment(fragment);
+            //} else {
+                ImagePager pager = new ImagePager(position);
+                /*SingleImageFragment fragment = new SingleImageFragment();
                 fragment.setGallery(true);
-                fragment.setParams(id);
+                fragment.setParams(id);*/
+                pager.setImageData(ids);
                 MainActivity activity = (MainActivity) getActivity();
-                activity.changeFragment(fragment);
-            }
-        } catch (Exception e) {
-            Log.e("Error!", e.toString());
-        }
+                activity.changeFragment(pager);
+           // }
+        //} catch (Exception e) {
+        //    Log.e("Error!", e.toString());
+        //}
     }
 
     @Override
