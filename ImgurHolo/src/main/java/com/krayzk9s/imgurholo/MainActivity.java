@@ -25,6 +25,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -134,6 +135,8 @@ public class MainActivity extends FragmentActivity {
             loadDefaultPage();
     }
 
+
+
     public void updateMenu() {
         DrawerAdapter drawerAdapter = new DrawerAdapter(this, R.layout.menu_item);
         if (loggedin && theme == HOLO_DARK)
@@ -154,6 +157,17 @@ public class MainActivity extends FragmentActivity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+    }
+
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            if(!mDrawerLayout.isDrawerOpen(GravityCompat.START))
+                mDrawerLayout.openDrawer(GravityCompat.START);
+            else
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     public class DrawerAdapter extends ArrayAdapter<String> {
@@ -325,10 +339,10 @@ public class MainActivity extends FragmentActivity {
                 protected void onPostExecute(JSONObject imageData) {
                     Log.d("data", imageData.toString());
                     try {
-                    SingleImageFragment singleImageFragment = new SingleImageFragment();
-                    singleImageFragment.setParams(imageData.getJSONObject("data"));
-                    singleImageFragment.setGallery(true);
-                    changeFragment(singleImageFragment);
+                        SingleImageFragment singleImageFragment = new SingleImageFragment();
+                        singleImageFragment.setParams(imageData.getJSONObject("data"));
+                        singleImageFragment.setGallery(true);
+                        changeFragment(singleImageFragment);
                     }
                     catch (Exception e) {
                         Log.e("Error!", e.toString());

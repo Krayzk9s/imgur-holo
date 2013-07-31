@@ -24,6 +24,9 @@ public class ImagePager extends Fragment {
     ArrayList<JSONParcelable> imageData;
     int start;
 
+    public ImagePager() {
+    }
+
     public ImagePager(int _start) {
         start = _start;
     }
@@ -32,13 +35,17 @@ public class ImagePager extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
+        if(savedInstanceState != null)
+            imageData = savedInstanceState.getParcelableArrayList("imageData");
         View result=inflater.inflate(R.layout.image_viewpager, container, false);
         pager=(ViewPager)result.findViewById(R.id.pager);
         adapter = new ImageAdapter(getActivity(), getChildFragmentManager());
         pager.setAdapter(adapter);
         pager.setCurrentItem(start);
+
         return(result);
     }
+
     public void setImageData(ArrayList<JSONParcelable> _ids) {
         imageData = _ids;
     }
@@ -77,5 +84,11 @@ public class ImagePager extends Fragment {
             }
             return null;
         }
+    }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelableArrayList("imageData", imageData);
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 }

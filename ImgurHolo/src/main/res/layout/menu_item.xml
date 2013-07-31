@@ -10,7 +10,9 @@
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:paddingLeft="16dp"
+               android:paddingRight="16dp"
                android:layout_centerVertical="true"
+               android:background="?android:attr/activatedBackgroundIndicator"
                android:gravity="center"/>
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/menu_text"
@@ -19,7 +21,6 @@
               android:textAppearance="?android:attr/textAppearanceListItemSmall"
               android:gravity="center_vertical"
               android:paddingLeft="16dp"
-              android:paddingRight="16dp"
               android:layout_toRightOf="@id/menu_icon"
               android:layout_centerVertical="true"
               android:background="?android:attr/activatedBackgroundIndicator"
