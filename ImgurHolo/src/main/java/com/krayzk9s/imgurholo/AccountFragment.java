@@ -35,6 +35,8 @@ public class AccountFragment extends Fragment {
 
     public AccountFragment(String _username) {
         username = _username;
+
+
     }
 
     @Override
@@ -59,6 +61,13 @@ public class AccountFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        Log.d("Username", username);
+        MainActivity activity = (MainActivity) getActivity();
+        Log.d("SettingTitle", username);
+        if(username != "me")
+            activity.setTitle(username + "'s Account");
+        else
+            activity.setTitle("My Account");
         View view = inflater.inflate(R.layout.account_layout, container, false);
         ListView mDrawerList = (ListView) view.findViewById(R.id.account_list);
         if(username.equals("me"))
@@ -178,24 +187,41 @@ public class AccountFragment extends Fragment {
         ImagesFragment imagesFragment;
         switch (position) {
             case 0:
+                if(username != "me")
+                    activity.setTitle(username + "'s Albums");
+                else
+                    activity.setTitle("My Albums");
                 AlbumsFragment albumsFragment = new AlbumsFragment(username);
                 activity.changeFragment(albumsFragment);
                 break;
             case 1:
+                if(username != "me")
+                    activity.setTitle(username + "'s Images");
+                else
+                    activity.setTitle("My Images");
                 imagesFragment = new ImagesFragment();
                 imagesFragment.setImageCall(null, "3/account/" + username + "/images/0", null);
                 activity.changeFragment(imagesFragment);
                 break;
             case 2:
+                if(username != "me")
+                    activity.setTitle(username + "'s Favorites");
+                else
+                    activity.setTitle("My Favorites");
                 imagesFragment = new ImagesFragment();
                 imagesFragment.setImageCall(null, "3/account/" + username + "/likes", null);
                 activity.changeFragment(imagesFragment);
                 break;
             case 3:
+                if(username != "me")
+                    activity.setTitle(username + "'s Comments");
+                else
+                    activity.setTitle("My Comments");
                 CommentsFragment commentsFragment = new CommentsFragment(username);
                 activity.changeFragment(commentsFragment);
                 break;
             case 6:
+                activity.setTitle("My Messages");
                 MessagingFragment messagingFragment = new MessagingFragment();
                 activity.changeFragment(messagingFragment);
                 break;

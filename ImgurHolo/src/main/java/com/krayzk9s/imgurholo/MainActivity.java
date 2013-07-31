@@ -662,6 +662,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
+        Log.d("new title", title.toString());
         getActionBar().setTitle(mTitle);
     }
 

@@ -71,6 +71,7 @@ public class SingleImageFragment extends Fragment {
     ImageButton imageFavorite;
     ImageButton imageComment;
     ImageButton imageReport;
+    ImageButton imageUser;
     ArrayList<JSONParcelable> commentArray;
     PhotoViewAttacher mAttacher;
 
@@ -367,7 +368,10 @@ public class SingleImageFragment extends Fragment {
             imageFavorite = (ImageButton) imageLayoutView.findViewById(R.id.rating_favorite);
             imageComment = (ImageButton) imageLayoutView.findViewById(R.id.comment);
             imageReport = (ImageButton) imageLayoutView.findViewById(R.id.report);
+            imageUser = (ImageButton) imageLayoutView.findViewById(R.id.user);
             try {
+                if(imageData.getJSONObject().getString("account_url") == "null" || imageData.getJSONObject().getString("account_url") == "[deleted]")
+                    imageUser.setVisibility(View.GONE);
                 if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
                     imageUpvote.setImageResource(R.drawable.green_rating_good);
                 else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
@@ -407,6 +411,19 @@ public class SingleImageFragment extends Fragment {
                         }
                     };
                     async.execute();
+                }
+            });
+            imageUser.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        AccountFragment accountFragment = new AccountFragment(imageData.getJSONObject().getString("account_url"));
+                        MainActivity activity = (MainActivity) getActivity();
+                        activity.changeFragment(accountFragment);
+                    } catch (Exception e) {
+                        Log.e("Error!", e.toString());
+                    }
+
                 }
             });
             imageComment.setOnClickListener(new View.OnClickListener() {
@@ -703,7 +720,7 @@ public class SingleImageFragment extends Fragment {
     }
 
     private void setDescendantsHidden(View view) {
-        LinearLayout convertView = (LinearLayout) view.getParent().getParent().getParent();
+        LinearLayout convertView = (LinearLayout) view;
         ViewHolder holder = (ViewHolder) convertView.getTag();
         int position = holder.position;
         JSONObject viewData = commentAdapter.getItem(position).getJSONObject();
@@ -762,6 +779,7 @@ public class SingleImageFragment extends Fragment {
         public ImageButton downvote;
         public ImageButton reply;
         public ImageButton report;
+        public ImageButton user;
         int position;
     }
 
@@ -820,6 +838,7 @@ public class SingleImageFragment extends Fragment {
                         holder.buttons = (LinearLayout) convertView.findViewById(R.id.comment_buttons);
                         holder.upvote = (ImageButton) holder.buttons.findViewById(R.id.rating_good);
                         holder.downvote = (ImageButton) holder.buttons.findViewById(R.id.rating_bad);
+                        holder.user = (ImageButton) holder.buttons.findViewById(R.id.user);
                         holder.reply = (ImageButton) holder.buttons.findViewById(R.id.reply);
                         holder.report = (ImageButton) holder.buttons.findViewById(R.id.report);
                         holder.header = (RelativeLayout) convertView.findViewById(R.id.header);
@@ -849,7 +868,6 @@ public class SingleImageFragment extends Fragment {
                         holder.buttons.setVisibility(View.GONE);
                         int indentPosition = Math.min(indentLevel, holder.indentViews.length - 1);
 
-
                         for (int i = 0; i < indentPosition - 1; i++) {
                             holder.indentViews[i].setVisibility(View.INVISIBLE);
                         }
@@ -865,15 +883,20 @@ public class SingleImageFragment extends Fragment {
                         else
                             holder.username.setText(viewData.getString("author").substring(0, 25) + "...");
 
+                        if(viewData.getString("author") == imageData.getJSONObject().getString("account_url"))
+                            holder.username.setTextColor(0xFF98FB98);
+                        else
+                            holder.username.setTextColor(0xFF87CEEB);
+
                         holder.points.setText(Html.fromHtml(viewData.getString("points") + "pts (<font color=#89c624>" + viewData.getString("ups") + "</font>/<font color=#ee4444>" + viewData.getString("downs") + "</font>)"));
 
                         holder.header.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                setDescendantsHidden(view);
+                                setDescendantsHidden((View) view.getParent().getParent().getParent());
                             }
                         });
-                        holder.username.setOnClickListener(new View.OnClickListener() {
+                        holder.user.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 try {
@@ -889,23 +912,25 @@ public class SingleImageFragment extends Fragment {
                         convertView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                ViewHolder viewHolder = (ViewHolder) view.getTag();
-                                if (viewHolder.buttons.getVisibility() == View.GONE)
-                                    viewHolder.buttons.setVisibility(View.VISIBLE);
-                                else
-                                    viewHolder.buttons.setVisibility(View.GONE);
+                                setDescendantsHidden(view);
                             }
                         });
-
                         holder.body.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 View convertView = (View) view.getParent().getParent().getParent();
                                 ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-                                if (viewHolder.buttons.getVisibility() == View.GONE)
-                                    viewHolder.buttons.setVisibility(View.VISIBLE);
-                                else
-                                    viewHolder.buttons.setVisibility(View.GONE);
+                                try {
+                                    Log.d("testing", viewData.getString("author"));
+                                    Log.d("testing", String.valueOf(viewData.getString("author").equals("[deleted]")));
+                                    if (viewHolder.buttons.getVisibility() == View.GONE && !viewData.getString("author").equals("[deleted]"))
+                                        viewHolder.buttons.setVisibility(View.VISIBLE);
+                                    else
+                                        viewHolder.buttons.setVisibility(View.GONE);
+                                }
+                                catch (Exception e) {
+                                    Log.e("Error!", e.toString());
+                                }
                             }
                         });
                         if (viewData.getString("vote") != null && viewData.getString("vote").equals("up"))

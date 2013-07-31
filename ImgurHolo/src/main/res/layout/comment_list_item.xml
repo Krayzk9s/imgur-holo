@@ -62,7 +62,7 @@
                                android:layout_width="fill_parent"
                                android:layout_height="wrap_content"
                                android:orientation="horizontal"
-                               android:layout_margin="8dp"
+                               android:padding="8dp"
                                android:id="@+id/header">
 
                     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -97,6 +97,10 @@
                           android:autoLink="web"
                           android:clickable="false"
                         />
+            <View xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="1dp"
+                  android:alpha="0"/>
             </LinearLayout>
     </LinearLayout>
 
@@ -126,6 +130,12 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/content_discard"
                 android:visibility="gone"/>
+
+        <ImageButton
+                android:id="@+id/user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/social_person"/>
 
         <ImageButton
                 android:id="@+id/reply"
