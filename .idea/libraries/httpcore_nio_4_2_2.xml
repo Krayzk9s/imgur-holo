@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="httpcore-nio-4.2.2">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/org.apache.httpcomponents/httpcore-nio/4.2.2/jar/8de205b66e168bf8a3f2eba10925a90c33c2ebd6/httpcore-nio-4.2.2.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
