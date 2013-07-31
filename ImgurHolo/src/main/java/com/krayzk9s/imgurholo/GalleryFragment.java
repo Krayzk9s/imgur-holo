@@ -225,7 +225,6 @@ public class GalleryFragment extends Fragment {
                         int imageLength = Math.min(urls.size() + 30, imageArray.length());
                         for (int i = urls.size(); i < imageLength; i++) {
                             JSONObject imageData = imageArray.getJSONObject(i);
-                            Log.d("Data", imageData.toString());
                             if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
                                 if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png"))
                                     urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");

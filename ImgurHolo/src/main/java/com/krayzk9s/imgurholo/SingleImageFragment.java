@@ -381,25 +381,29 @@ public class SingleImageFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     try {
-                    if (!imageData.getJSONObject().getString("vote").equals("up")) {
+                    if (!imageData.getJSONObject().getBoolean("favorite")) {
                         imageFavorite.setImageResource(R.drawable.green_rating_favorite);
+                        imageData.getJSONObject().put("favorite", true);
                         }
                     else {
                         if(activity.theme == activity.HOLO_LIGHT)
                             imageFavorite.setImageResource(R.drawable.rating_favorite);
                         else
                             imageFavorite.setImageResource(R.drawable.dark_rating_favorite);
+                        imageData.getJSONObject().put("favorite", false);
                     }
                     } catch (Exception e) {
                         Log.e("Error!", "missing data" + e.toString());
                     }
-
                     AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... voids) {
                             MainActivity activity = (MainActivity) getActivity();
                             try {
-                                activity.makePostCall("3/image/" + imageData.getJSONObject().getString("id") + "/favorite");
+                                if(!imageData.getJSONObject().getBoolean("is_album"))
+                                    activity.makePostCall("3/image/" + imageData.getJSONObject().getString("id") + "/favorite");
+                                else
+                                    activity.makePostCall("3/album/" + imageData.getJSONObject().getString("id") + "/favorite");
                             } catch (Exception e) {
                                 Log.e("Error!", e.toString());
                             }
