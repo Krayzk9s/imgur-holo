@@ -114,6 +114,7 @@ public class GalleryFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         MainActivity activity = (MainActivity) getActivity();
+        page = 0;
         switch (item.getItemId()) {
             case R.id.action_sort:
                 Log.d("sorting", "sorting");
@@ -223,7 +224,9 @@ public class GalleryFragment extends Fragment {
                         Log.d("Extending", "Getting more images!");
                         JSONArray imageArray = imagesData.getJSONArray("data");
                         int imageLength = Math.min(urls.size() + 30, imageArray.length());
+                        boolean loadedMore = false;
                         for (int i = urls.size(); i < imageLength; i++) {
+                            loadedMore = true;
                             JSONObject imageData = imageArray.getJSONObject(i);
                             Log.d("Data", imageData.toString());
                             if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
@@ -238,6 +241,12 @@ public class GalleryFragment extends Fragment {
                             dataParcel.setJSONObject(imageData);
                             ids.add(dataParcel);
                             imageAdapter.notifyDataSetChanged();
+                        }
+                        if(!loadedMore) {
+                            if(!gallery.equals("search")) {
+                                page += 1;
+                                getImages();
+                            }
                         }
                     } catch (Exception e) {
                         Log.e("Error!", e.toString());
@@ -318,6 +327,10 @@ public class GalleryFragment extends Fragment {
         imageAdapter.notifyDataSetChanged();
         MainActivity activity = (MainActivity) getActivity();
         activity.invalidateOptionsMenu();
+        getImages();
+    }
+
+    private void getImages() {
         async = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -336,8 +349,6 @@ public class GalleryFragment extends Fragment {
                 }
                 try {
                     Log.d("URI", imagesData.toString());
-                    urls = new ArrayList<String>();
-                    ids = new ArrayList<JSONParcelable>();
                     JSONArray imageArray = imagesData.getJSONArray("data");
                     int imageLength = Math.min(30, imageArray.length());
                     for (int i = 0; i < imageLength; i++) {
