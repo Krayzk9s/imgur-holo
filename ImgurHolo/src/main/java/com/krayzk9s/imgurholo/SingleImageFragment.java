@@ -230,6 +230,13 @@ public class SingleImageFragment extends Fragment {
                         }
                         return null;
                     }
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast;
+                        toast = Toast.makeText(activity, "Downloaded!", duration);
+                        toast.show();
+                    }
                 };
                 async.execute();
                 return true;

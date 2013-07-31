@@ -248,10 +248,6 @@ public class MainActivity extends FragmentActivity {
             Log.d("Image Upload", data.toString());
             return null;
         }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-        }
     }
 
 
