@@ -108,5 +108,11 @@
           android:icon="@drawable/dark_av_upload"
           android:showAsAction="ifRoom|collapseActionView"
           android:visible="false"/>
+    <item android:id="@+id/action_submit"
+          android:title="@string/action_submit"
+          android:orderInCategory="25"
+          android:icon="@drawable/dark_social_add_group"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false"/>
 
 </menu>

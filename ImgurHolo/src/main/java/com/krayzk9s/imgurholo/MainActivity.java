@@ -743,6 +743,56 @@ public class MainActivity extends FragmentActivity {
         return data;
     }
 
+    public JSONObject makeGalleryPost(String url, String title) {
+        Token accessKey = getAccessToken();
+        Log.d("Making Call", accessKey.toString());
+        HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + url)
+                .header("accept", "application/json")
+                .header("X-Mashape-Authorization", MASHAPE_KEY)
+                .header("Authorization", "Bearer " + accessKey.getToken())
+                .field("title", title)
+                .field("terms", "1")
+                .asJson();
+        Log.d("Getting Code", String.valueOf(response.getCode()));
+        int code = response.getCode();
+        if (code == 403) {
+            accessKey = renewAccessToken();
+            response = Unirest.post(MASHAPE_URL + url)
+                    .header("accept", "application/json")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Bearer " + accessKey.getToken())
+                    .field("title", title)
+                    .field("terms", "1")
+                    .asJson();
+        }
+        JSONObject data = response.getBody().getObject();
+        Log.d("Got data", data.toString());
+        return data;
+    }
+
+    public JSONObject makeDeleteCall(String url) {
+        Token accessKey = getAccessToken();
+        Log.d("Making Call", accessKey.toString());
+        HttpResponse<JsonNode> response = Unirest.delete(MASHAPE_URL + url)
+                .header("accept", "application/json")
+                .header("X-Mashape-Authorization", MASHAPE_KEY)
+                .header("Authorization", "Bearer " + accessKey.getToken())
+                .asJson();
+        Log.d("Getting Code", String.valueOf(response.getCode()));
+        int code = response.getCode();
+        if (code == 403) {
+            accessKey = renewAccessToken();
+            response = Unirest.delete(MASHAPE_URL + url)
+                    .header("accept", "application/json")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Bearer " + accessKey.getToken())
+                    .asJson();
+        }
+        JSONObject data = response.getBody().getObject();
+        Log.d("Got data", data.toString());
+        return data;
+    }
+
     public JSONObject makeGalleryReply(String imageId, String comment, String commentId) {
         Token accessKey = getAccessToken();
         Log.d("Making Call", accessKey.toString());

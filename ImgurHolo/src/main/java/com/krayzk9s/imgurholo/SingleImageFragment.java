@@ -36,6 +36,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONArray;
@@ -100,9 +101,10 @@ public class SingleImageFragment extends Fragment {
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
-        if (!inGallery) {
+        if (imageData.getJSONObject().has("deletehash")) {
             menu.findItem(R.id.action_delete).setVisible(true);
             menu.findItem(R.id.action_edit).setVisible(true);
+            menu.findItem(R.id.action_submit).setVisible(true);
         }
         menu.findItem(R.id.action_share).setVisible(true);
         menu.findItem(R.id.action_download).setVisible(true);
@@ -115,6 +117,51 @@ public class SingleImageFragment extends Fragment {
         // handle item selection
         final MainActivity activity = (MainActivity) getActivity();
         switch (item.getItemId()) {
+            case R.id.action_submit:
+                final EditText newGalleryTitle = new EditText(activity);
+                newGalleryTitle.setHint("Title");
+                newGalleryTitle.setSingleLine();
+                new AlertDialog.Builder(activity).setTitle("Set Gallery Title/Press OK to remove")
+                        .setView(newGalleryTitle).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        AsyncTask<Void, Void, Boolean> galleryAsync = new AsyncTask<Void, Void, Boolean>() {
+                            @Override
+                            protected Boolean doInBackground(Void... voids) {
+                                try {
+                                    JSONObject jsonObject = activity.makeGetCall("3/gallery/image/" + imageData.getJSONObject().getString("id"));
+                                    if(jsonObject.getJSONObject("data").has("error")) {
+                                        jsonObject = activity.makeGalleryPost("3/gallery/" + imageData.getJSONObject().getString("id"), newGalleryTitle.getText().toString());
+                                        return true;
+                                    }
+                                    else {
+                                        jsonObject = activity.makeDeleteCall("3/gallery/" + imageData.getJSONObject().getString("id"));
+                                        return false;
+                                    }
+                                } catch (Exception e) {
+                                    Log.e("Error!", "oops, some text fields missing values" + e.toString());
+                                }
+                                return false;
+                            }
+                            @Override
+                            protected void onPostExecute(Boolean bool) {
+                                int duration = Toast.LENGTH_SHORT;
+                                Toast toast;
+                                if(bool)
+                                    toast = Toast.makeText(activity, "Submitted!", duration);
+                                else
+                                    toast = Toast.makeText(activity, "Removed!", duration);
+                                toast.show();
+                            }
+                        };
+                        galleryAsync.execute();
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Do nothing.
+                    }
+                }).show();
+
+                return true;
             case R.id.action_edit:
                 try {
                     final EditText newTitle = new EditText(activity);
@@ -123,6 +170,7 @@ public class SingleImageFragment extends Fragment {
                         newTitle.setText(imageData.getJSONObject().getString("title"));
                     final EditText newBody = new EditText(activity);
                     newBody.setHint("Description");
+                    newTitle.setHint("Title");
                     if (imageData.getJSONObject().getString("description") != "null")
                         newBody.setText(imageData.getJSONObject().getString("description"));
                     LinearLayout linearLayout = new LinearLayout(activity);
@@ -397,22 +445,21 @@ public class SingleImageFragment extends Fragment {
                         new AlertDialog.Builder(activity).setTitle("Comment on Image")
                                 .setView(commentReplyLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                if(newBody.getText().toString().length() < 141) {
-                                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                                    @Override
-                                    protected Void doInBackground(Void... voids) {
-                                        MainActivity activity = (MainActivity) getActivity();
-                                        try {
-                                            activity.makeGalleryReply(imageData.getJSONObject().getString("id"), newBody.getText().toString(), null);
-                                        } catch (Exception e) {
-                                            Log.e("Error!", "oops, some text fields missing values" + e.toString());
+                                if (newBody.getText().toString().length() < 141) {
+                                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                                        @Override
+                                        protected Void doInBackground(Void... voids) {
+                                            MainActivity activity = (MainActivity) getActivity();
+                                            try {
+                                                activity.makeGalleryReply(imageData.getJSONObject().getString("id"), newBody.getText().toString(), null);
+                                            } catch (Exception e) {
+                                                Log.e("Error!", "oops, some text fields missing values" + e.toString());
+                                            }
+                                            return null;
                                         }
-                                        return null;
-                                    }
-                                };
-                                async.execute();
-                                }
-                                else {
+                                    };
+                                    async.execute();
+                                } else {
                                     //do nothing
                                 }
                             }
@@ -431,21 +478,19 @@ public class SingleImageFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         if (!imageData.getJSONObject().getString("vote").equals("up")) {
-                            if(activity.theme == activity.HOLO_LIGHT) {
+                            if (activity.theme == activity.HOLO_LIGHT) {
                                 imageUpvote.setImageResource(R.drawable.green_rating_good);
                                 imageDownvote.setImageResource(R.drawable.rating_bad);
-                            }
-                            else {
+                            } else {
                                 imageUpvote.setImageResource(R.drawable.green_rating_good);
                                 imageDownvote.setImageResource(R.drawable.dark_rating_bad);
                             }
                             imageData.getJSONObject().put("vote", "up");
                         } else {
-                            if(activity.theme == activity.HOLO_LIGHT) {
+                            if (activity.theme == activity.HOLO_LIGHT) {
                                 imageUpvote.setImageResource(R.drawable.rating_good);
                                 imageDownvote.setImageResource(R.drawable.rating_bad);
-                            }
-                            else {
+                            } else {
                                 imageUpvote.setImageResource(R.drawable.dark_rating_good);
                                 imageDownvote.setImageResource(R.drawable.dark_rating_bad);
                             }

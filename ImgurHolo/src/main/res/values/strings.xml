@@ -62,7 +62,7 @@
     <string name="linked_bbcode_link">Linked BBCode</string>
     <string name="markdown_link">Markdown Link (Reddit)</string>
     <string name="title_activity_image_select">ImageSelectActivity</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="action_submit">Submit/Remove from Gallery</string>
 
     <string name="upload_url">Upload From Web</string>
     <string name="upload_gallery">Upload From Phone</string>
