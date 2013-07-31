@@ -12,7 +12,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -322,7 +324,7 @@ public class SingleImageFragment extends Fragment {
                     imageUpvote.setImageResource(R.drawable.green_rating_good);
                 else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
                     imageDownvote.setImageResource(R.drawable.red_rating_bad);
-                if (imageData.getJSONObject().getBoolean("favorite"))
+                if (imageData.getJSONObject().getString("favorite") != null && imageData.getJSONObject().getBoolean("favorite"))
                     imageFavorite.setImageResource(R.drawable.green_rating_favorite);
             } catch (Exception e) {
                 Log.e("Error!", e.toString());
@@ -330,7 +332,20 @@ public class SingleImageFragment extends Fragment {
             imageFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    imageFavorite.setImageResource(R.drawable.green_rating_favorite);
+                    try {
+                    if (!imageData.getJSONObject().getString("vote").equals("up")) {
+                        imageFavorite.setImageResource(R.drawable.green_rating_favorite);
+                        }
+                    else {
+                        if(activity.theme == activity.HOLO_LIGHT)
+                            imageFavorite.setImageResource(R.drawable.rating_favorite);
+                        else
+                            imageFavorite.setImageResource(R.drawable.dark_rating_favorite);
+                    }
+                    } catch (Exception e) {
+                        Log.e("Error!", "missing data" + e.toString());
+                    }
+
                     AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... voids) {
@@ -353,9 +368,36 @@ public class SingleImageFragment extends Fragment {
                         MainActivity activity = (MainActivity) getActivity();
                         final EditText newBody = new EditText(activity);
                         newBody.setHint("Body");
+                        newBody.setLines(3);
+                        final TextView characterCount = new TextView(activity);
+                        characterCount.setText("140");
+                        LinearLayout commentReplyLayout = new LinearLayout(activity);
+                        newBody.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                                //
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                                characterCount.setText(String.valueOf(140 - charSequence.length()));
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable editable) {
+                                for(int i = editable.length(); i > 0; i--){
+                                    if(editable.subSequence(i-1, i).toString().equals("\n"))
+                                        editable.replace(i-1, i, "");
+                                }
+                            }
+                        });
+                        commentReplyLayout.setOrientation(LinearLayout.VERTICAL);
+                        commentReplyLayout.addView(newBody);
+                        commentReplyLayout.addView(characterCount);
                         new AlertDialog.Builder(activity).setTitle("Comment on Image")
-                                .setView(newBody).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                .setView(commentReplyLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
+                                if(newBody.getText().toString().length() < 141) {
                                 AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                                     @Override
                                     protected Void doInBackground(Void... voids) {
@@ -369,6 +411,10 @@ public class SingleImageFragment extends Fragment {
                                     }
                                 };
                                 async.execute();
+                                }
+                                else {
+                                    //do nothing
+                                }
                             }
                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -829,10 +875,37 @@ public class SingleImageFragment extends Fragment {
                                 try {
                                     MainActivity activity = (MainActivity) getActivity();
                                     final EditText newBody = new EditText(activity);
+                                    newBody.setLines(3);
+                                    final TextView characterCount = new TextView(activity);
+                                    characterCount.setText("140");
+                                    LinearLayout commentReplyLayout = new LinearLayout(activity);
+                                    newBody.addTextChangedListener(new TextWatcher() {
+                                        @Override
+                                        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                                           //
+                                        }
+
+                                        @Override
+                                        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                                            characterCount.setText(String.valueOf(140 - charSequence.length()));
+                                        }
+
+                                        @Override
+                                        public void afterTextChanged(Editable editable) {
+                                            for(int i = editable.length(); i > 0; i--){
+                                                if(editable.subSequence(i-1, i).toString().equals("\n"))
+                                                    editable.replace(i-1, i, "");
+                                            }
+                                        }
+                                    });
+                                    commentReplyLayout.setOrientation(LinearLayout.VERTICAL);
+                                    commentReplyLayout.addView(newBody);
+                                    commentReplyLayout.addView(characterCount);
                                     newBody.setHint("Body");
                                     new AlertDialog.Builder(activity).setTitle("Reply to Comment")
-                                            .setView(newBody).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            .setView(commentReplyLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
+                                            if(newBody.getText().toString().length() < 141) {
                                             AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                                                 @Override
                                                 protected Void doInBackground(Void... voids) {
@@ -847,6 +920,10 @@ public class SingleImageFragment extends Fragment {
                                                 }
                                             };
                                             async.execute();
+                                            }
+                                            else {
+                                                //do nothing
+                                            }
                                         }
                                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {

@@ -140,6 +140,7 @@ public class MessagingFragment extends Fragment {
         newHeader.setHint("Subject");
         final EditText newBody = new EditText(activity);
         newBody.setHint("Body");
+        newBody.setLines(5);
         LinearLayout linearLayout = new LinearLayout(activity);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.addView(newUsername);
