@@ -240,7 +240,7 @@ public class MessagingFragment extends Fragment {
                         LinearLayout layout = (LinearLayout) v.getParent().getParent();
                         final ViewHolder dataHolder = (ViewHolder) layout.getTag();
                         MainActivity activity = (MainActivity) getActivity();
-                        new AlertDialog.Builder(activity).setTitle("Send Message").setMessage("Are you sure you want to report this user and block them?")
+                        new AlertDialog.Builder(activity).setTitle("Report and Block User").setMessage("Are you sure you want to report this user and block them?")
                                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
                                         try {

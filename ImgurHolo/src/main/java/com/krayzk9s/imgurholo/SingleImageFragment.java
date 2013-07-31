@@ -413,6 +413,33 @@ public class SingleImageFragment extends Fragment {
                     async.execute();
                 }
             });
+            imageReport.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new AlertDialog.Builder(activity).setTitle("Report This Image?").setMessage("Are you sure you want to report this image?")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                        AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                                            @Override
+                                            protected Void doInBackground(Void... voids) {
+                                                try {
+                                                activity.makePostCall("3/gallery/" + imageData.getJSONObject().getString("id") + "/report");
+                                                } catch (Exception e) {
+                                                    Log.e("Error!", "missing data" + e.toString());
+                                                }
+                                                return null;
+                                            }
+                                        };
+                                        async.execute();
+                                }
+                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Do nothing.
+                        }
+                    }).show();
+                }
+            });
             imageComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1068,10 +1095,34 @@ public class SingleImageFragment extends Fragment {
                         });
                         holder.report.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View view) {
-
+                            public void onClick(View v) {
+                                LinearLayout layout = (LinearLayout) v.getParent().getParent();
+                                final ViewHolder dataHolder = (ViewHolder) layout.getTag();
+                                final MainActivity activity = (MainActivity) getActivity();
+                                new AlertDialog.Builder(activity).setTitle("Report Comment").setMessage("Are you sure you want to report this comment?")
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                try {
+                                                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                                                        @Override
+                                                        protected Void doInBackground(Void... voids) {
+                                                            activity.makePostCall("3/comment/" + dataHolder.id + "/report");
+                                                            return null;
+                                                        }
+                                                    };
+                                                    async.execute();
+                                                } catch (Exception e) {
+                                                    Log.e("Error!", "missing data" + e.toString());
+                                                }
+                                            }
+                                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        // Do nothing.
+                                    }
+                                }).show();
                             }
-                        });
+                        }
+                        );
                         if (viewData.has("hidden") && viewData.getInt("hidden") == ViewHolder.VIEW_HIDDEN) {
                             holder.body.setVisibility(View.GONE);
                         } else

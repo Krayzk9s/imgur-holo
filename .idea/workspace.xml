@@ -30,7 +30,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd7191f9-071f-4e7c-a8f1-8f8b811e97ef" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" />
     </list>
     <ignored path="ImgurHolo.iws" />
@@ -107,7 +107,7 @@
       <file leaf-file-name="SingleImageFragment.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="392" column="71" selection-start="20286" selection-end="20286" vertical-scroll-proportion="0.9218472" vertical-offset="5125" max-vertical-offset="16592">
+            <state line="433" column="56" selection-start="22808" selection-end="22808" vertical-scroll-proportion="0.312611" vertical-offset="6097" max-vertical-offset="17544">
               <folding>
                 <element signature="e#4032#6141#0" expanded="true" />
                 <element signature="e#6122#6123#0" expanded="true" />
@@ -125,8 +125,35 @@
                 <element signature="e#15334#15335#0" expanded="true" />
                 <element signature="e#15391#15592#0" expanded="true" />
                 <element signature="e#15573#15574#0" expanded="true" />
-                <element signature="e#30077#30085#0" expanded="true" />
+                <element signature="e#21492#23160#0" expanded="true" />
+                <element signature="e#21792#22872#0" expanded="true" />
+                <element signature="e#22004#22750#0" expanded="true" />
+                <element signature="e#22707#22708#0" expanded="true" />
+                <element signature="e#22841#22842#0" expanded="true" />
+                <element signature="e#22902#23119#0" expanded="true" />
+                <element signature="e#23096#23097#0" expanded="true" />
+                <element signature="e#23145#23146#0" expanded="true" />
+                <element signature="e#23207#26991#0" expanded="true" />
+                <element signature="e#26976#26977#0" expanded="true" />
+                <element signature="e#27037#29326#0" expanded="true" />
+                <element signature="e#29311#29312#0" expanded="true" />
+                <element signature="e#29374#31719#0" expanded="true" />
+                <element signature="e#31704#31705#0" expanded="true" />
+                <element signature="e#31791#31799#0" expanded="true" />
+                <element signature="e#59732#60224#0" expanded="true" />
+                <element signature="e#60189#60190#0" expanded="true" />
+                <element signature="e#61302#61816#0" expanded="true" />
+                <element signature="e#61761#61762#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MessagingFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="260" column="18" selection-start="9584" selection-end="11163" vertical-scroll-proportion="0.0" vertical-offset="3281" max-vertical-offset="5253">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -264,13 +291,13 @@
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagePager.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/menu_item.xml" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/menu/main.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/menu/main_dark.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/toast.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" />
       </list>
     </option>
@@ -931,13 +958,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="142" column="26" selection-start="5212" selection-end="5212" vertical-scroll-proportion="0.5281065" vertical-offset="1649" max-vertical-offset="5253">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="309" column="5" selection-start="11988" selection-end="12325" vertical-scroll-proportion="0.0" vertical-offset="6156" max-vertical-offset="6902">
@@ -1018,9 +1038,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="260" column="18" selection-start="9584" selection-end="11163" vertical-scroll-proportion="0.0" vertical-offset="3281" max-vertical-offset="5253">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="392" column="71" selection-start="20286" selection-end="20286" vertical-scroll-proportion="0.9218472" vertical-offset="5125" max-vertical-offset="16592">
+        <state line="433" column="56" selection-start="22808" selection-end="22808" vertical-scroll-proportion="0.312611" vertical-offset="6097" max-vertical-offset="17544">
           <folding>
             <element signature="e#4032#6141#0" expanded="true" />
             <element signature="e#6122#6123#0" expanded="true" />
@@ -1038,7 +1065,25 @@
             <element signature="e#15334#15335#0" expanded="true" />
             <element signature="e#15391#15592#0" expanded="true" />
             <element signature="e#15573#15574#0" expanded="true" />
-            <element signature="e#30077#30085#0" expanded="true" />
+            <element signature="e#21492#23160#0" expanded="true" />
+            <element signature="e#21792#22872#0" expanded="true" />
+            <element signature="e#22004#22750#0" expanded="true" />
+            <element signature="e#22707#22708#0" expanded="true" />
+            <element signature="e#22841#22842#0" expanded="true" />
+            <element signature="e#22902#23119#0" expanded="true" />
+            <element signature="e#23096#23097#0" expanded="true" />
+            <element signature="e#23145#23146#0" expanded="true" />
+            <element signature="e#23207#26991#0" expanded="true" />
+            <element signature="e#26976#26977#0" expanded="true" />
+            <element signature="e#27037#29326#0" expanded="true" />
+            <element signature="e#29311#29312#0" expanded="true" />
+            <element signature="e#29374#31719#0" expanded="true" />
+            <element signature="e#31704#31705#0" expanded="true" />
+            <element signature="e#31791#31799#0" expanded="true" />
+            <element signature="e#59732#60224#0" expanded="true" />
+            <element signature="e#60189#60190#0" expanded="true" />
+            <element signature="e#61302#61816#0" expanded="true" />
+            <element signature="e#61761#61762#0" expanded="true" />
           </folding>
         </state>
       </provider>
