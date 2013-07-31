@@ -71,6 +71,7 @@ public class SingleImageFragment extends Fragment {
     ImageButton imageFavorite;
     ImageButton imageComment;
     ImageButton imageReport;
+    ImageButton imageUser;
     ArrayList<JSONParcelable> commentArray;
     PhotoViewAttacher mAttacher;
 
@@ -109,6 +110,7 @@ public class SingleImageFragment extends Fragment {
         menu.findItem(R.id.action_share).setVisible(true);
         menu.findItem(R.id.action_download).setVisible(true);
         menu.findItem(R.id.action_copy).setVisible(true);
+        menu.findItem(R.id.action_refresh).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
     }
 
@@ -117,6 +119,12 @@ public class SingleImageFragment extends Fragment {
         // handle item selection
         final MainActivity activity = (MainActivity) getActivity();
         switch (item.getItemId()) {
+            case R.id.action_refresh:
+                commentAdapter.clear();
+                commentAdapter.hiddenViews.clear();
+                commentAdapter.notifyDataSetChanged();
+                getComments();
+                return true;
             case R.id.action_submit:
                 final EditText newGalleryTitle = new EditText(activity);
                 newGalleryTitle.setHint("Title");
@@ -229,6 +237,13 @@ public class SingleImageFragment extends Fragment {
                         }
                         return null;
                     }
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast;
+                        toast = Toast.makeText(activity, "Downloaded!", duration);
+                        toast.show();
+                    }
                 };
                 async.execute();
                 return true;
@@ -249,9 +264,9 @@ public class SingleImageFragment extends Fragment {
                                         }
                                         return null;
                                     }
-
-                                    protected void onPostExecute(Void... voids) {
-                                        finishActivity();
+                                    @Override
+                                    protected void onPostExecute(Void aVoid) {
+                                        getActivity().getSupportFragmentManager().popBackStack();
                                     }
                                 };
                                 async.execute();
@@ -359,7 +374,7 @@ public class SingleImageFragment extends Fragment {
             imageData = savedInstanceState.getParcelable("imageData");
             inGallery = savedInstanceState.getBoolean("inGallery");
         }
-        if (inGallery && imageData.getJSONObject().has("vote")) {
+        if ((inGallery && imageData.getJSONObject().has("vote") || imageData.getJSONObject().has("favorite"))) {
             LinearLayout layout = (LinearLayout) imageLayoutView.findViewById(R.id.image_buttons);
             layout.setVisibility(View.VISIBLE);
             imageUpvote = (ImageButton) imageLayoutView.findViewById(R.id.rating_good);
@@ -367,11 +382,20 @@ public class SingleImageFragment extends Fragment {
             imageFavorite = (ImageButton) imageLayoutView.findViewById(R.id.rating_favorite);
             imageComment = (ImageButton) imageLayoutView.findViewById(R.id.comment);
             imageReport = (ImageButton) imageLayoutView.findViewById(R.id.report);
+            imageUser = (ImageButton) imageLayoutView.findViewById(R.id.user);
             try {
-                if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
-                    imageUpvote.setImageResource(R.drawable.green_rating_good);
-                else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
-                    imageDownvote.setImageResource(R.drawable.red_rating_bad);
+                if(!imageData.getJSONObject().has("account_url") || imageData.getJSONObject().getString("account_url") == "null" || imageData.getJSONObject().getString("account_url") == "[deleted]")
+                    imageUser.setVisibility(View.GONE);
+                if(!imageData.getJSONObject().has("vote")) {
+                    imageUpvote.setVisibility(View.GONE);
+                    imageDownvote.setVisibility(View.GONE);
+                }
+                else {
+                    if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
+                        imageUpvote.setImageResource(R.drawable.green_rating_good);
+                    else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
+                        imageDownvote.setImageResource(R.drawable.red_rating_bad);
+                }
                 if (imageData.getJSONObject().getString("favorite") != null && imageData.getJSONObject().getBoolean("favorite"))
                     imageFavorite.setImageResource(R.drawable.green_rating_favorite);
             } catch (Exception e) {
@@ -381,29 +405,27 @@ public class SingleImageFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     try {
-                    if (!imageData.getJSONObject().getBoolean("favorite")) {
-                        imageFavorite.setImageResource(R.drawable.green_rating_favorite);
-                        imageData.getJSONObject().put("favorite", true);
+                        if (!imageData.getJSONObject().getBoolean("favorite")) {
+                            imageFavorite.setImageResource(R.drawable.green_rating_favorite);
+                            imageData.getJSONObject().put("favorite", true);
                         }
-                    else {
-                        if(activity.theme == activity.HOLO_LIGHT)
-                            imageFavorite.setImageResource(R.drawable.rating_favorite);
-                        else
-                            imageFavorite.setImageResource(R.drawable.dark_rating_favorite);
-                        imageData.getJSONObject().put("favorite", false);
-                    }
+                        else {
+                            imageData.getJSONObject().put("favorite", false);
+                            if(activity.theme == activity.HOLO_LIGHT)
+                                imageFavorite.setImageResource(R.drawable.rating_favorite);
+                            else
+                                imageFavorite.setImageResource(R.drawable.dark_rating_favorite);
+                        }
                     } catch (Exception e) {
                         Log.e("Error!", "missing data" + e.toString());
                     }
+
                     AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... voids) {
                             MainActivity activity = (MainActivity) getActivity();
                             try {
-                                if(!imageData.getJSONObject().getBoolean("is_album"))
-                                    activity.makePostCall("3/image/" + imageData.getJSONObject().getString("id") + "/favorite");
-                                else
-                                    activity.makePostCall("3/album/" + imageData.getJSONObject().getString("id") + "/favorite");
+                                activity.makePostCall("3/image/" + imageData.getJSONObject().getString("id") + "/favorite");
                             } catch (Exception e) {
                                 Log.e("Error!", e.toString());
                             }
@@ -413,31 +435,17 @@ public class SingleImageFragment extends Fragment {
                     async.execute();
                 }
             });
-            imageReport.setOnClickListener(new View.OnClickListener() {
+            imageUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new AlertDialog.Builder(activity).setTitle("Report This Image?").setMessage("Are you sure you want to report this image?")
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
+                    try {
+                        AccountFragment accountFragment = new AccountFragment(imageData.getJSONObject().getString("account_url"));
+                        MainActivity activity = (MainActivity) getActivity();
+                        activity.changeFragment(accountFragment);
+                    } catch (Exception e) {
+                        Log.e("Error!", e.toString());
+                    }
 
-                                        AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                                            @Override
-                                            protected Void doInBackground(Void... voids) {
-                                                try {
-                                                activity.makePostCall("3/gallery/" + imageData.getJSONObject().getString("id") + "/report");
-                                                } catch (Exception e) {
-                                                    Log.e("Error!", "missing data" + e.toString());
-                                                }
-                                                return null;
-                                            }
-                                        };
-                                        async.execute();
-                                }
-                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // Do nothing.
-                        }
-                    }).show();
                 }
             });
             imageComment.setOnClickListener(new View.OnClickListener() {
@@ -639,50 +647,11 @@ public class SingleImageFragment extends Fragment {
             Log.e("Text Error!", e.toString());
         }
         if ((savedInstanceState == null || commentData == null) && newData) {
-            AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    MainActivity activity = (MainActivity) getActivity();
-                    if (inGallery) {
-                        try {
-                            commentData = new JSONParcelable();
-                            commentData.setJSONObject(activity.makeGetCall("3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments"));
-                        } catch (Exception e) {
-                            Log.e("Error!", e.toString());
-                        }
-                        Log.d("Gallery Image", "Getting comments..." + commentData.toString());
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    try {
-                        if (inGallery) {
-                            AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                                @Override
-                                protected Void doInBackground(Void... voids) {
-                                    addComments();
-                                    return null;
-                                }
-
-                                @Override
-                                protected void onPostExecute(Void aVoid) {
-                                    commentAdapter.notifyDataSetChanged();
-                                    commentLayout.setAdapter(commentAdapter);
-                                    Log.d("Gallery Image", "Data set changed");
-                                }
-                            };
-                            async.execute();
-                        }
-
-                    } catch (Exception e) {
-                        Log.e("Error!", e.toString());
-                    }
-                }
-            };
-            async.execute();
-        } else if (newData) {
+            commentData = new JSONParcelable();
+            getComments();
+            commentLayout.setAdapter(commentAdapter);
+        }
+        else if (newData) {
             commentArray = savedInstanceState.getParcelableArrayList("commentData");
             commentAdapter.addAll(commentArray);
             commentLayout.setAdapter(commentAdapter);
@@ -693,6 +662,39 @@ public class SingleImageFragment extends Fragment {
             commentAdapter.notifyDataSetChanged();
         }
         return mainView;
+    }
+
+        public void getComments() {
+            AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    MainActivity activity = (MainActivity) getActivity();
+                    if (inGallery) {
+                        try {
+                            commentData.setJSONObject(activity.makeGetCall("3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments"));
+                        } catch (Exception e) {
+                            Log.e("Error3!", e.toString());
+                        }
+                        Log.d("Gallery Image", "Getting comments..." + commentData.toString());
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    try {
+                        if (inGallery) {
+                            addComments();
+                            commentAdapter.notifyDataSetChanged();
+                        }
+
+                    } catch (Exception e) {
+                        Log.e("Error2!", e.toString());
+                    }
+                }
+            };
+            async.execute();
+
     }
 
     private void addComments() {
@@ -706,7 +708,7 @@ public class SingleImageFragment extends Fragment {
             }
             commentAdapter.addAll(commentArray);
         } catch (Exception e) {
-            Log.e("Error!", e.toString());
+            Log.e("Error1!", e.toString());
         }
     }
 
@@ -729,12 +731,12 @@ public class SingleImageFragment extends Fragment {
                 }
             }
         } catch (Exception e) {
-            Log.e("Error!", e.toString());
+            Log.e("Error5!", e.toString());
         }
     }
 
     private void setDescendantsHidden(View view) {
-        LinearLayout convertView = (LinearLayout) view.getParent().getParent().getParent();
+        LinearLayout convertView = (LinearLayout) view;
         ViewHolder holder = (ViewHolder) convertView.getTag();
         int position = holder.position;
         JSONObject viewData = commentAdapter.getItem(position).getJSONObject();
@@ -793,6 +795,7 @@ public class SingleImageFragment extends Fragment {
         public ImageButton downvote;
         public ImageButton reply;
         public ImageButton report;
+        public ImageButton user;
         int position;
     }
 
@@ -851,6 +854,7 @@ public class SingleImageFragment extends Fragment {
                         holder.buttons = (LinearLayout) convertView.findViewById(R.id.comment_buttons);
                         holder.upvote = (ImageButton) holder.buttons.findViewById(R.id.rating_good);
                         holder.downvote = (ImageButton) holder.buttons.findViewById(R.id.rating_bad);
+                        holder.user = (ImageButton) holder.buttons.findViewById(R.id.user);
                         holder.reply = (ImageButton) holder.buttons.findViewById(R.id.reply);
                         holder.report = (ImageButton) holder.buttons.findViewById(R.id.report);
                         holder.header = (RelativeLayout) convertView.findViewById(R.id.header);
@@ -880,7 +884,6 @@ public class SingleImageFragment extends Fragment {
                         holder.buttons.setVisibility(View.GONE);
                         int indentPosition = Math.min(indentLevel, holder.indentViews.length - 1);
 
-
                         for (int i = 0; i < indentPosition - 1; i++) {
                             holder.indentViews[i].setVisibility(View.INVISIBLE);
                         }
@@ -896,15 +899,20 @@ public class SingleImageFragment extends Fragment {
                         else
                             holder.username.setText(viewData.getString("author").substring(0, 25) + "...");
 
+                        if(viewData.getString("author") == imageData.getJSONObject().getString("account_url"))
+                            holder.username.setTextColor(0xFF98FB98);
+                        else
+                            holder.username.setTextColor(0xFF87CEEB);
+
                         holder.points.setText(Html.fromHtml(viewData.getString("points") + "pts (<font color=#89c624>" + viewData.getString("ups") + "</font>/<font color=#ee4444>" + viewData.getString("downs") + "</font>)"));
 
                         holder.header.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                setDescendantsHidden(view);
+                                setDescendantsHidden((View) view.getParent().getParent().getParent());
                             }
                         });
-                        holder.username.setOnClickListener(new View.OnClickListener() {
+                        holder.user.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 try {
@@ -920,23 +928,25 @@ public class SingleImageFragment extends Fragment {
                         convertView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                ViewHolder viewHolder = (ViewHolder) view.getTag();
-                                if (viewHolder.buttons.getVisibility() == View.GONE)
-                                    viewHolder.buttons.setVisibility(View.VISIBLE);
-                                else
-                                    viewHolder.buttons.setVisibility(View.GONE);
+                                setDescendantsHidden(view);
                             }
                         });
-
                         holder.body.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 View convertView = (View) view.getParent().getParent().getParent();
                                 ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-                                if (viewHolder.buttons.getVisibility() == View.GONE)
-                                    viewHolder.buttons.setVisibility(View.VISIBLE);
-                                else
-                                    viewHolder.buttons.setVisibility(View.GONE);
+                                try {
+                                    Log.d("testing", viewData.getString("author"));
+                                    Log.d("testing", String.valueOf(viewData.getString("author").equals("[deleted]")));
+                                    if (viewHolder.buttons.getVisibility() == View.GONE && !viewData.getString("author").equals("[deleted]"))
+                                        viewHolder.buttons.setVisibility(View.VISIBLE);
+                                    else
+                                        viewHolder.buttons.setVisibility(View.GONE);
+                                }
+                                catch (Exception e) {
+                                    Log.e("Error!", e.toString());
+                                }
                             }
                         });
                         if (viewData.getString("vote") != null && viewData.getString("vote").equals("up"))
@@ -958,7 +968,7 @@ public class SingleImageFragment extends Fragment {
                                     newBody.addTextChangedListener(new TextWatcher() {
                                         @Override
                                         public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                                           //
+                                            //
                                         }
 
                                         @Override
@@ -982,20 +992,20 @@ public class SingleImageFragment extends Fragment {
                                             .setView(commentReplyLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
                                             if(newBody.getText().toString().length() < 141) {
-                                            AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                                                @Override
-                                                protected Void doInBackground(Void... voids) {
-                                                    MainActivity activity = (MainActivity) getActivity();
-                                                    try {
-                                                        Log.d("comment", dataHolder.id + newBody.getText().toString() + imageData.getJSONObject().getString("id"));
-                                                        activity.makeGalleryReply(imageData.getJSONObject().getString("id"), newBody.getText().toString(), dataHolder.id);
-                                                    } catch (Exception e) {
-                                                        Log.e("Error!", "oops, some text fields missing values" + e.toString());
+                                                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+                                                    @Override
+                                                    protected Void doInBackground(Void... voids) {
+                                                        MainActivity activity = (MainActivity) getActivity();
+                                                        try {
+                                                            Log.d("comment", dataHolder.id + newBody.getText().toString() + imageData.getJSONObject().getString("id"));
+                                                            activity.makeGalleryReply(imageData.getJSONObject().getString("id"), newBody.getText().toString(), dataHolder.id);
+                                                        } catch (Exception e) {
+                                                            Log.e("Error!", "oops, some text fields missing values" + e.toString());
+                                                        }
+                                                        return null;
                                                     }
-                                                    return null;
-                                                }
-                                            };
-                                            async.execute();
+                                                };
+                                                async.execute();
                                             }
                                             else {
                                                 //do nothing
@@ -1095,34 +1105,10 @@ public class SingleImageFragment extends Fragment {
                         });
                         holder.report.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View v) {
-                                LinearLayout layout = (LinearLayout) v.getParent().getParent();
-                                final ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                                final MainActivity activity = (MainActivity) getActivity();
-                                new AlertDialog.Builder(activity).setTitle("Report Comment").setMessage("Are you sure you want to report this comment?")
-                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int whichButton) {
-                                                try {
-                                                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                                                        @Override
-                                                        protected Void doInBackground(Void... voids) {
-                                                            activity.makePostCall("3/comment/" + dataHolder.id + "/report");
-                                                            return null;
-                                                        }
-                                                    };
-                                                    async.execute();
-                                                } catch (Exception e) {
-                                                    Log.e("Error!", "missing data" + e.toString());
-                                                }
-                                            }
-                                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        // Do nothing.
-                                    }
-                                }).show();
+                            public void onClick(View view) {
+
                             }
-                        }
-                        );
+                        });
                         if (viewData.has("hidden") && viewData.getInt("hidden") == ViewHolder.VIEW_HIDDEN) {
                             holder.body.setVisibility(View.GONE);
                         } else

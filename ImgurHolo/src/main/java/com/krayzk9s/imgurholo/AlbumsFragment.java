@@ -62,6 +62,7 @@ public class AlbumsFragment extends Fragment {
         if (username.equals("me"))
             menu.findItem(R.id.action_new).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
+        menu.findItem(R.id.action_refresh).setVisible(true);
     }
 
     @Override
@@ -69,6 +70,11 @@ public class AlbumsFragment extends Fragment {
         // handle item selection
         MainActivity activity = (MainActivity) getActivity();
         switch (item.getItemId()) {
+            case R.id.action_refresh:
+                urls = new ArrayList<String>();
+                imageAdapter.notifyDataSetChanged();
+                getImages();
+                return true;
             case R.id.action_new:
                 final EditText newTitle = new EditText(activity);
                 newTitle.setSingleLine();
@@ -121,41 +127,45 @@ public class AlbumsFragment extends Fragment {
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());
         if (newData) {
-            AsyncTask<Void, Void, Boolean> imageAsync = new AsyncTask<Void, Void, Boolean>() {
-                @Override
-                protected Boolean doInBackground(Void... voids) {
-                    MainActivity activity = (MainActivity) getActivity();
-                    JSONObject imagesData = activity.makeGetCall("3/account/" + username + "/albums");
-                    Log.d("album data", imagesData.toString());
-                    try {
-                        JSONArray imageArray = imagesData.getJSONArray("data");
-                        for (int i = 0; i < imageArray.length(); i++) {
-                            JSONObject imageData = imageArray.getJSONObject(i);
-                            Log.d("adding album...", imageData.getString("id"));
-                            urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
-                            ids.add(imageData.getString("id"));
-                        }
-                        if (imageArray.length() > 0)
-                            return true;
-                        else return false;
-
-                    } catch (Exception e) {
-                        Log.e("Error!", e.toString());
-                    }
-                    return false;
-                }
-
-                @Override
-                protected void onPostExecute(Boolean hasImages) {
-                    if (hasImages)
-                        imageAdapter.notifyDataSetChanged();
-                    else
-                        noImageView.setVisibility(View.VISIBLE);
-                }
-            };
-            imageAsync.execute();
+            getImages();
         }
         return view;
+    }
+
+    public void getImages() {
+        AsyncTask<Void, Void, Boolean> imageAsync = new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                MainActivity activity = (MainActivity) getActivity();
+                JSONObject imagesData = activity.makeGetCall("3/account/" + username + "/albums");
+                Log.d("album data", imagesData.toString());
+                try {
+                    JSONArray imageArray = imagesData.getJSONArray("data");
+                    for (int i = 0; i < imageArray.length(); i++) {
+                        JSONObject imageData = imageArray.getJSONObject(i);
+                        Log.d("adding album...", imageData.getString("id"));
+                        urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
+                        ids.add(imageData.getString("id"));
+                    }
+                    if (imageArray.length() > 0)
+                        return true;
+                    else return false;
+
+                } catch (Exception e) {
+                    Log.e("Error!", e.toString());
+                }
+                return false;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean hasImages) {
+                if (hasImages)
+                    imageAdapter.notifyDataSetChanged();
+                else
+                    noImageView.setVisibility(View.VISIBLE);
+            }
+        };
+        imageAsync.execute();
     }
 
     public void selectItem(int position) {

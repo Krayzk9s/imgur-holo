@@ -79,6 +79,7 @@ public class ImagesFragment extends Fragment {
         else
             inflater.inflate(R.menu.main_dark, menu);
         menu.findItem(R.id.action_upload).setVisible(false);
+        menu.findItem(R.id.action_refresh).setVisible(true);
         if (albumId != null && galleryAlbumData == null) {
             menu.findItem(R.id.action_new).setVisible(true);
         }
@@ -96,6 +97,13 @@ public class ImagesFragment extends Fragment {
         // handle item selection
         MainActivity activity = (MainActivity) getActivity();
         switch (item.getItemId()) {
+            case R.id.action_refresh:
+                urls = new ArrayList<String>();
+                ids = new ArrayList<JSONParcelable>();
+                page = 0;
+                imageAdapter.notifyDataSetChanged();
+                getImages();
+                return true;
             case R.id.action_copy:
                 try {
                     ClipboardManager clipboard = (ClipboardManager)

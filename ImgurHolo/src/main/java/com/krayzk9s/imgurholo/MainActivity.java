@@ -39,6 +39,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -207,7 +208,7 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-    private class SendImage extends AsyncTask<Void, Void, Void> {
+    private class SendImage extends AsyncTask<Void, Void, JSONObject> {
         Uri uri;
         Bitmap photo;
 
@@ -220,7 +221,7 @@ public class MainActivity extends FragmentActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected JSONObject doInBackground(Void... voids) {
             Token accessKey = getAccessToken();
             if (uri != null) {
                 Log.d("URI", uri.toString());
@@ -246,7 +247,24 @@ public class MainActivity extends FragmentActivity {
             Log.d("Getting Code", String.valueOf(response.getCode()));
             JSONObject data = response.getBody().getObject();
             Log.d("Image Upload", data.toString());
-            return null;
+            try {
+                JSONObject returner = makeGetCall("3/image/" + data.getJSONObject("data").getString("id"));
+                Log.d("returning", returner.toString());
+                return returner.getJSONObject("data");
+            }
+            catch (Exception e) {
+                Log.e("Error!", e.toString());
+            }
+            return new JSONObject();
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject) {
+            Log.d("Loading Fragment", "In Post Execute");
+            SingleImageFragment singleImageFragment = new SingleImageFragment();
+            singleImageFragment.setParams(jsonObject);
+            singleImageFragment.setGallery(false);
+            changeFragment(singleImageFragment);
         }
     }
 
@@ -301,14 +319,21 @@ public class MainActivity extends FragmentActivity {
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/")) {
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast;
+                toast = Toast.makeText(this, "Uploading Image...", duration);
+                toast.show();
                 SendImage async = new SendImage((Uri) intent.getExtras().get("android.intent.extra.STREAM"));
                 async.execute();
-                finish();
             }
         }
 
         else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             Log.d("sending", "sending multiple");
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast;
+            toast = Toast.makeText(this, "Uploading Images...", duration);
+            toast.show();
             ArrayList<Parcelable> list =
                     intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
                 for (Parcelable parcel : list) {
@@ -318,7 +343,6 @@ public class MainActivity extends FragmentActivity {
                     async.execute();
                 /// do things here with each image source path.
             }
-            finish();
         }
         else if(Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http"))
         {
@@ -379,6 +403,7 @@ public class MainActivity extends FragmentActivity {
                     protected void onPostExecute(Void aVoid) {
                         loggedin = true;
                         updateMenu();
+                        loadDefaultPage();
                     }
                 };
                 async.execute();
@@ -463,11 +488,19 @@ public class MainActivity extends FragmentActivity {
         if(resultCode == -1)
             Log.d("intent", data.toString());
         if (requestCode == 3 && resultCode == -1) {
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast;
+            toast = Toast.makeText(this, "Uploading Image...", duration);
+            toast.show();
             SendImage async = new SendImage((Uri) data.getData());
             async.execute(); // Handle single image being sent
             return;
         }
         if (requestCode == 4 && resultCode == -1) {
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast;
+            toast = Toast.makeText(this, "Uploading Images...", duration);
+            toast.show();
             Log.d("intent extras", data.getExtras().toString());
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             SendImage async = new SendImage(photo);

@@ -80,6 +80,7 @@ public class GalleryFragment extends Fragment {
         menu.findItem(R.id.action_sort).setVisible(true);
         menu.findItem(R.id.subreddit).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
+        menu.findItem(R.id.action_refresh).setVisible(true);
 
         menu.findItem(R.id.action_search).setVisible(true);
 
@@ -118,6 +119,10 @@ public class GalleryFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_sort:
                 Log.d("sorting", "sorting");
+                return true;
+            case R.id.action_refresh:
+                page = 0;
+                makeGallery();
                 return true;
             case R.id.subreddit:
                 gallery = "subreddit";

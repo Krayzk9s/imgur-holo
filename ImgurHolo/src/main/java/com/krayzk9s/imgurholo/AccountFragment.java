@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,13 +37,21 @@ public class AccountFragment extends Fragment {
 
     public AccountFragment(String _username) {
         username = _username;
-
-
     }
 
     @Override
     public void onCreate(Bundle save) {
         super.onCreate(save);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        MainActivity activity = (MainActivity)getActivity();
+        if(activity.theme == activity.HOLO_LIGHT)
+            inflater.inflate(R.menu.main, menu);
+        else
+            inflater.inflate(R.menu.main_dark, menu);
     }
 
     @Override
@@ -87,6 +97,7 @@ public class AccountFragment extends Fragment {
                     MainActivity activity = (MainActivity) getActivity();
                     JSONObject accountInfoJSON = activity.makeGetCall("3/account/" + username);
                     JSONObject likesJSON = activity.makeGetCall("3/account/" + username + "/likes");
+                    JSONObject commentJSON = activity.makeGetCall("3/account/" + username + "/comments/count");
                     if(username.equals("me")) {
                         JSONObject statsJSON = activity.makeGetCall("3/account/" + username + "/stats");
                         JSONObject settingsJSON = activity.makeGetCall("3/account/" + username + "/settings");
@@ -108,7 +119,23 @@ public class AccountFragment extends Fragment {
                         else
                             accountData.put("messaging_enabled", "enabled");
                     }
-
+                     else {
+                        try {
+                            JSONObject imagesJSON = activity.makeGetCall("3/account/" + username + "/images/count");
+                            if(imagesJSON.getInt("status") == 200)
+                                accountData.put("total_images", Integer.toString(imagesJSON.getInt("data")));
+                            else
+                                accountData.put("total_images", "0");
+                            JSONObject albumsJSON = activity.makeGetCall("/3/account/" + username + "/albums/ids");
+                            if(albumsJSON.getInt("status") == 200)
+                                accountData.put("total_albums", Integer.toString(albumsJSON.getJSONArray("data").length()));
+                            else
+                                accountData.put("total_albums", "0");
+                        }
+                        catch (Exception e) {
+                            Log.e("Account get error", e.toString());
+                        }
+                    }
                         accountInfoJSON = accountInfoJSON.getJSONObject("data");
                         Log.d("URI", accountInfoJSON.toString());
                         Log.d("URI", Integer.toString(accountInfoJSON.getInt("id")));
@@ -126,6 +153,7 @@ public class AccountFragment extends Fragment {
 
                         JSONArray likesJSONArray = likesJSON.getJSONArray("data");
                         accountData.put("total_likes", String.valueOf(likesJSONArray.length()));
+                        accountData.put("total_comments", String.valueOf(commentJSON.getInt("data")));
 
                         if(username.equals("me")) {
 
@@ -158,7 +186,7 @@ public class AccountFragment extends Fragment {
             mMenuList[0] = mMenuList[0] + " (" + accountData.get("total_albums") + ")";
             mMenuList[1] = mMenuList[1] + " (" + accountData.get("total_images") + ")";
             mMenuList[2] = mMenuList[2] + " (" + accountData.get("total_likes") + ")";
-            //mMenuList[3] = mMenuList[3] + " (" + accountData.get("total_comments") + ")";
+            mMenuList[3] = mMenuList[3] + " (" + accountData.get("total_comments") + ")";
             //mMenuList[4] = mMenuList[4] + " (" + accountData.get("total_messages") + ")";
             mMenuList[5] = mMenuList[5] + " " + accountData.get("created");
             if (accountData.get("bio") != "null")
@@ -173,6 +201,10 @@ public class AccountFragment extends Fragment {
             mMenuList[12] = mMenuList[12] + " - " + accountData.get("bandwidth_used");
         }
         else {
+            mMenuList[0] = mMenuList[0] + " (" + accountData.get("total_albums") + ")";
+            mMenuList[1] = mMenuList[1] + " (" + accountData.get("total_images") + ")";
+            mMenuList[2] = mMenuList[2] + " (" + accountData.get("total_likes") + ")";
+            mMenuList[3] = mMenuList[3] + " (" + accountData.get("total_comments") + ")";
             mMenuList[4] = mMenuList[4] + " " + accountData.get("created");
             if (accountData.get("bio") != "null")
                 mMenuList[5] = accountData.get("bio");
@@ -200,7 +232,7 @@ public class AccountFragment extends Fragment {
                 else
                     activity.setTitle("My Images");
                 imagesFragment = new ImagesFragment();
-                imagesFragment.setImageCall(null, "3/account/" + username + "/images/0", null);
+                imagesFragment.setImageCall(null, "3/account/" + username + "/images", null);
                 activity.changeFragment(imagesFragment);
                 break;
             case 2:

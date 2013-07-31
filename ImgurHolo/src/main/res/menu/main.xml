@@ -5,6 +5,12 @@
           android:showAsAction="ifRoom|collapseActionView"
           android:actionViewClass="android.widget.SearchView"
           android:visible="false"/>
+    <item android:id="@+id/action_refresh"
+          android:title="@string/action_refresh"
+          android:orderInCategory="100"
+          android:icon="@drawable/navigation_refresh"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false"/>
     <item android:id="@+id/action_comments"
           android:title="@string/action_comments"
           android:orderInCategory="100"
@@ -112,5 +118,6 @@
           android:icon="@drawable/social_add_group"
           android:showAsAction="ifRoom|collapseActionView"
           android:visible="false"/>
+
 
 </menu>

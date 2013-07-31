@@ -18,8 +18,8 @@
               android:layout_height="fill_parent"
               android:columnWidth="90dp"
               android:numColumns="auto_fit"
-              android:verticalSpacing="4dp"
-              android:horizontalSpacing="4dp"
+              android:verticalSpacing="1dp"
+              android:horizontalSpacing="1dp"
               android:scaleType="fitCenter"
               android:gravity="center">
     </GridView>

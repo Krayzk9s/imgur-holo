@@ -13,6 +13,12 @@
           android:icon="@drawable/dark_social_cc_bcc"
           android:showAsAction="ifRoom|collapseActionView"
           android:visible="false" />
+    <item android:id="@+id/action_refresh"
+          android:title="@string/action_refresh"
+          android:orderInCategory="100"
+          android:icon="@drawable/dark_navigation_refresh"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:visible="false"/>
     <item android:id="@+id/action_message"
           android:title="@string/action_message"
           android:orderInCategory="100"
@@ -114,5 +120,6 @@
           android:icon="@drawable/dark_social_add_group"
           android:showAsAction="ifRoom|collapseActionView"
           android:visible="false"/>
+
 
 </menu>
