@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Checkable;
@@ -50,9 +51,11 @@ public class ImagesFragment extends Fragment {
     JSONObject imageParam;
     JSONObject imagesData;
     TextView noImageView;
+    int page;
+    boolean gettingImages = false;
 
     public ImagesFragment() {
-
+        page = 0;
     }
 
     public void setImageCall(String _Album, String _imageCall, JSONObject _data) {
@@ -189,54 +192,80 @@ public class ImagesFragment extends Fragment {
         gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         multiChoiceModeListener = new MultiChoiceModeListener();
         gridview.setMultiChoiceModeListener(multiChoiceModeListener);
-        if (savedInstanceState == null && urls.size() == 0) {
+        if(albumId == null) {
+            gridview.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView absListView, int i) {
 
-            AsyncTask<Void, Void, Boolean> imageAsync = new AsyncTask<Void, Void, Boolean>() {
+                }
                 @Override
-                protected Boolean doInBackground(Void... voids) {
-                    MainActivity activity = (MainActivity) getActivity();
-                    imagesData = activity.makeGetCall(imageCall);
-                    try {
-                        JSONArray imageArray;
-                        if (imagesData.optJSONObject("data") != null)
-                            imageArray = imagesData.getJSONObject("data").getJSONArray("images");
-                        else
-                            imageArray = imagesData.getJSONArray("data");
-                        Log.d("single image array", imageArray.toString());
-                        for (int i = 0; i < imageArray.length(); i++) {
-                            JSONObject imageData = imageArray.getJSONObject(i);
-                            Log.d("Data", imageData.toString());
-                            if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
-                                    urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
-                            }
-                            else {
-                                    urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
-                            }
-                            JSONParcelable dataParcel = new JSONParcelable();
-                            dataParcel.setJSONObject(imageData);
-                            ids.add(dataParcel);
-                        }
-                        return (imageArray.length() > 0);
-                    } catch (Exception e) {
-                        Log.e("Error!", "bad image array data" + e.toString());
+                public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    int lastInScreen = firstVisibleItem + visibleItemCount;
+                    if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0 && !gettingImages) {
+                        gettingImages = true;
+                        page += 1;
+                        getImages();
                     }
-                    return false;
                 }
-                @Override
-                protected void onPostExecute(Boolean changed) {
-                    if(changed)
-                        imageAdapter.notifyDataSetChanged();
-                    else
-                        noImageView.setVisibility(View.VISIBLE);
-                }
-            };
-            imageAsync.execute();
+            });
+        }
+        if (savedInstanceState == null && urls.size() == 0) {
+            getImages();
+
         } else if (savedInstanceState != null) {
             urls = savedInstanceState.getStringArrayList("urls");
             ids = savedInstanceState.getParcelableArrayList("ids");
         }
 
         return view;
+    }
+
+    private void getImages() {
+        AsyncTask<Void, Void, Boolean> imageAsync = new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                MainActivity activity = (MainActivity) getActivity();
+                Log.d("call", imageCall + "/" + page);
+                imagesData = activity.makeGetCall(imageCall + "/" + page);
+                Log.d("page", page + "");
+                try {
+                    JSONArray imageArray;
+                    if (imagesData.optJSONObject("data") != null)
+                        imageArray = imagesData.getJSONObject("data").getJSONArray("images");
+                    else
+                        imageArray = imagesData.getJSONArray("data");
+                    Log.d("single image array", imageArray.toString());
+                    for (int i = 0; i < imageArray.length(); i++) {
+                        JSONObject imageData = imageArray.getJSONObject(i);
+                        Log.d("Data", imageData.toString());
+                        if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
+                            urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
+                        }
+                        else {
+                            urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
+                        }
+                        JSONParcelable dataParcel = new JSONParcelable();
+                        dataParcel.setJSONObject(imageData);
+                        ids.add(dataParcel);
+                    }
+                    return (imageArray.length() > 0);
+                } catch (Exception e) {
+                    Log.e("Error!", "bad image array data" + e.toString());
+                }
+                return false;
+            }
+            @Override
+            protected void onPostExecute(Boolean changed) {
+                gettingImages = false;
+                if(changed)
+                    imageAdapter.notifyDataSetChanged();
+                else if(urls.size() == 0)
+                    noImageView.setVisibility(View.VISIBLE);
+                else
+                    gettingImages = true;
+            }
+        };
+        imageAsync.execute();
     }
 
     public class ImageAdapter extends BaseAdapter {

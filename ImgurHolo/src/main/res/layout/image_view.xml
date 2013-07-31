@@ -81,6 +81,13 @@
                 android:src="@drawable/social_reply"/>
 
         <ImageButton
+                android:id="@+id/user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/social_person"/>
+
+
+        <ImageButton
                 android:id="@+id/report"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

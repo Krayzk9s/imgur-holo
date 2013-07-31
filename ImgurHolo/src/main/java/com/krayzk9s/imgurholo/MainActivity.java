@@ -248,10 +248,6 @@ public class MainActivity extends FragmentActivity {
             Log.d("Image Upload", data.toString());
             return null;
         }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-        }
     }
 
 
@@ -275,7 +271,7 @@ public class MainActivity extends FragmentActivity {
         } else if (settings.getString("DefaultPage", "").equals("Your Images")) {
             setTitle("Your Images");
             ImagesFragment imagesFragment = new ImagesFragment();
-            imagesFragment.setImageCall(null, "3/account/me/images/0", null);
+            imagesFragment.setImageCall(null, "3/account/me/images", null);
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
                     .commit();
@@ -595,7 +591,7 @@ public class MainActivity extends FragmentActivity {
                 if (loggedin) {
                     setTitle("Your Images");
                     ImagesFragment imagesFragment = new ImagesFragment();
-                    imagesFragment.setImageCall(null, "3/account/me/images/0", null);
+                    imagesFragment.setImageCall(null, "3/account/me/images", null);
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)
                             .commit();
@@ -662,6 +658,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
+        Log.d("new title", title.toString());
         getActionBar().setTitle(mTitle);
     }
 
