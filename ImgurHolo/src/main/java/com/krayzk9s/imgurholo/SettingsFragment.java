@@ -60,10 +60,6 @@ public class SettingsFragment extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
         adapter.clear();
-        if (settings.getInt("MaxComments", 50) != 0)
-            adapter.add("Load " + settings.getInt("MaxComments", 50) + " Comments");
-        else
-            adapter.add("Load All Comments");
         if (!settings.getString("DefaultPage", "").equals(""))
             adapter.add("Default Page is " + settings.getString("DefaultPage", ""));
         else
@@ -79,37 +75,6 @@ public class SettingsFragment extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         switch (position) {
             case 0:
-                new AlertDialog.Builder(activity).setTitle("Set Maximum Comments to Load")
-                        .setItems(R.array.commentCounts, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                MainActivity activity = (MainActivity) getActivity();
-                                SharedPreferences settings = activity.getSettings();
-                                SharedPreferences.Editor editor = settings.edit();
-                                int commentNumber = 0;
-                                switch (whichButton) {
-                                    case 0:
-                                        commentNumber = 50;
-                                        break;
-                                    case 1:
-                                        commentNumber = 100;
-                                        break;
-                                    case 2:
-                                        commentNumber = 200;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                editor.putInt("MaxComments", commentNumber);
-                                editor.commit();
-                                refreshAdapter();
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Do nothing.
-                    }
-                }).show();
-                break;
-            case 1:
                 new AlertDialog.Builder(activity).setTitle("Set Page as Default")
                         .setItems(R.array.defaultArray, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -146,7 +111,7 @@ public class SettingsFragment extends Fragment {
                     }
                 }).show();
                 break;
-            case 2:
+            case 1:
                 new AlertDialog.Builder(activity).setTitle("Set Theme")
                         .setItems(R.array.themes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {

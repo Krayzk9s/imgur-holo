@@ -234,7 +234,10 @@ public class ImagesFragment extends Fragment {
             protected Boolean doInBackground(Void... voids) {
                 MainActivity activity = (MainActivity) getActivity();
                 Log.d("call", imageCall + "/" + page);
-                imagesData = activity.makeGetCall(imageCall + "/" + page);
+                if(activity != null)
+                    imagesData = activity.makeGetCall(imageCall + "/" + page);
+                else
+                    return true;
                 Log.d("page", page + "");
                 try {
                     JSONArray imageArray;
@@ -310,7 +313,7 @@ public class ImagesFragment extends Fragment {
                 l = (CheckableLayout) convertView;
                 i = (SquareImageView) l.getChildAt(0);
             }
-            UrlImageViewHelper.setUrlDrawable(i, urls.get(position), R.drawable.icon);
+            UrlImageViewHelper.setUrlDrawable(i, urls.get(position));
             return l;
         }
     }
@@ -325,7 +328,8 @@ public class ImagesFragment extends Fragment {
     public void selectItem(int position) {
         if (!selecting) {
             ImagePager imagePager = new ImagePager(position);
-            imagePager.setImageData(ids);
+            ArrayList<JSONParcelable> idCopy = ids;
+            imagePager.setImageData(idCopy);
             MainActivity activity = (MainActivity) getActivity();
             activity.changeFragment(imagePager);
         }

@@ -74,6 +74,7 @@ public class SingleImageFragment extends Fragment {
     ImageButton imageUser;
     ArrayList<JSONParcelable> commentArray;
     PhotoViewAttacher mAttacher;
+    LinearLayout imageLayoutView;
 
     public SingleImageFragment() {
         inGallery = false;
@@ -185,10 +186,24 @@ public class SingleImageFragment extends Fragment {
                     linearLayout.setOrientation(LinearLayout.VERTICAL);
                     linearLayout.addView(newTitle);
                     linearLayout.addView(newBody);
+
                     new AlertDialog.Builder(activity).setTitle("Edit Image Details")
                             .setView(linearLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-
+                            TextView imageTitle = (TextView) imageLayoutView.findViewById(R.id.single_image_title);
+                            TextView imageDescription = (TextView) imageLayoutView.findViewById(R.id.single_image_description);
+                            if (!newTitle.getText().toString().equals("")) {
+                                imageTitle.setText(newTitle.getText().toString());
+                                imageTitle.setVisibility(View.VISIBLE);
+                            }
+                            else
+                                imageTitle.setVisibility(View.GONE);
+                            if (!newBody.getText().toString().equals("")) {
+                                imageDescription.setText(newBody.getText().toString());
+                                imageDescription.setVisibility(View.VISIBLE);
+                            }
+                            else
+                                imageDescription.setVisibility(View.GONE);
                             AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                                 @Override
                                 protected Void doInBackground(Void... voids) {
@@ -356,7 +371,6 @@ public class SingleImageFragment extends Fragment {
         commentAdapter = new CommentAdapter(mainView.getContext(),
                 R.id.comment_item);
         commentLayout = (ListView) mainView.findViewById(R.id.comment_thread);
-        LinearLayout imageLayoutView;
         if(activity.theme == activity.HOLO_LIGHT)
             imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
         else
@@ -374,7 +388,7 @@ public class SingleImageFragment extends Fragment {
             imageData = savedInstanceState.getParcelable("imageData");
             inGallery = savedInstanceState.getBoolean("inGallery");
         }
-        if ((inGallery && imageData.getJSONObject().has("vote") || imageData.getJSONObject().has("favorite"))) {
+        if (inGallery && imageData.getJSONObject().has("vote")) {
             LinearLayout layout = (LinearLayout) imageLayoutView.findViewById(R.id.image_buttons);
             layout.setVisibility(View.VISIBLE);
             imageUpvote = (ImageButton) imageLayoutView.findViewById(R.id.rating_good);
@@ -899,7 +913,7 @@ public class SingleImageFragment extends Fragment {
                         else
                             holder.username.setText(viewData.getString("author").substring(0, 25) + "...");
 
-                        if(viewData.getString("author") == imageData.getJSONObject().getString("account_url"))
+                        if(imageData.getJSONObject().has("account_url") && viewData.getString("author") == imageData.getJSONObject().getString("account_url"))
                             holder.username.setTextColor(0xFF98FB98);
                         else
                             holder.username.setTextColor(0xFF87CEEB);

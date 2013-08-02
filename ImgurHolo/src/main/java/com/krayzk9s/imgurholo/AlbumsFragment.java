@@ -216,7 +216,7 @@ public class AlbumsFragment extends Fragment {
             final ImageView imageView = new SquareImageView(mContext);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            UrlImageViewHelper.setUrlDrawable(imageView, urls.get(position), R.drawable.icon);
+            UrlImageViewHelper.setUrlDrawable(imageView, urls.get(position));
             return imageView;
         }
 

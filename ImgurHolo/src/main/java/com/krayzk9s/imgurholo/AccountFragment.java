@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,6 +36,8 @@ public class AccountFragment extends Fragment {
     ArrayAdapter<String> adapter;
     private HashMap<String, String> accountData;
     String username;
+    SearchView mSearchView;
+    MenuItem searchItem;
 
     public AccountFragment(String _username) {
         username = _username;
@@ -42,6 +46,7 @@ public class AccountFragment extends Fragment {
     @Override
     public void onCreate(Bundle save) {
         super.onCreate(save);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -52,16 +57,34 @@ public class AccountFragment extends Fragment {
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
+        menu.findItem(R.id.action_search).setVisible(true);
+        searchItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) searchItem.getActionView();
+        mSearchView.setQueryHint("Lookup Users");
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Do nothing
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("searching", mSearchView.getQuery() + "");
+                MainActivity activity = (MainActivity) getActivity();
+                AccountFragment accountFragment = new AccountFragment(mSearchView.getQuery().toString());
+                activity.changeFragment(accountFragment);
+                return true;
+            }
+        };
+        mSearchView.setOnQueryTextListener(queryTextListener);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
-        MainActivity activity = (MainActivity) getActivity();
+
         switch (item.getItemId()) {
-            case R.id.action_new:
-                Log.d("Adding", "new images to album");
-                break;
             default:
                 Log.d("Error!", "no action for that...");
         }
@@ -89,13 +112,17 @@ public class AccountFragment extends Fragment {
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         if (savedInstanceState == null && accountData == null) {
-            accountData = new HashMap<String, String>();
+
             AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... voids) {
                     try {
                     MainActivity activity = (MainActivity) getActivity();
                     JSONObject accountInfoJSON = activity.makeGetCall("3/account/" + username);
+                    if(accountInfoJSON.getJSONObject("data").has("error")) {
+                        return null;
+                    }
+                    accountData = new HashMap<String, String>();
                     JSONObject likesJSON = activity.makeGetCall("3/account/" + username + "/likes");
                     JSONObject commentJSON = activity.makeGetCall("3/account/" + username + "/comments/count");
                     if(username.equals("me")) {
@@ -200,7 +227,7 @@ public class AccountFragment extends Fragment {
             mMenuList[11] = mMenuList[11] + " - " + accountData.get("disk_used");
             mMenuList[12] = mMenuList[12] + " - " + accountData.get("bandwidth_used");
         }
-        else {
+        else if(accountData != null) {
             mMenuList[0] = mMenuList[0] + " (" + accountData.get("total_albums") + ")";
             mMenuList[1] = mMenuList[1] + " (" + accountData.get("total_images") + ")";
             mMenuList[2] = mMenuList[2] + " (" + accountData.get("total_likes") + ")";
@@ -210,6 +237,14 @@ public class AccountFragment extends Fragment {
                 mMenuList[5] = accountData.get("bio");
             else
                 mMenuList[5] = "No Biography";
+        }
+        else {
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast;
+            MainActivity activity = (MainActivity) getActivity();
+            toast = Toast.makeText(activity, "User not found", duration);
+            toast.show();
+            activity.getSupportFragmentManager().popBackStack();
         }
         adapter.notifyDataSetChanged();
     }

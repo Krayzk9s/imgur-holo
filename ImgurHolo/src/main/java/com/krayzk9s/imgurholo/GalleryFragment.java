@@ -97,8 +97,10 @@ public class GalleryFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 Log.d("searching", mSearchView.getQuery() + "");
                 mSpinnerAdapter.add("search: " + mSearchView.getQuery());
-                if (mSpinnerAdapter.getCount() > 6)
+                subreddit = null;
+                if (mSpinnerAdapter.getCount() > 6) {
                     mSpinnerAdapter.remove(mSpinnerAdapter.getItem(5));
+                }
                 gallery = "search";
                 search = mSearchView.getQuery() + "";
                 searchItem.collapseActionView();
@@ -133,8 +135,10 @@ public class GalleryFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         subreddit = subredditText.getText().toString();
                         mSpinnerAdapter.add("/r/" + subreddit);
-                        if (mSpinnerAdapter.getCount() > 6)
+                        search = null;
+                        if (mSpinnerAdapter.getCount() > 6) {
                             mSpinnerAdapter.remove(mSpinnerAdapter.getItem(5));
+                        }
                         mSpinnerAdapter.notifyDataSetChanged();
                         actionBar.setSelectedNavigationItem(5);
                     }
@@ -189,6 +193,7 @@ public class GalleryFragment extends Fragment {
             sort = savedInstanceState.getString("sort");
             window = savedInstanceState.getString("window");
             subreddit = savedInstanceState.getString("subreddit");
+            search = savedInstanceState.getString("search");
             urls = savedInstanceState.getStringArrayList("urls");
             try {
                 ids = savedInstanceState.getParcelableArrayList("ids");
@@ -198,7 +203,7 @@ public class GalleryFragment extends Fragment {
             page = savedInstanceState.getInt("page");
             selectedIndex = savedInstanceState.getInt("selectedIndex");
             spinner = savedInstanceState.getCharSequence("spinner");
-        } else if (subreddit == null) {
+        } else if (subreddit == null && search == null) {
             page = 0;
             subreddit = "pics";
             memeType = "top";
@@ -408,7 +413,7 @@ public class GalleryFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView = new SquareImageView(mContext);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            UrlImageViewHelper.setUrlDrawable(imageView, urls.get(position), R.drawable.icon);
+            UrlImageViewHelper.setUrlDrawable(imageView, urls.get(position));
             return imageView;
         }
 
@@ -434,7 +439,7 @@ public class GalleryFragment extends Fragment {
                 /*SingleImageFragment fragment = new SingleImageFragment();
                 fragment.setGallery(true);
                 fragment.setParams(id);*/
-                pager.setImageData(ids);
+                pager.setImageData(new ArrayList<JSONParcelable>(ids));
                 MainActivity activity = (MainActivity) getActivity();
                 activity.changeFragment(pager);
            // }
@@ -460,6 +465,7 @@ public class GalleryFragment extends Fragment {
         savedInstanceState.putString("sort", sort);
         savedInstanceState.putString("window", window);
         savedInstanceState.putString("subreddit", subreddit);
+        savedInstanceState.putString("search", search);
         savedInstanceState.putStringArrayList("urls", urls);
         savedInstanceState.putParcelableArrayList("ids", ids);
         savedInstanceState.putInt("page", page);
@@ -510,8 +516,11 @@ public class GalleryFragment extends Fragment {
                             break;
                     }
                     selectedIndex = i;
-                    if (mSpinnerAdapter.getCount() > 5 && !gallery.equals("subreddit") && !gallery.equals("search"))
+                    if (mSpinnerAdapter.getCount() > 5 && !gallery.equals("subreddit") && !gallery.equals("search")) {
                         mSpinnerAdapter.remove(mSpinnerAdapter.getItem(5));
+                        subreddit = null;
+                        search = null;
+                    }
                     Log.d("URI", gallery);
                     Log.d("URI", "" + i);
                     makeGallery();
@@ -525,6 +534,13 @@ public class GalleryFragment extends Fragment {
                 return true;
             }
         };
+        Log.d("gallery", gallery);
+        if(selectedIndex == 5) {
+            if(subreddit != null)
+                mSpinnerAdapter.add("/r/" + subreddit);
+            else
+                mSpinnerAdapter.add("search: " + search);
+        }
         actionBar.setListNavigationCallbacks(mSpinnerAdapter, mNavigationCallback);
         actionBar.setSelectedNavigationItem(selectedIndex);
     }

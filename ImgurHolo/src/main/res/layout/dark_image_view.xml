@@ -9,14 +9,17 @@
     <TextView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/single_image_title"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:minHeight="30dp"
-            android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
-            android:textAppearance="?android:textAppearanceLarge"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@color/LightGrey"
             android:adjustViewBounds="true"
+            android:text="This is a title for the image view"
             />
 
     <WebView
@@ -25,34 +28,49 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
             />
 
     <TextView
+            android:layout_margin="4dp"
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/single_image_description"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/DarkGray"
+            android:autoLink="web"
             android:textAppearance="?android:textAppearanceMedium"
+            android:text="This is a description for the image view"
             />
     <TextView
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/single_image_details"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textColor="@color/DarkGray"
+            android:textColor="@color/Gray"
             android:textAppearance="?android:textAppearanceSmall"
+            android:text="This is details for the image view"
             />
+
+    <View
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:background="@color/DarkGray"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:id="@+id/image_buttons"
                   android:orientation="horizontal"
                   android:layout_width="wrap_content"
                   android:layout_gravity="center_horizontal"
-                  android:visibility="gone"
+                  android:layout_margin="8dp"
                   android:layout_height="50dp"
+                  android:visibility="gone"
             >
 
         <ImageButton
