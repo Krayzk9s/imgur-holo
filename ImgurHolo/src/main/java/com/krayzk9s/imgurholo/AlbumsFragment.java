@@ -3,6 +3,7 @@ package com.krayzk9s.imgurholo;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -123,6 +124,9 @@ public class AlbumsFragment extends Fragment {
         View view = inflater.inflate(R.layout.image_layout, container, false);
         noImageView = (TextView) view.findViewById(R.id.no_images);
         GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
+        MainActivity activity = (MainActivity) getActivity();
+        SharedPreferences settings = activity.getSettings();
+        gridview.setColumnWidth(activity.dpToPx(settings.getInt("IconSize", 90)));
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());

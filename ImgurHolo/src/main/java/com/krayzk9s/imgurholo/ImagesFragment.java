@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -196,6 +197,9 @@ public class ImagesFragment extends Fragment {
         noImageView = (TextView) view.findViewById(R.id.no_images);
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
+        MainActivity activity = (MainActivity) getActivity();
+        SharedPreferences settings = activity.getSettings();
+        gridview.setColumnWidth(activity.dpToPx(settings.getInt("IconSize", 90)));
         gridview.setOnItemClickListener(new GridItemClickListener());
         gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         multiChoiceModeListener = new MultiChoiceModeListener();

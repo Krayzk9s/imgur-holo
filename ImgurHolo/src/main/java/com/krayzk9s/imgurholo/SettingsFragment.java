@@ -68,6 +68,11 @@ public class SettingsFragment extends Fragment {
             adapter.add("Theme is Holo Light");
         else
             adapter.add("Theme is Holo Dark");
+        adapter.add("Icons are " + settings.getInt("IconSize", 90) + "dps");
+        if (settings.getBoolean("ConfirmExit", false))
+            adapter.add("Confirming Exit");
+        else
+            adapter.add("Not Confirming Exit");
         adapter.notifyDataSetChanged();
     }
 
@@ -144,6 +149,64 @@ public class SettingsFragment extends Fragment {
                     }
                 }).show();
                 break;
+            case 2:
+                new AlertDialog.Builder(activity).setTitle("Set Icon Sizes")
+                        .setItems(R.array.iconsizes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                MainActivity activity = (MainActivity) getActivity();
+                                SharedPreferences settings = activity.getSettings();
+                                SharedPreferences.Editor editor = settings.edit();
+                                int iconsize = 90;
+                                switch (whichButton) {
+                                    case 0:
+                                        iconsize = 90;
+                                        break;
+                                    case 1:
+                                        iconsize = 120;
+                                        break;
+                                    case 2:
+                                        iconsize = 180;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                editor.putInt("IconSize", iconsize);
+                                editor.commit();
+                                refreshAdapter();
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Do nothing.
+                    }
+                }).show();
+                break;
+            case 3:
+                new AlertDialog.Builder(activity).setTitle("Confirm on Exit?")
+                        .setItems(R.array.yesno, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                MainActivity activity = (MainActivity) getActivity();
+                                SharedPreferences settings = activity.getSettings();
+                                SharedPreferences.Editor editor = settings.edit();
+                                Boolean confirm = false;
+                                switch (whichButton) {
+                                    case 0:
+                                        confirm = Boolean.TRUE;
+                                        break;
+                                    case 1:
+                                        confirm = Boolean.FALSE;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                editor.putBoolean("ConfirmExit", confirm);
+                                editor.commit();
+                                refreshAdapter();
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Do nothing.
+                    }
+                }).show();
             default:
                 break;
         }

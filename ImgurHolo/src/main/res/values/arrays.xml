@@ -39,7 +39,21 @@
     </array>
     <array
             name="imgurMenuListLoggedOut">
+        <item>@string/menu_gallery</item>
+        <item>@string/menu_settings</item>
         <item>@string/menu_login</item>
+    </array>
+    <array
+            name="imgurMenuListDarkIconsLoggedOut">
+        <item>@drawable/dark_social_group</item>
+        <item>@drawable/dark_action_settings</item>
+        <item>@drawable/dark_device_access_accounts</item>
+    </array>
+    <array
+            name="imgurMenuListIconsLoggedOut">
+        <item>@drawable/social_group</item>
+        <item>@drawable/action_settings</item>
+        <item>@drawable/device_access_accounts</item>
     </array>
     <array
             name="themes">
@@ -146,5 +160,17 @@
         <item>@string/upload_gallery</item>
         <item>@string/upload_camera</item>
         <item>@string/upload_explanation</item>
+    </array>
+
+    <array
+            name="iconsizes">
+        <item>@string/ninety</item>
+        <item>@string/onetwenty</item>
+        <item>@string/oneeighty</item>
+    </array>
+    <array
+            name="yesno">
+        <item>@string/yes</item>
+        <item>@string/no</item>
     </array>
 </resources>

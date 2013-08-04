@@ -24,6 +24,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -57,45 +58,39 @@ import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity {
 
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    public static int HOLO_DARK = 0;
-    public static int HOLO_LIGHT = 1;
-    public int theme;
-
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-
-    String consumerkey = "4cd3f96f162ac80";
-    String secretkey = "9cd3c621a4e064422e60aba4ccf84d6b149b4463";
-
-    private static final Token EMPTY_TOKEN = null;
     public static final String OAUTH_CALLBACK_SCHEME = "imgur-holo";
     public static final String OAUTH_CALLBACK_HOST = "authcallback";
     public static final String OAUTH_CALLBACK_URL = OAUTH_CALLBACK_SCHEME + "://" + OAUTH_CALLBACK_HOST;
     public static final String MASHAPE_KEY = "CoV9d8oMmqhy8YdAbCAnB1MroW1xMJpP";
     public static final String PREFS_NAME = "ImgurPrefs";
     public static final String MASHAPE_URL = "https://imgur-apiv3.p.mashape.com/";
+    private static final String CLIENTID = "4cd3f96f162ac80";
+    private static final String SECRETID = "9cd3c621a4e064422e60aba4ccf84d6b149b4463";
+    private static final Token EMPTY_TOKEN = null;
+    public static int HOLO_DARK = 0;
+    public static int HOLO_LIGHT = 1;
+    final OAuthService service = new ServiceBuilder().provider(ImgUr3Api.class).apiKey(CLIENTID).debug().callback(OAUTH_CALLBACK_URL).apiSecret(SECRETID).build();
+    public int theme;
     Token accessToken;
     String accessString;
     Verifier verifier;
     Adapter adapter;
-    final OAuthService service = new ServiceBuilder().provider(ImgUr3Api.class).apiKey(consumerkey).debug().callback(OAUTH_CALLBACK_URL).apiSecret(secretkey).build();
-
     boolean loggedin;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        if(settings.contains("theme")) {
+        if (settings.contains("theme")) {
             theme = settings.getInt("theme", HOLO_LIGHT);
-        }
-        else
+        } else
             theme = HOLO_LIGHT;
 
-        if(theme == HOLO_LIGHT)
+        if (theme == HOLO_LIGHT)
             setTheme(R.style.AppTheme);
         else
             setTheme(R.style.AppThemeDark);
@@ -136,18 +131,16 @@ public class MainActivity extends FragmentActivity {
             loadDefaultPage();
     }
 
-
-
     public void updateMenu() {
         DrawerAdapter drawerAdapter = new DrawerAdapter(this, R.layout.menu_item);
         if (loggedin && theme == HOLO_DARK)
             drawerAdapter.setMenu(R.array.imgurMenuListLoggedIn, R.array.imgurMenuListDarkIcons);
         else if (!loggedin && theme == HOLO_DARK)
-            drawerAdapter.setMenu(R.array.imgurMenuListLoggedOut, R.array.imgurMenuListDarkIcons);
+            drawerAdapter.setMenu(R.array.imgurMenuListLoggedOut, R.array.imgurMenuListDarkIconsLoggedOut);
         else if (loggedin && theme == HOLO_LIGHT)
             drawerAdapter.setMenu(R.array.imgurMenuListLoggedIn, R.array.imgurMenuListIcons);
         else
-            drawerAdapter.setMenu(R.array.imgurMenuListLoggedOut, R.array.imgurMenuListIcons);
+            drawerAdapter.setMenu(R.array.imgurMenuListLoggedOut, R.array.imgurMenuListIconsLoggedOut);
         mDrawerTitle = getTitle();
         if (mTitle == null)
             mTitle = "imgur Holo";
@@ -160,9 +153,15 @@ public class MainActivity extends FragmentActivity {
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
     }
 
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
+    }
+
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            if(!mDrawerLayout.isDrawerOpen(GravityCompat.START))
+            if (!mDrawerLayout.isDrawerOpen(GravityCompat.START))
                 mDrawerLayout.openDrawer(GravityCompat.START);
             else
                 mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -171,110 +170,41 @@ public class MainActivity extends FragmentActivity {
         return super.onKeyUp(keyCode, event);
     }
 
-    public class DrawerAdapter extends ArrayAdapter<String> {
-        public String[] mMenuList;
-        public TypedArray mMenuIcons;
-        LayoutInflater mInflater;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //Handle the back button
+        SharedPreferences settings = getSettings();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if(keyCode == KeyEvent.KEYCODE_BACK && settings.getBoolean("ConfirmExit", false) && isTaskRoot() && fragmentManager.getBackStackEntryCount() == 0) {
+            //Ask the user if they want to quit
+            new AlertDialog.Builder(this)
+                    .setTitle("Quit?")
+                    .setMessage("Are you sure you want to quit?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-        public DrawerAdapter(Context context, int textViewResourceId) {
-            super(context, textViewResourceId);
-            mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            //Stop the activity
+                            MainActivity.this.finish();
+                        }
+
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+
+            return true;
+        }
+        else {
+            return super.onKeyDown(keyCode, event);
         }
 
-        public void setMenu(int list, int array) {
-            mMenuList = getResources().getStringArray(list);
-            mMenuIcons = getResources().obtainTypedArray(array);
-        }
-
-        @Override
-        public int getCount() {
-            return mMenuList.length;
-        }
-
-        @Override
-        public long getItemId(int arg0) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = View.inflate(this.getContext(), R.layout.menu_item, null);
-            TextView menuItem = (TextView) convertView.findViewById(R.id.menu_text);
-            ImageView menuIcon = (ImageView) convertView.findViewById(R.id.menu_icon);
-            menuItem.setText(mMenuList[position]);
-            menuIcon.setImageDrawable(mMenuIcons.getDrawable(position));
-            return convertView;
-        }
     }
-
-
-    private class SendImage extends AsyncTask<Void, Void, JSONObject> {
-        Uri uri;
-        Bitmap photo;
-
-        public SendImage(Uri _uri) {
-            uri = _uri;
-        }
-
-        public SendImage(Bitmap _photo) {
-            photo = _photo;
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... voids) {
-            Token accessKey = getAccessToken();
-            if (uri != null) {
-                Log.d("URI", uri.toString());
-                Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-                cursor.moveToFirst();
-                final String filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
-                Log.d("Image Upload", filePath);
-                photo = BitmapFactory.decodeFile(filePath);
-            }
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] byteArray = stream.toByteArray();
-            if (byteArray == null)
-                Log.d("Image Upload", "NULL :(");
-            String image = Base64.encodeToString(byteArray, Base64.DEFAULT);
-            Log.d("Image Upload", image);
-            HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "3/image")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .field("image", image)
-                    .field("type", "binary")
-                    .asJson();
-            Log.d("Getting Code", String.valueOf(response.getCode()));
-            JSONObject data = response.getBody().getObject();
-            Log.d("Image Upload", data.toString());
-            try {
-                JSONObject returner = makeGetCall("3/image/" + data.getJSONObject("data").getString("id"));
-                Log.d("returning", returner.toString());
-                return returner.getJSONObject("data");
-            }
-            catch (Exception e) {
-                Log.e("Error!", e.toString());
-            }
-            return new JSONObject();
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject jsonObject) {
-            Log.d("Loading Fragment", "In Post Execute");
-            SingleImageFragment singleImageFragment = new SingleImageFragment();
-            singleImageFragment.setParams(jsonObject);
-            singleImageFragment.setGallery(false);
-            changeFragment(singleImageFragment);
-        }
-    }
-
 
     private void loadDefaultPage() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        if (!loggedin)
-            return;
-        else if (!settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery")) {
+        if (!loggedin || !settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery")) {
             setTitle("Gallery");
             GalleryFragment galleryFragment = new GalleryFragment();
             fragmentManager.beginTransaction()
@@ -309,7 +239,6 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -326,9 +255,7 @@ public class MainActivity extends FragmentActivity {
                 SendImage async = new SendImage((Uri) intent.getExtras().get("android.intent.extra.STREAM"));
                 async.execute();
             }
-        }
-
-        else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             Log.d("sending", "sending multiple");
             int duration = Toast.LENGTH_SHORT;
             Toast toast;
@@ -336,16 +263,14 @@ public class MainActivity extends FragmentActivity {
             toast.show();
             ArrayList<Parcelable> list =
                     intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-                for (Parcelable parcel : list) {
-                    Uri uri = (Uri) parcel;
-                    Log.d("sending", uri.toString());
-                    SendImage async = new SendImage(uri);
-                    async.execute();
+            for (Parcelable parcel : list) {
+                Uri uri = (Uri) parcel;
+                Log.d("sending", uri.toString());
+                SendImage async = new SendImage(uri);
+                async.execute();
                 /// do things here with each image source path.
             }
-        }
-        else if(Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http"))
-        {
+        } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http")) {
             String uri = intent.getData().toString();
             final String image = uri.split("/")[3].split("\\.")[0];
             Log.d("image", image);
@@ -355,6 +280,7 @@ public class MainActivity extends FragmentActivity {
                     JSONObject imageData = makeGetCall("/3/image/" + image);
                     return imageData;
                 }
+
                 @Override
                 protected void onPostExecute(JSONObject imageData) {
                     Log.d("data", imageData.toString());
@@ -363,16 +289,14 @@ public class MainActivity extends FragmentActivity {
                         singleImageFragment.setParams(imageData.getJSONObject("data"));
                         singleImageFragment.setGallery(true);
                         changeFragment(singleImageFragment);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         Log.e("Error!", e.toString());
                     }
                 }
             };
             async.execute();
 
-        }
-        else {
+        } else {
             Uri uri = intent.getData();
             Log.d("URI", "resumed2!");
             String uripath = "";
@@ -440,7 +364,6 @@ public class MainActivity extends FragmentActivity {
         return settings;
     }
 
-
     public void login() {
 
         AsyncTask<Void, Void, String> async = new AsyncTask<Void, Void, String>() {
@@ -463,11 +386,10 @@ public class MainActivity extends FragmentActivity {
         async.execute();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        if(theme == HOLO_LIGHT)
+        if (theme == HOLO_LIGHT)
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -485,7 +407,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("request code", requestCode + "");
-        if(resultCode == -1)
+        if (resultCode == -1)
             Log.d("intent", data.toString());
         if (requestCode == 3 && resultCode == -1) {
             int duration = Toast.LENGTH_SHORT;
@@ -510,7 +432,6 @@ public class MainActivity extends FragmentActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // The action bar home/up action should open or close the drawer.
@@ -525,14 +446,6 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    /* The click listner for ListView in the navigation drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
     private void selectItem(int position) {
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
@@ -541,15 +454,11 @@ public class MainActivity extends FragmentActivity {
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         switch (position) {
             case 0:
-                if (!loggedin)
-                    login();
-                else {
                     setTitle("Gallery");
                     GalleryFragment galleryFragment = new GalleryFragment();
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, galleryFragment)
                             .commit();
-                }
                 break;
             case 1:
                 if (loggedin) {
@@ -558,6 +467,14 @@ public class MainActivity extends FragmentActivity {
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, accountFragment)
                             .commit();
+                }
+                else {
+                    setTitle("Your Settings");
+                    SettingsFragment settingsFragment = new SettingsFragment();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.frame_layout, settingsFragment)
+                            .commit();
+                    updateMenu();
                 }
                 break;
             case 2:
@@ -606,7 +523,7 @@ public class MainActivity extends FragmentActivity {
                                                     " The ELI5 explanation is that basically the Android API is a bit weird in this area. More explicitly, I cannot determine a way to request multiple files via intent" +
                                                     ", if you know a work around feel free to contact me on Google Play.").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                                   //do nothing
+                                                    //do nothing
                                                 }
                                             }).show();
                                         default:
@@ -619,6 +536,8 @@ public class MainActivity extends FragmentActivity {
                         }
                     }).show();
                 }
+                else
+                    login();
                 break;
             case 3:
                 if (loggedin) {
@@ -728,29 +647,50 @@ public class MainActivity extends FragmentActivity {
     }
 
     public JSONObject makeGetCall(String url) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response = Unirest.get(MASHAPE_URL + url)
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            response = Unirest.get(MASHAPE_URL + url)
+        JSONObject data;
+        if (loggedin) {
+            Token accessKey = getAccessToken();
+            Log.d("Making Call", accessKey.toString());
+            HttpResponse<JsonNode> response = Unirest.get(MASHAPE_URL + url)
                     .header("accept", "application/json")
                     .header("X-Mashape-Authorization", MASHAPE_KEY)
                     .header("Authorization", "Bearer " + accessKey.getToken())
                     .asJson();
+            Log.d("Getting Code", String.valueOf(response.getCode()));
+            int code = response.getCode();
+            if (code == 403) {
+                accessKey = renewAccessToken();
+                response = Unirest.get(MASHAPE_URL + url)
+                        .header("accept", "application/json")
+                        .header("X-Mashape-Authorization", MASHAPE_KEY)
+                        .header("Authorization", "Bearer " + accessKey.getToken())
+                        .asJson();
+            }
+            data = response.getBody().getObject();
+            Log.d("Got data", data.toString());
+        } else {
+            HttpResponse<JsonNode> response = Unirest.get(MASHAPE_URL + url)
+                    .header("accept", "application/json")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Client-ID " + CLIENTID)
+                    .asJson();
+            Log.d("Getting Code", String.valueOf(response.getCode()));
+            int code = response.getCode();
+            if (code == 403) {
+                response = Unirest.get(MASHAPE_URL + url)
+                        .header("accept", "application/json")
+                        .header("X-Mashape-Authorization", MASHAPE_KEY)
+                        .header("Authorization", "Client-ID " + CLIENTID)
+                        .asJson();
+            }
+            data = response.getBody().getObject();
+            Log.d("Got data", data.toString());
         }
-        JSONObject data = response.getBody().getObject();
-        Log.d("Got data", data.toString());
         return data;
     }
 
     public JSONObject makePostCall(String url) {
+        JSONObject data;
         Token accessKey = getAccessToken();
         Log.d("Making Call", accessKey.toString());
         HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + url)
@@ -768,8 +708,9 @@ public class MainActivity extends FragmentActivity {
                     .header("Authorization", "Bearer " + accessKey.getToken())
                     .asJson();
         }
-        JSONObject data = response.getBody().getObject();
+        data = response.getBody().getObject();
         Log.d("Got data", data.toString());
+
         return data;
     }
 
@@ -1136,7 +1077,6 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-
     public void changeFragment(Fragment newFragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -1156,5 +1096,108 @@ public class MainActivity extends FragmentActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public class DrawerAdapter extends ArrayAdapter<String> {
+        public String[] mMenuList;
+        public TypedArray mMenuIcons;
+        LayoutInflater mInflater;
+
+        public DrawerAdapter(Context context, int textViewResourceId) {
+            super(context, textViewResourceId);
+            mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        public void setMenu(int list, int array) {
+            mMenuList = getResources().getStringArray(list);
+            mMenuIcons = getResources().obtainTypedArray(array);
+        }
+
+        @Override
+        public int getCount() {
+            return mMenuList.length;
+        }
+
+        @Override
+        public long getItemId(int arg0) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = View.inflate(this.getContext(), R.layout.menu_item, null);
+            TextView menuItem = (TextView) convertView.findViewById(R.id.menu_text);
+            ImageView menuIcon = (ImageView) convertView.findViewById(R.id.menu_icon);
+            menuItem.setText(mMenuList[position]);
+            menuIcon.setImageDrawable(mMenuIcons.getDrawable(position));
+            return convertView;
+        }
+    }
+
+    private class SendImage extends AsyncTask<Void, Void, JSONObject> {
+        Uri uri;
+        Bitmap photo;
+
+        public SendImage(Uri _uri) {
+            uri = _uri;
+        }
+
+        public SendImage(Bitmap _photo) {
+            photo = _photo;
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... voids) {
+            Token accessKey = getAccessToken();
+            if (uri != null) {
+                Log.d("URI", uri.toString());
+                Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+                cursor.moveToFirst();
+                final String filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+                Log.d("Image Upload", filePath);
+                photo = BitmapFactory.decodeFile(filePath);
+            }
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            if (byteArray == null)
+                Log.d("Image Upload", "NULL :(");
+            String image = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            Log.d("Image Upload", image);
+            HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "3/image")
+                    .header("X-Mashape-Authorization", MASHAPE_KEY)
+                    .header("Authorization", "Bearer " + accessKey.getToken())
+                    .field("image", image)
+                    .field("type", "binary")
+                    .asJson();
+            Log.d("Getting Code", String.valueOf(response.getCode()));
+            JSONObject data = response.getBody().getObject();
+            Log.d("Image Upload", data.toString());
+            try {
+                JSONObject returner = makeGetCall("3/image/" + data.getJSONObject("data").getString("id"));
+                Log.d("returning", returner.toString());
+                return returner.getJSONObject("data");
+            } catch (Exception e) {
+                Log.e("Error!", e.toString());
+            }
+            return new JSONObject();
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject) {
+            Log.d("Loading Fragment", "In Post Execute");
+            SingleImageFragment singleImageFragment = new SingleImageFragment();
+            singleImageFragment.setParams(jsonObject);
+            singleImageFragment.setGallery(false);
+            changeFragment(singleImageFragment);
+        }
+    }
+
+    /* The click listner for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
     }
 }

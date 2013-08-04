@@ -51,6 +51,9 @@
     <string name="fifty">50</string>
     <string name="one_hundred">100</string>
     <string name="two_hundred">200</string>
+    <string name="ninety">90</string>
+    <string name="onetwenty">120</string>
+    <string name="oneeighty">180</string>
     <string name="all">All</string>
     <string name="private_string">Private</string>
     <string name="public_string">Public</string>
@@ -72,5 +75,8 @@
 
     <string name="light_theme">Holo Light</string>
     <string name="dark_theme">Holo Dark</string>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

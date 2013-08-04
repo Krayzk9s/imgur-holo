@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -218,6 +219,9 @@ public class GalleryFragment extends Fragment {
         Log.d("NOT HERE EITHER", gallery);
         View view = inflater.inflate(R.layout.image_layout, container, false);
         GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
+        MainActivity activity = (MainActivity) getActivity();
+        SharedPreferences settings = activity.getSettings();
+        gridview.setColumnWidth(activity.dpToPx(settings.getInt("IconSize", 90)));
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());
@@ -246,6 +250,7 @@ public class GalleryFragment extends Fragment {
                                 if (!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png"))
                                     urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
                             }
+
                             JSONParcelable dataParcel = new JSONParcelable();
                             dataParcel.setJSONObject(imageData);
                             ids.add(dataParcel);
@@ -364,16 +369,22 @@ public class GalleryFragment extends Fragment {
                         JSONObject imageData = imageArray.getJSONObject(i);
                         Log.d("Data", imageData.toString());
                         if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
-                            if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png"))
+                            if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png")) {
                                 urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
+                                JSONParcelable dataParcel = new JSONParcelable();
+                                dataParcel.setJSONObject(imageData);
+                                ids.add(dataParcel);
+                            }
                         }
                         else {
                             if (!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png"))
+                            {
                                 urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
+                                JSONParcelable dataParcel = new JSONParcelable();
+                                dataParcel.setJSONObject(imageData);
+                                ids.add(dataParcel);
+                            }
                         }
-                        JSONParcelable dataParcel = new JSONParcelable();
-                        dataParcel.setJSONObject(imageData);
-                        ids.add(dataParcel);
                     }
                 } catch (Exception e) {
                     Log.e("Error!", e.toString());
@@ -492,7 +503,6 @@ public class GalleryFragment extends Fragment {
             @Override
             public boolean onNavigationItemSelected(int i, long l) {
                 Log.d("URI", String.valueOf(firstPass));
-                page = 0;
                 if (firstPass > 1) {
                     switch (i) {
                         case 0:
@@ -523,6 +533,7 @@ public class GalleryFragment extends Fragment {
                     }
                     Log.d("URI", gallery);
                     Log.d("URI", "" + i);
+                    page = 0;
                     makeGallery();
                 } else {
                     Log.d("URI4", String.valueOf(firstPass));
@@ -544,4 +555,5 @@ public class GalleryFragment extends Fragment {
         actionBar.setListNavigationCallbacks(mSpinnerAdapter, mNavigationCallback);
         actionBar.setSelectedNavigationItem(selectedIndex);
     }
+
 }
