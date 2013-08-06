@@ -91,7 +91,8 @@ public class MessagingFragment extends Fragment {
 
                 @Override
                 protected void onPostExecute(JSONObject messages) {
-                    addMessages(messages);
+                    if(messageAdapter != null)
+                        addMessages(messages);
                 }
             };
             async.execute();

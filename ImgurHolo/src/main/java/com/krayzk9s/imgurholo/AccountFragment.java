@@ -193,7 +193,8 @@ public class AccountFragment extends Fragment {
 
                 @Override
                 protected void onPostExecute(Void aVoid) {
-                    updateData();
+                    if(mMenuList != null && accountData != null)
+                        updateData();
                 }
             };
             async.execute();

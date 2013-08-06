@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -59,6 +60,7 @@ public class GalleryFragment extends Fragment {
     MenuItem searchItem;
     String search;
     CharSequence spinner;
+    int lastInView = -1;
 
     public GalleryFragment() {
 
@@ -218,13 +220,33 @@ public class GalleryFragment extends Fragment {
         }
         Log.d("NOT HERE EITHER", gallery);
         View view = inflater.inflate(R.layout.image_layout, container, false);
-        GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
-        MainActivity activity = (MainActivity) getActivity();
+        final GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
+        final MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
         gridview.setColumnWidth(activity.dpToPx(settings.getInt("IconSize", 90)));
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());
+        gridview.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (imageAdapter.getNumColumns() == 0) {
+                            SharedPreferences settings = activity.getSettings();
+                            Log.d("numColumnsWidth", gridview.getWidth()+"");
+                            Log.d("numColumnsIconWidth", activity.dpToPx((settings.getInt("IconSize", 90)))+"");
+                            final int numColumns = (int) Math.floor(
+                                    gridview.getWidth() / (activity.dpToPx((settings.getInt("IconSize", 90))) + activity.dpToPx(2)));
+                            if (numColumns > 0) {
+                                imageAdapter.setNumColumns(numColumns);
+                                if (BuildConfig.DEBUG) {
+                                    Log.d("NUMCOLS", "onCreateView - numColumns set to " + numColumns);
+                                }
+                                imageAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                });
         gridview.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -232,6 +254,16 @@ public class GalleryFragment extends Fragment {
             }
             @Override
             public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if(lastInView == -1)
+                    lastInView = firstVisibleItem;
+                else if (lastInView > firstVisibleItem) {
+                    actionBar.show();
+                    lastInView = firstVisibleItem;
+                }
+                else if (lastInView < firstVisibleItem) {
+                    actionBar.hide();
+                    lastInView = firstVisibleItem;
+                }
                 int lastInScreen = firstVisibleItem + visibleItemCount;
                 if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0) {
                     try {
@@ -394,7 +426,8 @@ public class GalleryFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 Log.d("returning", urls.size() + "");
-                imageAdapter.notifyDataSetChanged();
+                if(imageAdapter != null)
+                    imageAdapter.notifyDataSetChanged();
             }
         };
         async.execute();
@@ -402,30 +435,71 @@ public class GalleryFragment extends Fragment {
 
     public class ImageAdapter extends BaseAdapter {
         private Context mContext;
+        private int mNumColumns;
+
+        public void setNumColumns(int numColumns) {
+            mNumColumns = numColumns;
+        }
+
+        public int getNumColumns() {
+            return mNumColumns;
+        }
 
         public ImageAdapter(Context c) {
             mContext = c;
         }
 
+        @Override
+        public long getItemId(int position) {
+            return position < mNumColumns ? 0 : position - mNumColumns;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return (position < mNumColumns) ? 1 : 0;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
 
         public int getCount() {
-            return urls.size();
+            return urls.size()  + mNumColumns;
         }
 
         public Object getItem(int position) {
-            return null;
-        }
-
-        public long getItemId(int position) {
-            return 0;
+            return position < mNumColumns ?
+                    null :urls.get(position);
         }
 
         // create a new ImageView for each item referenced by the Adapter
         public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView imageView = new SquareImageView(mContext);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            UrlImageViewHelper.setUrlDrawable(imageView, urls.get(position));
-            return imageView;
+            if (position < mNumColumns) {
+                if (convertView == null) {
+                    convertView = new View(mContext);
+                }
+                convertView.setLayoutParams(new AbsListView.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, getActivity().getActionBar().getHeight()));
+                return convertView;
+            }
+            else {
+                ImageView imageView;
+                if(convertView == null) {
+                    imageView = new SquareImageView(mContext);
+                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                }
+                else {
+                    imageView = (ImageView) convertView;
+                }
+                UrlImageViewHelper.setUrlDrawable(imageView, urls.get(position - mNumColumns));
+                return imageView;
+            }
         }
 
     }
@@ -433,7 +507,7 @@ public class GalleryFragment extends Fragment {
     private class GridItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
+            selectItem(position - imageAdapter.getNumColumns());
         }
     }
 

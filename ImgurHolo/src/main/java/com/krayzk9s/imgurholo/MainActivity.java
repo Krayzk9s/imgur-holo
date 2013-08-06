@@ -95,7 +95,6 @@ public class MainActivity extends FragmentActivity {
         else
             setTheme(R.style.AppThemeDark);
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         if (settings.contains("RefreshToken")) {
             loggedin = true;
@@ -123,6 +122,7 @@ public class MainActivity extends FragmentActivity {
 
             public void onDrawerOpened(View drawerView) {
                 getActionBar().setTitle(mDrawerTitle);
+                getActionBar().show();
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -175,6 +175,9 @@ public class MainActivity extends FragmentActivity {
         //Handle the back button
         SharedPreferences settings = getSettings();
         FragmentManager fragmentManager = getSupportFragmentManager();
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            getActionBar().show();
+        }
         if(keyCode == KeyEvent.KEYCODE_BACK && settings.getBoolean("ConfirmExit", false) && isTaskRoot() && fragmentManager.getBackStackEntryCount() == 0) {
             //Ask the user if they want to quit
             new AlertDialog.Builder(this)
@@ -1078,6 +1081,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void changeFragment(Fragment newFragment) {
+        getActionBar().show();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, newFragment).addToBackStack("tag").commit();

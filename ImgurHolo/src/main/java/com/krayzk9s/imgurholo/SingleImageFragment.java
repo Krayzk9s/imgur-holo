@@ -52,8 +52,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
-
 /**
  * Created by Kurt Zimmer on 7/22/13.
  */
@@ -73,8 +71,8 @@ public class SingleImageFragment extends Fragment {
     ImageButton imageReport;
     ImageButton imageUser;
     ArrayList<JSONParcelable> commentArray;
-    PhotoViewAttacher mAttacher;
     LinearLayout imageLayoutView;
+    int lastInView = -1;
 
     public SingleImageFragment() {
         inGallery = false;
@@ -697,7 +695,7 @@ public class SingleImageFragment extends Fragment {
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     try {
-                        if (inGallery) {
+                        if (inGallery && commentAdapter != null) {
                             addComments();
                             commentAdapter.notifyDataSetChanged();
                         }

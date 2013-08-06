@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -41,6 +42,7 @@ public class AlbumsFragment extends Fragment {
     TextView noImageView;
     private ArrayList<String> urls;
     private ArrayList<String> ids;
+    int lastInView = -1;
 
     public AlbumsFragment(String _username) {
         username = _username;
@@ -122,6 +124,7 @@ public class AlbumsFragment extends Fragment {
             ids = savedInstanceState.getStringArrayList("ids");
         }
         View view = inflater.inflate(R.layout.image_layout, container, false);
+        view.setPadding(0, getActivity().getActionBar().getHeight(), 0, 0);
         noImageView = (TextView) view.findViewById(R.id.no_images);
         GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
         MainActivity activity = (MainActivity) getActivity();
@@ -133,6 +136,26 @@ public class AlbumsFragment extends Fragment {
         if (newData) {
             getImages();
         }
+        gridview.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int i2, int i3) {
+                if(lastInView == -1)
+                    lastInView = firstVisibleItem;
+                else if (lastInView > firstVisibleItem) {
+                    getActivity().getActionBar().show();
+                    lastInView = firstVisibleItem;
+                }
+                else if (lastInView < firstVisibleItem) {
+                    getActivity().getActionBar().hide();
+                    lastInView = firstVisibleItem;
+                }
+            }
+        });
         return view;
     }
 

@@ -90,7 +90,8 @@ public class CommentsFragment extends Fragment {
                 }
                 @Override
                 protected void onPostExecute(JSONObject comments) {
-                    addComments(comments);
+                    if(commentsAdapter != null)
+                        addComments(comments);
                 }
             };
             async.execute();

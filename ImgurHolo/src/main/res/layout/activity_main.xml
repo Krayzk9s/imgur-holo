@@ -13,10 +13,11 @@
     </FrameLayout>
 
     <ListView
+            android:layout_marginTop="?android:attr/actionBarSize"
             android:id="@+id/left_drawer"
             android:layout_width="240dp"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
+            android:layout_gravity="start|bottom"
             android:choiceMode="singleChoice"
             android:background="?listBackground"/>
 
