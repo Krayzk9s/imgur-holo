@@ -38,6 +38,7 @@ public class CommentsFragment extends Fragment {
     ListView mDrawerList;
     ArrayList<JSONParcelable> commentDataArray;
     String username;
+    TextView errorText;
 
     public CommentsFragment(String _username) {
         username = _username;
@@ -78,6 +79,7 @@ public class CommentsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.account_layout, container, false);
+        errorText = (TextView) view.findViewById(R.id.error);
         mDrawerList = (ListView) view.findViewById(R.id.account_list);
         MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
@@ -136,6 +138,8 @@ public class CommentsFragment extends Fragment {
             }
             commentsAdapter.addAll(commentDataArray);
         } catch (Exception e) {
+            errorText.setVisibility(View.VISIBLE);
+            errorText.setText("Error getting comments");
             Log.e("Error!", "adding messages" + e.toString());
         }
         mDrawerList.setAdapter(commentsAdapter);

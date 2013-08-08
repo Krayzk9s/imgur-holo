@@ -44,6 +44,8 @@ public class AlbumsFragment extends Fragment {
     private ArrayList<String> urls;
     private ArrayList<String> ids;
     int lastInView = -1;
+    JSONObject imagesData;
+    TextView errorText;
 
     public AlbumsFragment(String _username) {
         username = _username;
@@ -125,6 +127,9 @@ public class AlbumsFragment extends Fragment {
             ids = savedInstanceState.getStringArrayList("ids");
         }
         View view = inflater.inflate(R.layout.image_layout, container, false);
+        errorText = (TextView) view.findViewById(R.id.error);
+        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) errorText.getLayoutParams();
+        mlp.setMargins(0, 0, 0, 0);
         view.setPadding(0, getActivity().getActionBar().getHeight(), 0, 0);
         noImageView = (TextView) view.findViewById(R.id.no_images);
         GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
@@ -165,8 +170,7 @@ public class AlbumsFragment extends Fragment {
             @Override
             protected Boolean doInBackground(Void... voids) {
                 MainActivity activity = (MainActivity) getActivity();
-                JSONObject imagesData = activity.makeCall("3/account/" + username + "/albums", "get", null);
-                Log.d("album data", imagesData.toString());
+                imagesData = activity.makeCall("3/account/" + username + "/albums", "get", null);
                 try {
                     JSONArray imageArray = imagesData.getJSONArray("data");
                     for (int i = 0; i < imageArray.length(); i++) {
@@ -181,6 +185,7 @@ public class AlbumsFragment extends Fragment {
 
                 } catch (Exception e) {
                     Log.e("Error!", e.toString());
+                    imagesData = null;
                 }
                 return false;
             }
@@ -189,8 +194,10 @@ public class AlbumsFragment extends Fragment {
             protected void onPostExecute(Boolean hasImages) {
                 if (hasImages)
                     imageAdapter.notifyDataSetChanged();
-                else
+                else if(imagesData != null)
                     noImageView.setVisibility(View.VISIBLE);
+                else
+                    errorText.setVisibility(View.VISIBLE);
             }
         };
         imageAsync.execute();

@@ -35,6 +35,7 @@ public class MessagingFragment extends Fragment {
     MessageAdapter messageAdapter;
     ListView mDrawerList;
     ArrayList<JSONParcelable> messageDataArray;
+    TextView errorText;
 
     public MessagingFragment() {
 
@@ -78,6 +79,7 @@ public class MessagingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.account_layout, container, false);
+        errorText = (TextView) view.findViewById(R.id.error);
         mDrawerList = (ListView) view.findViewById(R.id.account_list);
         MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
@@ -141,6 +143,7 @@ public class MessagingFragment extends Fragment {
             messageAdapter.addAll(messageDataArray);
         } catch (Exception e) {
             Log.e("Error!", "adding messages" + e.toString());
+            errorText.setVisibility(View.VISIBLE);
         }
         mDrawerList.setAdapter(messageAdapter);
         messageAdapter.notifyDataSetChanged();

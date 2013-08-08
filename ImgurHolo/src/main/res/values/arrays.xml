@@ -139,10 +139,10 @@
     <array
             name="defaultArray">
         <item>@string/menu_gallery</item>
+        <item>@string/menu_account</item>
         <item>@string/menu_albums</item>
         <item>@string/menu_images</item>
         <item>@string/menu_favorites</item>
-        <item>@string/menu_account</item>
     </array>
     <array
             name="copyTypes">

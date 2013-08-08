@@ -26,6 +26,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
@@ -61,6 +62,7 @@ public class GalleryFragment extends Fragment {
     String search;
     CharSequence spinner;
     int lastInView = -1;
+    TextView errorText;
 
     public GalleryFragment() {
 
@@ -220,6 +222,7 @@ public class GalleryFragment extends Fragment {
         }
         Log.d("NOT HERE EITHER", gallery);
         View view = inflater.inflate(R.layout.image_layout, container, false);
+        errorText = (TextView) view.findViewById(R.id.error);
         final GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
         final MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
@@ -236,7 +239,7 @@ public class GalleryFragment extends Fragment {
                             Log.d("numColumnsWidth", gridview.getWidth()+"");
                             Log.d("numColumnsIconWidth", activity.dpToPx((settings.getInt("IconSize", 90)))+"");
                             final int numColumns = (int) Math.floor(
-                                    gridview.getWidth() / (activity.dpToPx((settings.getInt("IconSize", 90))) + activity.dpToPx(2)));
+                                    gridview.getWidth() / (activity.dpToPx((settings.getInt("IconSize", 90))) + activity.dpToPx(4)));
                             if (numColumns > 0) {
                                 imageAdapter.setNumColumns(numColumns);
                                 if (BuildConfig.DEBUG) {
@@ -382,6 +385,7 @@ public class GalleryFragment extends Fragment {
             protected Void doInBackground(Void... voids) {
                 MainActivity activity = (MainActivity) getActivity();
                 imagesData = new JSONObject();
+                Log.d("imagesData", "loading");
                 if (gallery.equals("hot") || gallery.equals("top") || gallery.equals("user")) {
                     imagesData = activity.makeCall("3/gallery/" + gallery + "/" + sort + "/" + window + "/" + page, "get", null);
                 } else if (gallery.equals("memes")) {
@@ -393,6 +397,11 @@ public class GalleryFragment extends Fragment {
                 } else if (gallery.equals("search")) {
                     imagesData = activity.makeCall("3/gallery/search?q=" + search, "get", null);
                 }
+                Log.d("imagesData", "checking");
+                if(imagesData == null) {
+                    return null;
+                }
+                Log.d("imagesData", "failed");
                 try {
                     Log.d("URI", imagesData.toString());
                     JSONArray imageArray = imagesData.getJSONArray("data");
@@ -425,9 +434,10 @@ public class GalleryFragment extends Fragment {
             }
             @Override
             protected void onPostExecute(Void aVoid) {
-                Log.d("returning", urls.size() + "");
-                if(imageAdapter != null)
+                if(imagesData != null)
                     imageAdapter.notifyDataSetChanged();
+                else
+                    errorText.setVisibility(View.VISIBLE);
             }
         };
         async.execute();

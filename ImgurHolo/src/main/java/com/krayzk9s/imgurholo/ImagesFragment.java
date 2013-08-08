@@ -67,6 +67,7 @@ public class ImagesFragment extends Fragment {
     int lastInView = -1;
     private ArrayList<String> urls;
     private ArrayList<JSONParcelable> ids;
+    TextView errorText;
 
     public ImagesFragment() {
         page = 0;
@@ -259,6 +260,7 @@ public class ImagesFragment extends Fragment {
         }
         View view = inflater.inflate(R.layout.image_layout, container, false);
         gridview = (GridView) view.findViewById(R.id.grid_layout);
+        errorText = (TextView) view.findViewById(R.id.error);
         noImageView = (TextView) view.findViewById(R.id.no_images);
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
@@ -362,6 +364,7 @@ public class ImagesFragment extends Fragment {
                         }
                     } catch (Exception e) {
                         Log.e("Error!", "bad image array data" + e.toString());
+                        imagesData = null;
                     }
                     page += 1;
                 } while (imageArray.length() > 0 && changed);
@@ -371,8 +374,10 @@ public class ImagesFragment extends Fragment {
             @Override
             protected void onPostExecute(Boolean changed) {
                 gettingImages = false;
-                if (imageAdapter != null)
+                if (imagesData != null && urls.size() > 0)
                     imageAdapter.notifyDataSetChanged();
+                else if (imagesData == null && errorText != null)
+                    errorText.setVisibility(View.VISIBLE);
                 else if (urls.size() == 0 && noImageView != null)
                     noImageView.setVisibility(View.VISIBLE);
                 else

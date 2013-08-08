@@ -173,10 +173,10 @@ public class MainActivity extends FragmentActivity {
         //Handle the back button
         SharedPreferences settings = getSettings();
         FragmentManager fragmentManager = getSupportFragmentManager();
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             getActionBar().show();
         }
-        if(keyCode == KeyEvent.KEYCODE_BACK && settings.getBoolean("ConfirmExit", false) && isTaskRoot() && fragmentManager.getBackStackEntryCount() == 0) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && settings.getBoolean("ConfirmExit", false) && isTaskRoot() && fragmentManager.getBackStackEntryCount() == 0) {
             //Ask the user if they want to quit
             new AlertDialog.Builder(this)
                     .setTitle("Quit?")
@@ -193,10 +193,8 @@ public class MainActivity extends FragmentActivity {
                     })
                     .setNegativeButton("No", null)
                     .show();
-
             return true;
-        }
-        else {
+        } else {
             return super.onKeyDown(keyCode, event);
         }
 
@@ -455,11 +453,11 @@ public class MainActivity extends FragmentActivity {
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         switch (position) {
             case 0:
-                    setTitle("Gallery");
-                    GalleryFragment galleryFragment = new GalleryFragment();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.frame_layout, galleryFragment)
-                            .commit();
+                setTitle("Gallery");
+                GalleryFragment galleryFragment = new GalleryFragment();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_layout, galleryFragment)
+                        .commit();
                 break;
             case 1:
                 if (loggedin) {
@@ -468,8 +466,7 @@ public class MainActivity extends FragmentActivity {
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, accountFragment)
                             .commit();
-                }
-                else {
+                } else {
                     setTitle("Your Settings");
                     SettingsFragment settingsFragment = new SettingsFragment();
                     fragmentManager.beginTransaction()
@@ -536,8 +533,7 @@ public class MainActivity extends FragmentActivity {
                             // Do nothing.
                         }
                     }).show();
-                }
-                else
+                } else
                     login();
                 break;
             case 3:
@@ -649,63 +645,64 @@ public class MainActivity extends FragmentActivity {
 
     public JSONObject makeCall(String url, String method, HashMap<String, Object> args) {
         Log.d("Call", url);
-        JSONObject data = null;
-        String methodString = null;
-        if(url.contains("?"))
-            methodString = "&_method=" + method;
-        else
-            methodString = "?_method=" + method;
-        if (loggedin) {
-            Token accessKey = getAccessToken();
-            Log.d("Making Call", accessKey.toString());
-            HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + url + methodString)
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .fields(args)
-                    .asJson();
-            Log.d("Getting Code", String.valueOf(response.getCode()));
-            int code = response.getCode();
-            if (code == 403) {
-                accessKey = renewAccessToken();
-                response = Unirest.post(MASHAPE_URL + url + methodString)
+        try {
+            JSONObject data = null;
+            String methodString = null;
+            if (url.contains("?"))
+                methodString = "&_method=" + method;
+            else
+                methodString = "?_method=" + method;
+            if (loggedin) {
+                Token accessKey = getAccessToken();
+                Log.d("Making Call", accessKey.toString());
+                HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + url + methodString)
                         .header("accept", "application/json")
                         .header("X-Mashape-Authorization", MASHAPE_KEY)
                         .header("Authorization", "Bearer " + accessKey.getToken())
                         .fields(args)
                         .asJson();
-            }
-            if(code == 200) {
-                data = response.getBody().getObject();
-                Log.d("Got data", data.toString());
-            }
-            else
-                data = null;
-        } else {
-            HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + url + methodString)
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Client-ID " + CLIENTID)
-                    .fields(args)
-                    .asJson();
-            Log.d("Getting Code", String.valueOf(response.getCode()));
-            int code = response.getCode();
-            if (code == 403) {
-                response = Unirest.post(MASHAPE_URL + url + methodString)
+                Log.d("Getting Code", String.valueOf(response.getCode()));
+                int code = response.getCode();
+                if (code == 403) {
+                    accessKey = renewAccessToken();
+                    response = Unirest.post(MASHAPE_URL + url + methodString)
+                            .header("accept", "application/json")
+                            .header("X-Mashape-Authorization", MASHAPE_KEY)
+                            .header("Authorization", "Bearer " + accessKey.getToken())
+                            .fields(args)
+                            .asJson();
+                }
+                if (code == 200) {
+                    data = response.getBody().getObject();
+                    Log.d("Got data", data.toString());
+                }
+            } else {
+                HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + url + methodString)
                         .header("accept", "application/json")
                         .header("X-Mashape-Authorization", MASHAPE_KEY)
                         .header("Authorization", "Client-ID " + CLIENTID)
                         .fields(args)
                         .asJson();
+                Log.d("Getting Code", String.valueOf(response.getCode()));
+                int code = response.getCode();
+                if (code == 403) {
+                    response = Unirest.post(MASHAPE_URL + url + methodString)
+                            .header("accept", "application/json")
+                            .header("X-Mashape-Authorization", MASHAPE_KEY)
+                            .header("Authorization", "Client-ID " + CLIENTID)
+                            .fields(args)
+                            .asJson();
+                }
+                if (code == 200) {
+                    data = response.getBody().getObject();
+                    Log.d("Got data", data.toString());
+                }
             }
-            if(code == 200) {
-                data = response.getBody().getObject();
-                Log.d("Got data", data.toString());
-            }
-
-            data = null;
+            return data;
+        } catch (Exception e) {
+            Log.e("Error getting data!", e.toString());
+            return null;
         }
-        return data;
     }
 
     public void changeFragment(Fragment newFragment) {
