@@ -3,6 +3,7 @@ package com.krayzk9s.imgurholo;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -57,6 +58,7 @@ public class CommentsFragment extends Fragment {
         else
             inflater.inflate(R.menu.main_dark, menu);
         menu.findItem(R.id.action_upload).setVisible(false);
+        menu.findItem(R.id.action_refresh).setVisible(true);
     }
 
     @Override
@@ -64,6 +66,9 @@ public class CommentsFragment extends Fragment {
         // handle item selection
         switch (item.getItemId()) {
             //none right now
+            case R.id.action_refresh:
+                getComments();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -75,26 +80,22 @@ public class CommentsFragment extends Fragment {
         View view = inflater.inflate(R.layout.account_layout, container, false);
         mDrawerList = (ListView) view.findViewById(R.id.account_list);
         MainActivity activity = (MainActivity) getActivity();
-        commentsAdapter = new MessageAdapter(activity, R.layout.comment_layout);
+        SharedPreferences settings = activity.getSettings();
+        if(settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
+            commentsAdapter = new MessageAdapter(activity, R.layout.comment_layout);
+        else
+            commentsAdapter = new MessageAdapter(activity, R.layout.comment_layout_dark);
         String[] mMenuList = getResources().getStringArray(R.array.emptyList);
-        ArrayAdapter<String> tempAdapter = new ArrayAdapter<String>(activity,
-                R.layout.comment_layout, mMenuList);
+        ArrayAdapter<String> tempAdapter = null;
+        if(settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
+            tempAdapter = new ArrayAdapter<String>(activity,
+                    R.layout.comment_layout, mMenuList);
+        else
+            tempAdapter = new ArrayAdapter<String>(activity,
+                    R.layout.comment_layout_dark, mMenuList);
         mDrawerList.setAdapter(tempAdapter);
         if (savedInstanceState == null) {
-            AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
-                @Override
-                protected JSONObject doInBackground(Void... voids) {
-                    MainActivity activity = (MainActivity) getActivity();
-                    JSONObject comments = activity.makeGetCall("/3/account/" + username + "/comments");
-                    return comments;
-                }
-                @Override
-                protected void onPostExecute(JSONObject comments) {
-                    if(commentsAdapter != null)
-                        addComments(comments);
-                }
-            };
-            async.execute();
+            getComments();
         } else {
             commentDataArray = savedInstanceState.getParcelableArrayList("content");
             commentsAdapter.addAll(commentDataArray);
@@ -102,6 +103,25 @@ public class CommentsFragment extends Fragment {
             commentsAdapter.notifyDataSetChanged();
         }
         return view;
+    }
+
+    private void getComments() {
+        commentsAdapter.clear();
+        commentsAdapter.notifyDataSetChanged();
+        AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
+            @Override
+            protected JSONObject doInBackground(Void... voids) {
+                MainActivity activity = (MainActivity) getActivity();
+                JSONObject comments = activity.makeCall("/3/account/" + username + "/comments", "get", null);
+                return comments;
+            }
+            @Override
+            protected void onPostExecute(JSONObject comments) {
+                if(commentsAdapter != null)
+                    addComments(comments);
+            }
+        };
+        async.execute();
     }
 
     private void addComments(JSONObject comments) {
@@ -146,7 +166,12 @@ public class CommentsFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.comment_layout, null);
+                MainActivity activity = (MainActivity) getActivity();
+                SharedPreferences settings = activity.getSettings();
+                if(settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
+                    convertView = mInflater.inflate(R.layout.comment_layout, null);
+                else
+                    convertView = mInflater.inflate(R.layout.comment_layout_dark, null);
                 holder = new ViewHolder();
                 holder.body = (TextView) convertView.findViewById(R.id.body);
                 holder.header = (TextView) convertView.findViewById(R.id.header);
@@ -162,6 +187,7 @@ public class CommentsFragment extends Fragment {
             }
             try {
                 commentContent = this.getItem(position).getJSONObject();
+                final int commentPosition = position;
                 Calendar accountCreationDate = Calendar.getInstance();
                 accountCreationDate.setTimeInMillis((long) commentContent.getInt("datetime") * 1000);
                 SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -183,6 +209,8 @@ public class CommentsFragment extends Fragment {
                             new AlertDialog.Builder(activity).setTitle("Delete Comment").setMessage("Are you sure you want to delete this comment?")
                                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
+                                            commentsAdapter.remove(commentsAdapter.getItem(commentPosition));
+                                            commentsAdapter.notifyDataSetChanged();
                                             DeleteAsync deleteAsync = new DeleteAsync(dataHolder.id);
                                             deleteAsync.execute();
                                         }
@@ -207,7 +235,7 @@ public class CommentsFragment extends Fragment {
                                 protected JSONObject doInBackground(Void... voids) {
                                     try {
                                     MainActivity activity = (MainActivity) getActivity();
-                                    JSONObject imageData = activity.makeGetCall("/3/gallery/image/" + viewHolder.image_id);
+                                    JSONObject imageData = activity.makeCall("/3/gallery/image/" + viewHolder.image_id, "get", null);
                                     return imageData.getJSONObject("data");
                                     } catch (Exception e) {
                                         Log.e("Error!", "missing data");
@@ -249,7 +277,7 @@ public class CommentsFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             MainActivity activity = (MainActivity) getActivity();
-            activity.deleteComment(id);
+            activity.makeCall("/3/comment/" + id, "delete", null);
             return null;
         }
     }

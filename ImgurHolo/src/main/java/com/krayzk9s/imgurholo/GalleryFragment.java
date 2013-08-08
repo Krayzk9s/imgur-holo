@@ -383,15 +383,15 @@ public class GalleryFragment extends Fragment {
                 MainActivity activity = (MainActivity) getActivity();
                 imagesData = new JSONObject();
                 if (gallery.equals("hot") || gallery.equals("top") || gallery.equals("user")) {
-                    imagesData = activity.makeGetCall("3/gallery/" + gallery + "/" + sort + "/" + window + "/" + page);
+                    imagesData = activity.makeCall("3/gallery/" + gallery + "/" + sort + "/" + window + "/" + page, "get", null);
                 } else if (gallery.equals("memes")) {
-                    imagesData = activity.makeGetCall("3/gallery/g/memes/" + sort + "/" + window + "/" + page);
+                    imagesData = activity.makeCall("3/gallery/g/memes/" + sort + "/" + window + "/" + page, "get", null);
                 } else if (gallery.equals("random")) {
-                    imagesData = activity.makeGetCall("3/gallery/random/random/" + page);
+                    imagesData = activity.makeCall("3/gallery/random/random/" + page, "get", null);
                 } else if (gallery.equals("subreddit")) {
-                    imagesData = activity.makeGetCall("3/gallery/r/" + subreddit + "/" + sort + "/" + window + "/" + page);
+                    imagesData = activity.makeCall("3/gallery/r/" + subreddit + "/" + sort + "/" + window + "/" + page, "get", null);
                 } else if (gallery.equals("search")) {
-                    imagesData = activity.makeGetCall("3/gallery/search?q=" + search);
+                    imagesData = activity.makeCall("3/gallery/search?q=" + search, "get", null);
                 }
                 try {
                     Log.d("URI", imagesData.toString());

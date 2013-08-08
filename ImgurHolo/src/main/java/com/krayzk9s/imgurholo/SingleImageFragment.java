@@ -51,6 +51,7 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 /**
  * Created by Kurt Zimmer on 7/22/13.
@@ -119,10 +120,7 @@ public class SingleImageFragment extends Fragment {
         final MainActivity activity = (MainActivity) getActivity();
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                commentAdapter.clear();
-                commentAdapter.hiddenViews.clear();
-                commentAdapter.notifyDataSetChanged();
-                getComments();
+                refreshComments();
                 return true;
             case R.id.action_submit:
                 final EditText newGalleryTitle = new EditText(activity);
@@ -135,13 +133,16 @@ public class SingleImageFragment extends Fragment {
                             @Override
                             protected Boolean doInBackground(Void... voids) {
                                 try {
-                                    JSONObject jsonObject = activity.makeGetCall("3/gallery/image/" + imageData.getJSONObject().getString("id"));
+                                    JSONObject jsonObject = activity.makeCall("3/gallery/image/" + imageData.getJSONObject().getString("id"), "get", null);
                                     if(jsonObject.getJSONObject("data").has("error")) {
-                                        jsonObject = activity.makeGalleryPost("3/gallery/" + imageData.getJSONObject().getString("id"), newGalleryTitle.getText().toString());
+                                        HashMap<String, Object> galleryMap = new HashMap<String, Object>();
+                                        galleryMap.put("terms", "1");
+                                        galleryMap.put("title", newGalleryTitle.getText().toString());
+                                        activity.makeCall("3/gallery/" + imageData.getJSONObject().getString("id"), "post", galleryMap);
                                         return true;
                                     }
                                     else {
-                                        jsonObject = activity.makeDeleteCall("3/gallery/" + imageData.getJSONObject().getString("id"));
+                                        activity.makeCall("3/gallery/" + imageData.getJSONObject().getString("id"), "delete", null);
                                         return false;
                                     }
                                 } catch (Exception e) {
@@ -206,7 +207,10 @@ public class SingleImageFragment extends Fragment {
                                 @Override
                                 protected Void doInBackground(Void... voids) {
                                     try {
-                                        activity.editImage(imageData.getJSONObject().getString("id"), newTitle.getText().toString(), newBody.getText().toString());
+                                        HashMap<String, Object> editImageMap = new HashMap<String, Object>();
+                                        editImageMap.put("title", newTitle.getText().toString());
+                                        editImageMap.put("description", newBody.getText().toString());
+                                        activity.makeCall("3/image/" + imageData.getJSONObject().getString("id"), "post", editImageMap);
                                     } catch (Exception e) {
                                         Log.e("Error!", "oops, some text fields missing values" + e.toString());
                                     }
@@ -271,7 +275,7 @@ public class SingleImageFragment extends Fragment {
                                         try {
                                             String deletehash = imageData.getJSONObject().getString("deletehash");
                                             MainActivity activity = (MainActivity) getActivity();
-                                            activity.deleteImage(deletehash);
+                                            activity.makeCall("3/image/" + deletehash, "delete", null);
                                         } catch (Exception e) {
                                             Log.e("Error!", e.toString());
                                         }
@@ -351,8 +355,11 @@ public class SingleImageFragment extends Fragment {
         }
     }
 
-    public void finishActivity() {
-        getActivity().getFragmentManager().popBackStack();
+    public void refreshComments() {
+        commentAdapter.clear();
+        commentAdapter.hiddenViews.clear();
+        commentAdapter.notifyDataSetChanged();
+        getComments();
     }
 
     @Override
@@ -386,7 +393,7 @@ public class SingleImageFragment extends Fragment {
             imageData = savedInstanceState.getParcelable("imageData");
             inGallery = savedInstanceState.getBoolean("inGallery");
         }
-        if (inGallery && imageData.getJSONObject().has("vote")) {
+        if (imageData.getJSONObject().has("ups")) {
             LinearLayout layout = (LinearLayout) imageLayoutView.findViewById(R.id.image_buttons);
             layout.setVisibility(View.VISIBLE);
             imageUpvote = (ImageButton) imageLayoutView.findViewById(R.id.rating_good);
@@ -437,7 +444,7 @@ public class SingleImageFragment extends Fragment {
                         protected Void doInBackground(Void... voids) {
                             MainActivity activity = (MainActivity) getActivity();
                             try {
-                                activity.makePostCall("3/image/" + imageData.getJSONObject().getString("id") + "/favorite");
+                                activity.makeCall("3/image/" + imageData.getJSONObject().getString("id") + "/favorite", "post", null);
                             } catch (Exception e) {
                                 Log.e("Error!", e.toString());
                             }
@@ -502,11 +509,22 @@ public class SingleImageFragment extends Fragment {
                                         protected Void doInBackground(Void... voids) {
                                             MainActivity activity = (MainActivity) getActivity();
                                             try {
-                                                activity.makeGalleryReply(imageData.getJSONObject().getString("id"), newBody.getText().toString(), null);
+                                                HashMap<String, Object> commentMap = new HashMap<String, Object>();
+                                                commentMap.put("comment", newBody.getText().toString());
+                                                commentMap.put("image_id", imageData.getJSONObject().getString("id"));
+                                                activity.makeCall("3/comment/", "post", commentMap);
                                             } catch (Exception e) {
                                                 Log.e("Error!", "oops, some text fields missing values" + e.toString());
                                             }
                                             return null;
+                                        }
+                                        @Override
+                                        protected void onPostExecute(Void aVoid) {
+                                            int duration = Toast.LENGTH_SHORT;
+                                            Toast toast;
+                                            toast = Toast.makeText(getActivity(), "Comment Posted!", duration);
+                                            toast.show();
+                                            refreshComments();
                                         }
                                     };
                                     async.execute();
@@ -556,7 +574,7 @@ public class SingleImageFragment extends Fragment {
                         protected Void doInBackground(Void... voids) {
                             MainActivity activity = (MainActivity) getActivity();
                             try {
-                                activity.makePostCall("3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/up");
+                                activity.makeCall("3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/up", "post", null);
                             } catch (Exception e) {
                                 Log.e("Error!", e.toString());
                             }
@@ -600,7 +618,7 @@ public class SingleImageFragment extends Fragment {
                         protected Void doInBackground(Void... voids) {
                             MainActivity activity = (MainActivity) getActivity();
                             try {
-                                activity.makePostCall("3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/down");
+                                activity.makeCall("3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/down", "post", null);
                             } catch (Exception e) {
                                 Log.e("Error!", e.toString());
                             }
@@ -683,7 +701,7 @@ public class SingleImageFragment extends Fragment {
                     MainActivity activity = (MainActivity) getActivity();
                     if (inGallery) {
                         try {
-                            commentData.setJSONObject(activity.makeGetCall("3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments"));
+                            commentData.setJSONObject(activity.makeCall("3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments", "get", null));
                         } catch (Exception e) {
                             Log.e("Error3!", e.toString());
                         }
@@ -1010,11 +1028,23 @@ public class SingleImageFragment extends Fragment {
                                                         MainActivity activity = (MainActivity) getActivity();
                                                         try {
                                                             Log.d("comment", dataHolder.id + newBody.getText().toString() + imageData.getJSONObject().getString("id"));
-                                                            activity.makeGalleryReply(imageData.getJSONObject().getString("id"), newBody.getText().toString(), dataHolder.id);
+                                                            HashMap<String, Object> commentMap = new HashMap<String, Object>();
+                                                            commentMap.put("comment", newBody.getText().toString());
+                                                            commentMap.put("image_id", imageData.getJSONObject().getString("id"));
+                                                            commentMap.put("parent_id", dataHolder.id);
+                                                            activity.makeCall("3/comment/", "post", commentMap);
                                                         } catch (Exception e) {
                                                             Log.e("Error!", "oops, some text fields missing values" + e.toString());
                                                         }
                                                         return null;
+                                                    }
+                                                    @Override
+                                                    protected void onPostExecute(Void aVoid) {
+                                                        int duration = Toast.LENGTH_SHORT;
+                                                        Toast toast;
+                                                        toast = Toast.makeText(getActivity(), "Comment Posted!", duration);
+                                                        toast.show();
+                                                        refreshComments();
                                                     }
                                                 };
                                                 async.execute();
@@ -1066,7 +1096,7 @@ public class SingleImageFragment extends Fragment {
                                     @Override
                                     protected Void doInBackground(Void... voids) {
                                         MainActivity activity = (MainActivity) getActivity();
-                                        activity.makePostCall("/3/comment/" + dataHolder.id + "/vote/up");
+                                        activity.makeCall("/3/comment/" + dataHolder.id + "/vote/up", "post", null);
                                         return null;
                                     }
                                 };
@@ -1108,7 +1138,7 @@ public class SingleImageFragment extends Fragment {
                                     @Override
                                     protected Void doInBackground(Void... voids) {
                                         MainActivity activity = (MainActivity) getActivity();
-                                        activity.makePostCall("/3/comment/" + dataHolder.id + "/vote/down");
+                                        activity.makeCall("/3/comment/" + dataHolder.id + "/vote/down", "post", null);
                                         return null;
                                     }
                                 };

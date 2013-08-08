@@ -37,12 +37,10 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <style name="MyActionBarDark" parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:background">#ff000000</item>
+    <style name="MyActionBarDark" parent="@android:style/Widget.Holo.ActionBar.Solid">
     </style>
 
-    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">#fff3f3f3</item>
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
     </style>
 
 </resources>

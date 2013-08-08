@@ -118,16 +118,16 @@ public class AccountFragment extends Fragment {
                 protected Void doInBackground(Void... voids) {
                     try {
                     MainActivity activity = (MainActivity) getActivity();
-                    JSONObject accountInfoJSON = activity.makeGetCall("3/account/" + username);
+                    JSONObject accountInfoJSON = activity.makeCall("3/account/" + username, "get", null);
                     if(accountInfoJSON.getJSONObject("data").has("error")) {
                         return null;
                     }
                     accountData = new HashMap<String, String>();
-                    JSONObject likesJSON = activity.makeGetCall("3/account/" + username + "/likes");
-                    JSONObject commentJSON = activity.makeGetCall("3/account/" + username + "/comments/count");
+                    JSONObject likesJSON = activity.makeCall("3/account/" + username + "/likes", "get", null);
+                    JSONObject commentJSON = activity.makeCall("3/account/" + username + "/comments/count", "get", null);
                     if(username.equals("me")) {
-                        JSONObject statsJSON = activity.makeGetCall("3/account/" + username + "/stats");
-                        JSONObject settingsJSON = activity.makeGetCall("3/account/" + username + "/settings");
+                        JSONObject statsJSON = activity.makeCall("3/account/" + username + "/stats", "get", null);
+                        JSONObject settingsJSON = activity.makeCall("3/account/" + username + "/settings", "get", null);
                         statsJSON = statsJSON.getJSONObject("data");
                         accountData.put("total_images", Integer.toString(statsJSON.getInt("total_images")));
                         accountData.put("total_albums", Integer.toString(statsJSON.getInt("total_albums")));
@@ -148,12 +148,12 @@ public class AccountFragment extends Fragment {
                     }
                      else {
                         try {
-                            JSONObject imagesJSON = activity.makeGetCall("3/account/" + username + "/images/count");
+                            JSONObject imagesJSON = activity.makeCall("3/account/" + username + "/images/count", "get", null);
                             if(imagesJSON.getInt("status") == 200)
                                 accountData.put("total_images", Integer.toString(imagesJSON.getInt("data")));
                             else
                                 accountData.put("total_images", "0");
-                            JSONObject albumsJSON = activity.makeGetCall("/3/account/" + username + "/albums/ids");
+                            JSONObject albumsJSON = activity.makeCall("/3/account/" + username + "/albums/ids", "get", null);
                             if(albumsJSON.getInt("status") == 200)
                                 accountData.put("total_albums", Integer.toString(albumsJSON.getJSONArray("data").length()));
                             else
@@ -288,10 +288,12 @@ public class AccountFragment extends Fragment {
                 CommentsFragment commentsFragment = new CommentsFragment(username);
                 activity.changeFragment(commentsFragment);
                 break;
-            case 6:
-                activity.setTitle("My Messages");
-                MessagingFragment messagingFragment = new MessagingFragment();
-                activity.changeFragment(messagingFragment);
+            case 4:
+                if(username == "me") {
+                    activity.setTitle("My Messages");
+                    MessagingFragment messagingFragment = new MessagingFragment();
+                    activity.changeFragment(messagingFragment);
+                }
                 break;
             case 8:
                 new AlertDialog.Builder(activity).setTitle("Set Album Privacy")
@@ -402,7 +404,9 @@ public class AccountFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             MainActivity activity = (MainActivity) getActivity();
-            activity.makeSettingsPost(settingName, data, username);
+            HashMap<String, Object> args = new HashMap<String, Object>();
+            args.put(settingName, data);
+            activity.makeCall("/3/account/me/settings", "post", args);
             return null;
         }
     }

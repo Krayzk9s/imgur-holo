@@ -33,7 +33,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -55,6 +54,7 @@ import org.scribe.oauth.OAuthService;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends FragmentActivity {
 
@@ -72,9 +72,7 @@ public class MainActivity extends FragmentActivity {
     final OAuthService service = new ServiceBuilder().provider(ImgUr3Api.class).apiKey(CLIENTID).debug().callback(OAUTH_CALLBACK_URL).apiSecret(SECRETID).build();
     public int theme;
     Token accessToken;
-    String accessString;
     Verifier verifier;
-    Adapter adapter;
     boolean loggedin;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -280,7 +278,7 @@ public class MainActivity extends FragmentActivity {
             AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
                 @Override
                 protected JSONObject doInBackground(Void... voids) {
-                    JSONObject imageData = makeGetCall("/3/image/" + image);
+                    JSONObject imageData = makeCall("/3/image/" + image, "get", null);
                     return imageData;
                 }
 
@@ -649,435 +647,65 @@ public class MainActivity extends FragmentActivity {
         return data;
     }
 
-    public JSONObject makeGetCall(String url) {
-        JSONObject data;
+    public JSONObject makeCall(String url, String method, HashMap<String, Object> args) {
+        Log.d("Call", url);
+        JSONObject data = null;
+        String methodString = null;
+        if(url.contains("?"))
+            methodString = "&_method=" + method;
+        else
+            methodString = "?_method=" + method;
         if (loggedin) {
             Token accessKey = getAccessToken();
             Log.d("Making Call", accessKey.toString());
-            HttpResponse<JsonNode> response = Unirest.get(MASHAPE_URL + url)
+            HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + url + methodString)
                     .header("accept", "application/json")
                     .header("X-Mashape-Authorization", MASHAPE_KEY)
                     .header("Authorization", "Bearer " + accessKey.getToken())
+                    .fields(args)
                     .asJson();
             Log.d("Getting Code", String.valueOf(response.getCode()));
             int code = response.getCode();
             if (code == 403) {
                 accessKey = renewAccessToken();
-                response = Unirest.get(MASHAPE_URL + url)
+                response = Unirest.post(MASHAPE_URL + url + methodString)
                         .header("accept", "application/json")
                         .header("X-Mashape-Authorization", MASHAPE_KEY)
                         .header("Authorization", "Bearer " + accessKey.getToken())
+                        .fields(args)
                         .asJson();
             }
-            data = response.getBody().getObject();
-            Log.d("Got data", data.toString());
+            if(code == 200) {
+                data = response.getBody().getObject();
+                Log.d("Got data", data.toString());
+            }
+            else
+                data = null;
         } else {
-            HttpResponse<JsonNode> response = Unirest.get(MASHAPE_URL + url)
+            HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + url + methodString)
                     .header("accept", "application/json")
                     .header("X-Mashape-Authorization", MASHAPE_KEY)
                     .header("Authorization", "Client-ID " + CLIENTID)
+                    .fields(args)
                     .asJson();
             Log.d("Getting Code", String.valueOf(response.getCode()));
             int code = response.getCode();
             if (code == 403) {
-                response = Unirest.get(MASHAPE_URL + url)
+                response = Unirest.post(MASHAPE_URL + url + methodString)
                         .header("accept", "application/json")
                         .header("X-Mashape-Authorization", MASHAPE_KEY)
                         .header("Authorization", "Client-ID " + CLIENTID)
+                        .fields(args)
                         .asJson();
             }
-            data = response.getBody().getObject();
-            Log.d("Got data", data.toString());
-        }
-        return data;
-    }
-
-    public JSONObject makePostCall(String url) {
-        JSONObject data;
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + url)
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            response = Unirest.post(MASHAPE_URL + url)
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .asJson();
-        }
-        data = response.getBody().getObject();
-        Log.d("Got data", data.toString());
-
-        return data;
-    }
-
-    public JSONObject makeGalleryPost(String url, String title) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + url)
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .field("title", title)
-                .field("terms", "1")
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            response = Unirest.post(MASHAPE_URL + url)
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .field("title", title)
-                    .field("terms", "1")
-                    .asJson();
-        }
-        JSONObject data = response.getBody().getObject();
-        Log.d("Got data", data.toString());
-        return data;
-    }
-
-    public JSONObject makeDeleteCall(String url) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response = Unirest.delete(MASHAPE_URL + url)
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            response = Unirest.delete(MASHAPE_URL + url)
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .asJson();
-        }
-        JSONObject data = response.getBody().getObject();
-        Log.d("Got data", data.toString());
-        return data;
-    }
-
-    public JSONObject makeGalleryReply(String imageId, String comment, String commentId) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response;
-        if (commentId != null) {
-            response = Unirest.post(MASHAPE_URL + "3/comment/")
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .field("comment", comment)
-                    .field("image_id", imageId)
-                    .field("parent_id", commentId)
-                    .asJson();
-        } else {
-            response = Unirest.post(MASHAPE_URL + "3/comment/")
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .field("comment", comment)
-                    .field("image_id", imageId)
-                    .asJson();
-        }
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            if (commentId != null) {
-                Unirest.post(MASHAPE_URL + "3/comment/")
-                        .header("accept", "application/json")
-                        .header("X-Mashape-Authorization", MASHAPE_KEY)
-                        .header("Authorization", "Bearer " + accessKey.getToken())
-                        .field("comment", comment)
-                        .field("image_id", imageId)
-                        .field("parent_id", commentId)
-                        .asJson();
-            } else {
-                Unirest.post(MASHAPE_URL + "3/comment/")
-                        .header("accept", "application/json")
-                        .header("X-Mashape-Authorization", MASHAPE_KEY)
-                        .header("Authorization", "Bearer " + accessKey.getToken())
-                        .field("comment", comment)
-                        .field("image_id", imageId)
-                        .asJson();
+            if(code == 200) {
+                data = response.getBody().getObject();
+                Log.d("Got data", data.toString());
             }
+
+            data = null;
         }
-        JSONObject data = response.getBody().getObject();
-        Log.d("Got data", data.toString());
         return data;
-    }
-
-    public void makeSettingsPost(String accountSetting, Object settingValue, String username) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "/3/account/me/settings")
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .field(accountSetting, settingValue)
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            Unirest.post(MASHAPE_URL + "/3/account/me/settings")
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .field(accountSetting, settingValue)
-                    .asJson();
-        }
-    }
-
-    public void makeNewAlbum(String title, String description) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "3/album/")
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .field("title", title)
-                .field("description", description)
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            Unirest.post(MASHAPE_URL + "3/album/")
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .field("title", title)
-                    .field("description", description)
-                    .asJson();
-        }
-    }
-
-    public void editAlbum(String ids, String id) {
-        Log.d("Editing Album", id + " " + ids);
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response;
-        response = Unirest.post(MASHAPE_URL + "3/album/" + id)
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .field("ids", ids)
-                .field("id", id)
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            Unirest.post(MASHAPE_URL + "3/album/" + id)
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .field("ids", ids)
-                    .field("id", id)
-                    .asJson();
-        }
-    }
-
-    public void editImage(String id, String title, String description) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response;
-        response = Unirest.post(MASHAPE_URL + "3/image/" + id)
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .field("title", title)
-                .field("description", description)
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            Unirest.post(MASHAPE_URL + "3/image/" + id)
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .field("title", title)
-                    .field("description", description)
-                    .asJson();
-        }
-    }
-
-    public void deleteImage(String deletehash) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response;
-        response = Unirest.delete(MASHAPE_URL + "3/image/" + deletehash)
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            Unirest.delete(MASHAPE_URL + "3/image/" + deletehash)
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .asJson();
-        }
-    }
-
-    public void deleteImages(ArrayList<String> deleteImages) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response;
-        for (int i = 0; i < deleteImages.size(); i++) {
-            response = Unirest.get(MASHAPE_URL + "3/image/" + deleteImages.get(i))
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .asJson();
-            Log.d("Getting Code", String.valueOf(response.getCode()));
-            Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
-            int code = response.getCode();
-            if (code == 403) {
-                accessKey = renewAccessToken();
-                Unirest.get(MASHAPE_URL + "3/image/" + deleteImages.get(i))
-                        .header("accept", "application/json")
-                        .header("X-Mashape-Authorization", MASHAPE_KEY)
-                        .header("Authorization", "Bearer " + accessKey.getToken())
-                        .asJson();
-            }
-            try {
-                String deletehash = response.getBody().getObject().getJSONObject("data").getString("deletehash");
-                response = Unirest.delete(MASHAPE_URL + "3/image/" + deletehash)
-                        .header("accept", "application/json")
-                        .header("X-Mashape-Authorization", MASHAPE_KEY)
-                        .header("Authorization", "Bearer " + accessKey.getToken())
-                        .asJson();
-                Log.d("Getting Code", String.valueOf(response.getCode()));
-                Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
-                code = response.getCode();
-                if (code == 403) {
-                    accessKey = renewAccessToken();
-                    Unirest.delete(MASHAPE_URL + "3/image/" + deletehash)
-                            .header("accept", "application/json")
-                            .header("X-Mashape-Authorization", MASHAPE_KEY)
-                            .header("Authorization", "Bearer " + accessKey.getToken())
-                            .asJson();
-                }
-            } catch (Exception e) {
-                Log.e("Error!", e.toString());
-            }
-        }
-    }
-
-    public void makeMessagePost(String header, String body, String username) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "/3/message")
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .field("subject", header)
-                .field("body", body)
-                .field("recipient", username)
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            Unirest.post(MASHAPE_URL + "/3/message")
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .field("subject", header)
-                    .field("body", body)
-                    .field("recipient", username)
-                    .asJson();
-        }
-    }
-
-    public void deleteComment(String commentId) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response = Unirest.delete(MASHAPE_URL + "/3/comment/" + commentId)
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            Unirest.delete(MASHAPE_URL + "/3/comment/" + commentId)
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .asJson();
-        }
-    }
-
-    public void reportPost(String username) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "3/message/report/" + username)
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            Unirest.post(MASHAPE_URL + "3/message/report/" + username)
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .asJson();
-        }
-        Unirest.post(MASHAPE_URL + "3/message/block/" + username)
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .asJson();
-    }
-
-    public void deletePost(String id) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response = Unirest.delete(MASHAPE_URL + "3/message/" + id)
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        Log.d("Response", String.valueOf(response.getBody().getObject().toString()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            Unirest.delete(MASHAPE_URL + "3/message/" + id)
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .asJson();
-        }
     }
 
     public void changeFragment(Fragment newFragment) {
@@ -1178,7 +806,7 @@ public class MainActivity extends FragmentActivity {
             JSONObject data = response.getBody().getObject();
             Log.d("Image Upload", data.toString());
             try {
-                JSONObject returner = makeGetCall("3/image/" + data.getJSONObject("data").getString("id"));
+                JSONObject returner = makeCall("3/image/" + data.getJSONObject("data").getString("id"), "get", null);
                 Log.d("returning", returner.toString());
                 return returner.getJSONObject("data");
             } catch (Exception e) {

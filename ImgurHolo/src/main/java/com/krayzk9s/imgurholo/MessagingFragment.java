@@ -3,6 +3,7 @@ package com.krayzk9s.imgurholo;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Kurt Zimmer on 7/24/13.
@@ -53,6 +55,7 @@ public class MessagingFragment extends Fragment {
         else
             inflater.inflate(R.menu.main_dark, menu);
         menu.findItem(R.id.action_message).setVisible(true);
+        menu.findItem(R.id.action_refresh).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
     }
 
@@ -60,6 +63,9 @@ public class MessagingFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
         switch (item.getItemId()) {
+            case R.id.action_refresh:
+                getMessages();
+                return true;
             case R.id.action_message:
                 buildSendMessage(null, null);
                 return true;
@@ -74,28 +80,25 @@ public class MessagingFragment extends Fragment {
         View view = inflater.inflate(R.layout.account_layout, container, false);
         mDrawerList = (ListView) view.findViewById(R.id.account_list);
         MainActivity activity = (MainActivity) getActivity();
-        messageAdapter = new MessageAdapter(activity, R.layout.message_layout);
+        SharedPreferences settings = activity.getSettings();
+        Log.d("Theme", settings.getInt("theme", 2) + "");
+        if(settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
+            messageAdapter = new MessageAdapter(activity, R.layout.message_layout);
+        else
+            messageAdapter = new MessageAdapter(activity, R.layout.message_layout_dark);
         String[] mMenuList = getResources().getStringArray(R.array.emptyList);
-        ArrayAdapter<String> tempAdapter = new ArrayAdapter<String>(activity,
-                R.layout.message_layout, mMenuList);
+        ArrayAdapter<String> tempAdapter = null;
+        if(settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
+            tempAdapter = new ArrayAdapter<String>(activity,
+                    R.layout.message_layout, mMenuList);
+        else
+            tempAdapter = new ArrayAdapter<String>(activity,
+                    R.layout.message_layout_dark, mMenuList);
+
         mDrawerList.setAdapter(tempAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         if (savedInstanceState == null) {
-            AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
-                @Override
-                protected JSONObject doInBackground(Void... voids) {
-                    MainActivity activity = (MainActivity) getActivity();
-                    JSONObject messages = activity.makeGetCall("/3/account/me/notifications/messages?new=false");
-                    return messages;
-                }
-
-                @Override
-                protected void onPostExecute(JSONObject messages) {
-                    if(messageAdapter != null)
-                        addMessages(messages);
-                }
-            };
-            async.execute();
+            getMessages();
         } else {
             messageDataArray = savedInstanceState.getParcelableArrayList("content");
             messageAdapter.addAll(messageDataArray);
@@ -103,6 +106,26 @@ public class MessagingFragment extends Fragment {
             messageAdapter.notifyDataSetChanged();
         }
         return view;
+    }
+
+    private void getMessages() {
+        messageAdapter.clear();
+        messageAdapter.notifyDataSetChanged();
+        AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
+            @Override
+            protected JSONObject doInBackground(Void... voids) {
+                MainActivity activity = (MainActivity) getActivity();
+                JSONObject messages = activity.makeCall("/3/account/me/notifications/messages?new=false", "get", null);
+                return messages;
+            }
+
+            @Override
+            protected void onPostExecute(JSONObject messages) {
+                if(messageAdapter != null)
+                    addMessages(messages);
+            }
+        };
+        async.execute();
     }
 
     private void addMessages(JSONObject messages) {
@@ -128,7 +151,6 @@ public class MessagingFragment extends Fragment {
 
     private void buildSendMessage(String username, String title) {
         MainActivity activity = (MainActivity) getActivity();
-
         final EditText newHeader = new EditText(activity);
         newHeader.setSingleLine();
         final EditText newUsername = new EditText(activity);
@@ -199,7 +221,12 @@ public class MessagingFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.message_layout, null);
+                MainActivity activity = (MainActivity) getActivity();
+                SharedPreferences settings = activity.getSettings();
+                if(settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
+                    convertView = mInflater.inflate(R.layout.message_layout, null);
+                else
+                    convertView = mInflater.inflate(R.layout.message_layout_dark, null);
                 holder = new ViewHolder();
                 holder.body = (TextView) convertView.findViewById(R.id.body);
                 holder.title = (TextView) convertView.findViewById(R.id.title);
@@ -215,7 +242,7 @@ public class MessagingFragment extends Fragment {
             }
             messageData = this.getItem(position).getJSONObject();
             try {
-
+                final int messagePosition = position;
                 messageContent = messageData.getJSONObject("content");
                 holder.body.setText(messageContent.getString("body"));
                 holder.title.setText(messageContent.getString("subject"));
@@ -270,6 +297,8 @@ public class MessagingFragment extends Fragment {
                             new AlertDialog.Builder(activity).setTitle("Send Message").setMessage("Are you sure you want to delete this message?")
                                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
+                                            messageAdapter.remove(messageAdapter.getItem(messagePosition));
+                                            messageAdapter.notifyDataSetChanged();
                                             DeleteAsync deleteAsync = new DeleteAsync(dataHolder.id);
                                             deleteAsync.execute();
                                         }
@@ -305,7 +334,11 @@ public class MessagingFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             MainActivity activity = (MainActivity) getActivity();
-            activity.makeMessagePost(header, body, username);
+            HashMap<String, Object> messageMap = new HashMap<String, Object>();
+            messageMap.put("subject", header);
+            messageMap.put("body", body);
+            messageMap.put("recipient", username);
+            activity.makeCall("/3/message", "post", messageMap);
             return null;
         }
     }
@@ -320,7 +353,7 @@ public class MessagingFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             MainActivity activity = (MainActivity) getActivity();
-            activity.deletePost(id);
+            activity.makeCall("3/message/" + id, "delete", null);
             return null;
         }
     }
@@ -335,7 +368,8 @@ public class MessagingFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             MainActivity activity = (MainActivity) getActivity();
-            activity.reportPost(username);
+            activity.makeCall("3/message/report/" + username, "post", null);
+            activity.makeCall("3/message/block/" + username, "post", null);
             return null;
         }
     }

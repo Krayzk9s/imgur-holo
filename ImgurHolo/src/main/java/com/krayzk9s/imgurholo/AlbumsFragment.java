@@ -30,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Kurt Zimmer on 7/23/13.
@@ -164,7 +165,7 @@ public class AlbumsFragment extends Fragment {
             @Override
             protected Boolean doInBackground(Void... voids) {
                 MainActivity activity = (MainActivity) getActivity();
-                JSONObject imagesData = activity.makeGetCall("3/account/" + username + "/albums");
+                JSONObject imagesData = activity.makeCall("3/account/" + username + "/albums", "get", null);
                 Log.d("album data", imagesData.toString());
                 try {
                     JSONArray imageArray = imagesData.getJSONArray("data");
@@ -268,7 +269,10 @@ public class AlbumsFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             MainActivity activity = (MainActivity) getActivity();
-            activity.makeNewAlbum(title, description);
+            HashMap<String, Object> albumMap = new HashMap<String, Object>();
+            albumMap.put("title", title);
+            albumMap.put("description", description);
+            activity.makeCall("/3/album/", "post", albumMap);
             return null;
         }
     }

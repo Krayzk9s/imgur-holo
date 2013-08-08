@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Kurt Zimmer on 7/22/13.
@@ -200,7 +201,7 @@ public class ImagesFragment extends Fragment {
                     protected Void doInBackground(Void... voids) {
                         MainActivity activity = (MainActivity) getActivity();
                         try {
-                            imageParam = activity.makeGetCall("3/image/" + galleryAlbumData.getString("cover")).getJSONObject("data");
+                            imageParam = activity.makeCall("3/image/" + galleryAlbumData.getString("cover"), "get", null).getJSONObject("data");
                             Log.d("Params", imageParam.toString());
                             galleryAlbumData.put("width", imageParam.getInt("width"));
                             galleryAlbumData.put("type", imageParam.getString("type"));
@@ -332,7 +333,7 @@ public class ImagesFragment extends Fragment {
                         MainActivity activity = (MainActivity) getActivity();
                         Log.d("call", imageCall + "/" + page);
                         if (activity != null)
-                            imagesData = activity.makeGetCall(imageCall + "/" + page);
+                            imagesData = activity.makeCall(imageCall + "/" + page, "get", null);
                         else
                             return true;
                         Log.d("page", page + "");
@@ -345,6 +346,8 @@ public class ImagesFragment extends Fragment {
                         for (int i = 0; i < imageArray.length(); i++) {
                             JSONObject imageData = imageArray.getJSONObject(i);
                             Log.d("Data", imageData.toString());
+                            if(imageCall.equals("3/account/me/likes") && !imageData.getBoolean("favorite"))
+                                continue;
                             JSONParcelable dataParcel = new JSONParcelable();
                             dataParcel.setJSONObject(imageData);
                             if (imageData.has("is_album") && imageData.getBoolean("is_album") && !urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png")) {
@@ -368,7 +371,7 @@ public class ImagesFragment extends Fragment {
             @Override
             protected void onPostExecute(Boolean changed) {
                 gettingImages = false;
-                if (changed && imageAdapter != null)
+                if (imageAdapter != null)
                     imageAdapter.notifyDataSetChanged();
                 else if (urls.size() == 0 && noImageView != null)
                     noImageView.setVisibility(View.VISIBLE);
@@ -506,7 +509,16 @@ public class ImagesFragment extends Fragment {
                             @Override
                             protected Void doInBackground(Void... voids) {
                                 MainActivity activity = (MainActivity) getActivity();
-                                activity.deleteImages(intentReturn);
+                                for(int i = 0; i < intentReturn.size(); i++) {
+                                    JSONObject response = activity.makeCall("3/image/" + intentReturn.get(i), "get", null);
+                                    try {
+                                        String deletehash = response.getJSONObject("data").getString("deletehash");
+                                        activity.makeCall("3/image/" + deletehash, "delete", null);
+                                    }
+                                    catch (Exception e) {
+                                        Log.e("Error!", e.toString());
+                                    }
+                                }
                                 return null;
                             }
                         };
@@ -599,7 +611,10 @@ public class ImagesFragment extends Fragment {
                     albumids += ",";
                 albumids += imageIDsAsync.get(i);
             }
-            activity.editAlbum(albumids, albumId);
+            HashMap<String, Object> editMap = new HashMap<String, Object>();
+            editMap.put("ids", albumids);
+            editMap.put("id", albumId);
+            activity.makeCall("3/album/" + albumId, "post", editMap);
             return null;
         }
 
