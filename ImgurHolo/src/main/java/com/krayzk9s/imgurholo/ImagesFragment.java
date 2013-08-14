@@ -324,6 +324,7 @@ public class ImagesFragment extends Fragment {
     }
 
     private void getImages() {
+        errorText.setVisibility(View.GONE);
         AsyncTask<Void, Void, Boolean> imageAsync = new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... voids) {

@@ -326,7 +326,6 @@ public class MainActivity extends FragmentActivity {
                     protected void onPostExecute(Void aVoid) {
                         loggedin = true;
                         updateMenu();
-                        loadDefaultPage();
                     }
                 };
                 async.execute();

@@ -56,10 +56,13 @@
     <string name="oneeighty">180</string>
     <string name="all">All</string>
     <string name="private_string">Private</string>
+    <string name="hidden_string">Hidden</string>
+    <string name="secret_string">Secret</string>
     <string name="public_string">Public</string>
     <string name="enable_messaging">Enable Messaging</string>
     <string name="disable_messaging">Disable Messaging</string>
     <string name="link">Link</string>
+    <string name="reputation">Reputation</string>
     <string name="direct_link">Direct Link</string>
     <string name="html_link">HTML Image</string>
     <string name="bbcode_link">BBCode (Forums)</string>

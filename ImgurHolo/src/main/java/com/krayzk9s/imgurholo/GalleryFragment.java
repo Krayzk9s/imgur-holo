@@ -380,6 +380,7 @@ public class GalleryFragment extends Fragment {
     }
 
     private void getImages() {
+        errorText.setVisibility(View.GONE);
         async = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {

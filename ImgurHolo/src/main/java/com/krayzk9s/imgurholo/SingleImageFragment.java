@@ -296,8 +296,20 @@ public class SingleImageFragment extends Fragment {
                         }).show();
                 return true;
             case R.id.action_copy:
+                String[] copyTypes = getResources().getStringArray(R.array.copyTypes);
+                try {
+                    copyTypes[0] = copyTypes[0] + "\nhttp://imgur.com/" + imageData.getJSONObject().getString("id");
+                    copyTypes[1] = copyTypes[1] + "\n" + imageData.getJSONObject().getString("link");
+                    copyTypes[2] = copyTypes[2] + "\n<a href=\"http://imgur.com/" + imageData.getJSONObject().getString("id") + "\"><img src=\"" + imageData.getJSONObject().getString("link") + "\" title=\"Hosted by imgur.com\"/></a>";
+                    copyTypes[3] = copyTypes[3] + "\n[IMG]" + imageData.getJSONObject().getString("link") + "[/IMG]";
+                    copyTypes[4] = copyTypes[4] + "\n[URL=http://imgur.com/" + imageData.getJSONObject().getString("id") + "][IMG]" + imageData.getJSONObject().getString("link") + "[/IMG][/URL]";
+                    copyTypes[5] = copyTypes[5] + "\n[Imgur](http://i.imgur.com/" + imageData.getJSONObject().getString("id") + ")";
+                }
+                catch (Exception e) {
+                    Log.e("Error!", e.toString());
+                }
                 new AlertDialog.Builder(activity).setTitle("Set Link Type to Copy")
-                        .setItems(R.array.copyTypes, new DialogInterface.OnClickListener() {
+                        .setItems(copyTypes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 MainActivity activity = (MainActivity) getActivity();
                                 ClipboardManager clipboard = (ClipboardManager)

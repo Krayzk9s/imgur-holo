@@ -75,6 +75,7 @@
         <item>@string/messaging_enabled</item>
         <item>@string/menu_disk_used</item>
         <item>@string/menu_bandwidth_used</item>
+        <item>@string/reputation</item>
     </array>
 
     <array
@@ -85,6 +86,7 @@
         <item>@string/menu_comments</item>
         <item>@string/menu_account_creation</item>
         <item>@string/menu_bio</item>
+        <item>@string/reputation</item>
     </array>
 
     <array
@@ -130,6 +132,13 @@
             name="privacy">
         <item>@string/private_string</item>
         <item>@string/public_string</item>
+    </array>
+    <array
+            name="albumPrivacy">
+
+        <item>@string/public_string</item>
+        <item>@string/hidden_string</item>
+        <item>@string/secret_string</item>
     </array>
     <array
             name="messaging">

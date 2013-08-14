@@ -38,6 +38,7 @@ public class AccountFragment extends Fragment {
     String username;
     SearchView mSearchView;
     MenuItem searchItem;
+    ListView mDrawerList;
 
     public AccountFragment(String _username) {
         username = _username;
@@ -58,6 +59,7 @@ public class AccountFragment extends Fragment {
         else
             inflater.inflate(R.menu.main_dark, menu);
         menu.findItem(R.id.action_search).setVisible(true);
+        menu.findItem(R.id.action_refresh).setVisible(true);
         searchItem = menu.findItem(R.id.action_search);
         mSearchView = (SearchView) searchItem.getActionView();
         mSearchView.setQueryHint("Lookup Users");
@@ -85,6 +87,8 @@ public class AccountFragment extends Fragment {
         // handle item selection
 
         switch (item.getItemId()) {
+            case R.id.action_refresh:
+                getAccount();
             default:
                 Log.d("Error!", "no action for that...");
         }
@@ -102,7 +106,7 @@ public class AccountFragment extends Fragment {
         else
             activity.setTitle("My Account");
         View view = inflater.inflate(R.layout.account_layout, container, false);
-        ListView mDrawerList = (ListView) view.findViewById(R.id.account_list);
+        mDrawerList = (ListView) view.findViewById(R.id.account_list);
         if(username.equals("me"))
             mMenuList = getResources().getStringArray(R.array.accountMenu);
         else
@@ -112,11 +116,31 @@ public class AccountFragment extends Fragment {
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         if (savedInstanceState == null && accountData == null) {
+            getAccount();
 
-            AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    try {
+        } else if(savedInstanceState != null) {
+            Bundle extras = savedInstanceState.getBundle("accountData");
+            accountData = (HashMap<String, String>) extras.getSerializable("HashMap");
+            updateData();
+        } else
+        {
+            updateData();
+        }
+        return view;
+    }
+
+    private void getAccount() {
+        if(username.equals("me"))
+            mMenuList = getResources().getStringArray(R.array.accountMenu);
+        else
+            mMenuList = getResources().getStringArray(R.array.accountMenuNotMe);
+        adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.drawer_list_item, mMenuList);
+        mDrawerList.setAdapter(adapter);
+        AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
                     MainActivity activity = (MainActivity) getActivity();
                     JSONObject accountInfoJSON = activity.makeCall("3/account/" + username, "get", null);
                     if(accountInfoJSON.getJSONObject("data").has("error")) {
@@ -128,11 +152,14 @@ public class AccountFragment extends Fragment {
                     if(username.equals("me")) {
                         JSONObject statsJSON = activity.makeCall("3/account/" + username + "/stats", "get", null);
                         JSONObject settingsJSON = activity.makeCall("3/account/" + username + "/settings", "get", null);
+                        JSONObject messageJSON = activity.makeCall("/3/account/me/notifications/messages?new=false", "get", null);
                         statsJSON = statsJSON.getJSONObject("data");
                         accountData.put("total_images", Integer.toString(statsJSON.getInt("total_images")));
                         accountData.put("total_albums", Integer.toString(statsJSON.getInt("total_albums")));
                         accountData.put("disk_used", statsJSON.getString("disk_used"));
                         accountData.put("bandwidth_used", statsJSON.getString("bandwidth_used"));
+                        accountData.put("total_messages", Integer.toString(messageJSON.getJSONArray("data").length()));
+                        accountData.put("reputation", Integer.toString(accountInfoJSON.getJSONObject("data").getInt("reputation")));
 
                         settingsJSON = settingsJSON.getJSONObject("data");
                         accountData.put("email", settingsJSON.getString("email"));
@@ -146,7 +173,7 @@ public class AccountFragment extends Fragment {
                         else
                             accountData.put("messaging_enabled", "enabled");
                     }
-                     else {
+                    else {
                         try {
                             JSONObject imagesJSON = activity.makeCall("3/account/" + username + "/images/count", "get", null);
                             if(imagesJSON.getInt("status") == 200)
@@ -163,91 +190,94 @@ public class AccountFragment extends Fragment {
                             Log.e("Account get error", e.toString());
                         }
                     }
-                        accountInfoJSON = accountInfoJSON.getJSONObject("data");
-                        Log.d("URI", accountInfoJSON.toString());
-                        Log.d("URI", Integer.toString(accountInfoJSON.getInt("id")));
-                        accountData.put("id", Integer.toString(accountInfoJSON.getInt("id")));
-                        accountData.put("reputation", Integer.toString(accountInfoJSON.getInt("reputation")));
-                        Calendar accountCreationDate = Calendar.getInstance();
-                        accountCreationDate.setTimeInMillis((long) accountInfoJSON.getInt("created") * 1000);
-                        Log.d("URI", accountInfoJSON.getInt("created") + "");
-                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                        String accountcreated = sdf.format(accountCreationDate.getTime());
-                        Log.d("URI", accountcreated);
-                        accountData.put("created", accountcreated);
-                        accountData.put("bio", accountInfoJSON.getString("bio"));
-                        accountData.put("name", accountInfoJSON.getString("url"));
+                    accountInfoJSON = accountInfoJSON.getJSONObject("data");
+                    Log.d("URI", accountInfoJSON.toString());
+                    Log.d("URI", Integer.toString(accountInfoJSON.getInt("id")));
+                    accountData.put("id", Integer.toString(accountInfoJSON.getInt("id")));
+                    accountData.put("reputation", Integer.toString(accountInfoJSON.getInt("reputation")));
+                    Calendar accountCreationDate = Calendar.getInstance();
+                    accountCreationDate.setTimeInMillis((long) accountInfoJSON.getInt("created") * 1000);
+                    Log.d("URI", accountInfoJSON.getInt("created") + "");
+                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                    String accountcreated = sdf.format(accountCreationDate.getTime());
+                    Log.d("URI", accountcreated);
+                    accountData.put("created", accountcreated);
+                    accountData.put("bio", accountInfoJSON.getString("bio"));
+                    accountData.put("name", accountInfoJSON.getString("url"));
+                    accountData.put("reputation", Integer.toString(accountInfoJSON.getInt("reputation")));
 
-                        JSONArray likesJSONArray = likesJSON.getJSONArray("data");
-                        accountData.put("total_likes", String.valueOf(likesJSONArray.length()));
-                        accountData.put("total_comments", String.valueOf(commentJSON.getInt("data")));
+                    JSONArray likesJSONArray = likesJSON.getJSONArray("data");
+                    accountData.put("total_likes", String.valueOf(likesJSONArray.length()));
+                    accountData.put("total_comments", String.valueOf(commentJSON.getInt("data")));
 
-                        if(username.equals("me")) {
+                    if(username.equals("me")) {
 
-                        }
-                    } catch (Exception e) {
-                        Log.e("Error!", e.toString());
                     }
-                    return null;
+                } catch (Exception e) {
+                    Log.e("Error!", e.toString());
                 }
+                return null;
+            }
 
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    if(mMenuList != null && accountData != null)
-                        updateData();
-                }
-            };
-            async.execute();
-        } else if(savedInstanceState != null) {
-            Bundle extras = savedInstanceState.getBundle("accountData");
-            accountData = (HashMap<String, String>) extras.getSerializable("HashMap");
-            updateData();
-        } else
-        {
-            updateData();
-        }
-        return view;
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if(mMenuList != null && accountData != null)
+                    updateData();
+            }
+        };
+        async.execute();
     }
 
     private void updateData() {
-        if(username.equals("me")) {
-            mMenuList[0] = mMenuList[0] + " (" + accountData.get("total_albums") + ")";
-            mMenuList[1] = mMenuList[1] + " (" + accountData.get("total_images") + ")";
-            mMenuList[2] = mMenuList[2] + " (" + accountData.get("total_likes") + ")";
-            mMenuList[3] = mMenuList[3] + " (" + accountData.get("total_comments") + ")";
-            //mMenuList[4] = mMenuList[4] + " (" + accountData.get("total_messages") + ")";
-            mMenuList[5] = mMenuList[5] + " " + accountData.get("created");
-            if (accountData.get("bio") != "null")
-                mMenuList[6] = accountData.get("bio");
+        if(isAdded()) {
+            if(username.equals("me"))
+                mMenuList = getResources().getStringArray(R.array.accountMenu);
             else
-                mMenuList[6] = "No Biography";
-            mMenuList[7] = "Your imgur e-mail is " + accountData.get("email");
-            mMenuList[8] = "Your albums are " + accountData.get("album_privacy");
-            mMenuList[9] = "Your images are " + accountData.get("public_images");
-            mMenuList[10] = "Your messaging is " + accountData.get("messaging_enabled");
-            mMenuList[11] = mMenuList[11] + " - " + accountData.get("disk_used");
-            mMenuList[12] = mMenuList[12] + " - " + accountData.get("bandwidth_used");
+                mMenuList = getResources().getStringArray(R.array.accountMenuNotMe);
+            adapter = new ArrayAdapter<String>(getActivity(),
+                    R.layout.drawer_list_item, mMenuList);
+            mDrawerList.setAdapter(adapter);
+            if(username.equals("me")) {
+                mMenuList[0] = mMenuList[0] + " (" + accountData.get("total_albums") + ")";
+                mMenuList[1] = mMenuList[1] + " (" + accountData.get("total_images") + ")";
+                mMenuList[2] = mMenuList[2] + " (" + accountData.get("total_likes") + ")";
+                mMenuList[3] = mMenuList[3] + " (" + accountData.get("total_comments") + ")";
+                mMenuList[4] = mMenuList[4] + " (" + accountData.get("total_messages") + ")";
+                mMenuList[5] = mMenuList[5] + " " + accountData.get("created");
+                if (accountData.get("bio") != "null")
+                    mMenuList[6] = accountData.get("bio");
+                else
+                    mMenuList[6] = "No Biography";
+                mMenuList[7] = "Your imgur e-mail is " + accountData.get("email");
+                mMenuList[8] = "Your albums are " + accountData.get("album_privacy");
+                mMenuList[9] = "Your images are " + accountData.get("public_images");
+                mMenuList[10] = "Your messaging is " + accountData.get("messaging_enabled");
+                mMenuList[11] = mMenuList[11] + " - " + accountData.get("disk_used");
+                mMenuList[12] = mMenuList[12] + " - " + accountData.get("bandwidth_used");
+                mMenuList[13] = mMenuList[13] + ": " + accountData.get("reputation");
+            }
+            else if(accountData != null) {
+                mMenuList[0] = mMenuList[0] + " (" + accountData.get("total_albums") + ")";
+                mMenuList[1] = mMenuList[1] + " (" + accountData.get("total_images") + ")";
+                mMenuList[2] = mMenuList[2] + " (" + accountData.get("total_likes") + ")";
+                mMenuList[3] = mMenuList[3] + " (" + accountData.get("total_comments") + ")";
+                mMenuList[4] = mMenuList[4] + " " + accountData.get("created");
+                if (accountData.get("bio") != "null")
+                    mMenuList[5] = accountData.get("bio");
+                else
+                    mMenuList[5] = "No Biography";
+                mMenuList[6] = mMenuList[6] + ": " + accountData.get("reputation");
+            }
+            else {
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast;
+                MainActivity activity = (MainActivity) getActivity();
+                toast = Toast.makeText(activity, "User not found", duration);
+                toast.show();
+                activity.getSupportFragmentManager().popBackStack();
+            }
+            adapter.notifyDataSetChanged();
         }
-        else if(accountData != null) {
-            mMenuList[0] = mMenuList[0] + " (" + accountData.get("total_albums") + ")";
-            mMenuList[1] = mMenuList[1] + " (" + accountData.get("total_images") + ")";
-            mMenuList[2] = mMenuList[2] + " (" + accountData.get("total_likes") + ")";
-            mMenuList[3] = mMenuList[3] + " (" + accountData.get("total_comments") + ")";
-            mMenuList[4] = mMenuList[4] + " " + accountData.get("created");
-            if (accountData.get("bio") != "null")
-                mMenuList[5] = accountData.get("bio");
-            else
-                mMenuList[5] = "No Biography";
-        }
-        else {
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast;
-            MainActivity activity = (MainActivity) getActivity();
-            toast = Toast.makeText(activity, "User not found", duration);
-            toast.show();
-            activity.getSupportFragmentManager().popBackStack();
-        }
-        adapter.notifyDataSetChanged();
     }
 
     private void selectItem(int position) {
@@ -297,20 +327,24 @@ public class AccountFragment extends Fragment {
                 break;
             case 8:
                 new AlertDialog.Builder(activity).setTitle("Set Album Privacy")
-                        .setItems(R.array.privacy, new DialogInterface.OnClickListener() {
+                        .setItems(R.array.albumPrivacy, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 MainActivity activity = (MainActivity) getActivity();
                                 SharedPreferences settings = activity.getSettings();
                                 SharedPreferences.Editor editor = settings.edit();
-                                int privacy = 0;
+                                String privacy = "";
                                 switch (whichButton) {
                                     case 0:
-                                        privacy = 1;
-                                        mMenuList[8] = "Your albums are private";
+                                        privacy = "public";
+                                        mMenuList[8] = "Your albums are public";
                                         break;
                                     case 1:
-                                        privacy = 0;
-                                        mMenuList[8] = "Your albums are public";
+                                        privacy = "hidden";
+                                        mMenuList[8] = "Your albums are hidden";
+                                        break;
+                                    case 2:
+                                        privacy = "secret";
+                                        mMenuList[8] = "Your albums are secret";
                                         break;
                                     default:
                                         break;
@@ -408,6 +442,10 @@ public class AccountFragment extends Fragment {
             args.put(settingName, data);
             activity.makeCall("/3/account/me/settings", "post", args);
             return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            getAccount();
         }
     }
 

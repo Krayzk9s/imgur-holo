@@ -111,6 +111,7 @@ public class MessagingFragment extends Fragment {
     }
 
     private void getMessages() {
+        errorText.setVisibility(View.GONE);
         messageAdapter.clear();
         messageAdapter.notifyDataSetChanged();
         AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {

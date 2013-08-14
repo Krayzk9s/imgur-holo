@@ -110,6 +110,7 @@ public class CommentsFragment extends Fragment {
     private void getComments() {
         commentsAdapter.clear();
         commentsAdapter.notifyDataSetChanged();
+        errorText.setVisibility(View.GONE);
         AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
             @Override
             protected JSONObject doInBackground(Void... voids) {
