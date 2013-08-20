@@ -125,8 +125,8 @@ public class MainActivity extends FragmentActivity {
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        if (savedInstanceState == null && getCallingActivity() == null)
-            loadDefaultPage();
+        Intent intent = getIntent();
+        processIntent(intent);
     }
 
     public void updateMenu() {
@@ -241,11 +241,17 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d("New Intent", intent.toString());
+
+        processIntent(intent);
+    }
+
+    private void processIntent(Intent intent) {
         String action = intent.getAction();
         String type = intent.getType();
-
-        if (Intent.ACTION_SEND.equals(action) && type != null) {
+        Log.d("New Intent", intent.toString());
+        if(Intent.ACTION_MAIN.equals(action))
+            loadDefaultPage();
+        else if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/")) {
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast;
@@ -295,9 +301,9 @@ public class MainActivity extends FragmentActivity {
             };
             async.execute();
 
-        } else {
+        } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("imgur-holo")) {
             Uri uri = intent.getData();
-            Log.d("URI", "resumed2!");
+            Log.d("URI", "" + action + "/" + type);
             String uripath = "";
             if (uri != null)
                 uripath = uri.toString();
@@ -792,14 +798,10 @@ public class MainActivity extends FragmentActivity {
                 Log.d("Image Upload", "NULL :(");
             String image = Base64.encodeToString(byteArray, Base64.DEFAULT);
             Log.d("Image Upload", image);
-            HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "3/image")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .field("image", image)
-                    .field("type", "binary")
-                    .asJson();
-            Log.d("Getting Code", String.valueOf(response.getCode()));
-            JSONObject data = response.getBody().getObject();
+            HashMap<String, Object> hashMap = new HashMap<String, Object>();
+            hashMap.put("image", image);
+            hashMap.put("type", "binary");
+            JSONObject data = makeCall("3/image", "post", hashMap);
             Log.d("Image Upload", data.toString());
             try {
                 JSONObject returner = makeCall("3/image/" + data.getJSONObject("data").getString("id"), "get", null);

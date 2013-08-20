@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -57,6 +58,8 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -83,9 +86,11 @@ public class SingleImageFragment extends Fragment {
     PopupWindow popupWindow;
     Boolean inPopout = false;
     int lastInView = -1;
+    String sort;
 
     public SingleImageFragment() {
         inGallery = false;
+        sort = "best";
     }
 
     public void setParams(JSONObject _params) {
@@ -101,6 +106,16 @@ public class SingleImageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        if (sort == null || sort.equals("best"))
+            menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortBest).setChecked(true);
+        else if (sort.equals("top"))
+            menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setChecked(true);
+        else if (sort.equals("newest"))
+            menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortNewest).setChecked(true);
     }
 
     @Override
@@ -121,13 +136,36 @@ public class SingleImageFragment extends Fragment {
         menu.findItem(R.id.action_copy).setVisible(true);
         menu.findItem(R.id.action_refresh).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
+        menu.findItem(R.id.action_sort).setVisible(true);
+        menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortNewest).setVisible(true);
+        menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortBest).setVisible(true);
+        menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setVisible(false);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
         final MainActivity activity = (MainActivity) getActivity();
+        SharedPreferences settings = activity.getSettings();
+        SharedPreferences.Editor editor = settings.edit();
         switch (item.getItemId()) {
+            case R.id.action_sort:
+                return true;
+            case R.id.menuSortNewest:
+                sort = "new";
+                editor.putString("CommentSort", sort);
+                refreshComments();
+                return true;
+            case R.id.menuSortTop:
+                sort = "top";
+                editor.putString("CommentSort", sort);
+                refreshComments();
+                return true;
+            case R.id.menuSortBest:
+                sort = "best";
+                editor.putString("CommentSort", sort);
+                refreshComments();
+                return true;
             case R.id.action_refresh:
                 refreshComments();
                 return true;
@@ -386,6 +424,8 @@ public class SingleImageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         final MainActivity activity = (MainActivity) getActivity();
+        SharedPreferences settings = activity.getSettings();
+        sort = settings.getString("CommentSort", "best");
         boolean newData = true;
         if (commentData != null) {
             newData = false;
@@ -801,8 +841,16 @@ public class SingleImageFragment extends Fragment {
             JSONArray commentJSONArray = commentData.getJSONObject().getJSONArray("data");
             commentArray = new ArrayList<JSONParcelable>();
             Log.d("calling indent function", commentJSONArray.toString());
+            ArrayList<JSONObject> childrenArray = new ArrayList<JSONObject>();
             for (int i = 0; i < commentJSONArray.length(); i++) {
-                getIndents(commentJSONArray.getJSONObject(i), 0);
+                childrenArray.add(commentJSONArray.getJSONObject(i));
+            }
+            if(sort == "new")
+                Collections.sort(childrenArray, new JSONNewestComparator());
+            else if (sort == "top")
+                Collections.sort(childrenArray, new JSONTopComparator());
+            for (int i = 0; i < childrenArray.size(); i++) {
+                getIndents(childrenArray.get(i), 0);
             }
             commentAdapter.addAll(commentArray);
         } catch (Exception e) {
@@ -815,21 +863,73 @@ public class SingleImageFragment extends Fragment {
         try {
             comment.put("indent", currentIndent);
             children = null;
+            ArrayList<JSONObject> childrenArray = null;
             if (comment.has("children")) {
                 children = comment.getJSONArray("children");
+                childrenArray = new ArrayList<JSONObject>();
+                for(int i = 0; i < children.length(); i++)
+                    childrenArray.add(children.getJSONObject(i));
+                if(sort == "new")
+                    Collections.sort(childrenArray, new JSONNewestComparator());
+                else if (sort == "top")
+                    Collections.sort(childrenArray, new JSONTopComparator());
                 comment.remove("children");
             }
             JSONParcelable commentParse = new JSONParcelable();
             commentParse.setJSONObject(comment);
             commentArray.add(commentParse);
-            if (children != null) {
-                for (int i = 0; i < children.length(); i++) {
-                    JSONObject child = children.getJSONObject(i);
+            if (childrenArray != null) {
+                for (int i = 0; i < childrenArray.size(); i++) {
+                    JSONObject child = childrenArray.get(i);
                     getIndents(child, currentIndent + 1);
                 }
             }
         } catch (Exception e) {
             Log.e("Error5!", e.toString());
+        }
+    }
+
+    class JSONNewestComparator implements Comparator<JSONObject>
+    {
+        public int compare(JSONObject a, JSONObject b)
+        {
+            //valA and valB could be any simple type, such as number, string, whatever
+            try {
+            int valA = a.getInt("datetime");
+            int valB = b.getInt("datetime");
+
+            if(valA > valB)
+                return -1;
+            if(valA < valB)
+                return 1;
+            return 0;
+            }
+            catch (Exception e) {
+                Log.e("Error!", e.toString());
+                return 0;
+            }
+        }
+    }
+
+    class JSONTopComparator implements Comparator<JSONObject>
+    {
+        public int compare(JSONObject a, JSONObject b)
+        {
+            //valA and valB could be any simple type, such as number, string, whatever
+            try {
+                int valA = a.getInt("points");
+                int valB = b.getInt("points");
+
+                if(valA > valB)
+                    return -1;
+                if(valA < valB)
+                    return 1;
+                return 0;
+            }
+            catch (Exception e) {
+                Log.e("Error!", e.toString());
+                return 0;
+            }
         }
     }
 

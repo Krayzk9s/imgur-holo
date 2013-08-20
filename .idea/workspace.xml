@@ -28,16 +28,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd7191f9-071f-4e7c-a8f1-8f8b811e97ef" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/OnImageTouchedListener.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ZoomableImageView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagePager.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagePager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" afterPath="$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/dark_image_view.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/dark_image_view.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/imgur-holo.iml" afterPath="$PROJECT_DIR$/imgur-holo.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/menu/main.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/menu/main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ImgurHolo.iws" />
@@ -102,90 +96,91 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SingleImageFragment.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
+      <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="423" column="74" selection-start="22325" selection-end="22325" vertical-scroll-proportion="0.0" vertical-offset="6975" max-vertical-offset="21029">
+            <state line="662" column="0" selection-start="29799" selection-end="29799" vertical-scroll-proportion="0.0" vertical-offset="10757" max-vertical-offset="13957">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#4537#6863#0" expanded="true" />
-                <element signature="e#5256#5272#0" expanded="true" />
-                <element signature="e#6844#6845#0" expanded="true" />
-                <element signature="e#6893#7094#0" expanded="true" />
-                <element signature="e#7075#7076#0" expanded="true" />
-                <element signature="e#8234#10421#0" expanded="true" />
-                <element signature="e#9357#10327#0" expanded="true" />
-                <element signature="e#9646#9662#0" expanded="true" />
-                <element signature="e#10296#10297#0" expanded="true" />
-                <element signature="e#10398#10399#0" expanded="true" />
-                <element signature="e#10451#10668#0" expanded="true" />
-                <element signature="e#10645#10646#0" expanded="true" />
-                <element signature="e#13290#14690#0" expanded="true" />
-                <element signature="e#14663#14664#0" expanded="true" />
-                <element signature="e#14745#14978#0" expanded="true" />
-                <element signature="e#14951#14952#0" expanded="true" />
-                <element signature="e#16300#18852#0" expanded="true" />
-                <element signature="e#18825#18826#0" expanded="true" />
-                <element signature="e#18882#19083#0" expanded="true" />
-                <element signature="e#19064#19065#0" expanded="true" />
-                <element signature="e#21046#21400#0" expanded="true" />
-                <element signature="e#21389#21390#0" expanded="true" />
-                <element signature="e#24001#25703#0" expanded="true" />
-                <element signature="e#25008#25633#0" expanded="true" />
-                <element signature="e#25610#25611#0" expanded="true" />
-                <element signature="e#25688#25689#0" expanded="true" />
-                <element signature="e#25747#26305#0" expanded="true" />
-                <element signature="e#26290#26291#0" expanded="true" />
-                <element signature="e#26352#30975#0" expanded="true" />
-                <element signature="e#28350#30548#0" expanded="true" />
-                <element signature="e#29053#29069#0" expanded="true" />
-                <element signature="e#30521#30522#0" expanded="true" />
-                <element signature="e#30578#30811#0" expanded="true" />
-                <element signature="e#30784#30785#0" expanded="true" />
-                <element signature="e#30960#30961#0" expanded="true" />
-                <element signature="e#31021#33320#0" expanded="true" />
-                <element signature="e#32624#33250#0" expanded="true" />
-                <element signature="e#33227#33228#0" expanded="true" />
-                <element signature="e#33305#33306#0" expanded="true" />
-                <element signature="e#33368#35669#0" expanded="true" />
-                <element signature="e#34971#35599#0" expanded="true" />
-                <element signature="e#35576#35577#0" expanded="true" />
-                <element signature="e#35654#35655#0" expanded="true" />
-                <element signature="e#35726#38007#0" expanded="true" />
-                <element signature="e#37996#37997#0" expanded="true" />
-                <element signature="e#38069#38077#0" expanded="true" />
-                <element signature="e#53113#53399#0" expanded="true" />
-                <element signature="e#53372#53373#0" expanded="true" />
-                <element signature="e#53457#54125#0" expanded="true" />
-                <element signature="e#54098#54099#0" expanded="true" />
-                <element signature="e#54183#54426#0" expanded="true" />
-                <element signature="e#54399#54400#0" expanded="true" />
-                <element signature="e#54484#55613#0" expanded="true" />
-                <element signature="e#55586#55587#0" expanded="true" />
-                <element signature="e#56072#62037#0" expanded="true" />
-                <element signature="e#58645#61487#0" expanded="true" />
-                <element signature="e#59612#59628#0" expanded="true" />
-                <element signature="e#61448#61449#0" expanded="true" />
-                <element signature="e#61517#61798#0" expanded="true" />
-                <element signature="e#61759#61760#0" expanded="true" />
-                <element signature="e#62010#62011#0" expanded="true" />
-                <element signature="e#62097#64729#0" expanded="true" />
-                <element signature="e#64123#64623#0" expanded="true" />
-                <element signature="e#64588#64589#0" expanded="true" />
-                <element signature="e#64702#64703#0" expanded="true" />
-                <element signature="e#64791#67474#0" expanded="true" />
-                <element signature="e#66866#67368#0" expanded="true" />
-                <element signature="e#67333#67334#0" expanded="true" />
-                <element signature="e#67447#67448#0" expanded="true" />
+                <element signature="e#35727#35743#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
+      <file leaf-file-name="SingleImageFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="197" column="29" selection-start="8241" selection-end="8241" vertical-scroll-proportion="-37.03846" vertical-offset="1383" max-vertical-offset="13005">
+            <state line="113" column="70" selection-start="3273" selection-end="3273" vertical-scroll-proportion="0.0" vertical-offset="706" max-vertical-offset="20859">
+              <folding>
+                <element signature="e#16498#16731#0" expanded="true" />
+                <element signature="e#16704#16705#0" expanded="true" />
+                <element signature="e#45362#45374#0" expanded="true" />
+                <element signature="e#57142#57428#0" expanded="true" />
+                <element signature="e#57401#57402#0" expanded="true" />
+                <element signature="e#57486#58154#0" expanded="true" />
+                <element signature="e#58127#58128#0" expanded="true" />
+                <element signature="e#58212#58455#0" expanded="true" />
+                <element signature="e#58428#58429#0" expanded="true" />
+                <element signature="e#58513#59642#0" expanded="true" />
+                <element signature="e#59615#59616#0" expanded="true" />
+                <element signature="e#60101#66066#0" expanded="true" />
+                <element signature="e#62674#65516#0" expanded="true" />
+                <element signature="e#63641#63657#0" expanded="true" />
+                <element signature="e#65477#65478#0" expanded="true" />
+                <element signature="e#65546#65827#0" expanded="true" />
+                <element signature="e#65788#65789#0" expanded="true" />
+                <element signature="e#66039#66040#0" expanded="true" />
+                <element signature="e#66126#68758#0" expanded="true" />
+                <element signature="e#68152#68652#0" expanded="true" />
+                <element signature="e#68617#68618#0" expanded="true" />
+                <element signature="e#68731#68732#0" expanded="true" />
+                <element signature="e#68820#71503#0" expanded="true" />
+                <element signature="e#70895#71397#0" expanded="true" />
+                <element signature="e#71362#71363#0" expanded="true" />
+                <element signature="e#71476#71477#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/menu/main.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="45" column="45" selection-start="2128" selection-end="2128" vertical-scroll-proportion="1.3054607" vertical-offset="0" max-vertical-offset="2278">
+              <folding>
+                <element signature="e#132#155#0" expanded="true" />
+                <element signature="e#468#492#0" expanded="true" />
+                <element signature="e#749#774#0" expanded="true" />
+                <element signature="e#1025#1049#0" expanded="true" />
+                <element signature="e#1301#1322#0" expanded="true" />
+                <element signature="e#1569#1589#0" expanded="true" />
+                <element signature="e#1837#1859#0" expanded="true" />
+                <element signature="e#2107#2128#0" expanded="true" />
+                <element signature="e#2377#2400#0" expanded="true" />
+                <element signature="e#2655#2680#0" expanded="true" />
+                <element signature="e#2927#2948#0" expanded="true" />
+                <element signature="e#4741#4760#0" expanded="true" />
+                <element signature="e#5009#5032#0" expanded="true" />
+                <element signature="e#5270#5293#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="48" column="44" selection-start="2361" selection-end="2361" vertical-scroll-proportion="0.0" vertical-offset="604" max-vertical-offset="1547">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GalleryFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="328" column="101" selection-start="12890" selection-end="13950" vertical-scroll-proportion="-12.384615" vertical-offset="4540" max-vertical-offset="10268">
               <folding />
             </state>
           </provider>
@@ -203,40 +198,7 @@
       <file leaf-file-name="SettingsFragment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SettingsFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="13" selection-start="498" selection-end="498" vertical-scroll-proportion="0.0" vertical-offset="918" max-vertical-offset="3213">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="arrays.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="153" column="41" selection-start="5065" selection-end="5065" vertical-scroll-proportion="0.0" vertical-offset="2244" max-vertical-offset="3230">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="image_view.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="120" column="43" selection-start="5116" selection-end="5116" vertical-scroll-proportion="0.6524064" vertical-offset="1674" max-vertical-offset="2261">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dark_image_view.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/dark_image_view.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="115" column="70" selection-start="4853" selection-end="4895" vertical-scroll-proportion="-12.92" vertical-offset="1632" max-vertical-offset="2210">
+            <state line="40" column="29" selection-start="1381" selection-end="1383" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3213">
               <folding />
             </state>
           </provider>
@@ -245,7 +207,7 @@
       <file leaf-file-name="AlbumsFragment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="13" selection-start="1019" selection-end="1019" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4386">
+            <state line="37" column="13" selection-start="1019" selection-end="1019" vertical-scroll-proportion="0.0" vertical-offset="612" max-vertical-offset="4964">
               <folding />
             </state>
           </provider>
@@ -357,10 +319,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/message_layout_dark.xml" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/comment_layout_dark.xml" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/CommentsFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/comment_layout.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/account_layout.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/OnImageTouchedListener.java" />
@@ -371,8 +329,12 @@
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagePager.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/dark_image_view.xml" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/menu/main.xml" />
       </list>
     </option>
   </component>
@@ -549,7 +511,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="layout" />
+              <option name="myItemId" value="menu" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -847,17 +809,17 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.175" sideWeight="0.66019416" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.175" sideWeight="0.66019416" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3398058" sideWeight="0.49791667" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27615964" sideWeight="0.5015625" order="11" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3398058" sideWeight="0.50208336" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -868,7 +830,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1765625" sideWeight="0.66019416" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1765625" sideWeight="0.66019416" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32815966" sideWeight="0.49893278" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -881,24 +843,25 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.345898" sideWeight="0.50053364" order="11" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3398058" sideWeight="0.50208336" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977587" sideWeight="0.6707317" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17662753" sideWeight="0.672949" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1765625" sideWeight="0.66019416" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32815966" sideWeight="0.49893278" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.175" sideWeight="0.66019416" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3004269" sideWeight="0.65410197" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27716187" sideWeight="0.49839914" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3398058" sideWeight="0.49791667" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32705098" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.345898" sideWeight="0.49893278" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32686085" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26860842" sideWeight="0.49895832" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -917,13 +880,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="482" column="87" selection-start="20771" selection-end="20842" vertical-scroll-proportion="0.0" vertical-offset="8177" max-vertical-offset="10778">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="98" column="44" selection-start="3541" selection-end="3541" vertical-scroll-proportion="0.0" vertical-offset="1213" max-vertical-offset="5678">
@@ -934,13 +890,6 @@
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagePager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="27" column="23" selection-start="715" selection-end="715" vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="1411">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="13" selection-start="1181" selection-end="1181" vertical-scroll-proportion="0.0" vertical-offset="9367" max-vertical-offset="10268">
           <folding />
         </state>
       </provider>
@@ -966,95 +915,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SettingsFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="13" selection-start="498" selection-end="498" vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="3213">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/android/view/View.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="28" selection-start="409" selection-end="450" vertical-scroll-proportion="0.23734729" vertical-offset="0" max-vertical-offset="19482">
+        <state line="9" column="28" selection-start="409" selection-end="450" vertical-scroll-proportion="0.23734729" vertical-offset="0" max-vertical-offset="19482" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/dark_image_view.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="115" column="70" selection-start="4853" selection-end="4895" vertical-scroll-proportion="0.0" vertical-offset="1938" max-vertical-offset="2210">
           <folding />
         </state>
       </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
+    <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/java/lang/String.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="423" column="74" selection-start="22325" selection-end="22325" vertical-scroll-proportion="0.0" vertical-offset="6975" max-vertical-offset="21029">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4537#6863#0" expanded="true" />
-            <element signature="e#5256#5272#0" expanded="true" />
-            <element signature="e#6844#6845#0" expanded="true" />
-            <element signature="e#6893#7094#0" expanded="true" />
-            <element signature="e#7075#7076#0" expanded="true" />
-            <element signature="e#8234#10421#0" expanded="true" />
-            <element signature="e#9357#10327#0" expanded="true" />
-            <element signature="e#9646#9662#0" expanded="true" />
-            <element signature="e#10296#10297#0" expanded="true" />
-            <element signature="e#10398#10399#0" expanded="true" />
-            <element signature="e#10451#10668#0" expanded="true" />
-            <element signature="e#10645#10646#0" expanded="true" />
-            <element signature="e#13290#14690#0" expanded="true" />
-            <element signature="e#14663#14664#0" expanded="true" />
-            <element signature="e#14745#14978#0" expanded="true" />
-            <element signature="e#14951#14952#0" expanded="true" />
-            <element signature="e#16300#18852#0" expanded="true" />
-            <element signature="e#18825#18826#0" expanded="true" />
-            <element signature="e#18882#19083#0" expanded="true" />
-            <element signature="e#19064#19065#0" expanded="true" />
-            <element signature="e#21046#21400#0" expanded="true" />
-            <element signature="e#21389#21390#0" expanded="true" />
-            <element signature="e#24001#25703#0" expanded="true" />
-            <element signature="e#25008#25633#0" expanded="true" />
-            <element signature="e#25610#25611#0" expanded="true" />
-            <element signature="e#25688#25689#0" expanded="true" />
-            <element signature="e#25747#26305#0" expanded="true" />
-            <element signature="e#26290#26291#0" expanded="true" />
-            <element signature="e#26352#30975#0" expanded="true" />
-            <element signature="e#28350#30548#0" expanded="true" />
-            <element signature="e#29053#29069#0" expanded="true" />
-            <element signature="e#30521#30522#0" expanded="true" />
-            <element signature="e#30578#30811#0" expanded="true" />
-            <element signature="e#30784#30785#0" expanded="true" />
-            <element signature="e#30960#30961#0" expanded="true" />
-            <element signature="e#31021#33320#0" expanded="true" />
-            <element signature="e#32624#33250#0" expanded="true" />
-            <element signature="e#33227#33228#0" expanded="true" />
-            <element signature="e#33305#33306#0" expanded="true" />
-            <element signature="e#33368#35669#0" expanded="true" />
-            <element signature="e#34971#35599#0" expanded="true" />
-            <element signature="e#35576#35577#0" expanded="true" />
-            <element signature="e#35654#35655#0" expanded="true" />
-            <element signature="e#35726#38007#0" expanded="true" />
-            <element signature="e#37996#37997#0" expanded="true" />
-            <element signature="e#38069#38077#0" expanded="true" />
-            <element signature="e#53113#53399#0" expanded="true" />
-            <element signature="e#53372#53373#0" expanded="true" />
-            <element signature="e#53457#54125#0" expanded="true" />
-            <element signature="e#54098#54099#0" expanded="true" />
-            <element signature="e#54183#54426#0" expanded="true" />
-            <element signature="e#54399#54400#0" expanded="true" />
-            <element signature="e#54484#55613#0" expanded="true" />
-            <element signature="e#55586#55587#0" expanded="true" />
-            <element signature="e#56072#62037#0" expanded="true" />
-            <element signature="e#58645#61487#0" expanded="true" />
-            <element signature="e#59612#59628#0" expanded="true" />
-            <element signature="e#61448#61449#0" expanded="true" />
-            <element signature="e#61517#61798#0" expanded="true" />
-            <element signature="e#61759#61760#0" expanded="true" />
-            <element signature="e#62010#62011#0" expanded="true" />
-            <element signature="e#62097#64729#0" expanded="true" />
-            <element signature="e#64123#64623#0" expanded="true" />
-            <element signature="e#64588#64589#0" expanded="true" />
-            <element signature="e#64702#64703#0" expanded="true" />
-            <element signature="e#64791#67474#0" expanded="true" />
-            <element signature="e#66866#67368#0" expanded="true" />
-            <element signature="e#67333#67334#0" expanded="true" />
-            <element signature="e#67447#67448#0" expanded="true" />
-          </folding>
+        <state line="6" column="19" selection-start="139" selection-end="263" vertical-scroll-proportion="0.094339624" vertical-offset="0" max-vertical-offset="3145" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="120" column="43" selection-start="5116" selection-end="5116" vertical-scroll-proportion="1.167558" vertical-offset="1385" max-vertical-offset="2261">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SettingsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="29" selection-start="1381" selection-end="1383" vertical-scroll-proportion="0.0" vertical-offset="663" max-vertical-offset="3740">
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1065,30 +959,83 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="328" column="101" selection-start="12890" selection-end="13950" vertical-scroll-proportion="-12.384615" vertical-offset="4540" max-vertical-offset="10268">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="44" selection-start="2361" selection-end="2361" vertical-scroll-proportion="0.0" vertical-offset="604" max-vertical-offset="1547">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="197" column="29" selection-start="8241" selection-end="8241" vertical-scroll-proportion="-37.03846" vertical-offset="1383" max-vertical-offset="13005">
-          <folding />
+        <state line="662" column="0" selection-start="29799" selection-end="29799" vertical-scroll-proportion="0.0" vertical-offset="10757" max-vertical-offset="13957">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#35727#35743#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/dark_image_view.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="115" column="70" selection-start="4853" selection-end="4895" vertical-scroll-proportion="-12.92" vertical-offset="1632" max-vertical-offset="2210">
-          <folding />
+        <state line="113" column="70" selection-start="3273" selection-end="3273" vertical-scroll-proportion="0.0" vertical-offset="706" max-vertical-offset="20859">
+          <folding>
+            <element signature="e#16498#16731#0" expanded="true" />
+            <element signature="e#16704#16705#0" expanded="true" />
+            <element signature="e#45362#45374#0" expanded="true" />
+            <element signature="e#57142#57428#0" expanded="true" />
+            <element signature="e#57401#57402#0" expanded="true" />
+            <element signature="e#57486#58154#0" expanded="true" />
+            <element signature="e#58127#58128#0" expanded="true" />
+            <element signature="e#58212#58455#0" expanded="true" />
+            <element signature="e#58428#58429#0" expanded="true" />
+            <element signature="e#58513#59642#0" expanded="true" />
+            <element signature="e#59615#59616#0" expanded="true" />
+            <element signature="e#60101#66066#0" expanded="true" />
+            <element signature="e#62674#65516#0" expanded="true" />
+            <element signature="e#63641#63657#0" expanded="true" />
+            <element signature="e#65477#65478#0" expanded="true" />
+            <element signature="e#65546#65827#0" expanded="true" />
+            <element signature="e#65788#65789#0" expanded="true" />
+            <element signature="e#66039#66040#0" expanded="true" />
+            <element signature="e#66126#68758#0" expanded="true" />
+            <element signature="e#68152#68652#0" expanded="true" />
+            <element signature="e#68617#68618#0" expanded="true" />
+            <element signature="e#68731#68732#0" expanded="true" />
+            <element signature="e#68820#71503#0" expanded="true" />
+            <element signature="e#70895#71397#0" expanded="true" />
+            <element signature="e#71362#71363#0" expanded="true" />
+            <element signature="e#71476#71477#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/menu/main.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="120" column="43" selection-start="5116" selection-end="5116" vertical-scroll-proportion="0.6524064" vertical-offset="1674" max-vertical-offset="2261">
-          <folding />
+        <state line="45" column="45" selection-start="2128" selection-end="2128" vertical-scroll-proportion="1.3054607" vertical-offset="0" max-vertical-offset="2278">
+          <folding>
+            <element signature="e#132#155#0" expanded="true" />
+            <element signature="e#468#492#0" expanded="true" />
+            <element signature="e#749#774#0" expanded="true" />
+            <element signature="e#1025#1049#0" expanded="true" />
+            <element signature="e#1301#1322#0" expanded="true" />
+            <element signature="e#1569#1589#0" expanded="true" />
+            <element signature="e#1837#1859#0" expanded="true" />
+            <element signature="e#2107#2128#0" expanded="true" />
+            <element signature="e#2377#2400#0" expanded="true" />
+            <element signature="e#2655#2680#0" expanded="true" />
+            <element signature="e#2927#2948#0" expanded="true" />
+            <element signature="e#4741#4760#0" expanded="true" />
+            <element signature="e#5009#5032#0" expanded="true" />
+            <element signature="e#5270#5293#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
