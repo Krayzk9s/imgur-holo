@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -98,7 +97,6 @@ public class MessagingFragment extends Fragment {
                     R.layout.message_layout_dark, mMenuList);
 
         mDrawerList.setAdapter(tempAdapter);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         if (savedInstanceState == null) {
             getMessages();
         } else {
@@ -150,9 +148,6 @@ public class MessagingFragment extends Fragment {
         messageAdapter.notifyDataSetChanged();
     }
 
-    private void selectItem(int position) {
-    }
-
     private void buildSendMessage(String username, String title) {
         MainActivity activity = (MainActivity) getActivity();
         final EditText newHeader = new EditText(activity);
@@ -201,14 +196,6 @@ public class MessagingFragment extends Fragment {
         public ImageButton report;
         public String from;
         public String id;
-    }
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.d("clicked!", "clicked!");
-            selectItem(position);
-        }
     }
 
     public class MessageAdapter extends ArrayAdapter<JSONParcelable> {

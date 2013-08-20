@@ -23,17 +23,21 @@
             android:adjustViewBounds="true"
             android:text="This is a title for the image view"
             />
-
-    <WebView
+    <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/single_image_view"
-            android:layout_width="wrap_content"
+            android:id="@+id/webview_container"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
-            />
-
+            android:layout_width="wrap_content">
+        <WebView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/single_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                />
+    </LinearLayout>
     <TextView
             android:layout_margin="4dp"
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -70,7 +74,6 @@
                   android:orientation="horizontal"
                   android:layout_width="wrap_content"
                   android:layout_gravity="center_horizontal"
-                  android:visibility="gone"
                   android:layout_height="50dp"
             >
 
@@ -78,37 +81,48 @@
                 android:id="@+id/rating_good"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/rating_good"/>
+                android:src="@drawable/rating_good"
+                android:visibility="gone"/>
 
         <ImageButton
                 android:id="@+id/rating_bad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/rating_bad"/>
+                android:src="@drawable/rating_bad"
+                android:visibility="gone"/>
 
         <ImageButton
                 android:id="@+id/rating_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/rating_favorite"/>
+                android:src="@drawable/rating_favorite"
+                android:visibility="gone"/>
 
         <ImageButton
                 android:id="@+id/comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/social_reply"/>
+                android:src="@drawable/social_reply"
+                android:visibility="gone"/>
 
         <ImageButton
                 android:id="@+id/user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/social_person"/>
+                android:src="@drawable/social_person"
+                android:visibility="gone"/>
 
 
         <ImageButton
                 android:id="@+id/report"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/alerts_and_states_warning"/>
+                android:src="@drawable/alerts_and_states_warning"
+                android:visibility="gone"/>
+        <ImageButton
+                android:id="@+id/fullscreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/av_full_screen"/>
     </LinearLayout>
 </LinearLayout>

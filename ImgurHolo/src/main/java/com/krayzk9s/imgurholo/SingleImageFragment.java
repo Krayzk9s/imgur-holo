@@ -6,7 +6,10 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +21,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +37,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -46,6 +51,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -71,8 +77,11 @@ public class SingleImageFragment extends Fragment {
     ImageButton imageComment;
     ImageButton imageReport;
     ImageButton imageUser;
+    ImageButton imageFullscreen;
     ArrayList<JSONParcelable> commentArray;
     LinearLayout imageLayoutView;
+    PopupWindow popupWindow;
+    Boolean inPopout = false;
     int lastInView = -1;
 
     public SingleImageFragment() {
@@ -97,8 +106,8 @@ public class SingleImageFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        MainActivity activity = (MainActivity)getActivity();
-        if(activity.theme == activity.HOLO_LIGHT)
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity.theme == activity.HOLO_LIGHT)
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -134,14 +143,13 @@ public class SingleImageFragment extends Fragment {
                             protected Boolean doInBackground(Void... voids) {
                                 try {
                                     JSONObject jsonObject = activity.makeCall("3/gallery/image/" + imageData.getJSONObject().getString("id"), "get", null);
-                                    if(jsonObject.getJSONObject("data").has("error")) {
+                                    if (jsonObject.getJSONObject("data").has("error")) {
                                         HashMap<String, Object> galleryMap = new HashMap<String, Object>();
                                         galleryMap.put("terms", "1");
                                         galleryMap.put("title", newGalleryTitle.getText().toString());
                                         activity.makeCall("3/gallery/" + imageData.getJSONObject().getString("id"), "post", galleryMap);
                                         return true;
-                                    }
-                                    else {
+                                    } else {
                                         activity.makeCall("3/gallery/" + imageData.getJSONObject().getString("id"), "delete", null);
                                         return false;
                                     }
@@ -150,11 +158,12 @@ public class SingleImageFragment extends Fragment {
                                 }
                                 return false;
                             }
+
                             @Override
                             protected void onPostExecute(Boolean bool) {
                                 int duration = Toast.LENGTH_SHORT;
                                 Toast toast;
-                                if(bool)
+                                if (bool)
                                     toast = Toast.makeText(activity, "Submitted!", duration);
                                 else
                                     toast = Toast.makeText(activity, "Removed!", duration);
@@ -194,14 +203,12 @@ public class SingleImageFragment extends Fragment {
                             if (!newTitle.getText().toString().equals("")) {
                                 imageTitle.setText(newTitle.getText().toString());
                                 imageTitle.setVisibility(View.VISIBLE);
-                            }
-                            else
+                            } else
                                 imageTitle.setVisibility(View.GONE);
                             if (!newBody.getText().toString().equals("")) {
                                 imageDescription.setText(newBody.getText().toString());
                                 imageDescription.setVisibility(View.VISIBLE);
-                            }
-                            else
+                            } else
                                 imageDescription.setVisibility(View.GONE);
                             AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                                 @Override
@@ -254,6 +261,7 @@ public class SingleImageFragment extends Fragment {
                         }
                         return null;
                     }
+
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         int duration = Toast.LENGTH_SHORT;
@@ -281,6 +289,7 @@ public class SingleImageFragment extends Fragment {
                                         }
                                         return null;
                                     }
+
                                     @Override
                                     protected void onPostExecute(Void aVoid) {
                                         getActivity().getSupportFragmentManager().popBackStack();
@@ -304,8 +313,7 @@ public class SingleImageFragment extends Fragment {
                     copyTypes[3] = copyTypes[3] + "\n[IMG]" + imageData.getJSONObject().getString("link") + "[/IMG]";
                     copyTypes[4] = copyTypes[4] + "\n[URL=http://imgur.com/" + imageData.getJSONObject().getString("id") + "][IMG]" + imageData.getJSONObject().getString("link") + "[/IMG][/URL]";
                     copyTypes[5] = copyTypes[5] + "\n[Imgur](http://i.imgur.com/" + imageData.getJSONObject().getString("id") + ")";
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Log.e("Error!", e.toString());
                 }
                 new AlertDialog.Builder(activity).setTitle("Set Link Type to Copy")
@@ -388,13 +396,13 @@ public class SingleImageFragment extends Fragment {
         commentAdapter = new CommentAdapter(mainView.getContext(),
                 R.id.comment_item);
         commentLayout = (ListView) mainView.findViewById(R.id.comment_thread);
-        if(activity.theme == activity.HOLO_LIGHT)
+        if (activity.theme == activity.HOLO_LIGHT)
             imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
         else
             imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.dark_image_view, null);
-        WebView imageView = (WebView) imageLayoutView.findViewById(R.id.single_image_view);
+        final WebView imageView = (WebView) imageLayoutView.findViewById(R.id.single_image_view);
         imageView.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view, String url){
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 // do your handling codes here, which url is the requested url
                 // probably you need to open that url rather than redirect:
                 return false; // then it is not handled by default action
@@ -405,23 +413,29 @@ public class SingleImageFragment extends Fragment {
             imageData = savedInstanceState.getParcelable("imageData");
             inGallery = savedInstanceState.getBoolean("inGallery");
         }
+        LinearLayout layout = (LinearLayout) imageLayoutView.findViewById(R.id.image_buttons);
+        layout.setVisibility(View.VISIBLE);
+        imageFullscreen = (ImageButton) imageLayoutView.findViewById(R.id.fullscreen);
+        imageUpvote = (ImageButton) imageLayoutView.findViewById(R.id.rating_good);
+        imageDownvote = (ImageButton) imageLayoutView.findViewById(R.id.rating_bad);
+        imageFavorite = (ImageButton) imageLayoutView.findViewById(R.id.rating_favorite);
+        imageComment = (ImageButton) imageLayoutView.findViewById(R.id.comment);
+        imageReport = (ImageButton) imageLayoutView.findViewById(R.id.report);
+        imageUser = (ImageButton) imageLayoutView.findViewById(R.id.user);
         if (imageData.getJSONObject().has("ups")) {
-            LinearLayout layout = (LinearLayout) imageLayoutView.findViewById(R.id.image_buttons);
-            layout.setVisibility(View.VISIBLE);
-            imageUpvote = (ImageButton) imageLayoutView.findViewById(R.id.rating_good);
-            imageDownvote = (ImageButton) imageLayoutView.findViewById(R.id.rating_bad);
-            imageFavorite = (ImageButton) imageLayoutView.findViewById(R.id.rating_favorite);
-            imageComment = (ImageButton) imageLayoutView.findViewById(R.id.comment);
-            imageReport = (ImageButton) imageLayoutView.findViewById(R.id.report);
-            imageUser = (ImageButton) imageLayoutView.findViewById(R.id.user);
+            imageUpvote.setVisibility(View.VISIBLE);
+            imageDownvote.setVisibility(View.VISIBLE);
+            imageUser.setVisibility(View.VISIBLE);
+            imageFavorite.setVisibility(View.VISIBLE);
+            imageComment.setVisibility(View.VISIBLE);
+            imageReport.setVisibility(View.VISIBLE);
             try {
-                if(!imageData.getJSONObject().has("account_url") || imageData.getJSONObject().getString("account_url") == "null" || imageData.getJSONObject().getString("account_url") == "[deleted]")
+                if (!imageData.getJSONObject().has("account_url") || imageData.getJSONObject().getString("account_url") == "null" || imageData.getJSONObject().getString("account_url") == "[deleted]")
                     imageUser.setVisibility(View.GONE);
-                if(!imageData.getJSONObject().has("vote")) {
+                if (!imageData.getJSONObject().has("vote")) {
                     imageUpvote.setVisibility(View.GONE);
                     imageDownvote.setVisibility(View.GONE);
-                }
-                else {
+                } else {
                     if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
                         imageUpvote.setImageResource(R.drawable.green_rating_good);
                     else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
@@ -439,10 +453,9 @@ public class SingleImageFragment extends Fragment {
                         if (!imageData.getJSONObject().getBoolean("favorite")) {
                             imageFavorite.setImageResource(R.drawable.green_rating_favorite);
                             imageData.getJSONObject().put("favorite", true);
-                        }
-                        else {
+                        } else {
                             imageData.getJSONObject().put("favorite", false);
-                            if(activity.theme == activity.HOLO_LIGHT)
+                            if (activity.theme == activity.HOLO_LIGHT)
                                 imageFavorite.setImageResource(R.drawable.rating_favorite);
                             else
                                 imageFavorite.setImageResource(R.drawable.dark_rating_favorite);
@@ -503,9 +516,9 @@ public class SingleImageFragment extends Fragment {
 
                             @Override
                             public void afterTextChanged(Editable editable) {
-                                for(int i = editable.length(); i > 0; i--){
-                                    if(editable.subSequence(i-1, i).toString().equals("\n"))
-                                        editable.replace(i-1, i, "");
+                                for (int i = editable.length(); i > 0; i--) {
+                                    if (editable.subSequence(i - 1, i).toString().equals("\n"))
+                                        editable.replace(i - 1, i, "");
                                 }
                             }
                         });
@@ -530,6 +543,7 @@ public class SingleImageFragment extends Fragment {
                                             }
                                             return null;
                                         }
+
                                         @Override
                                         protected void onPostExecute(Void aVoid) {
                                             int duration = Toast.LENGTH_SHORT;
@@ -601,21 +615,19 @@ public class SingleImageFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         if (!imageData.getJSONObject().getString("vote").equals("down")) {
-                            if(activity.theme == activity.HOLO_LIGHT) {
+                            if (activity.theme == activity.HOLO_LIGHT) {
                                 imageUpvote.setImageResource(R.drawable.rating_good);
                                 imageDownvote.setImageResource(R.drawable.red_rating_bad);
-                            }
-                            else {
+                            } else {
                                 imageUpvote.setImageResource(R.drawable.dark_rating_good);
                                 imageDownvote.setImageResource(R.drawable.red_rating_bad);
                             }
                             imageData.getJSONObject().put("vote", "down");
                         } else {
-                            if(activity.theme == activity.HOLO_LIGHT) {
+                            if (activity.theme == activity.HOLO_LIGHT) {
                                 imageUpvote.setImageResource(R.drawable.rating_good);
                                 imageDownvote.setImageResource(R.drawable.rating_bad);
-                            }
-                            else {
+                            } else {
                                 imageUpvote.setImageResource(R.drawable.dark_rating_good);
                                 imageDownvote.setImageResource(R.drawable.dark_rating_bad);
                             }
@@ -640,7 +652,52 @@ public class SingleImageFragment extends Fragment {
                     async.execute();
                 }
             });
+
         }
+        imageFullscreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (popupWindow != null) {
+                    popupWindow.dismiss();
+                    popupWindow = null;
+                }
+                popupWindow = new PopupWindow();
+                popupWindow.setBackgroundDrawable(new ColorDrawable(0x80000000));
+                popupWindow.setFocusable(true);
+                popupWindow.setWindowLayoutMode(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                final ZoomableImageView zoomableImageView = new ZoomableImageView(getActivity());
+                popupWindow.setContentView(zoomableImageView);
+                popupWindow.showAtLocation(mainView, Gravity.TOP, 0, 0);
+                AsyncTask<Void, Void, Bitmap> asyncTask = new AsyncTask<Void, Void, Bitmap>() {
+                    @Override
+                    protected Bitmap doInBackground(Void... voids) {
+                        try {
+                            URL url;
+                            if (imageData.getJSONObject().has("cover"))
+                                url = new URL("http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png");
+                            else
+                                url = new URL(imageData.getJSONObject().getString("link"));
+                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                            connection.setDoInput(true);
+                            connection.connect();
+                            InputStream input = connection.getInputStream();
+                            Bitmap bitmap = BitmapFactory.decodeStream(input);
+                            return bitmap;
+                        } catch (Exception e) {
+                            Log.e("Error!", e.toString());
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Bitmap bitmap) {
+                        Log.e("set zoomable view", "set");
+                        zoomableImageView.setImageBitmap(bitmap);
+                    }
+                };
+                asyncTask.execute();
+            }
+        });
         ArrayAdapter<String> tempAdapter = new ArrayAdapter<String>(mainView.getContext(),
                 R.layout.drawer_list_item, mMenuList);
 
@@ -692,13 +749,12 @@ public class SingleImageFragment extends Fragment {
             commentData = new JSONParcelable();
             getComments();
             commentLayout.setAdapter(commentAdapter);
-        }
-        else if (newData) {
+        } else if (newData) {
             commentArray = savedInstanceState.getParcelableArrayList("commentData");
             commentAdapter.addAll(commentArray);
             commentLayout.setAdapter(commentAdapter);
             commentAdapter.notifyDataSetChanged();
-        } else if(commentArray != null) {
+        } else if (commentArray != null) {
             commentAdapter.addAll(commentArray);
             commentLayout.setAdapter(commentAdapter);
             commentAdapter.notifyDataSetChanged();
@@ -706,36 +762,36 @@ public class SingleImageFragment extends Fragment {
         return mainView;
     }
 
-        public void getComments() {
-            AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    MainActivity activity = (MainActivity) getActivity();
-                    if (inGallery) {
-                        try {
-                            commentData.setJSONObject(activity.makeCall("3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments", "get", null));
-                        } catch (Exception e) {
-                            Log.e("Error3!", e.toString());
-                        }
-                        Log.d("Gallery Image", "Getting comments..." + commentData.toString());
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
+    public void getComments() {
+        AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                MainActivity activity = (MainActivity) getActivity();
+                if (inGallery) {
                     try {
-                        if (inGallery && commentAdapter != null) {
-                            addComments();
-                            commentAdapter.notifyDataSetChanged();
-                        }
-
+                        commentData.setJSONObject(activity.makeCall("3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments", "get", null));
                     } catch (Exception e) {
-                        Log.e("Error2!", e.toString());
+                        Log.e("Error3!", e.toString());
                     }
+                    Log.d("Gallery Image", "Getting comments..." + commentData.toString());
                 }
-            };
-            async.execute();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                try {
+                    if (inGallery && commentAdapter != null) {
+                        addComments();
+                        commentAdapter.notifyDataSetChanged();
+                    }
+
+                } catch (Exception e) {
+                    Log.e("Error2!", e.toString());
+                }
+            }
+        };
+        async.execute();
 
     }
 
@@ -885,7 +941,7 @@ public class SingleImageFragment extends Fragment {
                         return convertView;
                     case VISIBLE_TYPE:
                         MainActivity activity = (MainActivity) getActivity();
-                        if(activity.theme == activity.HOLO_LIGHT)
+                        if (activity.theme == activity.HOLO_LIGHT)
                             convertView = (LinearLayout) View.inflate(activity, R.layout.comment_list_item, null);
                         else
                             convertView = (LinearLayout) View.inflate(activity, R.layout.comment_list_item_dark, null);
@@ -941,7 +997,7 @@ public class SingleImageFragment extends Fragment {
                         else
                             holder.username.setText(viewData.getString("author").substring(0, 25) + "...");
 
-                        if(imageData.getJSONObject().has("account_url") && viewData.getString("author") == imageData.getJSONObject().getString("account_url"))
+                        if (imageData.getJSONObject().has("account_url") && viewData.getString("author") == imageData.getJSONObject().getString("account_url"))
                             holder.username.setTextColor(0xFF98FB98);
                         else
                             holder.username.setTextColor(0xFF87CEEB);
@@ -985,8 +1041,7 @@ public class SingleImageFragment extends Fragment {
                                         viewHolder.buttons.setVisibility(View.VISIBLE);
                                     else
                                         viewHolder.buttons.setVisibility(View.GONE);
-                                }
-                                catch (Exception e) {
+                                } catch (Exception e) {
                                     Log.e("Error!", e.toString());
                                 }
                             }
@@ -1020,9 +1075,9 @@ public class SingleImageFragment extends Fragment {
 
                                         @Override
                                         public void afterTextChanged(Editable editable) {
-                                            for(int i = editable.length(); i > 0; i--){
-                                                if(editable.subSequence(i-1, i).toString().equals("\n"))
-                                                    editable.replace(i-1, i, "");
+                                            for (int i = editable.length(); i > 0; i--) {
+                                                if (editable.subSequence(i - 1, i).toString().equals("\n"))
+                                                    editable.replace(i - 1, i, "");
                                             }
                                         }
                                     });
@@ -1033,7 +1088,7 @@ public class SingleImageFragment extends Fragment {
                                     new AlertDialog.Builder(activity).setTitle("Reply to Comment")
                                             .setView(commentReplyLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
-                                            if(newBody.getText().toString().length() < 141) {
+                                            if (newBody.getText().toString().length() < 141) {
                                                 AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                                                     @Override
                                                     protected Void doInBackground(Void... voids) {
@@ -1050,6 +1105,7 @@ public class SingleImageFragment extends Fragment {
                                                         }
                                                         return null;
                                                     }
+
                                                     @Override
                                                     protected void onPostExecute(Void aVoid) {
                                                         int duration = Toast.LENGTH_SHORT;
@@ -1060,8 +1116,7 @@ public class SingleImageFragment extends Fragment {
                                                     }
                                                 };
                                                 async.execute();
-                                            }
-                                            else {
+                                            } else {
                                                 //do nothing
                                             }
                                         }
@@ -1084,24 +1139,22 @@ public class SingleImageFragment extends Fragment {
                                 try {
                                     if (!viewData.getString("vote").equals("up")) {
                                         dataHolder.upvote.setImageResource(R.drawable.green_rating_good);
-                                        if(activity.theme == activity.HOLO_LIGHT)
+                                        if (activity.theme == activity.HOLO_LIGHT)
                                             dataHolder.downvote.setImageResource(R.drawable.rating_bad);
                                         else
                                             dataHolder.downvote.setImageResource(R.drawable.dark_rating_bad);
                                         viewData.put("vote", "up");
                                     } else {
-                                        if(activity.theme == activity.HOLO_LIGHT) {
+                                        if (activity.theme == activity.HOLO_LIGHT) {
                                             dataHolder.upvote.setImageResource(R.drawable.rating_good);
                                             dataHolder.downvote.setImageResource(R.drawable.rating_bad);
-                                        }
-                                        else {
+                                        } else {
                                             dataHolder.upvote.setImageResource(R.drawable.dark_rating_good);
                                             dataHolder.downvote.setImageResource(R.drawable.dark_rating_bad);
                                         }
                                         viewData.put("vote", "none");
                                     }
-                                }
-                                catch (Exception e) {
+                                } catch (Exception e) {
                                     Log.e("Error!", e.toString());
                                 }
                                 AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
@@ -1124,26 +1177,23 @@ public class SingleImageFragment extends Fragment {
                                 try {
                                     if (!viewData.getString("vote").equals("down")) {
                                         dataHolder.downvote.setImageResource(R.drawable.red_rating_bad);
-                                        if(activity.theme == activity.HOLO_LIGHT) {
+                                        if (activity.theme == activity.HOLO_LIGHT) {
                                             dataHolder.upvote.setImageResource(R.drawable.rating_good);
-                                        }
-                                        else {
+                                        } else {
                                             dataHolder.upvote.setImageResource(R.drawable.dark_rating_good);
                                         }
                                         viewData.put("vote", "down");
                                     } else {
-                                        if(activity.theme == activity.HOLO_LIGHT) {
+                                        if (activity.theme == activity.HOLO_LIGHT) {
                                             dataHolder.upvote.setImageResource(R.drawable.rating_good);
                                             dataHolder.downvote.setImageResource(R.drawable.rating_bad);
-                                        }
-                                        else {
+                                        } else {
                                             dataHolder.upvote.setImageResource(R.drawable.dark_rating_good);
                                             dataHolder.downvote.setImageResource(R.drawable.dark_rating_bad);
                                         }
                                         viewData.put("vote", "none");
                                     }
-                                }
-                                catch (Exception e) {
+                                } catch (Exception e) {
                                     Log.e("Error!", e.toString());
                                 }
                                 AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {

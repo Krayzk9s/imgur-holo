@@ -24,9 +24,6 @@ public class ImagePager extends Fragment {
     ArrayList<JSONParcelable> imageData;
     int start;
 
-    public ImagePager() {
-    }
-
     public ImagePager(int _start) {
         start = _start;
     }
