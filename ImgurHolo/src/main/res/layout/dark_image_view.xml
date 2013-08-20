@@ -71,7 +71,7 @@
                   android:layout_width="wrap_content"
                   android:layout_gravity="center_horizontal"
                   android:layout_margin="8dp"
-                  android:layout_height="50dp"
+                  android:layout_height="wrap_content"
             >
 
         <ImageButton
@@ -107,13 +107,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/dark_social_person"
-                android:visibility="gone"/>
-
-        <ImageButton
-                android:id="@+id/report"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/dark_alerts_and_states_warning"
                 android:visibility="gone"/>
 
         <ImageButton

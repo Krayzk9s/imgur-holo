@@ -78,7 +78,6 @@ public class SingleImageFragment extends Fragment {
     ImageButton imageDownvote;
     ImageButton imageFavorite;
     ImageButton imageComment;
-    ImageButton imageReport;
     ImageButton imageUser;
     ImageButton imageFullscreen;
     ArrayList<JSONParcelable> commentArray;
@@ -460,7 +459,6 @@ public class SingleImageFragment extends Fragment {
         imageDownvote = (ImageButton) imageLayoutView.findViewById(R.id.rating_bad);
         imageFavorite = (ImageButton) imageLayoutView.findViewById(R.id.rating_favorite);
         imageComment = (ImageButton) imageLayoutView.findViewById(R.id.comment);
-        imageReport = (ImageButton) imageLayoutView.findViewById(R.id.report);
         imageUser = (ImageButton) imageLayoutView.findViewById(R.id.user);
         if (imageData.getJSONObject().has("ups")) {
             imageUpvote.setVisibility(View.VISIBLE);
@@ -468,7 +466,6 @@ public class SingleImageFragment extends Fragment {
             imageUser.setVisibility(View.VISIBLE);
             imageFavorite.setVisibility(View.VISIBLE);
             imageComment.setVisibility(View.VISIBLE);
-            imageReport.setVisibility(View.VISIBLE);
             try {
                 if (!imageData.getJSONObject().has("account_url") || imageData.getJSONObject().getString("account_url") == "null" || imageData.getJSONObject().getString("account_url") == "[deleted]")
                     imageUser.setVisibility(View.GONE);

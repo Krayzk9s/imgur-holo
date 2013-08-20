@@ -74,7 +74,7 @@
                   android:orientation="horizontal"
                   android:layout_width="wrap_content"
                   android:layout_gravity="center_horizontal"
-                  android:layout_height="50dp"
+                  android:layout_height="wrap_content"
             >
 
         <ImageButton
@@ -109,16 +109,7 @@
                 android:id="@+id/user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/social_person"
-                android:visibility="gone"/>
-
-
-        <ImageButton
-                android:id="@+id/report"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/alerts_and_states_warning"
-                android:visibility="gone"/>
+                android:src="@drawable/social_person"/>
         <ImageButton
                 android:id="@+id/fullscreen"
                 android:layout_width="wrap_content"
