@@ -1,7 +1,13 @@
 package com.krayzk9s.imgurholo;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,12 +21,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Base64;
@@ -56,7 +59,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
 
     public static final String OAUTH_CALLBACK_SCHEME = "imgur-holo";
     public static final String OAUTH_CALLBACK_HOST = "authcallback";
@@ -67,10 +70,10 @@ public class MainActivity extends FragmentActivity {
     private static final String CLIENTID = "4cd3f96f162ac80";
     private static final String SECRETID = "9cd3c621a4e064422e60aba4ccf84d6b149b4463";
     private static final Token EMPTY_TOKEN = null;
-    public static int HOLO_DARK = 0;
-    public static int HOLO_LIGHT = 1;
+    public static String HOLO_DARK = "Holo Dark";
+    public static String HOLO_LIGHT = "Holo Light";
     final OAuthService service = new ServiceBuilder().provider(ImgUr3Api.class).apiKey(CLIENTID).debug().callback(OAUTH_CALLBACK_URL).apiSecret(SECRETID).build();
-    public int theme;
+    public String theme;
     Token accessToken;
     Verifier verifier;
     boolean loggedin;
@@ -82,13 +85,9 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        if (settings.contains("theme")) {
-            theme = settings.getInt("theme", HOLO_LIGHT);
-        } else
-            theme = HOLO_LIGHT;
-
-        if (theme == HOLO_LIGHT)
+        SharedPreferences settings = getSettings();
+        theme = settings.getString("theme", HOLO_LIGHT);
+        if (theme.equals(HOLO_LIGHT))
             setTheme(R.style.AppTheme);
         else
             setTheme(R.style.AppThemeDark);
@@ -131,11 +130,14 @@ public class MainActivity extends FragmentActivity {
 
     public void updateMenu() {
         DrawerAdapter drawerAdapter = new DrawerAdapter(this, R.layout.menu_item);
-        if (loggedin && theme == HOLO_DARK)
+        Log.d("theme", theme);
+        Log.d("theme dark?", theme.equals(HOLO_DARK) + "");
+        Log.d("theme light?", theme.equals(HOLO_LIGHT) + "");
+        if (loggedin && theme.equals(HOLO_DARK))
             drawerAdapter.setMenu(R.array.imgurMenuListLoggedIn, R.array.imgurMenuListDarkIcons);
-        else if (!loggedin && theme == HOLO_DARK)
+        else if (!loggedin && theme.equals(HOLO_DARK))
             drawerAdapter.setMenu(R.array.imgurMenuListLoggedOut, R.array.imgurMenuListDarkIconsLoggedOut);
-        else if (loggedin && theme == HOLO_LIGHT)
+        else if (loggedin && theme.equals(HOLO_LIGHT))
             drawerAdapter.setMenu(R.array.imgurMenuListLoggedIn, R.array.imgurMenuListIcons);
         else
             drawerAdapter.setMenu(R.array.imgurMenuListLoggedOut, R.array.imgurMenuListIconsLoggedOut);
@@ -172,7 +174,7 @@ public class MainActivity extends FragmentActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         //Handle the back button
         SharedPreferences settings = getSettings();
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             getActionBar().show();
         }
@@ -201,8 +203,8 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void loadDefaultPage() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        FragmentManager fragmentManager = getFragmentManager();
+        SharedPreferences settings = getSettings();
         if (!loggedin || !settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery")) {
             setTitle("Gallery");
             GalleryFragment galleryFragment = new GalleryFragment();
@@ -275,7 +277,14 @@ public class MainActivity extends FragmentActivity {
                 async.execute();
                 /// do things here with each image source path.
             }
-        } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http")) {
+        } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http://imgur.com/a")) {
+            String uri = intent.getData().toString();
+            final String album = uri.split("/")[4];
+            Log.d("album", album);
+            ImagesFragment fragment = new ImagesFragment();
+            fragment.setImageCall(album, "/3/album/" + album + "/images", null);
+            changeFragment(fragment);
+        } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http://i.imgur")) {
             String uri = intent.getData().toString();
             final String image = uri.split("/")[3].split("\\.")[0];
             Log.d("image", image);
@@ -301,7 +310,7 @@ public class MainActivity extends FragmentActivity {
             };
             async.execute();
 
-        } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("imgur-holo")) {
+        }else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("imgur-holo")) {
             Uri uri = intent.getData();
             Log.d("URI", "" + action + "/" + type);
             String uripath = "";
@@ -316,7 +325,7 @@ public class MainActivity extends FragmentActivity {
                 AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... voids) {
-                        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                        SharedPreferences settings = getSettings();
                         SharedPreferences.Editor editor = settings.edit();
                         accessToken = service.getAccessToken(Token.empty(), verifier);
                         Log.d("URI", verifier.toString());
@@ -341,7 +350,7 @@ public class MainActivity extends FragmentActivity {
 
     public Token renewAccessToken() {
 
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = getSettings();
         SharedPreferences.Editor editor = settings.edit();
         accessToken = service.refreshAccessToken(accessToken);
         Log.d("URI", accessToken.getRawResponse());
@@ -351,7 +360,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     public Token getAccessToken() {
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = getSettings();
         if (settings.contains("RefreshToken")) {
             accessToken = new Token(settings.getString("AccessToken", ""), settings.getString("RefreshToken", ""));
             loggedin = true;
@@ -364,7 +373,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     public SharedPreferences getSettings() {
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         return settings;
     }
 
@@ -393,7 +402,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        if (theme == HOLO_LIGHT)
+        if (theme.equals(HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -454,7 +463,7 @@ public class MainActivity extends FragmentActivity {
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mDrawerList);
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         switch (position) {
             case 0:
@@ -595,7 +604,7 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 8:
                 if (loggedin) {
-                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                    SharedPreferences settings = getSettings();
                     SharedPreferences.Editor editor = settings.edit();
                     editor.remove("AccessToken");
                     editor.remove("RefreshToken");
@@ -712,7 +721,7 @@ public class MainActivity extends FragmentActivity {
 
     public void changeFragment(Fragment newFragment) {
         getActionBar().show();
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, newFragment).addToBackStack("tag").commit();
         updateMenu();
@@ -820,6 +829,39 @@ public class MainActivity extends FragmentActivity {
             singleImageFragment.setParams(jsonObject);
             singleImageFragment.setGallery(false);
             changeFragment(singleImageFragment);
+            copyURL(jsonObject);
+        }
+    }
+
+    private void copyURL(JSONObject jsonObject) {
+        SharedPreferences settings = getSettings();
+        if(!settings.getBoolean("AutoCopy", true))
+            return;
+        ClipboardManager clipboard = (ClipboardManager)
+                getSystemService(Context.CLIPBOARD_SERVICE);
+        try {
+            String link = "";
+                if (settings.getString("AutoCopyType", getResources().getString(R.string.link)).equals("Link"))
+                    link = "http://imgur.com/" + jsonObject.getString("id");
+                else if (settings.getString("AutoCopyType", getResources().getString(R.string.link)).equals("Direct Link"))
+                    link = jsonObject.getString("link");
+                else if (settings.getString("AutoCopyType", getResources().getString(R.string.link)).equals("HTML Image"))
+                    link = "<a href=\"http://imgur.com/" + jsonObject.getString("id") + "\"><img src=\"" + jsonObject.getString("link") + "\" title=\"Hosted by imgur.com\"/></a>";
+                else if (settings.getString("AutoCopyType", getResources().getString(R.string.link)).equals("BBCode (Forums)"))
+                    link = "[IMG]" + jsonObject.getString("link") + "[/IMG]";
+                else if (settings.getString("AutoCopyType", getResources().getString(R.string.link)).equals("Linked BBCode"))
+                    link = "[URL=http://imgur.com/" + jsonObject.getString("id") + "][IMG]" + jsonObject.getString("link") + "[/IMG][/URL]";
+                else if (settings.getString("AutoCopyType", getResources().getString(R.string.link)).equals("Markdown Link (Reddit)"))
+                    link = "[Imgur](http://i.imgur.com/" + jsonObject.getString("id") + ")";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast;
+            toast = Toast.makeText(this, "URL Copied!", duration);
+            toast.show();
+            ClipData clip = ClipData.newPlainText("imgur Link", link);
+            clipboard.setPrimaryClip(clip);
+        }
+        catch (Exception e) {
+            Log.e("Error!", e.toString());
         }
     }
 

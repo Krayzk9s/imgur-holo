@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,7 +54,7 @@ public class CommentsFragment extends Fragment {
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         MainActivity activity = (MainActivity)getActivity();
-        if(activity.theme == activity.HOLO_LIGHT)
+        if(activity.theme.equals(activity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -83,13 +83,13 @@ public class CommentsFragment extends Fragment {
         mDrawerList = (ListView) view.findViewById(R.id.account_list);
         MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
-        if(settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
+        if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
             commentsAdapter = new MessageAdapter(activity, R.layout.comment_layout);
         else
             commentsAdapter = new MessageAdapter(activity, R.layout.comment_layout_dark);
         String[] mMenuList = getResources().getStringArray(R.array.emptyList);
         ArrayAdapter<String> tempAdapter = null;
-        if(settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
+        if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
             tempAdapter = new ArrayAdapter<String>(activity,
                     R.layout.comment_layout, mMenuList);
         else
@@ -173,7 +173,7 @@ public class CommentsFragment extends Fragment {
             if (convertView == null) {
                 MainActivity activity = (MainActivity) getActivity();
                 SharedPreferences settings = activity.getSettings();
-                if(settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
+                if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
                     convertView = mInflater.inflate(R.layout.comment_layout, null);
                 else
                     convertView = mInflater.inflate(R.layout.comment_layout_dark, null);

@@ -15,7 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -109,11 +109,11 @@ public class SingleImageFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        if (sort == null || sort.equals("best"))
+        if (sort == null || sort.equals("Best"))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortBest).setChecked(true);
-        else if (sort.equals("top"))
+        else if (sort.equals("Top"))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setChecked(true);
-        else if (sort.equals("newest"))
+        else if (sort.equals("New"))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortNewest).setChecked(true);
     }
 
@@ -121,7 +121,7 @@ public class SingleImageFragment extends Fragment {
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         MainActivity activity = (MainActivity) getActivity();
-        if (activity.theme == activity.HOLO_LIGHT)
+        if (activity.theme.equals(activity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -146,23 +146,19 @@ public class SingleImageFragment extends Fragment {
         // handle item selection
         final MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
-        SharedPreferences.Editor editor = settings.edit();
         switch (item.getItemId()) {
             case R.id.action_sort:
                 return true;
             case R.id.menuSortNewest:
                 sort = "new";
-                editor.putString("CommentSort", sort);
                 refreshComments();
                 return true;
             case R.id.menuSortTop:
                 sort = "top";
-                editor.putString("CommentSort", sort);
                 refreshComments();
                 return true;
             case R.id.menuSortBest:
                 sort = "best";
-                editor.putString("CommentSort", sort);
                 refreshComments();
                 return true;
             case R.id.action_refresh:
@@ -318,9 +314,8 @@ public class SingleImageFragment extends Fragment {
                                     @Override
                                     protected Void doInBackground(Void... voids) {
                                         try {
-                                            String deletehash = imageData.getJSONObject().getString("deletehash");
                                             MainActivity activity = (MainActivity) getActivity();
-                                            activity.makeCall("3/image/" + deletehash, "delete", null);
+                                            activity.makeCall("3/image/" + imageData.getJSONObject().getString("id"), "delete", null);
                                         } catch (Exception e) {
                                             Log.e("Error!", e.toString());
                                         }
@@ -329,7 +324,7 @@ public class SingleImageFragment extends Fragment {
 
                                     @Override
                                     protected void onPostExecute(Void aVoid) {
-                                        getActivity().getSupportFragmentManager().popBackStack();
+                                        getActivity().getFragmentManager().popBackStack();
                                     }
                                 };
                                 async.execute();
@@ -383,6 +378,10 @@ public class SingleImageFragment extends Fragment {
                                         default:
                                             break;
                                     }
+                                    int duration = Toast.LENGTH_SHORT;
+                                    Toast toast;
+                                    toast = Toast.makeText(getActivity(), "URL Copied!", duration);
+                                    toast.show();
                                     ClipData clip = ClipData.newPlainText("imgur Link", link);
                                     clipboard.setPrimaryClip(clip);
                                 } catch (Exception e) {
@@ -435,7 +434,7 @@ public class SingleImageFragment extends Fragment {
         commentAdapter = new CommentAdapter(mainView.getContext(),
                 R.id.comment_item);
         commentLayout = (ListView) mainView.findViewById(R.id.comment_thread);
-        if (activity.theme == activity.HOLO_LIGHT)
+        if (activity.theme.equals(activity.HOLO_LIGHT))
             imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
         else
             imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.dark_image_view, null);
@@ -492,7 +491,7 @@ public class SingleImageFragment extends Fragment {
                             imageData.getJSONObject().put("favorite", true);
                         } else {
                             imageData.getJSONObject().put("favorite", false);
-                            if (activity.theme == activity.HOLO_LIGHT)
+                            if (activity.theme.equals(activity.HOLO_LIGHT))
                                 imageFavorite.setImageResource(R.drawable.rating_favorite);
                             else
                                 imageFavorite.setImageResource(R.drawable.dark_rating_favorite);
@@ -610,7 +609,7 @@ public class SingleImageFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         if (!imageData.getJSONObject().getString("vote").equals("up")) {
-                            if (activity.theme == activity.HOLO_LIGHT) {
+                            if (activity.theme.equals(activity.HOLO_LIGHT)) {
                                 imageUpvote.setImageResource(R.drawable.green_rating_good);
                                 imageDownvote.setImageResource(R.drawable.rating_bad);
                             } else {
@@ -619,7 +618,7 @@ public class SingleImageFragment extends Fragment {
                             }
                             imageData.getJSONObject().put("vote", "up");
                         } else {
-                            if (activity.theme == activity.HOLO_LIGHT) {
+                            if (activity.theme.equals(activity.HOLO_LIGHT)) {
                                 imageUpvote.setImageResource(R.drawable.rating_good);
                                 imageDownvote.setImageResource(R.drawable.rating_bad);
                             } else {
@@ -652,7 +651,7 @@ public class SingleImageFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         if (!imageData.getJSONObject().getString("vote").equals("down")) {
-                            if (activity.theme == activity.HOLO_LIGHT) {
+                            if (activity.theme.equals(activity.HOLO_LIGHT)) {
                                 imageUpvote.setImageResource(R.drawable.rating_good);
                                 imageDownvote.setImageResource(R.drawable.red_rating_bad);
                             } else {
@@ -661,7 +660,7 @@ public class SingleImageFragment extends Fragment {
                             }
                             imageData.getJSONObject().put("vote", "down");
                         } else {
-                            if (activity.theme == activity.HOLO_LIGHT) {
+                            if (activity.theme.equals(activity.HOLO_LIGHT)) {
                                 imageUpvote.setImageResource(R.drawable.rating_good);
                                 imageDownvote.setImageResource(R.drawable.rating_bad);
                             } else {
@@ -800,6 +799,9 @@ public class SingleImageFragment extends Fragment {
     }
 
     public void getComments() {
+        MainActivity activity = (MainActivity) getActivity();
+        if(!activity.getSettings().getBoolean("ShowComments", true))
+            return;
         AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -842,9 +844,9 @@ public class SingleImageFragment extends Fragment {
             for (int i = 0; i < commentJSONArray.length(); i++) {
                 childrenArray.add(commentJSONArray.getJSONObject(i));
             }
-            if(sort == "new")
+            if(sort.equals("New"))
                 Collections.sort(childrenArray, new JSONNewestComparator());
-            else if (sort == "top")
+            else if (sort.equals("Top"))
                 Collections.sort(childrenArray, new JSONTopComparator());
             for (int i = 0; i < childrenArray.size(); i++) {
                 getIndents(childrenArray.get(i), 0);
@@ -866,9 +868,9 @@ public class SingleImageFragment extends Fragment {
                 childrenArray = new ArrayList<JSONObject>();
                 for(int i = 0; i < children.length(); i++)
                     childrenArray.add(children.getJSONObject(i));
-                if(sort == "new")
+                if(sort.equals("New"))
                     Collections.sort(childrenArray, new JSONNewestComparator());
-                else if (sort == "top")
+                else if (sort.equals("Top"))
                     Collections.sort(childrenArray, new JSONTopComparator());
                 comment.remove("children");
             }
@@ -1038,7 +1040,7 @@ public class SingleImageFragment extends Fragment {
                         return convertView;
                     case VISIBLE_TYPE:
                         MainActivity activity = (MainActivity) getActivity();
-                        if (activity.theme == activity.HOLO_LIGHT)
+                        if (activity.theme.equals(activity.HOLO_LIGHT))
                             convertView = (LinearLayout) View.inflate(activity, R.layout.comment_list_item, null);
                         else
                             convertView = (LinearLayout) View.inflate(activity, R.layout.comment_list_item_dark, null);
@@ -1098,9 +1100,11 @@ public class SingleImageFragment extends Fragment {
                             holder.username.setTextColor(0xFF98FB98);
                         else
                             holder.username.setTextColor(0xFF87CEEB);
-
-                        holder.points.setText(Html.fromHtml(viewData.getString("points") + "pts (<font color=#89c624>" + viewData.getString("ups") + "</font>/<font color=#ee4444>" + viewData.getString("downs") + "</font>)"));
-
+                        MainActivity activity = (MainActivity) getActivity();
+                        if(activity.getSettings().getBoolean("ShowVotes", true))
+                            holder.points.setText(Html.fromHtml(viewData.getString("points") + "pts (<font color=#89c624>" + viewData.getString("ups") + "</font>/<font color=#ee4444>" + viewData.getString("downs") + "</font>)"));
+                        else
+                            holder.points.setText("");
                         holder.header.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -1236,13 +1240,13 @@ public class SingleImageFragment extends Fragment {
                                 try {
                                     if (!viewData.getString("vote").equals("up")) {
                                         dataHolder.upvote.setImageResource(R.drawable.green_rating_good);
-                                        if (activity.theme == activity.HOLO_LIGHT)
+                                        if (activity.theme.equals(activity.HOLO_LIGHT))
                                             dataHolder.downvote.setImageResource(R.drawable.rating_bad);
                                         else
                                             dataHolder.downvote.setImageResource(R.drawable.dark_rating_bad);
                                         viewData.put("vote", "up");
                                     } else {
-                                        if (activity.theme == activity.HOLO_LIGHT) {
+                                        if (activity.theme.equals(activity.HOLO_LIGHT)) {
                                             dataHolder.upvote.setImageResource(R.drawable.rating_good);
                                             dataHolder.downvote.setImageResource(R.drawable.rating_bad);
                                         } else {
@@ -1274,14 +1278,14 @@ public class SingleImageFragment extends Fragment {
                                 try {
                                     if (!viewData.getString("vote").equals("down")) {
                                         dataHolder.downvote.setImageResource(R.drawable.red_rating_bad);
-                                        if (activity.theme == activity.HOLO_LIGHT) {
+                                        if (activity.theme.equals(activity.HOLO_LIGHT)) {
                                             dataHolder.upvote.setImageResource(R.drawable.rating_good);
                                         } else {
                                             dataHolder.upvote.setImageResource(R.drawable.dark_rating_good);
                                         }
                                         viewData.put("vote", "down");
                                     } else {
-                                        if (activity.theme == activity.HOLO_LIGHT) {
+                                        if (activity.theme.equals(activity.HOLO_LIGHT)) {
                                             dataHolder.upvote.setImageResource(R.drawable.rating_good);
                                             dataHolder.downvote.setImageResource(R.drawable.rating_bad);
                                         } else {

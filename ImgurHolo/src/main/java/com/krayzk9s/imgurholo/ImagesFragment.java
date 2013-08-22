@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -89,7 +89,7 @@ public class ImagesFragment extends Fragment {
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         MainActivity activity = (MainActivity) getActivity();
-        if (activity.theme == activity.HOLO_LIGHT)
+        if (activity.theme.equals(activity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -266,7 +266,7 @@ public class ImagesFragment extends Fragment {
         gridview.setAdapter(imageAdapter);
         final MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
-        gridview.setColumnWidth(activity.dpToPx(settings.getInt("IconSize", 90)));
+        gridview.setColumnWidth(activity.dpToPx(Integer.parseInt(settings.getString("IconSize", "90"))));
         gridview.setOnItemClickListener(new GridItemClickListener());
         gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         multiChoiceModeListener = new MultiChoiceModeListener();
@@ -277,9 +277,9 @@ public class ImagesFragment extends Fragment {
                         if (imageAdapter.getNumColumns() == 0) {
                             SharedPreferences settings = activity.getSettings();
                             Log.d("numColumnsWidth", gridview.getWidth() + "");
-                            Log.d("numColumnsIconWidth", activity.dpToPx((settings.getInt("IconSize", 90))) + "");
+                            Log.d("numColumnsIconWidth", activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "90")))) + "");
                             final int numColumns = (int) Math.floor(
-                                    gridview.getWidth() / (activity.dpToPx((settings.getInt("IconSize", 90))) + activity.dpToPx(2)));
+                                    gridview.getWidth() / (activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "90")))) + activity.dpToPx(2)));
                             if (numColumns > 0) {
                                 imageAdapter.setNumColumns(numColumns);
                                 if (BuildConfig.DEBUG) {
@@ -457,7 +457,7 @@ public class ImagesFragment extends Fragment {
 
         public Object getItem(int position) {
             return position < mNumColumns ?
-                    null : urls.get(position);
+                    null : ids.get(position - mNumColumns);
         }
 
         // create a new ImageView for each item referenced by the Adapter
@@ -509,23 +509,25 @@ public class ImagesFragment extends Fragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete:
-                    if (albumId != null) {
+                    Log.d("Action clicked", (albumId == null) + "");
+                    if (albumId == null) {
                         getChecked();
                         async = new AsyncTask<Void, Void, Void>() {
                             @Override
                             protected Void doInBackground(Void... voids) {
                                 MainActivity activity = (MainActivity) getActivity();
                                 for(int i = 0; i < intentReturn.size(); i++) {
-                                    JSONObject response = activity.makeCall("3/image/" + intentReturn.get(i), "get", null);
-                                    try {
-                                        String deletehash = response.getJSONObject("data").getString("deletehash");
-                                        activity.makeCall("3/image/" + deletehash, "delete", null);
-                                    }
-                                    catch (Exception e) {
-                                        Log.e("Error!", e.toString());
-                                    }
+                                    activity.makeCall("3/image/" + intentReturn.get(i), "delete", null);
                                 }
                                 return null;
+                            }
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                urls = new ArrayList<String>();
+                                ids = new ArrayList<JSONParcelable>();
+                                page = 0;
+                                imageAdapter.notifyDataSetChanged();
+                                getImages();
                             }
                         };
                         async.execute();
@@ -534,7 +536,8 @@ public class ImagesFragment extends Fragment {
                 default:
                     break;
             }
-            return true;
+            mode.finish();
+            return false;
         }
 
         public void onDestroyActionMode(ActionMode mode) {
@@ -552,8 +555,11 @@ public class ImagesFragment extends Fragment {
             intentReturn = new ArrayList<String>();
             try {
                 for (int i = 0; i < gridview.getCount(); i++) {
-                    if (gridview.isItemChecked(i))
-                        intentReturn.add(ids.get(i).getJSONObject().getString("id"));
+                    if (gridview.isItemChecked(i)) {
+                        JSONParcelable imageData = (JSONParcelable) imageAdapter.getItem(i);
+                        intentReturn.add(imageData.getJSONObject().getString("id"));
+                        Log.d("checkedid", imageData.getJSONObject().getString("id"));
+                    }
                 }
             } catch (Exception e) {
                 Log.e("Error!", e.toString());

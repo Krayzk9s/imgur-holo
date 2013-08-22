@@ -172,6 +172,13 @@
     </array>
 
     <array
+            name="commentOptions">
+        <item>@string/bestComment</item>
+        <item>@string/topComment</item>
+        <item>@string/newComment</item>
+    </array>
+
+    <array
             name="iconsizes">
         <item>@string/ninety</item>
         <item>@string/onetwenty</item>

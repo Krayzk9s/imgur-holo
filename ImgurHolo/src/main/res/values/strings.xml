@@ -82,4 +82,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
+    <string name="topComment">Top</string>
+    <string name="bestComment">Best</string>
+    <string name="newComment">New</string>
+
 </resources>

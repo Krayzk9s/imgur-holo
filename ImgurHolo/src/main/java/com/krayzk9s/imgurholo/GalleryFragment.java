@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -78,7 +78,7 @@ public class GalleryFragment extends Fragment {
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         MainActivity activity = (MainActivity)getActivity();
-        if(activity.theme == activity.HOLO_LIGHT)
+        if(activity.theme.equals(activity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -193,6 +193,7 @@ public class GalleryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         boolean newData = false;
+        final MainActivity activity = (MainActivity) getActivity();
         if (savedInstanceState != null) {
             gallery = savedInstanceState.getString("gallery");
             sort = savedInstanceState.getString("sort");
@@ -209,24 +210,26 @@ public class GalleryFragment extends Fragment {
             selectedIndex = savedInstanceState.getInt("selectedIndex");
             spinner = savedInstanceState.getCharSequence("spinner");
         } else if (subreddit == null && search == null) {
+            SharedPreferences settings = activity.getSettings();
             page = 0;
             subreddit = "pics";
             memeType = "top";
-            gallery = "hot";
+            gallery = settings.getString("DefaultGallery", "hot");
+            ArrayList<String> galleryOptions = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.galleryOptions)));
             sort = "viral";
             window = "day";
             urls = new ArrayList<String>();
             ids = new ArrayList<JSONParcelable>();
-            selectedIndex = 0;
+            selectedIndex = galleryOptions.indexOf(gallery);
             newData = true;
         }
         Log.d("NOT HERE EITHER", gallery);
         View view = inflater.inflate(R.layout.image_layout, container, false);
         errorText = (TextView) view.findViewById(R.id.error);
         final GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
-        final MainActivity activity = (MainActivity) getActivity();
+
         SharedPreferences settings = activity.getSettings();
-        gridview.setColumnWidth(activity.dpToPx(settings.getInt("IconSize", 90)));
+        gridview.setColumnWidth(activity.dpToPx(Integer.parseInt(settings.getString("IconSize", "90"))));
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());
@@ -237,9 +240,9 @@ public class GalleryFragment extends Fragment {
                         if (imageAdapter.getNumColumns() == 0) {
                             SharedPreferences settings = activity.getSettings();
                             Log.d("numColumnsWidth", gridview.getWidth()+"");
-                            Log.d("numColumnsIconWidth", activity.dpToPx((settings.getInt("IconSize", 90)))+"");
+                            Log.d("numColumnsIconWidth", activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "90"))))+"");
                             final int numColumns = (int) Math.floor(
-                                    gridview.getWidth() / (activity.dpToPx((settings.getInt("IconSize", 90))) + activity.dpToPx(4)));
+                                    gridview.getWidth() / (activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "90")))) + activity.dpToPx(4)));
                             if (numColumns > 0) {
                                 imageAdapter.setNumColumns(numColumns);
                                 if (BuildConfig.DEBUG) {

@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,7 +54,7 @@ public class AccountFragment extends Fragment {
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         MainActivity activity = (MainActivity)getActivity();
-        if(activity.theme == activity.HOLO_LIGHT)
+        if(activity.theme.equals(activity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -274,7 +274,7 @@ public class AccountFragment extends Fragment {
                 MainActivity activity = (MainActivity) getActivity();
                 toast = Toast.makeText(activity, "User not found", duration);
                 toast.show();
-                activity.getSupportFragmentManager().popBackStack();
+                activity.getFragmentManager().popBackStack();
             }
             adapter.notifyDataSetChanged();
         }

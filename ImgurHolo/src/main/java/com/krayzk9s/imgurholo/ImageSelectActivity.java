@@ -2,7 +2,7 @@ package com.krayzk9s.imgurholo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.app.FragmentManager;
 import android.view.Menu;
 
 public class ImageSelectActivity extends MainActivity {
@@ -11,7 +11,7 @@ public class ImageSelectActivity extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_select_layout);
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         ImagesFragment imagesFragment = new ImagesFragment();
         imagesFragment.selecting = true;
         imagesFragment.setImageCall(null, "3/account/me/images/0", null);

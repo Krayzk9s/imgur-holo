@@ -1,23 +1,16 @@
 package com.krayzk9s.imgurholo;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import java.util.ArrayList;
 
 /**
  * Created by Kurt Zimmer on 7/24/13.
  */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends PreferenceFragment {
     ArrayAdapter<String> adapter;
 
     public SettingsFragment() {
@@ -25,190 +18,96 @@ public class SettingsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.account_layout, container, false);
-        ListView mDrawerList = (ListView) view.findViewById(R.id.account_list);
-        MainActivity activity = (MainActivity) getActivity();
-        SharedPreferences settings = activity.getSettings();
-        SharedPreferences.Editor editor = settings.edit();
-        if (!settings.contains("MaxComments"))
-            editor.putInt("MaxComments", 50);
-        if (!settings.contains("DefaultPage"))
-            editor.putString("DefaultPage", "");
-
-        editor.commit();
-        ArrayList<String> mSettingList = new ArrayList<String>();
-        adapter = new ArrayAdapter<String>(view.getContext(),
-                R.layout.drawer_list_item, mSettingList);
-
-
-        refreshAdapter();
-        mDrawerList.setAdapter(adapter);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        return view;
-    }
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Load the preferences from an XML resource
+        addPreferencesFromResource(R.xml.preferences);
+        ListPreference defaultPage = (ListPreference) findPreference("DefaultPage");
+        defaultPage.setSummary(defaultPage.getValue().toString());
+        defaultPage.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                preference.setSummary(o.toString());
+                return true;
+            }
+        });
+        ListPreference theme = (ListPreference) findPreference("theme");
+        theme.setSummary(theme.getValue().toString());
+        theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                preference.setSummary(o.toString());
+                return true;
+            }
+        });
+        ListPreference iconSize = (ListPreference) findPreference("IconSize");
+        iconSize.setSummary(iconSize.getValue().toString());
+        iconSize.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                preference.setSummary(o.toString());
+                return true;
+            }
+        });
+        ListPreference galleryDefault = (ListPreference) findPreference("DefaultGallery");
+        galleryDefault.setSummary(galleryDefault.getValue().toString());
+        galleryDefault.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                preference.setSummary(o.toString());
+                return true;
+            }
+        });
+        final ListPreference commentSort = (ListPreference) findPreference("CommentSort");
+        commentSort.setSummary(commentSort.getValue().toString());
+        commentSort.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                preference.setSummary(o.toString());
+                return true;
+            }
+        });
+        CheckBoxPreference autoCopy = (CheckBoxPreference) findPreference("AutoCopy");
+        final ListPreference autoCopyType = (ListPreference) findPreference("AutoCopyType");
+        autoCopyType.setSummary(autoCopyType.getValue().toString());
+        if(!autoCopy.isChecked())
+            autoCopyType.setEnabled(false);
+        autoCopyType.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                preference.setSummary(o.toString());
+                return true;
+            }
+        });
+        autoCopy.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                if(Boolean.parseBoolean(o.toString()))
+                    autoCopyType.setEnabled(true);
+                else
+                    autoCopyType.setEnabled(false);
+                return true;
+            }
+        });
+        final CheckBoxPreference showVotes = (CheckBoxPreference) findPreference("ShowVotes");
+        CheckBoxPreference showComments = (CheckBoxPreference) findPreference("ShowComments");
+        if(!showComments.isChecked()) {
+            showVotes.setEnabled(false);
+            commentSort.setEnabled(false);
         }
-    }
-
-    private void refreshAdapter() {
-        MainActivity activity = (MainActivity) getActivity();
-        SharedPreferences settings = activity.getSettings();
-        adapter.clear();
-        if (!settings.getString("DefaultPage", "").equals(""))
-            adapter.add("Default Page is " + settings.getString("DefaultPage", ""));
-        else
-            adapter.add("No Default Page");
-        if (settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
-            adapter.add("Theme is Holo Light");
-        else
-            adapter.add("Theme is Holo Dark");
-        adapter.add("Icons are " + settings.getInt("IconSize", 90) + "dps");
-        if (settings.getBoolean("ConfirmExit", false))
-            adapter.add("Confirming Exit");
-        else
-            adapter.add("Not Confirming Exit");
-        adapter.notifyDataSetChanged();
-    }
-
-    private void selectItem(int position) {
-        MainActivity activity = (MainActivity) getActivity();
-        switch (position) {
-            case 0:
-                new AlertDialog.Builder(activity).setTitle("Set Page as Default")
-                        .setItems(R.array.defaultArray, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                MainActivity activity = (MainActivity) getActivity();
-                                SharedPreferences settings = activity.getSettings();
-                                SharedPreferences.Editor editor = settings.edit();
-                                String defaultPage = "";
-                                switch (whichButton) {
-                                    case 0:
-                                        defaultPage = "Gallery";
-                                        break;
-                                    case 1:
-                                        defaultPage = "Your Albums";
-                                        break;
-                                    case 2:
-                                        defaultPage = "Your Images";
-                                        break;
-                                    case 3:
-                                        defaultPage = "Your Favorites";
-                                        break;
-                                    case 4:
-                                        defaultPage = "Your Account";
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                editor.putString("DefaultPage", defaultPage);
-                                editor.commit();
-                                refreshAdapter();
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Do nothing.
-                    }
-                }).show();
-                break;
-            case 1:
-                new AlertDialog.Builder(activity).setTitle("Set Theme")
-                        .setItems(R.array.themes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                MainActivity activity = (MainActivity) getActivity();
-                                SharedPreferences settings = activity.getSettings();
-                                SharedPreferences.Editor editor = settings.edit();
-                                switch (whichButton) {
-                                    case 0:
-                                        activity.theme = activity.HOLO_LIGHT;
-                                        break;
-                                    case 1:
-                                        activity.theme = activity.HOLO_DARK;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                editor.putInt("theme", activity.theme);
-                                editor.commit();
-                                refreshAdapter();
-                                new AlertDialog.Builder(activity).setTitle("Set Theme").setMessage("Restart app for changes to take effect").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        //nothing
-                                    }
-                                }).show();
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Do nothing.
-                    }
-                }).show();
-                break;
-            case 2:
-                new AlertDialog.Builder(activity).setTitle("Set Icon Sizes")
-                        .setItems(R.array.iconsizes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                MainActivity activity = (MainActivity) getActivity();
-                                SharedPreferences settings = activity.getSettings();
-                                SharedPreferences.Editor editor = settings.edit();
-                                int iconsize = 90;
-                                switch (whichButton) {
-                                    case 0:
-                                        iconsize = 90;
-                                        break;
-                                    case 1:
-                                        iconsize = 120;
-                                        break;
-                                    case 2:
-                                        iconsize = 180;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                editor.putInt("IconSize", iconsize);
-                                editor.commit();
-                                refreshAdapter();
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Do nothing.
-                    }
-                }).show();
-                break;
-            case 3:
-                new AlertDialog.Builder(activity).setTitle("Confirm on Exit?")
-                        .setItems(R.array.yesno, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                MainActivity activity = (MainActivity) getActivity();
-                                SharedPreferences settings = activity.getSettings();
-                                SharedPreferences.Editor editor = settings.edit();
-                                Boolean confirm = false;
-                                switch (whichButton) {
-                                    case 0:
-                                        confirm = Boolean.TRUE;
-                                        break;
-                                    case 1:
-                                        confirm = Boolean.FALSE;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                editor.putBoolean("ConfirmExit", confirm);
-                                editor.commit();
-                                refreshAdapter();
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Do nothing.
-                    }
-                }).show();
-            default:
-                break;
-        }
+        showComments.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                if(Boolean.parseBoolean(o.toString())) {
+                    showVotes.setEnabled(true);
+                    commentSort.setEnabled(true);
+                }
+                else {
+                    showVotes.setEnabled(false);
+                    commentSort.setEnabled(false);
+                }
+                return true;
+            }
+        });
     }
 }

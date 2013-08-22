@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,7 +50,7 @@ public class MessagingFragment extends Fragment {
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         MainActivity activity = (MainActivity)getActivity();
-        if(activity.theme == activity.HOLO_LIGHT)
+        if(activity.theme.equals(activity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -82,14 +82,14 @@ public class MessagingFragment extends Fragment {
         mDrawerList = (ListView) view.findViewById(R.id.account_list);
         MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
-        Log.d("Theme", settings.getInt("theme", 2) + "");
-        if(settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
+        Log.d("Theme", settings.getString("theme", activity.HOLO_LIGHT) + "");
+        if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
             messageAdapter = new MessageAdapter(activity, R.layout.message_layout);
         else
             messageAdapter = new MessageAdapter(activity, R.layout.message_layout_dark);
         String[] mMenuList = getResources().getStringArray(R.array.emptyList);
         ArrayAdapter<String> tempAdapter = null;
-        if(settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
+        if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
             tempAdapter = new ArrayAdapter<String>(activity,
                     R.layout.message_layout, mMenuList);
         else
@@ -214,7 +214,7 @@ public class MessagingFragment extends Fragment {
             if (convertView == null) {
                 MainActivity activity = (MainActivity) getActivity();
                 SharedPreferences settings = activity.getSettings();
-                if(settings.getInt("theme", activity.HOLO_LIGHT) == activity.HOLO_LIGHT)
+                if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
                     convertView = mInflater.inflate(R.layout.message_layout, null);
                 else
                     convertView = mInflater.inflate(R.layout.message_layout_dark, null);

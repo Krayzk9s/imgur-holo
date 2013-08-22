@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+            android:layout="@layout/preferences"/>
+    <PreferenceCategory
+            android:title="App Settings"
+            android:key="pref_cat_behavior">
+        <ListPreference android:key="DefaultPage"
+                        android:title= "Default Page"
+                        android:summary= "Gallery"
+                        android:defaultValue="Gallery"
+                        android:entries="@array/defaultArray"
+                        android:entryValues="@array/defaultArray"/>
+        <CheckBoxPreference android:key="ConfirmExit"
+                            android:title= "Confirm exit"
+                            android:summary= "Show confirmation dialog on exit"
+                            android:defaultValue="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:title="Gallery Settings"
+            android:key="pref_cat_gallery">
+        <ListPreference android:key="DefaultGallery"
+                        android:title= "Default gallery page"
+                        android:summary= ""
+                        android:defaultValue="hot"
+                        android:entries="@array/galleryOptions"
+                        android:entryValues="@array/galleryOptions"/>
+        <CheckBoxPreference android:key="ShowComments"
+                            android:title= "Gallery comments"
+                            android:summary= "Show comments in gallery"
+                            android:defaultValue="true" />
+        <ListPreference android:key="CommentSort"
+                        android:title= "Default comment sort"
+                        android:summary= ""
+                        android:defaultValue="Best"
+                        android:entries="@array/commentOptions"
+                        android:entryValues="@array/commentOptions"/>
+        <CheckBoxPreference android:key="ShowVotes"
+                            android:title= "Comment votes"
+                            android:summary= "Show votes for comments in gallery"
+                            android:defaultValue="true" />
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:title="Upload Settings"
+            android:key="pref_cat_gallery">
+        <CheckBoxPreference android:key="AutoCopy"
+                        android:title="Copy on image upload"
+                        android:summary="Copy URL on image upload to clipboard"
+                        android:defaultValue="true"/>
+        <ListPreference android:key="AutoCopyType"
+                            android:title= "Copy Type"
+                            android:summary= ""
+                            android:defaultValue="Direct Link"
+                            android:entries="@array/copyTypes"
+                            android:entryValues="@array/copyTypes"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:title="Theme Options"
+            android:key="pref_cat_theme">
+        <ListPreference android:key="theme"
+                        android:title= "Theme"
+                        android:summary= "Holo Light"
+                        android:defaultValue="Holo Light"
+                        android:entries="@array/themes"
+                        android:entryValues="@array/themes"/>
+        <ListPreference android:key="IconSize"
+                        android:title= "Thumbnail Size"
+                        android:summary= "90dps"
+                        android:entries="@array/iconsizes"
+                        android:entryValues="@array/iconsizes"/>/>
+    </PreferenceCategory>
+</PreferenceScreen>

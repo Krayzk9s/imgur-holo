@@ -80,7 +80,7 @@
                         android:title="Top" />
                 <item
                         android:id="@+id/menuSortNewest"
-                        android:title="Newest" />
+                        android:title="New" />
 
                 <item
                         android:id="@+id/menuSortDay"

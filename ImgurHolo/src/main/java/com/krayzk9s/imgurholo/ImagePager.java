@@ -1,10 +1,9 @@
 package com.krayzk9s.imgurholo;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,8 +46,7 @@ public class ImagePager extends Fragment {
         imageData = _ids;
     }
 
-
-    public class ImageAdapter extends FragmentPagerAdapter {
+    public class ImageAdapter extends android.support.v13.app.FragmentPagerAdapter {
 
         Context ctxt=null;
 
