@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurhologallery;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -211,27 +211,27 @@ public class MainActivity extends Activity {
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, galleryFragment)
                     .commit();
-        } else if (settings.getString("DefaultPage", "").equals("Your Albums")) {
+        } else if (settings.getString("DefaultPage", "").equals("Albums")) {
             setTitle("Your Albums");
             AlbumsFragment albumsFragment = new AlbumsFragment("me");
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, albumsFragment)
                     .commit();
-        } else if (settings.getString("DefaultPage", "").equals("Your Images")) {
+        } else if (settings.getString("DefaultPage", "").equals("Images")) {
             setTitle("Your Images");
             ImagesFragment imagesFragment = new ImagesFragment();
             imagesFragment.setImageCall(null, "3/account/me/images", null);
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
                     .commit();
-        } else if (settings.getString("DefaultPage", "").equals("Your Favorites")) {
+        } else if (settings.getString("DefaultPage", "").equals("Favorites")) {
             setTitle("Your Favorites");
             ImagesFragment imagesFragment = new ImagesFragment();
             imagesFragment.setImageCall(null, "3/account/me/likes", null);
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
                     .commit();
-        } else if (settings.getString("DefaultPage", "").equals("Your Account")) {
+        } else if (settings.getString("DefaultPage", "").equals("Account")) {
             setTitle("Your Account");
             AccountFragment accountFragment = new AccountFragment("me");
             fragmentManager.beginTransaction()

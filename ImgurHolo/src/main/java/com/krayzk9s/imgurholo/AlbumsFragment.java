@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurhologallery;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -135,7 +135,7 @@ public class AlbumsFragment extends Fragment {
         GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
         MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
-        gridview.setColumnWidth(activity.dpToPx(settings.getInt("IconSize", 90)));
+        gridview.setColumnWidth(activity.dpToPx(Integer.parseInt(settings.getString("IconSize", "90"))));
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());

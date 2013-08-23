@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurhologallery;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -63,6 +63,8 @@ public class GalleryFragment extends Fragment {
     CharSequence spinner;
     int lastInView = -1;
     TextView errorText;
+    GridView gridview;
+    int oldwidth = 0;
 
     public GalleryFragment() {
 
@@ -72,6 +74,11 @@ public class GalleryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -226,7 +233,7 @@ public class GalleryFragment extends Fragment {
         Log.d("NOT HERE EITHER", gallery);
         View view = inflater.inflate(R.layout.image_layout, container, false);
         errorText = (TextView) view.findViewById(R.id.error);
-        final GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
+        gridview = (GridView) view.findViewById(R.id.grid_layout);
 
         SharedPreferences settings = activity.getSettings();
         gridview.setColumnWidth(activity.dpToPx(Integer.parseInt(settings.getString("IconSize", "90"))));
@@ -237,20 +244,8 @@ public class GalleryFragment extends Fragment {
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        if (imageAdapter.getNumColumns() == 0) {
-                            SharedPreferences settings = activity.getSettings();
-                            Log.d("numColumnsWidth", gridview.getWidth()+"");
-                            Log.d("numColumnsIconWidth", activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "90"))))+"");
-                            final int numColumns = (int) Math.floor(
-                                    gridview.getWidth() / (activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "90")))) + activity.dpToPx(4)));
-                            if (numColumns > 0) {
-                                imageAdapter.setNumColumns(numColumns);
-                                if (BuildConfig.DEBUG) {
-                                    Log.d("NUMCOLS", "onCreateView - numColumns set to " + numColumns);
-                                }
-                                imageAdapter.notifyDataSetChanged();
-                            }
-                        }
+                        if(imageAdapter.getNumColumns() == 0 || gridview.getWidth() != oldwidth)
+                            setNumColumns();
                     }
                 });
         gridview.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -312,6 +307,26 @@ public class GalleryFragment extends Fragment {
         if(newData)
             makeGallery();
         return view;
+    }
+
+    private void setNumColumns() {
+        Log.d("Setting Columns", "Setting Columns");
+        MainActivity activity = (MainActivity) getActivity();
+        if(activity != null) {
+            oldwidth = gridview.getWidth();
+            SharedPreferences settings = activity.getSettings();
+            Log.d("numColumnsWidth", gridview.getWidth()+"");
+            Log.d("numColumnsIconWidth", activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "90"))))+"");
+            final int numColumns = (int) Math.floor(
+                    gridview.getWidth() / (activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "90")))) + activity.dpToPx(4)));
+            if (numColumns > 0) {
+                imageAdapter.setNumColumns(numColumns);
+                if (BuildConfig.DEBUG) {
+                    Log.d("NUMCOLS", "onCreateView - numColumns set to " + numColumns);
+                }
+                imageAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override

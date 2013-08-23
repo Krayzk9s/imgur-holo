@@ -1,12 +1,10 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurhologallery;
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,8 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -39,6 +39,10 @@ public class AccountFragment extends Fragment {
     SearchView mSearchView;
     MenuItem searchItem;
     ListView mDrawerList;
+    TextView usernameText;
+    TextView biography;
+    TextView created;
+    TextView reputation;
 
     public AccountFragment(String _username) {
         username = _username;
@@ -100,17 +104,24 @@ public class AccountFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         Log.d("Username", username);
         MainActivity activity = (MainActivity) getActivity();
+        SharedPreferences settings = activity.getSettings();
+
         Log.d("SettingTitle", username);
         if(username != "me")
             activity.setTitle(username + "'s Account");
         else
             activity.setTitle("My Account");
         View view = inflater.inflate(R.layout.account_layout, container, false);
+        LinearLayout header = (LinearLayout) view.findViewById(R.id.header);
+        if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
+            header.setBackgroundColor(0xFFCCCCCC);
+        biography = (TextView) view.findViewById(R.id.biography);
+        usernameText = (TextView) view.findViewById(R.id.username);
+        usernameText.setText(username);
+        created = (TextView) view.findViewById(R.id.created);
+        reputation = (TextView) view.findViewById(R.id.reputation);
         mDrawerList = (ListView) view.findViewById(R.id.account_list);
-        if(username.equals("me"))
-            mMenuList = getResources().getStringArray(R.array.accountMenu);
-        else
-            mMenuList = getResources().getStringArray(R.array.accountMenuNotMe);
+        mMenuList = getResources().getStringArray(R.array.accountMenu);
         adapter = new ArrayAdapter<String>(view.getContext(),
                 R.layout.drawer_list_item, mMenuList);
         mDrawerList.setAdapter(adapter);
@@ -130,10 +141,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void getAccount() {
-        if(username.equals("me"))
-            mMenuList = getResources().getStringArray(R.array.accountMenu);
-        else
-            mMenuList = getResources().getStringArray(R.array.accountMenuNotMe);
+        mMenuList = getResources().getStringArray(R.array.accountMenu);
         adapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.drawer_list_item, mMenuList);
         mDrawerList.setAdapter(adapter);
@@ -149,31 +157,6 @@ public class AccountFragment extends Fragment {
                     accountData = new HashMap<String, String>();
                     JSONObject likesJSON = activity.makeCall("3/account/" + username + "/likes", "get", null);
                     JSONObject commentJSON = activity.makeCall("3/account/" + username + "/comments/count", "get", null);
-                    if(username.equals("me")) {
-                        JSONObject statsJSON = activity.makeCall("3/account/" + username + "/stats", "get", null);
-                        JSONObject settingsJSON = activity.makeCall("3/account/" + username + "/settings", "get", null);
-                        JSONObject messageJSON = activity.makeCall("/3/account/me/notifications/messages?new=false", "get", null);
-                        statsJSON = statsJSON.getJSONObject("data");
-                        accountData.put("total_images", Integer.toString(statsJSON.getInt("total_images")));
-                        accountData.put("total_albums", Integer.toString(statsJSON.getInt("total_albums")));
-                        accountData.put("disk_used", statsJSON.getString("disk_used"));
-                        accountData.put("bandwidth_used", statsJSON.getString("bandwidth_used"));
-                        accountData.put("total_messages", Integer.toString(messageJSON.getJSONArray("data").length()));
-                        accountData.put("reputation", Integer.toString(accountInfoJSON.getJSONObject("data").getInt("reputation")));
-
-                        settingsJSON = settingsJSON.getJSONObject("data");
-                        accountData.put("email", settingsJSON.getString("email"));
-                        accountData.put("album_privacy", settingsJSON.getString("album_privacy"));
-                        if (settingsJSON.getBoolean("public_images") == false)
-                            accountData.put("public_images", "private");
-                        else
-                            accountData.put("public_images", "public");
-                        if (settingsJSON.getBoolean("messaging_enabled") == false)
-                            accountData.put("messaging_enabled", "disabled");
-                        else
-                            accountData.put("messaging_enabled", "enabled");
-                    }
-                    else {
                         try {
                             JSONObject imagesJSON = activity.makeCall("3/account/" + username + "/images/count", "get", null);
                             if(imagesJSON.getInt("status") == 200)
@@ -189,7 +172,6 @@ public class AccountFragment extends Fragment {
                         catch (Exception e) {
                             Log.e("Account get error", e.toString());
                         }
-                    }
                     accountInfoJSON = accountInfoJSON.getJSONObject("data");
                     Log.d("URI", accountInfoJSON.toString());
                     Log.d("URI", Integer.toString(accountInfoJSON.getInt("id")));
@@ -209,10 +191,6 @@ public class AccountFragment extends Fragment {
                     JSONArray likesJSONArray = likesJSON.getJSONArray("data");
                     accountData.put("total_likes", String.valueOf(likesJSONArray.length()));
                     accountData.put("total_comments", String.valueOf(commentJSON.getInt("data")));
-
-                    if(username.equals("me")) {
-
-                    }
                 } catch (Exception e) {
                     Log.e("Error!", e.toString());
                 }
@@ -230,43 +208,21 @@ public class AccountFragment extends Fragment {
 
     private void updateData() {
         if(isAdded()) {
-            if(username.equals("me"))
-                mMenuList = getResources().getStringArray(R.array.accountMenu);
+            if (accountData.get("bio") != null && !accountData.get("bio").equals("null") && !accountData.get("bio").equals(""))
+                biography.setText(accountData.get("bio"));
             else
-                mMenuList = getResources().getStringArray(R.array.accountMenuNotMe);
+                biography.setText("No Biography");
+            reputation.setText(accountData.get("reputation"));
+            created.setText(accountData.get("created"));
+            mMenuList = getResources().getStringArray(R.array.accountMenu);
             adapter = new ArrayAdapter<String>(getActivity(),
                     R.layout.drawer_list_item, mMenuList);
             mDrawerList.setAdapter(adapter);
-            if(username.equals("me")) {
+            if(accountData != null) {
                 mMenuList[0] = mMenuList[0] + " (" + accountData.get("total_albums") + ")";
                 mMenuList[1] = mMenuList[1] + " (" + accountData.get("total_images") + ")";
                 mMenuList[2] = mMenuList[2] + " (" + accountData.get("total_likes") + ")";
                 mMenuList[3] = mMenuList[3] + " (" + accountData.get("total_comments") + ")";
-                mMenuList[4] = mMenuList[4] + " (" + accountData.get("total_messages") + ")";
-                mMenuList[5] = mMenuList[5] + " " + accountData.get("created");
-                if (accountData.get("bio") != "null")
-                    mMenuList[6] = accountData.get("bio");
-                else
-                    mMenuList[6] = "No Biography";
-                mMenuList[7] = "Your imgur e-mail is " + accountData.get("email");
-                mMenuList[8] = "Your albums are " + accountData.get("album_privacy");
-                mMenuList[9] = "Your images are " + accountData.get("public_images");
-                mMenuList[10] = "Your messaging is " + accountData.get("messaging_enabled");
-                mMenuList[11] = mMenuList[11] + " - " + accountData.get("disk_used");
-                mMenuList[12] = mMenuList[12] + " - " + accountData.get("bandwidth_used");
-                mMenuList[13] = mMenuList[13] + ": " + accountData.get("reputation");
-            }
-            else if(accountData != null) {
-                mMenuList[0] = mMenuList[0] + " (" + accountData.get("total_albums") + ")";
-                mMenuList[1] = mMenuList[1] + " (" + accountData.get("total_images") + ")";
-                mMenuList[2] = mMenuList[2] + " (" + accountData.get("total_likes") + ")";
-                mMenuList[3] = mMenuList[3] + " (" + accountData.get("total_comments") + ")";
-                mMenuList[4] = mMenuList[4] + " " + accountData.get("created");
-                if (accountData.get("bio") != "null")
-                    mMenuList[5] = accountData.get("bio");
-                else
-                    mMenuList[5] = "No Biography";
-                mMenuList[6] = mMenuList[6] + ": " + accountData.get("reputation");
             }
             else {
                 int duration = Toast.LENGTH_SHORT;
@@ -318,134 +274,8 @@ public class AccountFragment extends Fragment {
                 CommentsFragment commentsFragment = new CommentsFragment(username);
                 activity.changeFragment(commentsFragment);
                 break;
-            case 4:
-                if(username == "me") {
-                    activity.setTitle("My Messages");
-                    MessagingFragment messagingFragment = new MessagingFragment();
-                    activity.changeFragment(messagingFragment);
-                }
-                break;
-            case 8:
-                new AlertDialog.Builder(activity).setTitle("Set Album Privacy")
-                        .setItems(R.array.albumPrivacy, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                MainActivity activity = (MainActivity) getActivity();
-                                SharedPreferences settings = activity.getSettings();
-                                SharedPreferences.Editor editor = settings.edit();
-                                String privacy = "";
-                                switch (whichButton) {
-                                    case 0:
-                                        privacy = "public";
-                                        mMenuList[8] = "Your albums are public";
-                                        break;
-                                    case 1:
-                                        privacy = "hidden";
-                                        mMenuList[8] = "Your albums are hidden";
-                                        break;
-                                    case 2:
-                                        privacy = "secret";
-                                        mMenuList[8] = "Your albums are secret";
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                SettingsAsync settingsAsync = new SettingsAsync("album_privacy", privacy, accountData.get("name"));
-                                settingsAsync.execute();
-                                adapter.notifyDataSetChanged();
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Do nothing.
-                    }
-                }).show();
-                break;
-            case 9:
-                new AlertDialog.Builder(activity).setTitle("Set Image Privacy")
-                        .setItems(R.array.privacy, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                MainActivity activity = (MainActivity) getActivity();
-                                SharedPreferences settings = activity.getSettings();
-                                SharedPreferences.Editor editor = settings.edit();
-                                int privacy = 0;
-                                switch (whichButton) {
-                                    case 0:
-                                        privacy = 0;
-                                        mMenuList[9] = "Your images are private";
-                                        break;
-                                    case 1:
-                                        privacy = 1;
-                                        mMenuList[9] = "Your images are public";
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                SettingsAsync settingsAsync = new SettingsAsync("public_images", privacy, accountData.get("name"));
-                                settingsAsync.execute();
-                                adapter.notifyDataSetChanged();
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Do nothing.
-                    }
-                }).show();
-                break;
-            case 10:
-                new AlertDialog.Builder(activity).setTitle("Enable/Disable Messaging")
-                        .setItems(R.array.messaging, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                MainActivity activity = (MainActivity) getActivity();
-                                SharedPreferences settings = activity.getSettings();
-                                SharedPreferences.Editor editor = settings.edit();
-                                int enable = 0;
-                                switch (whichButton) {
-                                    case 0:
-                                        enable = 1;
-                                        mMenuList[10] = "Your messaging is enabled";
-                                        break;
-                                    case 1:
-                                        enable = 0;
-                                        mMenuList[10] = "Your messaging is disabled";
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                SettingsAsync settingsAsync = new SettingsAsync("messaging_enabled", enable, accountData.get("name"));
-                                settingsAsync.execute();
-                                adapter.notifyDataSetChanged();
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Do nothing.
-                    }
-                }).show();
-                break;
             default:
                 break;
-        }
-    }
-
-    private class SettingsAsync extends AsyncTask<Void, Void, Void> {
-        private Object data;
-        private String settingName;
-        private String username;
-
-        public SettingsAsync(String _settingName, Object _data, String _username) {
-            data = _data;
-            settingName = _settingName;
-            username = _username;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            MainActivity activity = (MainActivity) getActivity();
-            HashMap<String, Object> args = new HashMap<String, Object>();
-            args.put(settingName, data);
-            activity.makeCall("/3/account/me/settings", "post", args);
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            getAccount();
         }
     }
 

@@ -56,7 +56,7 @@
                             android:entryValues="@array/copyTypes"/>
     </PreferenceCategory>
     <PreferenceCategory
-            android:title="Theme Options"
+            android:title="Theme Settings"
             android:key="pref_cat_theme">
         <ListPreference android:key="theme"
                         android:title= "Theme"
@@ -69,5 +69,18 @@
                         android:summary= "90dps"
                         android:entries="@array/iconsizes"
                         android:entryValues="@array/iconsizes"/>/>
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:title="Contact"
+            android:key="pref_cat_contact">
+        <Preference android:key="GooglePlus"
+                        android:title="Google+"
+                        android:summary= "Google Plus Community"/>
+        <Preference android:key="Reddit"
+                    android:title="Subreddit"
+                    android:summary= "/r/imgurholo"/>
+        <Preference android:key="Email"
+                        android:title= "Email"
+                        android:summary= "Send feedback"/>
     </PreferenceCategory>
 </PreferenceScreen>

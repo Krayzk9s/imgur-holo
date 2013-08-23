@@ -27,7 +27,7 @@
     <string name="menu_likes">Likes</string>
     <string name="menu_disk_used">Disk Used</string>
     <string name="menu_bio">Biography</string>
-    <string name="menu_account_creation">Created On</string>
+    <string name="menu_account_creation">Creation Date</string>
     <string name="menu_email">Your Email</string>
     <string name="album_privacy">Change Album Privacy</string>
     <string name="public_images">Change Image Privacy</string>
@@ -59,6 +59,9 @@
     <string name="hidden_string">Hidden</string>
     <string name="secret_string">Secret</string>
     <string name="public_string">Public</string>
+    <string name="hidden_string_submit">hidden</string>
+    <string name="secret_string_submit">secret</string>
+    <string name="public_string_submit">public</string>
     <string name="enable_messaging">Enable Messaging</string>
     <string name="disable_messaging">Disable Messaging</string>
     <string name="link">Link</string>

@@ -1,5 +1,7 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurhologallery;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -106,6 +108,38 @@ public class SettingsFragment extends PreferenceFragment {
                     showVotes.setEnabled(false);
                     commentSort.setEnabled(false);
                 }
+                return true;
+            }
+        });
+
+        Preference googlePlus = findPreference("GooglePlus");
+        googlePlus.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/communities/115412944377397978285"));
+                startActivity(Intent.createChooser(intent, "Go to Google Plus"));
+                return true;
+            }
+        });
+        Preference email = findPreference("Email");
+        email.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/html");
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[] { "imgurholo@gmail.com" });
+                intent.putExtra(Intent.EXTRA_SUBJECT, "imgur Holo Feedback");
+                startActivity(Intent.createChooser(intent, "Send Email"));
+                return true;
+            }
+        });
+        Preference reddit = findPreference("Reddit");
+        reddit.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("http://www.reddit.com/r/imgurholo/"));
+                startActivity(Intent.createChooser(intent, "Go to Subreddit"));
                 return true;
             }
         });

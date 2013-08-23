@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurhologallery;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -78,6 +78,8 @@ public class MessagingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.account_layout, container, false);
+        LinearLayout headerLayout = (LinearLayout) view.findViewById(R.id.header);
+        headerLayout.setVisibility(View.GONE);
         errorText = (TextView) view.findViewById(R.id.error);
         mDrawerList = (ListView) view.findViewById(R.id.account_list);
         MainActivity activity = (MainActivity) getActivity();
