@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurhologallery;
+package com.krayzk9s.imgurholo;
 
 
 import android.app.Fragment;
