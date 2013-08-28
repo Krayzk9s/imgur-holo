@@ -77,6 +77,7 @@
     <orderEntry type="library" name="urlimageviewhelper-1.0.4" level="project" />
     <orderEntry type="library" name="library-1.2.1" level="project" />
     <orderEntry type="library" name="android-support-v13" level="project" />
+    <orderEntry type="library" name="universal-image-loader-1.8.6" level="project" />
   </component>
 </module>
 

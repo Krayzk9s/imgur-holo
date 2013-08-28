@@ -67,8 +67,15 @@
         <ListPreference android:key="IconSize"
                         android:title= "Thumbnail Size"
                         android:summary= "90dps"
+                        android:defaultValue="90"
                         android:entries="@array/iconsizes"
-                        android:entryValues="@array/iconsizes"/>/>
+                        android:entryValues="@array/iconsizes"/>
+        <ListPreference android:key="IconQuality"
+                        android:title= "Thumbnail Quality"
+                        android:summary= "@string/low"
+                        android:defaultValue="s"
+                        android:entries="@array/imageQualities"
+                        android:entryValues="@array/imageQualitiesSettings"/>
     </PreferenceCategory>
     <PreferenceCategory
             android:title="Contact"

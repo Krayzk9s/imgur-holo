@@ -54,6 +54,7 @@
     <string name="ninety">90</string>
     <string name="onetwenty">120</string>
     <string name="oneeighty">180</string>
+    <string name="threesixty">360</string>
     <string name="all">All</string>
     <string name="private_string">Private</string>
     <string name="hidden_string">Hidden</string>
@@ -88,5 +89,16 @@
     <string name="topComment">Top</string>
     <string name="bestComment">Best</string>
     <string name="newComment">New</string>
+
+    <string name="best">Best</string>
+    <string name="high">High</string>
+    <string name="medium">Medium</string>
+    <string name="low">Low</string>
+
+    <string name="bestSetting">l</string>
+    <string name="highSetting">m</string>
+    <string name="mediumSetting">t</string>
+    <string name="lowSetting">s</string>
+
 
 </resources>

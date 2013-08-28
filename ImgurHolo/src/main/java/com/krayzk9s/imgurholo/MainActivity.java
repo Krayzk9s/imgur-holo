@@ -125,7 +125,8 @@ public class MainActivity extends Activity {
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         Intent intent = getIntent();
-        processIntent(intent);
+        if(savedInstanceState == null)
+            processIntent(intent);
     }
 
     public void updateMenu() {
@@ -244,7 +245,7 @@ public class MainActivity extends Activity {
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        processIntent(intent);
+        //processIntent(intent);
     }
 
     private void processIntent(Intent intent) {
@@ -291,16 +292,15 @@ public class MainActivity extends Activity {
             AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
                 @Override
                 protected JSONObject doInBackground(Void... voids) {
-                    JSONObject imageData = makeCall("/3/image/" + image, "get", null);
-                    return imageData;
+                    return makeCall("/3/image/" + image, "get", null);
                 }
 
                 @Override
-                protected void onPostExecute(JSONObject imageData) {
-                    Log.d("data", imageData.toString());
+                protected void onPostExecute(JSONObject singleImageData) {
                     try {
+                        Log.d("data", singleImageData.toString());
                         SingleImageFragment singleImageFragment = new SingleImageFragment();
-                        singleImageFragment.setParams(imageData.getJSONObject("data"));
+                        singleImageFragment.setParams(singleImageData.getJSONObject("data"));
                         singleImageFragment.setGallery(true);
                         changeFragment(singleImageFragment);
                     } catch (Exception e) {

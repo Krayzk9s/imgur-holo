@@ -159,10 +159,27 @@
     </array>
 
     <array
+        name="imageQualities">
+        <item>@string/best</item>
+        <item>@string/high</item>
+        <item>@string/medium</item>
+        <item>@string/low</item>
+        </array>
+
+    <array
+            name="imageQualitiesSettings">
+        <item>@string/bestSetting</item>
+        <item>@string/highSetting</item>
+        <item>@string/mediumSetting</item>
+        <item>@string/lowSetting</item>
+    </array>
+
+    <array
             name="iconsizes">
         <item>@string/ninety</item>
         <item>@string/onetwenty</item>
         <item>@string/oneeighty</item>
+        <item>@string/threesixty</item>
     </array>
     <array
             name="yesno">
