@@ -790,7 +790,7 @@ public class SingleImageFragment extends Fragment {
         TextView imageDescription = (TextView) imageLayoutView.findViewById(R.id.single_image_description);
 
         try {
-            String size = String.valueOf(NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("width"))) + "x" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("height")) + " (" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("size")) + " bytes)";
+            String size = String.valueOf(NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("width"))) + "x" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("height")) + " (" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("size")) + "B)";
             String initial = imageData.getJSONObject().getString("type") + " | " + size + " | Views: " + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("views"));
             imageDetails.setText(initial);
             Log.d("imagedata", imageData.getJSONObject().toString());
