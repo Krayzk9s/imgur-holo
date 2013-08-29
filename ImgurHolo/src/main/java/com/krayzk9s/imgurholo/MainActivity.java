@@ -124,9 +124,7 @@ public class MainActivity extends Activity {
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        Intent intent = getIntent();
-        if(savedInstanceState == null)
-            processIntent(intent);
+        loadDefaultPage();
     }
 
     public void updateMenu() {
@@ -244,17 +242,15 @@ public class MainActivity extends Activity {
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
-        //processIntent(intent);
+        Log.d("Going to process intent", "Processing intent...");
+        processIntent(intent);
     }
 
     private void processIntent(Intent intent) {
         String action = intent.getAction();
         String type = intent.getType();
         Log.d("New Intent", intent.toString());
-        if(Intent.ACTION_MAIN.equals(action))
-            loadDefaultPage();
-        else if (Intent.ACTION_SEND.equals(action) && type != null) {
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/")) {
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast;
@@ -282,9 +278,74 @@ public class MainActivity extends Activity {
             String uri = intent.getData().toString();
             final String album = uri.split("/")[4];
             Log.d("album", album);
-            ImagesFragment fragment = new ImagesFragment();
-            fragment.setImageCall(album, "/3/album/" + album + "/images", null);
-            changeFragment(fragment);
+            AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
+                @Override
+                protected JSONObject doInBackground(Void... voids) {
+                    return makeCall("/3/album/" + album, "get", null);
+                }
+
+                @Override
+                protected void onPostExecute(JSONObject albumData) {
+                    try {
+                        Log.d("data", albumData.toString());
+                        ImagesFragment fragment = new ImagesFragment();
+                        fragment.setImageCall(album, "/3/album/" + album, albumData.getJSONObject("data"));
+                        changeFragment(fragment);
+                    } catch (Exception e) {
+                        Log.e("Error!", e.toString());
+                    }
+                }
+            };
+            async.execute();
+        }  else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http://imgur.com/gallery/")) {
+                String uri = intent.getData().toString();
+                final String album = uri.split("/")[4];
+                if(album.length() == 5) {
+                    Log.d("album", album);
+                    AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
+                        @Override
+                        protected JSONObject doInBackground(Void... voids) {
+                            return makeCall("/3/album/" + album, "get", null);
+                        }
+
+                        @Override
+                        protected void onPostExecute(JSONObject albumData) {
+                            try {
+                                Log.d("data", albumData.toString());
+                                ImagesFragment fragment = new ImagesFragment();
+                                fragment.setImageCall(album, "/3/album/" + album, albumData.getJSONObject("data"));
+                                changeFragment(fragment);
+                            } catch (Exception e) {
+                                Log.e("Error!", e.toString());
+                            }
+                        }
+                    };
+                    async.execute();
+
+                }
+                else if(album.length() == 7) {
+                    Log.d("image", album);
+                    AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
+                        @Override
+                        protected JSONObject doInBackground(Void... voids) {
+                            return makeCall("/3/image/" + album, "get", null);
+                        }
+
+                        @Override
+                        protected void onPostExecute(JSONObject singleImageData) {
+                            try {
+                                Log.d("data", singleImageData.toString());
+                                SingleImageFragment singleImageFragment = new SingleImageFragment();
+                                singleImageFragment.setParams(singleImageData.getJSONObject("data"));
+                                singleImageFragment.setGallery(true);
+                                changeFragment(singleImageFragment);
+                            } catch (Exception e) {
+                                Log.e("Error!", e.toString());
+                            }
+                        }
+                    };
+                    async.execute();
+                }
         } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http://i.imgur")) {
             String uri = intent.getData().toString();
             final String image = uri.split("/")[3].split("\\.")[0];

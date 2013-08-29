@@ -55,9 +55,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.SimpleDateFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -83,9 +82,9 @@ public class SingleImageFragment extends Fragment {
     ArrayList<JSONParcelable> commentArray;
     LinearLayout imageLayoutView;
     PopupWindow popupWindow;
-    Boolean inPopout = false;
-    int lastInView = -1;
     String sort;
+    TextView imageScore;
+    TextView imageDetails;
 
     public SingleImageFragment() {
         inGallery = false;
@@ -434,8 +433,8 @@ public class SingleImageFragment extends Fragment {
 
         mainView = inflater.inflate(R.layout.single_image_layout, container, false);
         mMenuList = getResources().getStringArray(R.array.emptyList);
-        commentAdapter = new CommentAdapter(mainView.getContext(),
-                R.id.comment_item);
+        if(commentAdapter == null)
+            commentAdapter = new CommentAdapter(mainView.getContext(), R.id.comment_item);
         commentLayout = (ListView) mainView.findViewById(R.id.comment_thread);
         if (activity.theme.equals(activity.HOLO_LIGHT))
             imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
@@ -455,6 +454,7 @@ public class SingleImageFragment extends Fragment {
             inGallery = savedInstanceState.getBoolean("inGallery");
         }
         LinearLayout layout = (LinearLayout) imageLayoutView.findViewById(R.id.image_buttons);
+        imageDetails = (TextView) imageLayoutView.findViewById(R.id.single_image_details);
         layout.setVisibility(View.VISIBLE);
         imageFullscreen = (ImageButton) imageLayoutView.findViewById(R.id.fullscreen);
         imageUpvote = (ImageButton) imageLayoutView.findViewById(R.id.rating_good);
@@ -463,6 +463,11 @@ public class SingleImageFragment extends Fragment {
         imageComment = (ImageButton) imageLayoutView.findViewById(R.id.comment);
         imageUser = (ImageButton) imageLayoutView.findViewById(R.id.user);
         if (imageData.getJSONObject().has("ups")) {
+            imageScore = (TextView) imageLayoutView.findViewById(R.id.single_image_score);
+            imageScore.setVisibility(View.VISIBLE);
+            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) imageScore.getLayoutParams();
+            mlp.setMargins(0, 0, 0, 4);
+            updateImageFont();
             imageUpvote.setVisibility(View.VISIBLE);
             imageDownvote.setVisibility(View.VISIBLE);
             imageUser.setVisibility(View.VISIBLE);
@@ -619,6 +624,14 @@ public class SingleImageFragment extends Fragment {
                                 imageUpvote.setImageResource(R.drawable.green_rating_good);
                                 imageDownvote.setImageResource(R.drawable.dark_rating_bad);
                             }
+                            imageData.getJSONObject().put("ups", (Integer.parseInt(imageData.getJSONObject().getString("ups")) + 1) + "");
+                            if(imageData.getJSONObject().getString("vote").equals("down")) {
+                                imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) + 2) + "");
+                                imageData.getJSONObject().put("downs", (Integer.parseInt(imageData.getJSONObject().getString("downs")) - 1) + "");
+                            }
+                            else {
+                                imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) + 1) + "");
+                            }
                             imageData.getJSONObject().put("vote", "up");
                         } else {
                             if (activity.theme.equals(activity.HOLO_LIGHT)) {
@@ -628,12 +641,14 @@ public class SingleImageFragment extends Fragment {
                                 imageUpvote.setImageResource(R.drawable.dark_rating_good);
                                 imageDownvote.setImageResource(R.drawable.dark_rating_bad);
                             }
-
+                            imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) - 1) + "");
+                            imageData.getJSONObject().put("ups", (Integer.parseInt(imageData.getJSONObject().getString("ups")) - 1) + "");
                             imageData.getJSONObject().put("vote", "none");
                         }
                     } catch (Exception e) {
                         Log.e("Error!", e.toString());
                     }
+                    updateImageFont();
                     AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... voids) {
@@ -655,11 +670,20 @@ public class SingleImageFragment extends Fragment {
                     try {
                         if (!imageData.getJSONObject().getString("vote").equals("down")) {
                             if (activity.theme.equals(activity.HOLO_LIGHT)) {
+                                imageData.getJSONObject().put("vote", "down");
                                 imageUpvote.setImageResource(R.drawable.rating_good);
                                 imageDownvote.setImageResource(R.drawable.red_rating_bad);
                             } else {
                                 imageUpvote.setImageResource(R.drawable.dark_rating_good);
                                 imageDownvote.setImageResource(R.drawable.red_rating_bad);
+                            }
+                            imageData.getJSONObject().put("downs", (Integer.parseInt(imageData.getJSONObject().getString("downs")) + 1) + "");
+                            if(imageData.getJSONObject().getString("vote").equals("up")) {
+                                imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) - 2) + "");
+                                imageData.getJSONObject().put("ups", (Integer.parseInt(imageData.getJSONObject().getString("ups")) - 1) + "");
+                            }
+                            else {
+                                imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) - 1) + "");
                             }
                             imageData.getJSONObject().put("vote", "down");
                         } else {
@@ -670,12 +694,14 @@ public class SingleImageFragment extends Fragment {
                                 imageUpvote.setImageResource(R.drawable.dark_rating_good);
                                 imageDownvote.setImageResource(R.drawable.dark_rating_bad);
                             }
-
+                            imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) + 1) + "");
+                            imageData.getJSONObject().put("downs", (Integer.parseInt(imageData.getJSONObject().getString("downs")) - 1) + "");
                             imageData.getJSONObject().put("vote", "none");
                         }
                     } catch (Exception e) {
                         Log.e("Error!", e.toString());
                     }
+                    updateImageFont();
                     AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... voids) {
@@ -760,17 +786,14 @@ public class SingleImageFragment extends Fragment {
         } catch (Exception e) {
             Log.e("drawable Error!", e.toString());
         }
-        TextView imageDetails = (TextView) imageLayoutView.findViewById(R.id.single_image_details);
         TextView imageTitle = (TextView) imageLayoutView.findViewById(R.id.single_image_title);
         TextView imageDescription = (TextView) imageLayoutView.findViewById(R.id.single_image_description);
+
         try {
+            String size = String.valueOf(NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("width"))) + "x" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("height")) + " (" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("size")) + " bytes)";
+            String initial = imageData.getJSONObject().getString("type") + " | " + size + " | Views: " + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("views"));
+            imageDetails.setText(initial);
             Log.d("imagedata", imageData.getJSONObject().toString());
-            String size = String.valueOf(imageData.getJSONObject().getInt("width")) + "x" + String.valueOf(imageData.getJSONObject().getInt("height")) + " (" + String.valueOf(imageData.getJSONObject().getInt("size")) + " bytes)";
-            Calendar accountCreationDate = Calendar.getInstance();
-            accountCreationDate.setTimeInMillis((long) imageData.getJSONObject().getInt("datetime") * 1000);
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-            String accountCreated = sdf.format(accountCreationDate.getTime());
-            imageDetails.setText(imageData.getJSONObject().getString("type") + " | " + size + " | Views: " + String.valueOf(imageData.getJSONObject().getInt("views")));
             if (imageData.getJSONObject().getString("title") != "null")
                 imageTitle.setText(imageData.getJSONObject().getString("title"));
             else
@@ -799,6 +822,20 @@ public class SingleImageFragment extends Fragment {
             commentAdapter.notifyDataSetChanged();
         }
         return mainView;
+    }
+
+    private void updateImageFont() {
+        try {
+                if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
+                    imageScore.setText(Html.fromHtml("<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points </font> (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
+                else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
+                    imageScore.setText(Html.fromHtml("<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points </font> (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
+                else
+                    imageScore.setText(Html.fromHtml(NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
+        }
+        catch (Exception e) {
+            Log.e("Error font!", e.toString());
+        }
     }
 
     public void getComments() {
@@ -1093,21 +1130,7 @@ public class SingleImageFragment extends Fragment {
                             holder.indentViews[i].setVisibility(View.GONE);
                         }
                         holder.body.setText(viewData.getString("comment"));
-
-                        if (viewData.getString("author").length() < 25)
-                            holder.username.setText(viewData.getString("author"));
-                        else
-                            holder.username.setText(viewData.getString("author").substring(0, 25) + "...");
-
-                        if (imageData.getJSONObject().has("account_url") && viewData.getString("author") == imageData.getJSONObject().getString("account_url"))
-                            holder.username.setTextColor(0xFF98FB98);
-                        else
-                            holder.username.setTextColor(0xFF87CEEB);
-                        MainActivity activity = (MainActivity) getActivity();
-                        if(activity.getSettings().getBoolean("ShowVotes", true))
-                            holder.points.setText(Html.fromHtml(viewData.getString("points") + "pts (<font color=#89c624>" + viewData.getString("ups") + "</font>/<font color=#ee4444>" + viewData.getString("downs") + "</font>)"));
-                        else
-                            holder.points.setText("");
+                        updateFontColor(holder, viewData);
                         holder.header.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -1247,8 +1270,18 @@ public class SingleImageFragment extends Fragment {
                                             dataHolder.downvote.setImageResource(R.drawable.rating_bad);
                                         else
                                             dataHolder.downvote.setImageResource(R.drawable.dark_rating_bad);
+                                        viewData.put("ups", (Integer.parseInt(viewData.getString("ups")) + 1) + "");
+                                        if(viewData.getString("vote").equals("down"))
+                                        {
+                                            viewData.put("points", (Integer.parseInt(viewData.getString("points")) + 2) + "");
+                                            viewData.put("downs", (Integer.parseInt(viewData.getString("downs")) - 1) + "");
+                                        }
+                                        else
+                                            viewData.put("points", (Integer.parseInt(viewData.getString("points")) + 1) + "");
                                         viewData.put("vote", "up");
                                     } else {
+                                        viewData.put("ups", (Integer.parseInt(viewData.getString("ups")) - 1) + "");
+                                        viewData.put("points", (Integer.parseInt(viewData.getString("points")) - 1) + "");
                                         if (activity.theme.equals(activity.HOLO_LIGHT)) {
                                             dataHolder.upvote.setImageResource(R.drawable.rating_good);
                                             dataHolder.downvote.setImageResource(R.drawable.rating_bad);
@@ -1261,6 +1294,7 @@ public class SingleImageFragment extends Fragment {
                                 } catch (Exception e) {
                                     Log.e("Error!", e.toString());
                                 }
+                                updateFontColor(dataHolder, viewData);
                                 AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                                     @Override
                                     protected Void doInBackground(Void... voids) {
@@ -1286,8 +1320,17 @@ public class SingleImageFragment extends Fragment {
                                         } else {
                                             dataHolder.upvote.setImageResource(R.drawable.dark_rating_good);
                                         }
+                                        viewData.put("downs", (Integer.parseInt(viewData.getString("downs")) + 1) + "");
+                                        if(viewData.getString("vote").equals("up")) {
+                                            viewData.put("ups", (Integer.parseInt(viewData.getString("ups")) - 1) + "");
+                                            viewData.put("points", (Integer.parseInt(viewData.getString("points")) - 2) + "");
+                                        }
+                                        else
+                                            viewData.put("points", (Integer.parseInt(viewData.getString("points")) - 1) + "");
                                         viewData.put("vote", "down");
                                     } else {
+                                        viewData.put("points", (Integer.parseInt(viewData.getString("points")) + 1) + "");
+                                        viewData.put("downs", (Integer.parseInt(viewData.getString("downs")) - 1) + "");
                                         if (activity.theme.equals(activity.HOLO_LIGHT)) {
                                             dataHolder.upvote.setImageResource(R.drawable.rating_good);
                                             dataHolder.downvote.setImageResource(R.drawable.rating_bad);
@@ -1300,6 +1343,7 @@ public class SingleImageFragment extends Fragment {
                                 } catch (Exception e) {
                                     Log.e("Error!", e.toString());
                                 }
+                                updateFontColor(dataHolder, viewData);
                                 AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                                     @Override
                                     protected Void doInBackground(Void... voids) {
@@ -1330,6 +1374,30 @@ public class SingleImageFragment extends Fragment {
                     return convertView;
                 default:
                     return convertView;
+            }
+        }
+        private void updateFontColor(ViewHolder dataHolder, JSONObject viewData) {
+            MainActivity activity = (MainActivity) getActivity();
+            String username = "";
+            try {
+                if (viewData.getString("author").length() < 25)
+                   username = viewData.getString("author") + " &#8226; ";
+                else
+                   username = viewData.getString("author").substring(0, 25) + "..." + " &#8226; ";
+                if(activity.getSettings().getBoolean("ShowVotes", true))
+                {
+                    if (viewData.getString("vote") != null && viewData.getString("vote").equals("up"))
+                        dataHolder.points.setText(Html.fromHtml(username + "<font color=#89c624>" + NumberFormat.getIntegerInstance().format(viewData.getInt("points")) + " points </font> (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(viewData.getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(viewData.getInt("downs")) + "</font>)"));
+                    else if (viewData.getString("vote") != null && viewData.getString("vote").equals("down"))
+                        dataHolder.points.setText(Html.fromHtml(username + "<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(viewData.getInt("points")) + " points </font> (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(viewData.getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(viewData.getInt("downs")) + "</font>)"));
+                    else
+                        dataHolder.points.setText(Html.fromHtml(username + NumberFormat.getIntegerInstance().format(viewData.getInt("points")) + " points (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(viewData.getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(viewData.getInt("downs")) + "</font>)"));
+                }
+                else
+                    dataHolder.points.setText(username);
+                }
+            catch (Exception e) {
+                Log.e("Error!", e.toString());
             }
         }
     }

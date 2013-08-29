@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +28,6 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import org.json.JSONArray;
@@ -531,12 +529,7 @@ public class GalleryFragment extends Fragment {
                 else {
                     imageView = (ImageView) convertView;
                 }
-                UrlImageViewHelper.setUrlDrawable(imageView, urls.get(position - mNumColumns), new UrlImageViewCallback() {
-                    @Override
-                    public void onLoaded(ImageView imageView, Bitmap bitmap, String s, boolean b) {
-                        Log.d("image", s);
-                    }
-                });
+                UrlImageViewHelper.setUrlDrawable(imageView, urls.get(position - mNumColumns));
                 return imageView;
             }
         }
