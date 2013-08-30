@@ -70,6 +70,7 @@
             android:name=".ImageSelectActivity"
             android:label="@string/title_activity_image_select" >
         </activity>
+        <service android:name="com.krayzk9s.imgurholo.UploadService" />
     </application>
 
 </manifest>

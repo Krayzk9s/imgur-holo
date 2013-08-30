@@ -14,6 +14,8 @@
             android:fastScrollEnabled="true"
             android:persistentDrawingCache="scrolling"
             android:scrollingCache="false"
+            android:layout_marginRight="@dimen/comments_margin"
+            android:layout_marginLeft="@dimen/comments_margin"
             />
 
 </LinearLayout>

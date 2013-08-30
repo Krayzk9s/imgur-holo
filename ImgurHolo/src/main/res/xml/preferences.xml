@@ -66,8 +66,8 @@
                         android:entryValues="@array/themes"/>
         <ListPreference android:key="IconSize"
                         android:title= "Thumbnail Size"
-                        android:summary= "90dps"
-                        android:defaultValue="90"
+                        android:summary= "120dps"
+                        android:defaultValue="120"
                         android:entries="@array/iconsizes"
                         android:entryValues="@array/iconsizes"/>
         <ListPreference android:key="IconQuality"

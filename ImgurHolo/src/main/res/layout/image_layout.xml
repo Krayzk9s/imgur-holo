@@ -2,7 +2,8 @@
 
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/image_layout"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/image_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical">
@@ -23,16 +24,21 @@
             android:layout_gravity="center_horizontal"
             android:text="Error getting images"
             android:visibility="gone"/>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal">
     <GridView
               android:id="@+id/grid_layout"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:columnWidth="90dp"
-              android:rowHeight="90dp"
+              android:columnWidth="120dp"
+              android:rowHeight="120dp"
               android:numColumns="auto_fit"
               android:verticalSpacing="1dp"
               android:horizontalSpacing="1dp"
               android:scaleType="fitCenter"
               android:gravity="center">
     </GridView>
+    </LinearLayout>
 </LinearLayout>

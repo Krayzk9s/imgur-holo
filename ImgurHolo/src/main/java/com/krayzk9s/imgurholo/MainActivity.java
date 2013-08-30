@@ -14,19 +14,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -44,48 +40,30 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-
 import org.json.JSONObject;
-import org.scribe.builder.ServiceBuilder;
-import org.scribe.builder.api.ImgUr3Api;
 import org.scribe.model.Token;
 import org.scribe.model.Verifier;
-import org.scribe.oauth.OAuthService;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends Activity {
 
-    public static final String OAUTH_CALLBACK_SCHEME = "imgur-holo";
-    public static final String OAUTH_CALLBACK_HOST = "authcallback";
-    public static final String OAUTH_CALLBACK_URL = OAUTH_CALLBACK_SCHEME + "://" + OAUTH_CALLBACK_HOST;
-    public static final String MASHAPE_KEY = "CoV9d8oMmqhy8YdAbCAnB1MroW1xMJpP";
-    public static final String PREFS_NAME = "ImgurPrefs";
-    public static final String MASHAPE_URL = "https://imgur-apiv3.p.mashape.com/";
-    private static final String CLIENTID = "4cd3f96f162ac80";
-    private static final String SECRETID = "9cd3c621a4e064422e60aba4ccf84d6b149b4463";
-    private static final Token EMPTY_TOKEN = null;
+
     public static String HOLO_DARK = "Holo Dark";
     public static String HOLO_LIGHT = "Holo Light";
-    final OAuthService service = new ServiceBuilder().provider(ImgUr3Api.class).apiKey(CLIENTID).debug().callback(OAUTH_CALLBACK_URL).apiSecret(SECRETID).build();
     public String theme;
-    Token accessToken;
-    Verifier verifier;
-    boolean loggedin;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
+    private ApiCall apiCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences settings = getSettings();
+        apiCall = new ApiCall(settings);
         theme = settings.getString("theme", HOLO_LIGHT);
         if (theme.equals(HOLO_LIGHT))
             setTheme(R.style.AppTheme);
@@ -94,7 +72,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (settings.contains("RefreshToken")) {
-            loggedin = true;
+            apiCall.loggedin = true;
         }
         updateMenu();
 
@@ -132,11 +110,11 @@ public class MainActivity extends Activity {
         Log.d("theme", theme);
         Log.d("theme dark?", theme.equals(HOLO_DARK) + "");
         Log.d("theme light?", theme.equals(HOLO_LIGHT) + "");
-        if (loggedin && theme.equals(HOLO_DARK))
+        if (apiCall.loggedin && theme.equals(HOLO_DARK))
             drawerAdapter.setMenu(R.array.imgurMenuListLoggedIn, R.array.imgurMenuListDarkIcons);
-        else if (!loggedin && theme.equals(HOLO_DARK))
+        else if (!apiCall.loggedin && theme.equals(HOLO_DARK))
             drawerAdapter.setMenu(R.array.imgurMenuListLoggedOut, R.array.imgurMenuListDarkIconsLoggedOut);
-        else if (loggedin && theme.equals(HOLO_LIGHT))
+        else if (apiCall.loggedin && theme.equals(HOLO_LIGHT))
             drawerAdapter.setMenu(R.array.imgurMenuListLoggedIn, R.array.imgurMenuListIcons);
         else
             drawerAdapter.setMenu(R.array.imgurMenuListLoggedOut, R.array.imgurMenuListIconsLoggedOut);
@@ -204,7 +182,7 @@ public class MainActivity extends Activity {
     private void loadDefaultPage() {
         FragmentManager fragmentManager = getFragmentManager();
         SharedPreferences settings = getSettings();
-        if (!loggedin || !settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery")) {
+        if (!apiCall.loggedin || !settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery")) {
             setTitle("Gallery");
             GalleryFragment galleryFragment = new GalleryFragment();
             fragmentManager.beginTransaction()
@@ -256,8 +234,10 @@ public class MainActivity extends Activity {
                 Toast toast;
                 toast = Toast.makeText(this, "Uploading Image...", duration);
                 toast.show();
-                SendImage async = new SendImage((Uri) intent.getExtras().get("android.intent.extra.STREAM"));
-                async.execute();
+                Intent serviceIntent = new Intent(this, UploadService.class);
+                serviceIntent.setData((Uri) intent.getExtras().get("android.intent.extra.STREAM"));
+                startService(serviceIntent);
+                finish();
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             Log.d("sending", "sending multiple");
@@ -270,8 +250,10 @@ public class MainActivity extends Activity {
             for (Parcelable parcel : list) {
                 Uri uri = (Uri) parcel;
                 Log.d("sending", uri.toString());
-                SendImage async = new SendImage(uri);
-                async.execute();
+                Intent serviceIntent = new Intent(this, UploadService.class);
+                serviceIntent.setData(uri);
+                startService(serviceIntent);
+                finish();
                 /// do things here with each image source path.
             }
         } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http://imgur.com/a")) {
@@ -380,27 +362,27 @@ public class MainActivity extends Activity {
             Log.d("URI", uripath);
             Log.d("URI", "HERE");
 
-            if (uri != null && uripath.startsWith(OAUTH_CALLBACK_URL)) {
-                verifier = new Verifier(uri.getQueryParameter("code"));
+            if (uri != null && uripath.startsWith(apiCall.OAUTH_CALLBACK_URL)) {
+                apiCall.verifier = new Verifier(uri.getQueryParameter("code"));
 
                 AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... voids) {
                         SharedPreferences settings = getSettings();
                         SharedPreferences.Editor editor = settings.edit();
-                        accessToken = service.getAccessToken(Token.empty(), verifier);
-                        Log.d("URI", verifier.toString());
-                        Log.d("URI", accessToken.getToken());
-                        Log.d("URI", accessToken.getSecret());
-                        editor.putString("RefreshToken", accessToken.getSecret());
-                        editor.putString("AccessToken", accessToken.getToken());
+                        apiCall.accessToken = apiCall.service.getAccessToken(Token.empty(), apiCall.verifier);
+                        Log.d("URI", apiCall.verifier.toString());
+                        Log.d("URI", apiCall.accessToken.getToken());
+                        Log.d("URI", apiCall.accessToken.getSecret());
+                        editor.putString("RefreshToken", apiCall.accessToken.getSecret());
+                        editor.putString("AccessToken", apiCall.accessToken.getToken());
                         editor.commit();
                         return null;
                     }
 
                     @Override
                     protected void onPostExecute(Void aVoid) {
-                        loggedin = true;
+                        apiCall.loggedin = true;
                         updateMenu();
                     }
                 };
@@ -409,32 +391,13 @@ public class MainActivity extends Activity {
         }
     }
 
-    public Token renewAccessToken() {
-
-        SharedPreferences settings = getSettings();
-        SharedPreferences.Editor editor = settings.edit();
-        accessToken = service.refreshAccessToken(accessToken);
-        Log.d("URI", accessToken.getRawResponse());
-        editor.putString("AccessToken", accessToken.getToken());
-        editor.commit();
-        return accessToken;
+    public JSONObject makeCall(String url, String method, HashMap<String, Object> args) {
+        return apiCall.makeCall(url, method, args);
     }
 
-    public Token getAccessToken() {
-        SharedPreferences settings = getSettings();
-        if (settings.contains("RefreshToken")) {
-            accessToken = new Token(settings.getString("AccessToken", ""), settings.getString("RefreshToken", ""));
-            loggedin = true;
-            Log.d("URI", accessToken.toString());
-        } else {
-            loggedin = false;
-            login();
-        }
-        return accessToken;
-    }
 
     public SharedPreferences getSettings() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         return settings;
     }
 
@@ -443,7 +406,7 @@ public class MainActivity extends Activity {
         AsyncTask<Void, Void, String> async = new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
-                String authURL = service.getAuthorizationUrl(EMPTY_TOKEN);
+                String authURL = apiCall.service.getAuthorizationUrl(apiCall.EMPTY_TOKEN);
                 Log.d("AuthURL", authURL);
                 return authURL;
             }
@@ -488,8 +451,10 @@ public class MainActivity extends Activity {
             Toast toast;
             toast = Toast.makeText(this, "Uploading Image...", duration);
             toast.show();
-            SendImage async = new SendImage((Uri) data.getData());
-            async.execute(); // Handle single image being sent
+            Intent serviceIntent = new Intent();
+            serviceIntent.setAction("com.krayzk9s.imgurholo.UploadService");
+            serviceIntent.setData(data.getData());
+            startService(serviceIntent);
             return;
         }
         if (requestCode == 4 && resultCode == -1) {
@@ -499,8 +464,10 @@ public class MainActivity extends Activity {
             toast.show();
             Log.d("intent extras", data.getExtras().toString());
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            SendImage async = new SendImage(photo);
-            async.execute(); // Handle single image being sent
+            Intent serviceIntent = new Intent();
+            serviceIntent.setAction("com.krayzk9s.imgurholo.UploadService");
+            serviceIntent.setData(data.getData());
+            startService(serviceIntent);
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -535,7 +502,7 @@ public class MainActivity extends Activity {
                         .commit();
                 break;
             case 1:
-                if (loggedin) {
+                if (apiCall.loggedin) {
                     setTitle("Your Account");
                     AccountFragment accountFragment = new AccountFragment("me");
                     fragmentManager.beginTransaction()
@@ -551,7 +518,7 @@ public class MainActivity extends Activity {
                 }
                 break;
             case 2:
-                if (loggedin) {
+                if (apiCall.loggedin) {
                     new AlertDialog.Builder(this).setTitle("Upload Options")
                             .setItems(R.array.upload_options, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -567,7 +534,9 @@ public class MainActivity extends Activity {
                                                         @Override
                                                         protected Void doInBackground(Void... voids) {
                                                             MainActivity activity = MainActivity.this;
-                                                            activity.uploadURL(urlText.getText().toString());
+                                                            HashMap<String, Object> hashMap = new HashMap<String, Object>();
+                                                            hashMap.put("image", urlText.getText().toString());
+                                                            makeCall("3/image", "post", hashMap);
                                                             return null;
                                                         }
                                                     };
@@ -612,7 +581,7 @@ public class MainActivity extends Activity {
                     login();
                 break;
             case 3:
-                if (loggedin) {
+                if (apiCall.loggedin) {
                     setTitle("Your Images");
                     ImagesFragment imagesFragment = new ImagesFragment();
                     imagesFragment.setImageCall(null, "3/account/me/images", null);
@@ -623,7 +592,7 @@ public class MainActivity extends Activity {
                 }
                 break;
             case 4:
-                if (loggedin) {
+                if (apiCall.loggedin) {
                     setTitle("Your Albums");
                     AlbumsFragment albumsFragment = new AlbumsFragment("me");
                     fragmentManager.beginTransaction()
@@ -633,7 +602,7 @@ public class MainActivity extends Activity {
                 }
                 break;
             case 5:
-                if (loggedin) {
+                if (apiCall.loggedin) {
                     setTitle("Your Favorites");
                     ImagesFragment imagesFragment = new ImagesFragment();
                     imagesFragment.setImageCall(null, "3/account/me/likes", null);
@@ -644,7 +613,7 @@ public class MainActivity extends Activity {
                 }
                 break;
             case 6:
-                if (loggedin) {
+                if (apiCall.loggedin) {
                     setTitle("Your Messages");
                     MessagingFragment messagingFragment = new MessagingFragment();
                     fragmentManager.beginTransaction()
@@ -654,7 +623,7 @@ public class MainActivity extends Activity {
                 }
                 break;
             case 7:
-                if (loggedin) {
+                if (apiCall.loggedin) {
                     setTitle("Your Settings");
                     SettingsFragment settingsFragment = new SettingsFragment();
                     fragmentManager.beginTransaction()
@@ -664,13 +633,13 @@ public class MainActivity extends Activity {
                 }
                 break;
             case 8:
-                if (loggedin) {
+                if (apiCall.loggedin) {
                     SharedPreferences settings = getSettings();
                     SharedPreferences.Editor editor = settings.edit();
                     editor.remove("AccessToken");
                     editor.remove("RefreshToken");
                     editor.commit();
-                    loggedin = false;
+                    apiCall.loggedin = false;
                     updateMenu();
                 }
                 break;
@@ -684,100 +653,6 @@ public class MainActivity extends Activity {
         mTitle = title;
         Log.d("new title", title.toString());
         getActionBar().setTitle(mTitle);
-    }
-
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
-
-    public JSONObject uploadURL(String url) {
-        Token accessKey = getAccessToken();
-        Log.d("Making Call", accessKey.toString());
-        HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + "3/image")
-                .header("accept", "application/json")
-                .header("X-Mashape-Authorization", MASHAPE_KEY)
-                .header("Authorization", "Bearer " + accessKey.getToken())
-                .field("image", url)
-                .field("type", "URL")
-                .asJson();
-        Log.d("Getting Code", String.valueOf(response.getCode()));
-        int code = response.getCode();
-        if (code == 403) {
-            accessKey = renewAccessToken();
-            response = Unirest.post(MASHAPE_URL + "3/image")
-                    .header("accept", "application/json")
-                    .header("X-Mashape-Authorization", MASHAPE_KEY)
-                    .header("Authorization", "Bearer " + accessKey.getToken())
-                    .field("image", url)
-                    .field("type", "URL")
-                    .asJson();
-        }
-        JSONObject data = response.getBody().getObject();
-        Log.d("Got data", data.toString());
-        return data;
-    }
-
-    public JSONObject makeCall(String url, String method, HashMap<String, Object> args) {
-        Log.d("Call", url);
-        try {
-            JSONObject data = null;
-            String methodString = null;
-            if (url.contains("?"))
-                methodString = "&_method=" + method;
-            else
-                methodString = "?_method=" + method;
-            if (loggedin) {
-                Token accessKey = getAccessToken();
-                Log.d("Making Call", accessKey.toString());
-                HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + url + methodString)
-                        .header("accept", "application/json")
-                        .header("X-Mashape-Authorization", MASHAPE_KEY)
-                        .header("Authorization", "Bearer " + accessKey.getToken())
-                        .fields(args)
-                        .asJson();
-                Log.d("Getting Code", String.valueOf(response.getCode()));
-                int code = response.getCode();
-                if (code == 403) {
-                    accessKey = renewAccessToken();
-                    response = Unirest.post(MASHAPE_URL + url + methodString)
-                            .header("accept", "application/json")
-                            .header("X-Mashape-Authorization", MASHAPE_KEY)
-                            .header("Authorization", "Bearer " + accessKey.getToken())
-                            .fields(args)
-                            .asJson();
-                }
-                if (code == 200) {
-                    data = response.getBody().getObject();
-                    Log.d("Got data", data.toString());
-                }
-            } else {
-                HttpResponse<JsonNode> response = Unirest.post(MASHAPE_URL + url + methodString)
-                        .header("accept", "application/json")
-                        .header("X-Mashape-Authorization", MASHAPE_KEY)
-                        .header("Authorization", "Client-ID " + CLIENTID)
-                        .fields(args)
-                        .asJson();
-                Log.d("Getting Code", String.valueOf(response.getCode()));
-                int code = response.getCode();
-                if (code == 403) {
-                    response = Unirest.post(MASHAPE_URL + url + methodString)
-                            .header("accept", "application/json")
-                            .header("X-Mashape-Authorization", MASHAPE_KEY)
-                            .header("Authorization", "Client-ID " + CLIENTID)
-                            .fields(args)
-                            .asJson();
-                }
-                if (code == 200) {
-                    data = response.getBody().getObject();
-                    Log.d("Got data", data.toString());
-                }
-            }
-            return data;
-        } catch (Exception e) {
-            Log.e("Error getting data!", e.toString());
-            return null;
-        }
     }
 
     public void changeFragment(Fragment newFragment) {
@@ -838,61 +713,6 @@ public class MainActivity extends Activity {
         }
     }
 
-    private class SendImage extends AsyncTask<Void, Void, JSONObject> {
-        Uri uri;
-        Bitmap photo;
-
-        public SendImage(Uri _uri) {
-            uri = _uri;
-        }
-
-        public SendImage(Bitmap _photo) {
-            photo = _photo;
-        }
-
-        @Override
-        protected JSONObject doInBackground(Void... voids) {
-            Token accessKey = getAccessToken();
-            if (uri != null) {
-                Log.d("URI", uri.toString());
-                Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-                cursor.moveToFirst();
-                final String filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
-                Log.d("Image Upload", filePath);
-                photo = BitmapFactory.decodeFile(filePath);
-            }
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] byteArray = stream.toByteArray();
-            if (byteArray == null)
-                Log.d("Image Upload", "NULL :(");
-            String image = Base64.encodeToString(byteArray, Base64.DEFAULT);
-            Log.d("Image Upload", image);
-            HashMap<String, Object> hashMap = new HashMap<String, Object>();
-            hashMap.put("image", image);
-            hashMap.put("type", "binary");
-            JSONObject data = makeCall("3/image", "post", hashMap);
-            Log.d("Image Upload", data.toString());
-            try {
-                JSONObject returner = makeCall("3/image/" + data.getJSONObject("data").getString("id"), "get", null);
-                Log.d("returning", returner.toString());
-                return returner.getJSONObject("data");
-            } catch (Exception e) {
-                Log.e("Error!", e.toString());
-            }
-            return new JSONObject();
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject jsonObject) {
-            Log.d("Loading Fragment", "In Post Execute");
-            SingleImageFragment singleImageFragment = new SingleImageFragment();
-            singleImageFragment.setParams(jsonObject);
-            singleImageFragment.setGallery(false);
-            changeFragment(singleImageFragment);
-            copyURL(jsonObject);
-        }
-    }
 
     private void copyURL(JSONObject jsonObject) {
         SharedPreferences settings = getSettings();
