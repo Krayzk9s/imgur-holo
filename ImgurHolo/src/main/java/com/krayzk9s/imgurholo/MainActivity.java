@@ -451,7 +451,7 @@ public class MainActivity extends Activity {
             Toast toast;
             toast = Toast.makeText(this, "Uploading Image...", duration);
             toast.show();
-            Intent serviceIntent = new Intent();
+            Intent serviceIntent = new Intent(this, UploadService.class);
             serviceIntent.setAction("com.krayzk9s.imgurholo.UploadService");
             serviceIntent.setData(data.getData());
             startService(serviceIntent);
@@ -464,7 +464,7 @@ public class MainActivity extends Activity {
             toast.show();
             Log.d("intent extras", data.getExtras().toString());
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            Intent serviceIntent = new Intent();
+            Intent serviceIntent = new Intent(this, UploadService.class);
             serviceIntent.setAction("com.krayzk9s.imgurholo.UploadService");
             serviceIntent.setData(data.getData());
             startService(serviceIntent);
@@ -533,7 +533,6 @@ public class MainActivity extends Activity {
                                                     AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
                                                         @Override
                                                         protected Void doInBackground(Void... voids) {
-                                                            MainActivity activity = MainActivity.this;
                                                             HashMap<String, Object> hashMap = new HashMap<String, Object>();
                                                             hashMap.put("image", urlText.getText().toString());
                                                             makeCall("3/image", "post", hashMap);
