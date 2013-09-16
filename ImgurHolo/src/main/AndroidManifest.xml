@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.krayzk9s.imgurholo"
-    android:versionCode="20"
+    android:versionCode="21"
     android:versionName="0.9.0" >
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -24,6 +24,7 @@
             android:name=".MainActivity"
             android:label="imgur Holo"
             android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
