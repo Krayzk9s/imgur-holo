@@ -1,7 +1,7 @@
 package com.krayzk9s.imgurholo;
 
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;

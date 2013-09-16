@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" filepath="$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ImgurHoloProject.iml" filepath="$PROJECT_DIR$/ImgurHoloProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/imgur-holo.iml" filepath="$PROJECT_DIR$/imgur-holo.iml" />
     </modules>
   </component>

@@ -36,6 +36,8 @@ public class ApiCall {
 
     public ApiCall(SharedPreferences _settings) {
         settings = _settings;
+        if(settings.contains("AccessToken"))
+            loggedin = true;
     }
 
     public JSONObject makeCall(String url, String method, HashMap<String, Object> args) {

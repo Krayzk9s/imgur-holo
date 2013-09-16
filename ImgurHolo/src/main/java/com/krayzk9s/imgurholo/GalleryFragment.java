@@ -2,7 +2,7 @@ package com.krayzk9s.imgurholo;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -268,7 +268,7 @@ public class GalleryFragment extends Fragment {
                     try {
                         Log.d("Extending", "Getting more images!");
                         JSONArray imageArray = imagesData.getJSONArray("data");
-                        int imageLength = Math.min(urls.size() + 30, imageArray.length());
+                        int imageLength = imageArray.length(); //Math.min(urls.size() + 5, imageArray.length());
                         boolean loadedMore = false;
                         for (int i = urls.size(); i < imageLength; i++) {
                             loadedMore = true;
@@ -428,7 +428,7 @@ public class GalleryFragment extends Fragment {
                 try {
                     Log.d("URI", imagesData.toString());
                     JSONArray imageArray = imagesData.getJSONArray("data");
-                    int imageLength = Math.min(30, imageArray.length());
+                    int imageLength = imageArray.length(); //Math.min(30, imageArray.length());
                     for (int i = 0; i < imageLength; i++) {
                         JSONObject imageData = imageArray.getJSONObject(i);
                         Log.d("Data", imageData.toString());
@@ -577,7 +577,7 @@ public class GalleryFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save the user's current game state
+        // Save the user's current state
         savedInstanceState.putString("gallery", gallery);
         savedInstanceState.putString("sort", sort);
         savedInstanceState.putString("window", window);

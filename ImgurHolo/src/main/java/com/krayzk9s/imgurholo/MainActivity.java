@@ -1,11 +1,11 @@
 package com.krayzk9s.imgurholo;
 
 import android.app.ActionBar;
-import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -47,7 +47,7 @@ import org.scribe.model.Verifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
 
     public static String HOLO_DARK = "Holo Dark";
@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        loadDefaultPage();
+        processIntent(getIntent());
     }
 
     public void updateMenu() {
@@ -151,7 +151,7 @@ public class MainActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         //Handle the back button
         SharedPreferences settings = getSettings();
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             getActionBar().show();
         }
@@ -180,7 +180,7 @@ public class MainActivity extends Activity {
     }
 
     private void loadDefaultPage() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         SharedPreferences settings = getSettings();
         if (!apiCall.loggedin || !settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery")) {
             setTitle("Gallery");
@@ -389,6 +389,9 @@ public class MainActivity extends Activity {
                 async.execute();
             }
         }
+        else {
+            loadDefaultPage();
+        }
     }
 
     public JSONObject makeCall(String url, String method, HashMap<String, Object> args) {
@@ -491,7 +494,7 @@ public class MainActivity extends Activity {
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mDrawerList);
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         switch (position) {
             case 0:
@@ -510,10 +513,8 @@ public class MainActivity extends Activity {
                             .commit();
                 } else {
                     setTitle("Your Settings");
-                    SettingsFragment settingsFragment = new SettingsFragment();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.frame_layout, settingsFragment)
-                            .commit();
+                    Intent myIntent = new Intent(this, SettingsActivity.class);
+                    startActivity(myIntent);
                     updateMenu();
                 }
                 break;
@@ -624,10 +625,12 @@ public class MainActivity extends Activity {
             case 7:
                 if (apiCall.loggedin) {
                     setTitle("Your Settings");
-                    SettingsFragment settingsFragment = new SettingsFragment();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.frame_layout, settingsFragment)
-                            .commit();
+                    Intent myIntent = new Intent(this, SettingsActivity.class);
+                    startActivity(myIntent);
+                    //SettingsFragment settingsFragment = new SettingsFragment();
+                    //fragmentManager.beginTransaction()
+                    //        .replace(R.id.frame_layout, settingsFragment)
+                    //        .commit();
                     updateMenu();
                 }
                 break;
@@ -656,7 +659,7 @@ public class MainActivity extends Activity {
 
     public void changeFragment(Fragment newFragment) {
         getActionBar().show();
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, newFragment).addToBackStack("tag").commit();
         updateMenu();
