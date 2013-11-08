@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.krayzk9s.imgurholo"
-    android:versionCode="21"
-    android:versionName="0.9.0" >
+    android:versionCode="23"
+    android:versionName="0.9.1" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -16,15 +16,15 @@
         android:label="imgur Holo"
             >
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.krayzk9s.imgurholo.SettingsActivity"
             android:label="imgur Holo Settings"
             android:configChanges="orientation|screenSize"
             > </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.krayzk9s.imgurholo.MainActivity"
             android:label="imgur Holo"
             android:configChanges="orientation|screenSize"
-            android:launchMode="singleTop"
+            android:launchMode="standard"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -71,10 +71,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ImageSelectActivity"
+            android:name="com.krayzk9s.imgurholo.ImageSelectActivity"
             android:label="@string/title_activity_image_select" >
         </activity>
-        <service android:name=".UploadService" />
+        <service android:name="com.krayzk9s.imgurholo.UploadService" />
     </application>
 
 </manifest>

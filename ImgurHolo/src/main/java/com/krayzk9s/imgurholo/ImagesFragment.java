@@ -1,5 +1,21 @@
 package com.krayzk9s.imgurholo;
 
+/*
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -309,6 +325,12 @@ public class ImagesFragment extends Fragment {
                         getActivity().getActionBar().hide();
                         lastInView = firstVisibleItem;
                     }
+                    int lastInScreen = firstVisibleItem + visibleItemCount;
+                    if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0 && !gettingImages) {
+                        gettingImages = true;
+                        page += 1;
+                        getImages();
+                    }
                 }
             });
         }
@@ -330,7 +352,6 @@ public class ImagesFragment extends Fragment {
             protected Boolean doInBackground(Void... voids) {
                 boolean changed = false;
                 JSONArray imageArray = new JSONArray();
-                do {
                     try {
                         changed = false;
                         MainActivity activity = (MainActivity) getActivity();
@@ -367,14 +388,12 @@ public class ImagesFragment extends Fragment {
                         Log.e("Error!", "bad image array data" + e.toString());
                         imagesData = null;
                     }
-                    page += 1;
-                } while (imageArray.length() > 0 && changed);
                 return changed;
             }
 
             @Override
             protected void onPostExecute(Boolean changed) {
-                gettingImages = false;
+                gettingImages = !changed;
                 if (imagesData != null && urls.size() > 0)
                     imageAdapter.notifyDataSetChanged();
                 else if (imagesData == null && errorText != null)

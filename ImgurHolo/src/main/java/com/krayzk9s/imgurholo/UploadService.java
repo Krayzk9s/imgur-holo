@@ -1,5 +1,21 @@
 package com.krayzk9s.imgurholo;
 
+/*
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -114,22 +130,22 @@ public class UploadService extends IntentService {
             Intent shareIntent = new Intent();
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String link = "";
-            if (settings.getString("AutoCopyType", getResources().getString(R.string.direct_link)) == getResources().getString(R.string.direct_link)) {
+            if (settings.getString("AutoCopyType", getResources().getString(R.string.direct_link)).equals(getResources().getString(R.string.direct_link))) {
                link = "http://imgur.com/" + data.getString("id");
             }
-            else if(settings.getString("AutoCopyType", getResources().getString(R.string.direct_link)) == getResources().getString(R.string.link)) {
+            else if(settings.getString("AutoCopyType", getResources().getString(R.string.direct_link)).equals(getResources().getString(R.string.link))) {
                 link = data.getString("link");
             }
-            else if(settings.getString("AutoCopyType", getResources().getString(R.string.direct_link)) == getResources().getString(R.string.html_link)) {
+            else if(settings.getString("AutoCopyType", getResources().getString(R.string.direct_link)).equals(getResources().getString(R.string.html_link))) {
                 link = "<a href=\"http://imgur.com/" + data.getString("id") + "\"><img src=\"" + data.getString("link") + "\" title=\"Hosted by imgur.com\"/></a>";
             }
-            else if(settings.getString("AutoCopyType", getResources().getString(R.string.direct_link)) == getResources().getString(R.string.bbcode_link)) {
+            else if(settings.getString("AutoCopyType", getResources().getString(R.string.direct_link)).equals(getResources().getString(R.string.bbcode_link))) {
                 link = "[IMG]" + data.getString("link") + "[/IMG]";
             }
-            else if(settings.getString("AutoCopyType", getResources().getString(R.string.direct_link)) == getResources().getString(R.string.linked_bbcode_link)) {
+            else if(settings.getString("AutoCopyType", getResources().getString(R.string.direct_link)).equals(getResources().getString(R.string.linked_bbcode_link))) {
                 link = "[URL=http://imgur.com/" + data.getString("id") + "][IMG]" + data.getString("link") + "[/IMG][/URL]";
             }
-            else if(settings.getString("AutoCopyType", getResources().getString(R.string.direct_link)) == getResources().getString(R.string.markdown_link)) {
+            else if(settings.getString("AutoCopyType", getResources().getString(R.string.direct_link)).equals(getResources().getString(R.string.markdown_link))) {
                 link = "[Imgur](http://i.imgur.com/" + data.getString("id") + ")";
             }
                 shareIntent.setType("text/plain");
