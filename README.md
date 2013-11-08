@@ -1,4 +1,12 @@
 imgur-holo
 ==========
 
-New Android App
+This app and source code is licensed under the Apache license: http://www.apache.org/licenses/LICENSE-2.0.html with the sole exception being that if you use any of my code in your own android imgur client, you MUST get permission to publish on Google Play. I will almost assuredly give you permission as long as you aren't making a direct ripoff. I rather you make a pull request though :)
+
+Libraries used: https://github.com/laurencedawson/ZoomableImageView https://github.com/abarisain/dmix/tree/master/MPDroid
+
+Code from: Google examples, stackoverflow questions, etc. Please note if you see any code that is improperly attributed and I will fix it immediately.
+
+A future imgur app that is designed around the Holo guidelines and imgur API attempting to build the fastest possible android app with the most features (eventually!) and best user interface. This app is in BETA. Please don't download if you need a feature not listed in this description or don't mind a lot of bugs while the app is in the rapid development stage. Please report all bugs! Known bug: If image is too large the app will crash when going into fullscreen. Features: An app limited only by the features yet to implement and how fast your phone can connect to imgur's servers. Gallery - hot, top, user submitted, random images, search, subreddit, memes Account Settings - make images/albums private and enable/disable messaging App Settings - dark and light theme, set your default page Accounts - view other's accounts including their images, favorites, albums and comments. Favorites - favorite images from your collection and in the gallery for easy access Messaging - Message other users and reply to their messages Albums - Add albums and add images to them to share with others! Images - Share images via intent, copy the image URL in any common format with 2 clicks, download an image to your phone (not support with .gifs yet), edit title and description and publish them to the gallery. Community - interact with other imgur users on the gallery by commenting and voting. Collapsible comments! Upload - upload one image, or multiple images at once! Planned Features: widget clear data setting (can do this in android settings) font size setting hide votes setting auto upload images placed in certain folders save custom subreddits lock rotation setting slideshow of albums/gallery set image as background
+
+DISCLAIMER: “IMGUR” is a trademark of Imgur LLC and is used here for informational purposes only. imgur Holo is not affiliated with Imgur and has not been reviewed or approved by Imgur LLC
