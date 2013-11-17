@@ -16,16 +16,17 @@ package com.krayzk9s.imgurholo;
  * limitations under the License.
  */
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -107,7 +108,7 @@ public class ImagePager extends Fragment {
                 singleImageFragment.setArguments(bundle);
                 return singleImageFragment;
              }
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 Log.e("Error!", e.toString());
             }
             return null;

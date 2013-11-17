@@ -93,11 +93,7 @@ public class GalleryFragment extends Fragment implements GetData {
             subreddit = savedInstanceState.getString("subreddit");
             search = savedInstanceState.getString("search");
             urls = savedInstanceState.getStringArrayList("urls");
-            try {
-                ids = savedInstanceState.getParcelableArrayList("ids");
-            } catch (Exception e) {
-                Log.e("Error!", e.toString());
-            }
+            ids = savedInstanceState.getParcelableArrayList("ids");
             page = savedInstanceState.getInt("page");
             selectedIndex = savedInstanceState.getInt("selectedIndex");
             spinner = savedInstanceState.getCharSequence("spinner");

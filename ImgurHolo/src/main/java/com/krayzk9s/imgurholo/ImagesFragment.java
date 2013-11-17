@@ -56,7 +56,9 @@ import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -163,9 +165,14 @@ public class ImagesFragment extends Fragment implements GetData {
                                 fos.write(baf.toByteArray());
                                 fos.close();
                             }
-                        } catch (Exception e) {
+                        } catch (MalformedURLException e) {
+                            Log.e("Error!", e.toString());
+                        } catch (IOException e) {
+                            Log.e("Error!", e.toString());
+                        } catch (JSONException e) {
                             Log.e("Error!", e.toString());
                         }
+
 
                         return null;
                     }
@@ -190,7 +197,6 @@ public class ImagesFragment extends Fragment implements GetData {
                 getImages();
                 return true;
             case R.id.action_copy:
-                try {
                     ClipboardManager clipboard = (ClipboardManager)
                             activity.getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("imgur Link", "http://imgur.com/a/" + albumId);
@@ -198,19 +204,12 @@ public class ImagesFragment extends Fragment implements GetData {
                     duration = Toast.LENGTH_SHORT;
                     toast = Toast.makeText(activity, "Copied!", duration);
                     toast.show();
-                } catch (Exception e) {
-                    Log.e("Error!", e.toString());
-                }
                 return true;
             case R.id.action_share:
                 Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                try {
-                    intent.putExtra(Intent.EXTRA_TEXT, "http://imgur.com/a/" + albumId);
-                } catch (Exception e) {
-                    Log.e("Error!", "bad link to share");
-                }
+                intent.putExtra(Intent.EXTRA_TEXT, "http://imgur.com/a/" + albumId);
                 startActivity(intent);
                 return true;
             case R.id.action_new:
@@ -231,7 +230,7 @@ public class ImagesFragment extends Fragment implements GetData {
                             galleryAlbumData.put("height", imageParam.getInt("height"));
                             galleryAlbumData.put("size", imageParam.getInt("size"));
                             Log.d("Params w/ new data", galleryAlbumData.toString());
-                        } catch (Exception e) {
+                        } catch (JSONException e) {
                             Log.e("Error!", "bad single image call" + e.toString());
                         }
                         return null;
@@ -578,7 +577,7 @@ public class ImagesFragment extends Fragment implements GetData {
                         Log.d("checkedid", imageData.getJSONObject().getString("id"));
                     }
                 }
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 Log.e("Error!", e.toString());
             }
         }

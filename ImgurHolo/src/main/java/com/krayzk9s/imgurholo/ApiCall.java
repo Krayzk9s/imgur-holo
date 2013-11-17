@@ -58,7 +58,6 @@ public class ApiCall {
 
     public JSONObject makeCall(String url, String method, HashMap<String, Object> args) {
         Log.d("Call", url);
-        try {
             JSONObject data = null;
             String methodString = null;
             if (url.contains("?"))
@@ -112,10 +111,6 @@ public class ApiCall {
                 }
             }
             return data;
-        } catch (Exception e) {
-            Log.e("Error getting data!", e.toString());
-            return null;
-        }
     }
     public Token renewAccessToken() {
         SharedPreferences.Editor editor = settings.edit();

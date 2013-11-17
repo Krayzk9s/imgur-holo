@@ -35,6 +35,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -117,7 +118,7 @@ public class UploadService extends IntentService {
                 JSONObject returner = apiCallStatic.makeCall("3/image/" + data.getJSONObject("data").getString("id"), "get", null);
                 Log.d("returning", returner.toString());
                 return returner.getJSONObject("data");
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 Log.e("Error!", e.toString());
             }
             return new JSONObject();
@@ -158,11 +159,7 @@ public class UploadService extends IntentService {
             }
                 shareIntent.setType("text/plain");
                 shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                try {
                     shareIntent.putExtra(Intent.EXTRA_TEXT, link);
-            } catch (Exception e) {
-               Log.e("Error!", "bad link to share");
-            }
             PendingIntent viewImagePendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), viewImageIntent, 0);
             PendingIntent sharePendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), shareIntent, 0);
             Notification notification = notificationBuilder
@@ -178,7 +175,7 @@ public class UploadService extends IntentService {
             notificationManager.notify(1, notification);
             Log.d("Built", "Notification display");
             }
-            catch (Exception e) {
+            catch (JSONException e) {
                 Log.e("Error!", e.toString());
                 notificationManager.cancel(0);
                 notificationBuilder = new NotificationCompat.Builder(context);

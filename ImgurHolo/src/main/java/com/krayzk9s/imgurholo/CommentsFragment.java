@@ -40,6 +40,7 @@ import android.widget.TextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -158,7 +159,7 @@ public class CommentsFragment extends Fragment implements GetData {
                 commentDataArray.add(dataParcel);
             }
             commentsAdapter.addAll(commentDataArray);
-        } catch (Exception e) {
+        } catch (JSONException e) {
             errorText.setVisibility(View.VISIBLE);
             errorText.setText("Error getting comments");
             Log.e("Error!", "adding messages" + e.toString());
@@ -230,7 +231,6 @@ public class CommentsFragment extends Fragment implements GetData {
                         LinearLayout layout = (LinearLayout) v.getParent().getParent();
                         final ViewHolder dataHolder = (ViewHolder) layout.getTag();
                         MainActivity activity = (MainActivity) getActivity();
-                        try {
                             new AlertDialog.Builder(activity).setTitle("Delete Comment").setMessage("Are you sure you want to delete this comment?")
                                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -244,15 +244,11 @@ public class CommentsFragment extends Fragment implements GetData {
                                     // Do nothing.
                                 }
                             }).show();
-                        } catch (Exception e) {
-                            Log.e("Error!", "missing data");
-                        }
                     }
                 });
                 holder.link.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        try {
                             View convertView = (View) view.getParent().getParent();
                             final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
                             AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
@@ -262,7 +258,7 @@ public class CommentsFragment extends Fragment implements GetData {
                                     MainActivity activity = (MainActivity) getActivity();
                                     JSONObject imageData = activity.makeCall("/3/gallery/image/" + viewHolder.image_id, "get", null);
                                     return imageData.getJSONObject("data");
-                                    } catch (Exception e) {
+                                    } catch (JSONException e) {
                                         Log.e("Error!", "missing data");
                                     }
                                     return null;
@@ -280,16 +276,12 @@ public class CommentsFragment extends Fragment implements GetData {
                                 }
                             };
                             async.execute();
-                        }
-                        catch (Exception e) {
-                            Log.e("Error!", e.toString());
-                        }
                     }
                 });
 
                 convertView.setTag(holder);
             }
-            catch (Exception e) {
+            catch (JSONException e) {
                 Log.e("Error!", e.toString());
             }
             return convertView;

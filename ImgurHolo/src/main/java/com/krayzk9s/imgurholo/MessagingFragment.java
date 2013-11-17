@@ -38,6 +38,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -161,7 +162,7 @@ public class MessagingFragment extends Fragment {
                 messageDataArray.add(dataParcel);
             }
             messageAdapter.addAll(messageDataArray);
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Log.e("Error!", "adding messages" + e.toString());
             errorText.setVisibility(View.VISIBLE);
         }
@@ -192,13 +193,9 @@ public class MessagingFragment extends Fragment {
         new AlertDialog.Builder(activity).setTitle("Send Message")
                 .setView(linearLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                try {
                     Log.d("Header", newHeader.getText().toString());
                     MessagingAsync messagingAsync = new MessagingAsync(newHeader.getText().toString(), newBody.getText().toString(), newUsername.getText().toString());
                     messagingAsync.execute();
-                } catch (Exception e) {
-                    Log.e("Error!", "oops, some text fields missing values");
-                }
 
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -266,11 +263,7 @@ public class MessagingFragment extends Fragment {
                     public void onClick(View v) {
                         LinearLayout layout = (LinearLayout) v.getParent().getParent();
                         ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                        try {
                             buildSendMessage(dataHolder.from, dataHolder.title.getText().toString());
-                        } catch (Exception e) {
-                            Log.e("Error!", "missing data");
-                        }
                     }
                 }
                 );
@@ -283,12 +276,8 @@ public class MessagingFragment extends Fragment {
                         new AlertDialog.Builder(activity).setTitle("Report and Block User").setMessage("Are you sure you want to report this user and block them?")
                                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                        try {
                                             ReportAsync reportAsync = new ReportAsync(dataHolder.from);
                                             reportAsync.execute();
-                                        } catch (Exception e) {
-                                            Log.e("Error!", "missing data" + dataHolder.toString());
-                                        }
                                     }
                                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
@@ -304,8 +293,7 @@ public class MessagingFragment extends Fragment {
                     public void onClick(View v) {
                         LinearLayout layout = (LinearLayout) v.getParent().getParent();
                         final ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                        MainActivity activity = (MainActivity) getActivity();
-                        try {
+                            MainActivity activity = (MainActivity) getActivity();
                             new AlertDialog.Builder(activity).setTitle("Send Message").setMessage("Are you sure you want to delete this message?")
                                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -319,13 +307,10 @@ public class MessagingFragment extends Fragment {
                                     // Do nothing.
                                 }
                             }).show();
-                        } catch (Exception e) {
-                            Log.e("Error!", "missing data");
-                        }
                     }
                 });
                 convertView.setTag(holder);
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 Log.e("Error!", "error in getting view" + e.toString());
             }
             return convertView;

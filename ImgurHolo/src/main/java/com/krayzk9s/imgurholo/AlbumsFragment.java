@@ -117,14 +117,8 @@ public class AlbumsFragment extends Fragment implements GetData {
                 new AlertDialog.Builder(activity).setTitle("New Album")
                         .setView(linearLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        try {
-                            Log.d("Header", newTitle.getText().toString());
-                            NewAlbumAsync messagingAsync = new NewAlbumAsync(newTitle.getText().toString(), newDescription.getText().toString(), (MainActivity) getActivity());
-                            messagingAsync.execute();
-                        } catch (Exception e) {
-                            Log.e("Error!", "oops, some text fields missing values");
-                        }
-
+                        NewAlbumAsync messagingAsync = new NewAlbumAsync(newTitle.getText().toString(), newDescription.getText().toString(), (MainActivity) getActivity());
+                        messagingAsync.execute();
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {

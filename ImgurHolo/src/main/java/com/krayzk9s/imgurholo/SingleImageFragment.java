@@ -62,13 +62,16 @@ import android.widget.Toast;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.NumberFormat;
@@ -206,7 +209,7 @@ public class SingleImageFragment extends Fragment {
                                         activity.makeCall("3/gallery/" + imageData.getJSONObject().getString("id"), "delete", null);
                                         return false;
                                     }
-                                } catch (Exception e) {
+                                } catch (JSONException e) {
                                     Log.e("Error!", "oops, some text fields missing values" + e.toString());
                                 }
                                 return false;
@@ -270,7 +273,7 @@ public class SingleImageFragment extends Fragment {
                                         editImageMap.put("title", newTitle.getText().toString());
                                         editImageMap.put("description", newBody.getText().toString());
                                         activity.makeCall("3/image/" + imageData.getJSONObject().getString("id"), "post", editImageMap);
-                                    } catch (Exception e) {
+                                    } catch (JSONException e) {
                                         Log.e("Error!", "oops, some text fields missing values" + e.toString());
                                     }
                                     return null;
@@ -283,7 +286,7 @@ public class SingleImageFragment extends Fragment {
                             // Do nothing.
                         }
                     }).show();
-                } catch (Exception e) {
+                } catch (JSONException e) {
                     Log.e("Error!", "oops, some image fields missing values" + e.toString());
                 }
                 return true;
@@ -308,7 +311,11 @@ public class SingleImageFragment extends Fragment {
                             fos.close();
                             activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                                     + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))));
-                        } catch (Exception e) {
+                        } catch (JSONException e) {
+                            Log.e("Error!", e.toString());
+                        } catch (MalformedURLException e) {
+                            Log.e("Error!", e.toString());
+                        } catch (IOException e) {
                             Log.e("Error!", e.toString());
                         }
                         return null;
@@ -335,7 +342,7 @@ public class SingleImageFragment extends Fragment {
                                         try {
                                             MainActivity activity = (MainActivity) getActivity();
                                             activity.makeCall("3/image/" + imageData.getJSONObject().getString("id"), "delete", null);
-                                        } catch (Exception e) {
+                                        } catch (JSONException e) {
                                             Log.e("Error!", e.toString());
                                         }
                                         return null;
@@ -364,7 +371,7 @@ public class SingleImageFragment extends Fragment {
                     copyTypes[3] = copyTypes[3] + "\n[IMG]" + imageData.getJSONObject().getString("link") + "[/IMG]";
                     copyTypes[4] = copyTypes[4] + "\n[URL=http://imgur.com/" + imageData.getJSONObject().getString("id") + "][IMG]" + imageData.getJSONObject().getString("link") + "[/IMG][/URL]";
                     copyTypes[5] = copyTypes[5] + "\n[Imgur](http://i.imgur.com/" + imageData.getJSONObject().getString("id") + ")";
-                } catch (Exception e) {
+                } catch (JSONException e) {
                     Log.e("Error!", e.toString());
                 }
                 new AlertDialog.Builder(activity).setTitle("Set Link Type to Copy")
@@ -403,7 +410,7 @@ public class SingleImageFragment extends Fragment {
                                     toast.show();
                                     ClipData clip = ClipData.newPlainText("imgur Link", link);
                                     clipboard.setPrimaryClip(clip);
-                                } catch (Exception e) {
+                                } catch (JSONException e) {
                                     Log.e("Error!", "No link in image data!");
                                 }
 
@@ -420,7 +427,7 @@ public class SingleImageFragment extends Fragment {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                 try {
                     intent.putExtra(Intent.EXTRA_TEXT, imageData.getJSONObject().getString("link"));
-                } catch (Exception e) {
+                } catch (JSONException e) {
                     Log.e("Error!", "bad link to share");
                 }
                 startActivity(intent);
@@ -504,7 +511,7 @@ public class SingleImageFragment extends Fragment {
                 }
                 if (imageData.getJSONObject().getString("favorite") != null && imageData.getJSONObject().getBoolean("favorite"))
                     imageFavorite.setImageResource(R.drawable.green_rating_favorite);
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 Log.e("Error!", e.toString());
             }
             imageFavorite.setOnClickListener(new View.OnClickListener() {
@@ -521,7 +528,7 @@ public class SingleImageFragment extends Fragment {
                             else
                                 imageFavorite.setImageResource(R.drawable.dark_rating_favorite);
                         }
-                    } catch (Exception e) {
+                    } catch (JSONException e) {
                         Log.e("Error!", "missing data" + e.toString());
                     }
 
@@ -531,7 +538,7 @@ public class SingleImageFragment extends Fragment {
                             MainActivity activity = (MainActivity) getActivity();
                             try {
                                 activity.makeCall("3/image/" + imageData.getJSONObject().getString("id") + "/favorite", "post", null);
-                            } catch (Exception e) {
+                            } catch (JSONException e) {
                                 Log.e("Error!", e.toString());
                             }
                             return null;
@@ -550,7 +557,7 @@ public class SingleImageFragment extends Fragment {
                         accountFragment.setArguments(bundle);
                         MainActivity activity = (MainActivity) getActivity();
                         activity.changeFragment(accountFragment, true);
-                    } catch (Exception e) {
+                    } catch (JSONException e) {
                         Log.e("Error!", e.toString());
                     }
 
@@ -559,7 +566,6 @@ public class SingleImageFragment extends Fragment {
             imageComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try {
                         MainActivity activity = (MainActivity) getActivity();
                         final EditText newBody = new EditText(activity);
                         newBody.setHint("Body");
@@ -602,7 +608,7 @@ public class SingleImageFragment extends Fragment {
                                                 commentMap.put("comment", newBody.getText().toString());
                                                 commentMap.put("image_id", imageData.getJSONObject().getString("id"));
                                                 activity.makeCall("3/comment/", "post", commentMap);
-                                            } catch (Exception e) {
+                                            } catch (JSONException e) {
                                                 Log.e("Error!", "oops, some text fields missing values" + e.toString());
                                             }
                                             return null;
@@ -627,9 +633,6 @@ public class SingleImageFragment extends Fragment {
                                 // Do nothing.
                             }
                         }).show();
-                    } catch (Exception e) {
-                        Log.e("Error!", "missing data");
-                    }
                 }
             });
             imageUpvote.setOnClickListener(new View.OnClickListener() {
@@ -665,7 +668,7 @@ public class SingleImageFragment extends Fragment {
                             imageData.getJSONObject().put("ups", (Integer.parseInt(imageData.getJSONObject().getString("ups")) - 1) + "");
                             imageData.getJSONObject().put("vote", "none");
                         }
-                    } catch (Exception e) {
+                    } catch (JSONException e) {
                         Log.e("Error!", e.toString());
                     }
                     updateImageFont();
@@ -675,7 +678,7 @@ public class SingleImageFragment extends Fragment {
                             MainActivity activity = (MainActivity) getActivity();
                             try {
                                 activity.makeCall("3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/up", "post", null);
-                            } catch (Exception e) {
+                            } catch (JSONException e) {
                                 Log.e("Error!", e.toString());
                             }
                             return null;
@@ -718,7 +721,7 @@ public class SingleImageFragment extends Fragment {
                             imageData.getJSONObject().put("downs", (Integer.parseInt(imageData.getJSONObject().getString("downs")) - 1) + "");
                             imageData.getJSONObject().put("vote", "none");
                         }
-                    } catch (Exception e) {
+                    } catch (JSONException e) {
                         Log.e("Error!", e.toString());
                     }
                     updateImageFont();
@@ -728,7 +731,7 @@ public class SingleImageFragment extends Fragment {
                             MainActivity activity = (MainActivity) getActivity();
                             try {
                                 activity.makeCall("3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/down", "post", null);
-                            } catch (Exception e) {
+                            } catch (JSONException e) {
                                 Log.e("Error!", e.toString());
                             }
                             return null;
@@ -768,7 +771,9 @@ public class SingleImageFragment extends Fragment {
                             InputStream input = connection.getInputStream();
                             Bitmap bitmap = BitmapFactory.decodeStream(input);
                             return bitmap;
-                        } catch (Exception e) {
+                        } catch (JSONException e) {
+                            Log.e("Error!", e.toString());
+                        } catch (IOException e) {
                             Log.e("Error!", e.toString());
                         }
                         return null;
@@ -803,7 +808,7 @@ public class SingleImageFragment extends Fragment {
                         width, height));
             else
                 imageView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Log.e("drawable Error!", e.toString());
         }
         TextView imageTitle = (TextView) imageLayoutView.findViewById(R.id.single_image_title);
@@ -824,7 +829,7 @@ public class SingleImageFragment extends Fragment {
                 imageDescription.setVisibility(View.GONE);
             commentLayout.addHeaderView(imageLayoutView);
             commentLayout.setAdapter(tempAdapter);
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Log.e("Text Error!", e.toString());
         }
         if ((savedInstanceState == null || commentData == null) && newData) {
@@ -857,7 +862,7 @@ public class SingleImageFragment extends Fragment {
                 else
                     imageScore.setText(Html.fromHtml(NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
         }
-        catch (Exception e) {
+        catch (JSONException e) {
             Log.e("Error font!", e.toString());
 
         }
@@ -874,7 +879,7 @@ public class SingleImageFragment extends Fragment {
                 if (inGallery) {
                     try {
                         commentData.setJSONObject(activity.makeCall("3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments", "get", null));
-                    } catch (Exception e) {
+                    } catch (JSONException e) {
                         Log.e("Error3!", e.toString());
                     }
                 }
@@ -883,15 +888,10 @@ public class SingleImageFragment extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                try {
                     if (inGallery && commentAdapter != null) {
                         addComments();
                         commentAdapter.notifyDataSetChanged();
                     }
-
-                } catch (Exception e) {
-                    Log.e("Error2!", e.toString());
-                }
             }
         };
         async.execute();
@@ -915,7 +915,7 @@ public class SingleImageFragment extends Fragment {
                 getIndents(childrenArray.get(i), 0);
             }
             commentAdapter.addAll(commentArray);
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Log.e("Error1!", e.toString());
         }
     }
@@ -946,7 +946,7 @@ public class SingleImageFragment extends Fragment {
                     getIndents(child, currentIndent + 1);
                 }
             }
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Log.e("Error5!", e.toString());
         }
     }
@@ -966,7 +966,7 @@ public class SingleImageFragment extends Fragment {
                 return 1;
             return 0;
             }
-            catch (Exception e) {
+            catch (JSONException e) {
                 Log.e("Error!", e.toString());
                 return 0;
             }
@@ -988,7 +988,7 @@ public class SingleImageFragment extends Fragment {
                     return 1;
                 return 0;
             }
-            catch (Exception e) {
+            catch (JSONException e) {
                 Log.e("Error!", e.toString());
                 return 0;
             }
@@ -1025,7 +1025,7 @@ public class SingleImageFragment extends Fragment {
                 } else
                     break;
             }
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Log.e("Converting to Hidden Error!", e.toString());
         }
         commentAdapter.notifyDataSetChanged();
@@ -1171,7 +1171,7 @@ public class SingleImageFragment extends Fragment {
                                     accountFragment.setArguments(bundle);
                                     MainActivity activity = (MainActivity) getActivity();
                                     activity.changeFragment(accountFragment, true);
-                                } catch (Exception e) {
+                                } catch (JSONException e) {
                                     Log.e("Error!", e.toString());
                                 }
 
@@ -1195,7 +1195,7 @@ public class SingleImageFragment extends Fragment {
                                         viewHolder.buttons.setVisibility(View.VISIBLE);
                                     else
                                         viewHolder.buttons.setVisibility(View.GONE);
-                                } catch (Exception e) {
+                                } catch (JSONException e) {
                                     Log.e("Error!", e.toString());
                                 }
                             }
@@ -1209,7 +1209,6 @@ public class SingleImageFragment extends Fragment {
                             public void onClick(View view) {
                                 LinearLayout layout = (LinearLayout) view.getParent().getParent();
                                 final ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                                try {
                                     MainActivity activity = (MainActivity) getActivity();
                                     final EditText newBody = new EditText(activity);
                                     newBody.setLines(3);
@@ -1254,7 +1253,7 @@ public class SingleImageFragment extends Fragment {
                                                             commentMap.put("image_id", imageData.getJSONObject().getString("id"));
                                                             commentMap.put("parent_id", dataHolder.id);
                                                             activity.makeCall("3/comment/", "post", commentMap);
-                                                        } catch (Exception e) {
+                                                        } catch (JSONException e) {
                                                             Log.e("Error!", "oops, some text fields missing values" + e.toString());
                                                         }
                                                         return null;
@@ -1279,9 +1278,6 @@ public class SingleImageFragment extends Fragment {
                                             // Do nothing.
                                         }
                                     }).show();
-                                } catch (Exception e) {
-                                    Log.e("Error!", "missing data" + e.toString());
-                                }
                             }
                         });
                         holder.upvote.setOnClickListener(new View.OnClickListener() {
@@ -1318,7 +1314,7 @@ public class SingleImageFragment extends Fragment {
                                         }
                                         viewData.put("vote", "none");
                                     }
-                                } catch (Exception e) {
+                                } catch (JSONException e) {
                                     Log.e("Error!", e.toString());
                                 }
                                 updateFontColor(dataHolder, viewData);
@@ -1367,7 +1363,7 @@ public class SingleImageFragment extends Fragment {
                                         }
                                         viewData.put("vote", "none");
                                     }
-                                } catch (Exception e) {
+                                } catch (JSONException e) {
                                     Log.e("Error!", e.toString());
                                 }
                                 updateFontColor(dataHolder, viewData);
@@ -1392,7 +1388,7 @@ public class SingleImageFragment extends Fragment {
                             holder.body.setVisibility(View.GONE);
                         } else
                             holder.body.setVisibility(View.VISIBLE);
-                    } catch (Exception e) {
+                    } catch (JSONException e) {
                         Log.e("View Error!", e.toString());
                     }
                     convertView.setTag(holder);
@@ -1423,7 +1419,7 @@ public class SingleImageFragment extends Fragment {
                 else
                     dataHolder.points.setText(username);
                 }
-            catch (Exception e) {
+            catch (JSONException e) {
                 Log.e("Error!", e.toString());
             }
         }

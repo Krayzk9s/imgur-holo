@@ -56,6 +56,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.scribe.model.Token;
 import org.scribe.model.Verifier;
@@ -668,7 +669,7 @@ public class MainActivity extends FragmentActivity {
             ClipData clip = ClipData.newPlainText("imgur Link", link);
             clipboard.setPrimaryClip(clip);
         }
-        catch (Exception e) {
+        catch (JSONException e) {
             Log.e("Error!", e.toString());
         }
     }
@@ -707,7 +708,7 @@ public class MainActivity extends FragmentActivity {
                 bundle.putParcelable("albumData", data);
                 fragment.setArguments(bundle);
                 activity.changeFragment(fragment, false);
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 Log.e("Error!", e.toString());
             }
         }
@@ -737,7 +738,7 @@ public class MainActivity extends FragmentActivity {
                 bundle.putParcelable("imageData", data);
                 singleImageFragment.setArguments(bundle);
                 activity.changeFragment(singleImageFragment, false);
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 Log.e("Error!", e.toString());
             }
         }

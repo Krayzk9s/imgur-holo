@@ -299,7 +299,7 @@ public class AccountFragment extends Fragment implements GetData {
                     else
                         _accountData.put("total_albums", "0");
                 }
-                catch (Exception e) {
+                catch (JSONException e) {
                     Log.e("Account get error", e.toString());
                 }
                 accountInfoJSON = accountInfoJSON.getJSONObject("data");
