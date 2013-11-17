@@ -18,12 +18,10 @@
         <activity
             android:name="com.krayzk9s.imgurholo.SettingsActivity"
             android:label="imgur Holo Settings"
-            android:configChanges="orientation|screenSize"
             > </activity>
         <activity
             android:name="com.krayzk9s.imgurholo.MainActivity"
             android:label="imgur Holo"
-            android:configChanges="orientation|screenSize"
             android:launchMode="standard"
                 >
             <intent-filter>

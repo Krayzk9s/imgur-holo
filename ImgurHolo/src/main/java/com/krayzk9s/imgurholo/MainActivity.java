@@ -17,11 +17,7 @@ package com.krayzk9s.imgurholo;
  */
 
 import android.app.ActionBar;
-import android.support.v4.app.FragmentActivity;
 import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -37,6 +33,10 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.DisplayMetrics;
@@ -79,7 +79,8 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences settings = getSettings();
-        apiCall = new ApiCall(settings);
+        apiCall = new ApiCall();
+        apiCall.setSettings(settings);
         theme = settings.getString("theme", HOLO_LIGHT);
         if (theme.equals(HOLO_LIGHT))
             setTheme(R.style.AppTheme);
@@ -87,9 +88,6 @@ public class MainActivity extends FragmentActivity {
             setTheme(R.style.AppThemeDark);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (settings.contains("RefreshToken")) {
-            apiCall.loggedin = true;
-        }
         updateMenu();
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
@@ -118,7 +116,8 @@ public class MainActivity extends FragmentActivity {
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        processIntent(getIntent());
+        if(savedInstanceState == null)
+            loadDefaultPage();
     }
 
     public void updateMenu() {
@@ -206,7 +205,8 @@ public class MainActivity extends FragmentActivity {
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Albums")) {
             setTitle("Your Albums");
-            AlbumsFragment albumsFragment = new AlbumsFragment("me");
+            AlbumsFragment albumsFragment = new AlbumsFragment();
+            albumsFragment.setUsername("me");
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, albumsFragment)
                     .commit();
@@ -226,7 +226,8 @@ public class MainActivity extends FragmentActivity {
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Account")) {
             setTitle("Your Account");
-            AccountFragment accountFragment = new AccountFragment("me");
+            AccountFragment accountFragment = new AccountFragment();
+            accountFragment.setUsername("me");
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, accountFragment)
                     .commit();
@@ -268,105 +269,34 @@ public class MainActivity extends FragmentActivity {
                 Log.d("sending", uri.toString());
                 Intent serviceIntent = new Intent(this, UploadService.class);
                 serviceIntent.setData(uri);
+                serviceIntent.putExtra("album", true);
                 startService(serviceIntent);
                 finish();
-                /// do things here with each image source path.
             }
         } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http://imgur.com/a")) {
             String uri = intent.getData().toString();
             final String album = uri.split("/")[4];
             Log.d("album", album);
-            AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
-                @Override
-                protected JSONObject doInBackground(Void... voids) {
-                    return makeCall("/3/album/" + album, "get", null);
-                }
-
-                @Override
-                protected void onPostExecute(JSONObject albumData) {
-                    try {
-                        Log.d("data", albumData.toString());
-                        ImagesFragment fragment = new ImagesFragment();
-                        fragment.setImageCall(album, "/3/album/" + album, albumData.getJSONObject("data"));
-                        changeFragment(fragment);
-                    } catch (Exception e) {
-                        Log.e("Error!", e.toString());
-                    }
-                }
-            };
+            AlbumAsync async = new AlbumAsync(album, this);
             async.execute();
         }  else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http://imgur.com/gallery/")) {
                 String uri = intent.getData().toString();
                 final String album = uri.split("/")[4];
                 if(album.length() == 5) {
                     Log.d("album", album);
-                    AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
-                        @Override
-                        protected JSONObject doInBackground(Void... voids) {
-                            return makeCall("/3/album/" + album, "get", null);
-                        }
-
-                        @Override
-                        protected void onPostExecute(JSONObject albumData) {
-                            try {
-                                Log.d("data", albumData.toString());
-                                ImagesFragment fragment = new ImagesFragment();
-                                fragment.setImageCall(album, "/3/album/" + album, albumData.getJSONObject("data"));
-                                changeFragment(fragment);
-                            } catch (Exception e) {
-                                Log.e("Error!", e.toString());
-                            }
-                        }
-                    };
+                    AlbumAsync async = new AlbumAsync(album, this);
                     async.execute();
-
                 }
                 else if(album.length() == 7) {
                     Log.d("image", album);
-                    AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
-                        @Override
-                        protected JSONObject doInBackground(Void... voids) {
-                            return makeCall("/3/image/" + album, "get", null);
-                        }
-
-                        @Override
-                        protected void onPostExecute(JSONObject singleImageData) {
-                            try {
-                                Log.d("data", singleImageData.toString());
-                                SingleImageFragment singleImageFragment = new SingleImageFragment();
-                                singleImageFragment.setParams(singleImageData.getJSONObject("data"));
-                                singleImageFragment.setGallery(true);
-                                changeFragment(singleImageFragment);
-                            } catch (Exception e) {
-                                Log.e("Error!", e.toString());
-                            }
-                        }
-                    };
+                    ImageAsync async = new ImageAsync(album, this);
                     async.execute();
                 }
         } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http://i.imgur")) {
             String uri = intent.getData().toString();
             final String image = uri.split("/")[3].split("\\.")[0];
             Log.d("image", image);
-            AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
-                @Override
-                protected JSONObject doInBackground(Void... voids) {
-                    return makeCall("/3/image/" + image, "get", null);
-                }
-
-                @Override
-                protected void onPostExecute(JSONObject singleImageData) {
-                    try {
-                        Log.d("data", singleImageData.toString());
-                        SingleImageFragment singleImageFragment = new SingleImageFragment();
-                        singleImageFragment.setParams(singleImageData.getJSONObject("data"));
-                        singleImageFragment.setGallery(true);
-                        changeFragment(singleImageFragment);
-                    } catch (Exception e) {
-                        Log.e("Error!", e.toString());
-                    }
-                }
-            };
+            ImageAsync async = new ImageAsync(image, this);
             async.execute();
 
         }else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("imgur-holo")) {
@@ -380,29 +310,8 @@ public class MainActivity extends FragmentActivity {
 
             if (uri != null && uripath.startsWith(apiCall.OAUTH_CALLBACK_URL)) {
                 apiCall.verifier = new Verifier(uri.getQueryParameter("code"));
-
-                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        SharedPreferences settings = getSettings();
-                        SharedPreferences.Editor editor = settings.edit();
-                        apiCall.accessToken = apiCall.service.getAccessToken(Token.empty(), apiCall.verifier);
-                        Log.d("URI", apiCall.verifier.toString());
-                        Log.d("URI", apiCall.accessToken.getToken());
-                        Log.d("URI", apiCall.accessToken.getSecret());
-                        editor.putString("RefreshToken", apiCall.accessToken.getSecret());
-                        editor.putString("AccessToken", apiCall.accessToken.getToken());
-                        editor.commit();
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        apiCall.loggedin = true;
-                        updateMenu();
-                    }
-                };
-                async.execute();
+                CallbackAsync callbackAsync = new CallbackAsync(apiCall, this);
+                callbackAsync.execute();
             }
         }
         else {
@@ -422,24 +331,6 @@ public class MainActivity extends FragmentActivity {
 
     public void login() {
 
-        AsyncTask<Void, Void, String> async = new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... voids) {
-                String authURL = apiCall.service.getAuthorizationUrl(apiCall.EMPTY_TOKEN);
-                Log.d("AuthURL", authURL);
-                return authURL;
-            }
-
-            @Override
-            protected void onPostExecute(String authURL) {
-                startActivity(new Intent("android.intent.action.VIEW",
-                        Uri.parse(authURL)).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
-                        | Intent.FLAG_ACTIVITY_NO_HISTORY
-                        | Intent.FLAG_FROM_BACKGROUND));
-                Log.d("AuthURL2", authURL);
-            }
-        };
-        async.execute();
     }
 
     @Override
@@ -523,7 +414,8 @@ public class MainActivity extends FragmentActivity {
             case 1:
                 if (apiCall.loggedin) {
                     setTitle("Your Account");
-                    AccountFragment accountFragment = new AccountFragment("me");
+                    AccountFragment accountFragment = new AccountFragment();
+                    accountFragment.setUsername("me");
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, accountFragment)
                             .commit();
@@ -547,16 +439,8 @@ public class MainActivity extends FragmentActivity {
                                             urlText.setSingleLine();
                                             new AlertDialog.Builder(activity).setTitle("Enter URL").setView(urlText).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                                                        @Override
-                                                        protected Void doInBackground(Void... voids) {
-                                                            HashMap<String, Object> hashMap = new HashMap<String, Object>();
-                                                            hashMap.put("image", urlText.getText().toString());
-                                                            makeCall("3/image", "post", hashMap);
-                                                            return null;
-                                                        }
-                                                    };
-                                                    async.execute();
+                                                    UrlAsync urlAsync = new UrlAsync(urlText.getText().toString(), MainActivity.this);
+                                                    urlAsync.execute();
                                                 }
                                             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -593,8 +477,10 @@ public class MainActivity extends FragmentActivity {
                             // Do nothing.
                         }
                     }).show();
-                } else
-                    login();
+                } else {
+                    LoginAsync loginAsync = new LoginAsync(apiCall, this);
+                    loginAsync.execute();
+                }
                 break;
             case 3:
                 if (apiCall.loggedin) {
@@ -610,7 +496,8 @@ public class MainActivity extends FragmentActivity {
             case 4:
                 if (apiCall.loggedin) {
                     setTitle("Your Albums");
-                    AlbumsFragment albumsFragment = new AlbumsFragment("me");
+                    AlbumsFragment albumsFragment = new AlbumsFragment();
+                    albumsFragment.setUsername("me");
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, albumsFragment)
                             .commit();
@@ -673,11 +560,14 @@ public class MainActivity extends FragmentActivity {
         getActionBar().setTitle(mTitle);
     }
 
-    public void changeFragment(Fragment newFragment) {
+    public void changeFragment(Fragment newFragment, Boolean backstack) {
         getActionBar().show();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout, newFragment).addToBackStack("tag").commit();
+        if(backstack)
+            fragmentTransaction.replace(R.id.frame_layout, newFragment).addToBackStack("tag").commit();
+        else
+            fragmentTransaction.replace(R.id.frame_layout, newFragment).commit();
         updateMenu();
     }
 
@@ -769,6 +659,142 @@ public class MainActivity extends FragmentActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
+        }
+    }
+
+    private static class AlbumAsync extends AsyncTask<Void, Void, JSONObject> {
+
+        String album;
+        MainActivity activity;
+        public AlbumAsync(String _album, MainActivity _activity) {
+            album = _album;
+            activity = _activity;
+        }
+        @Override
+        protected JSONObject doInBackground(Void... voids) {
+            return activity.makeCall("/3/album/" + album, "get", null);
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject albumData) {
+            try {
+                Log.d("data", albumData.toString());
+                ImagesFragment fragment = new ImagesFragment();
+                fragment.setImageCall(album, "/3/album/" + album, albumData.getJSONObject("data"));
+                activity.changeFragment(fragment, false);
+            } catch (Exception e) {
+                Log.e("Error!", e.toString());
+            }
+        }
+    }
+    private static class ImageAsync extends AsyncTask<Void, Void, JSONObject> {
+
+        String album;
+        MainActivity activity;
+        public ImageAsync(String _album, MainActivity _activity) {
+            album = _album;
+            activity = _activity;
+        }
+        @Override
+        protected JSONObject doInBackground(Void... voids) {
+            return activity.makeCall("/3/image/" + album, "get", null);
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject singleImageData) {
+            try {
+                Log.d("data", singleImageData.toString());
+                SingleImageFragment singleImageFragment = new SingleImageFragment();
+                singleImageFragment.setParams(singleImageData.getJSONObject("data"));
+                singleImageFragment.setGallery(true);
+                activity.changeFragment(singleImageFragment, false);
+            } catch (Exception e) {
+                Log.e("Error!", e.toString());
+            }
+        }
+    }
+
+    private static class UrlAsync extends AsyncTask<Void, Void, Void> {
+        String urlText;
+        MainActivity activity;
+        public UrlAsync(String _urlText, MainActivity _activity) {
+            urlText = _urlText;
+            activity = _activity;
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            HashMap<String, Object> hashMap = new HashMap<String, Object>();
+            hashMap.put("image", urlText);
+            activity.makeCall("3/image", "post", hashMap);
+            return null;
+        }
+    }
+
+    private static class LoginAsync extends android.os.AsyncTask<Void, Void, String> {
+        ApiCall apiCall;
+        MainActivity activity;
+
+        public LoginAsync(ApiCall _apiCall, MainActivity _activity) {
+            apiCall = _apiCall;
+            activity = _activity;
+        }
+            @Override
+            protected String doInBackground(Void... voids) {
+                String authURL = apiCall.service.getAuthorizationUrl(apiCall.EMPTY_TOKEN);
+                Log.d("AuthURL", authURL);
+                return authURL;
+            }
+
+            @Override
+            protected void onPostExecute(String authURL) {
+                activity.startActivity(new Intent("android.intent.action.VIEW",
+                        Uri.parse(authURL)).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        | Intent.FLAG_ACTIVITY_NO_HISTORY
+                        | Intent.FLAG_FROM_BACKGROUND));
+                Log.d("AuthURL2", authURL);
+            }
+        }
+    private static class CallbackAsync extends AsyncTask<Void, Void, Void> {
+        ApiCall apiCall;
+        MainActivity activity;
+
+        public CallbackAsync(ApiCall _apiCall, MainActivity _activity) {
+            apiCall = _apiCall;
+            activity = _activity;
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            SharedPreferences settings = activity.getSettings();
+            SharedPreferences.Editor editor = settings.edit();
+            apiCall.accessToken = apiCall.service.getAccessToken(Token.empty(), apiCall.verifier);
+            Log.d("URI", apiCall.verifier.toString());
+            Log.d("URI", apiCall.accessToken.getToken());
+            Log.d("URI", apiCall.accessToken.getSecret());
+            editor.putString("RefreshToken", apiCall.accessToken.getSecret());
+            editor.putString("AccessToken", apiCall.accessToken.getToken());
+            editor.commit();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            apiCall.loggedin = true;
+            activity.updateMenu();
+        }
+    }
+
+    private static class NewAlbumAsync extends AsyncTask<Void, Void, Void> {
+        MainActivity activity;
+
+        public NewAlbumAsync(MainActivity _activity) {
+            activity = _activity;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            HashMap<String, Object> albumMap = new HashMap<String, Object>();
+            activity.makeCall("/3/album/", "post", albumMap);
+            return null;
         }
     }
 }

@@ -50,6 +50,7 @@ import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -64,7 +65,7 @@ import java.util.HashMap;
 /**
  * Created by Kurt Zimmer on 7/22/13.
  */
-public class ImagesFragment extends Fragment {
+public class ImagesFragment extends Fragment implements GetData {
 
     public boolean selecting = false;
     ImageAdapter imageAdapter;
@@ -76,7 +77,6 @@ public class ImagesFragment extends Fragment {
     String albumId;
     JSONObject galleryAlbumData;
     JSONObject imageParam;
-    JSONObject imagesData;
     TextView noImageView;
     int page;
     boolean gettingImages = false;
@@ -238,7 +238,7 @@ public class ImagesFragment extends Fragment {
                             fragment.setParams(galleryAlbumData);
                             fragment.setGallery(true);
                             MainActivity activity = (MainActivity) getActivity();
-                            activity.changeFragment(fragment);
+                            activity.changeFragment(fragment, true);
                         }
                     }
                 };
@@ -282,7 +282,7 @@ public class ImagesFragment extends Fragment {
         gridview.setAdapter(imageAdapter);
         final MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
-        gridview.setColumnWidth(activity.dpToPx(Integer.parseInt(settings.getString("IconSize", "90"))));
+        gridview.setColumnWidth(activity.dpToPx(Integer.parseInt(settings.getString("IconSize", "120"))));
         gridview.setOnItemClickListener(new GridItemClickListener());
         gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         multiChoiceModeListener = new MultiChoiceModeListener();
@@ -293,9 +293,9 @@ public class ImagesFragment extends Fragment {
                         if (imageAdapter.getNumColumns() == 0) {
                             SharedPreferences settings = activity.getSettings();
                             Log.d("numColumnsWidth", gridview.getWidth() + "");
-                            Log.d("numColumnsIconWidth", activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "90")))) + "");
+                            Log.d("numColumnsIconWidth", activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "120")))) + "");
                             final int numColumns = (int) Math.floor(
-                                    gridview.getWidth() / (activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "90")))) + activity.dpToPx(2)));
+                                    gridview.getWidth() / (activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "120")))) + activity.dpToPx(2)));
                             if (numColumns > 0) {
                                 imageAdapter.setNumColumns(numColumns);
                                 if (BuildConfig.DEBUG) {
@@ -345,75 +345,62 @@ public class ImagesFragment extends Fragment {
         return view;
     }
 
+    public void onGetObject(Object object) {
+        JSONObject data = (JSONObject) object;
+        Boolean changed = false;
+        JSONArray imageArray;
+        try {
+            if (data.optJSONObject("data") != null)
+                imageArray = data.getJSONObject("data").getJSONArray("images");
+            else
+                imageArray = data.getJSONArray("data");
+            Log.d("single image array", imageArray.toString());
+            for (int i = 0; i < imageArray.length(); i++) {
+                JSONObject imageData = imageArray.getJSONObject(i);
+                Log.d("Data", imageData.toString());
+                if(imageCall.equals("3/account/me/likes") && !imageData.getBoolean("favorite"))
+                    continue;
+                JSONParcelable dataParcel = new JSONParcelable();
+                dataParcel.setJSONObject(imageData);
+                if (imageData.has("is_album") && imageData.getBoolean("is_album") && !urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png")) {
+                    urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
+                    ids.add(dataParcel);
+                    changed = true;
+                } else if(!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png")) {
+                    urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
+                    ids.add(dataParcel);
+                    changed = true;
+                }
+            }
+        }
+        catch (JSONException e) {
+            Log.e("JSON error!", "oops");
+        }
+        gettingImages = !changed;
+        if (data != null && urls.size() > 0)
+            imageAdapter.notifyDataSetChanged();
+        else if (data == null && errorText != null)
+            errorText.setVisibility(View.VISIBLE);
+        else if (urls.size() == 0 && noImageView != null)
+            noImageView.setVisibility(View.VISIBLE);
+        else
+            gettingImages = true;
+    }
+
     private void getImages() {
         errorText.setVisibility(View.GONE);
-        AsyncTask<Void, Void, Boolean> imageAsync = new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... voids) {
-                boolean changed = false;
-                JSONArray imageArray = new JSONArray();
-                    try {
-                        changed = false;
-                        MainActivity activity = (MainActivity) getActivity();
-                        Log.d("call", imageCall + "/" + page);
-                        if (activity != null)
-                            imagesData = activity.makeCall(imageCall + "/" + page, "get", null);
-                        else
-                            return true;
-                        Log.d("page", page + "");
-
-                        if (imagesData.optJSONObject("data") != null)
-                            imageArray = imagesData.getJSONObject("data").getJSONArray("images");
-                        else
-                            imageArray = imagesData.getJSONArray("data");
-                        Log.d("single image array", imageArray.toString());
-                        for (int i = 0; i < imageArray.length(); i++) {
-                            JSONObject imageData = imageArray.getJSONObject(i);
-                            Log.d("Data", imageData.toString());
-                            if(imageCall.equals("3/account/me/likes") && !imageData.getBoolean("favorite"))
-                                continue;
-                            JSONParcelable dataParcel = new JSONParcelable();
-                            dataParcel.setJSONObject(imageData);
-                            if (imageData.has("is_album") && imageData.getBoolean("is_album") && !urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png")) {
-                                urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
-                                ids.add(dataParcel);
-                                changed = true;
-                            } else if(!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png")) {
-                                urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
-                                ids.add(dataParcel);
-                                changed = true;
-                            }
-                        }
-                    } catch (Exception e) {
-                        Log.e("Error!", "bad image array data" + e.toString());
-                        imagesData = null;
-                    }
-                return changed;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean changed) {
-                gettingImages = !changed;
-                if (imagesData != null && urls.size() > 0)
-                    imageAdapter.notifyDataSetChanged();
-                else if (imagesData == null && errorText != null)
-                    errorText.setVisibility(View.VISIBLE);
-                else if (urls.size() == 0 && noImageView != null)
-                    noImageView.setVisibility(View.VISIBLE);
-                else
-                    gettingImages = true;
-            }
-        };
-        imageAsync.execute();
+        Fetcher fetcher = new Fetcher(this, imageCall + "/" + page, (MainActivity)getActivity());
+        fetcher.execute();
     }
 
     public void selectItem(int position) {
         if (!selecting) {
-            ImagePager imagePager = new ImagePager(position);
+            ImagePager imagePager = new ImagePager();
+            imagePager.setStart(position);
             ArrayList<JSONParcelable> idCopy = ids;
             imagePager.setImageData(idCopy);
             MainActivity activity = (MainActivity) getActivity();
-            activity.changeFragment(imagePager);
+            activity.changeFragment(imagePager, true);
         }
     }
 

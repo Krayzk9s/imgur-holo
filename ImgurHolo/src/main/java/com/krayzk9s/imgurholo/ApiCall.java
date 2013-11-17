@@ -50,7 +50,7 @@ public class ApiCall {
     boolean loggedin;
     SharedPreferences settings;
 
-    public ApiCall(SharedPreferences _settings) {
+    public void setSettings(SharedPreferences _settings) {
         settings = _settings;
         if(settings.contains("AccessToken"))
             loggedin = true;

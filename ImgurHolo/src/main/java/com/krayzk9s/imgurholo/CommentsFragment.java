@@ -49,14 +49,14 @@ import java.util.Calendar;
 /**
  * Created by Kurt Zimmer on 7/24/13.
  */
-public class CommentsFragment extends Fragment {
+public class CommentsFragment extends Fragment implements GetData {
     MessageAdapter commentsAdapter;
     ListView mDrawerList;
     ArrayList<JSONParcelable> commentDataArray;
     String username;
     TextView errorText;
 
-    public CommentsFragment(String _username) {
+    public void setUsername(String _username) {
         username = _username;
     }
 
@@ -64,6 +64,7 @@ public class CommentsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
     }
 
     @Override
@@ -125,24 +126,18 @@ public class CommentsFragment extends Fragment {
         return view;
     }
 
+    public void onGetObject(Object object) {
+        JSONObject comments = (JSONObject) object;
+        if(commentsAdapter != null)
+            addComments(comments);
+    }
+
     private void getComments() {
         commentsAdapter.clear();
         commentsAdapter.notifyDataSetChanged();
         errorText.setVisibility(View.GONE);
-        AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
-            @Override
-            protected JSONObject doInBackground(Void... voids) {
-                MainActivity activity = (MainActivity) getActivity();
-                JSONObject comments = activity.makeCall("/3/account/" + username + "/comments", "get", null);
-                return comments;
-            }
-            @Override
-            protected void onPostExecute(JSONObject comments) {
-                if(commentsAdapter != null)
-                    addComments(comments);
-            }
-        };
-        async.execute();
+        Fetcher fetcher = new Fetcher(this, "/3/account/" + username + "/comments", (MainActivity) getActivity());
+        fetcher.execute();
     }
 
     private void addComments(JSONObject comments) {
@@ -234,7 +229,7 @@ public class CommentsFragment extends Fragment {
                                         public void onClick(DialogInterface dialog, int whichButton) {
                                             commentsAdapter.remove(commentsAdapter.getItem(commentPosition));
                                             commentsAdapter.notifyDataSetChanged();
-                                            DeleteAsync deleteAsync = new DeleteAsync(dataHolder.id);
+                                            DeleteAsync deleteAsync = new DeleteAsync(dataHolder.id, (MainActivity) getActivity());
                                             deleteAsync.execute();
                                         }
                                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -270,7 +265,7 @@ public class CommentsFragment extends Fragment {
                                     SingleImageFragment singleImageFragment = new SingleImageFragment();
                                     singleImageFragment.setGallery(true);
                                     singleImageFragment.setParams(imageData);
-                                    activity.changeFragment(singleImageFragment);
+                                    activity.changeFragment(singleImageFragment, true);
                                 }
                             };
                             async.execute();
@@ -290,16 +285,17 @@ public class CommentsFragment extends Fragment {
         }
     }
 
-    private class DeleteAsync extends AsyncTask<Void, Void, Void> {
+    private static class DeleteAsync extends AsyncTask<Void, Void, Void> {
         private String id;
+        MainActivity activity;
 
-        public DeleteAsync(String _id) {
+        public DeleteAsync(String _id, MainActivity _activity) {
             id = _id;
+            activity = _activity;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            MainActivity activity = (MainActivity) getActivity();
             activity.makeCall("/3/comment/" + id, "delete", null);
             return null;
         }

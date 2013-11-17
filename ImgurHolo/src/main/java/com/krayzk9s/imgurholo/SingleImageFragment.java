@@ -17,7 +17,6 @@ package com.krayzk9s.imgurholo;
  */
 
 import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -32,6 +31,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -245,7 +245,6 @@ public class SingleImageFragment extends Fragment {
                     linearLayout.setOrientation(LinearLayout.VERTICAL);
                     linearLayout.addView(newTitle);
                     linearLayout.addView(newBody);
-
                     new AlertDialog.Builder(activity).setTitle("Edit Image Details")
                             .setView(linearLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -543,9 +542,10 @@ public class SingleImageFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     try {
-                        AccountFragment accountFragment = new AccountFragment(imageData.getJSONObject().getString("account_url"));
+                        AccountFragment accountFragment = new AccountFragment();
+                        accountFragment.setUsername(imageData.getJSONObject().getString("account_url"));
                         MainActivity activity = (MainActivity) getActivity();
-                        activity.changeFragment(accountFragment);
+                        activity.changeFragment(accountFragment, true);
                     } catch (Exception e) {
                         Log.e("Error!", e.toString());
                     }
@@ -868,7 +868,6 @@ public class SingleImageFragment extends Fragment {
                     } catch (Exception e) {
                         Log.e("Error3!", e.toString());
                     }
-                    Log.d("Gallery Image", "Getting comments..." + commentData.toString());
                 }
                 return null;
             }
@@ -892,7 +891,6 @@ public class SingleImageFragment extends Fragment {
 
     private void addComments() {
         try {
-            Log.d("getting data", commentData.toString());
             JSONArray commentJSONArray = commentData.getJSONObject().getJSONArray("data");
             commentArray = new ArrayList<JSONParcelable>();
             Log.d("calling indent function", commentJSONArray.toString());
@@ -1157,9 +1155,10 @@ public class SingleImageFragment extends Fragment {
                             @Override
                             public void onClick(View view) {
                                 try {
-                                    AccountFragment accountFragment = new AccountFragment(viewData.getString("author"));
+                                    AccountFragment accountFragment = new AccountFragment();
+                                    accountFragment.setUsername(viewData.getString("author"));
                                     MainActivity activity = (MainActivity) getActivity();
-                                    activity.changeFragment(accountFragment);
+                                    activity.changeFragment(accountFragment, true);
                                 } catch (Exception e) {
                                     Log.e("Error!", e.toString());
                                 }

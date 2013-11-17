@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -47,6 +46,7 @@ import android.widget.TextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ import java.util.List;
 /**
  * Created by Kurt Zimmer on 7/23/13.
  */
-public class GalleryFragment extends Fragment {
+public class GalleryFragment extends Fragment implements GetData {
 
     private ArrayList<String> urls;
     private ArrayList<JSONParcelable> ids;
@@ -64,15 +64,12 @@ public class GalleryFragment extends Fragment {
     String sort;
     String gallery;
     int page;
-    AsyncTask<Void, Void, Void> async;
     String subreddit;
     String memeType;
     String window;
     ArrayAdapter<CharSequence> mSpinnerAdapter;
     ActionBar actionBar;
-    int firstPass = 0;
     int selectedIndex;
-    JSONObject imagesData;
     SearchView mSearchView;
     MenuItem searchItem;
     String search;
@@ -81,6 +78,7 @@ public class GalleryFragment extends Fragment {
     TextView errorText;
     GridView gridview;
     int oldwidth = 0;
+    private boolean fetchingImages;
 
     public GalleryFragment() {
 
@@ -90,6 +88,35 @@ public class GalleryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        final MainActivity activity = (MainActivity) getActivity();
+        final SharedPreferences settings = activity.getSettings();
+        if (savedInstanceState != null) {
+            gallery = savedInstanceState.getString("gallery");
+            sort = savedInstanceState.getString("sort");
+            window = savedInstanceState.getString("window");
+            subreddit = savedInstanceState.getString("subreddit");
+            search = savedInstanceState.getString("search");
+            urls = savedInstanceState.getStringArrayList("urls");
+            try {
+                ids = savedInstanceState.getParcelableArrayList("ids");
+            } catch (Exception e) {
+                Log.e("Error!", e.toString());
+            }
+            page = savedInstanceState.getInt("page");
+            selectedIndex = savedInstanceState.getInt("selectedIndex");
+            spinner = savedInstanceState.getCharSequence("spinner");
+        } else {
+            page = 0;
+            subreddit = "pics";
+            memeType = "top";
+            gallery = settings.getString("DefaultGallery", "hot");
+            ArrayList<String> galleryOptions = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.galleryOptions)));
+            sort = "viral";
+            window = "day";
+            urls = new ArrayList<String>();
+            ids = new ArrayList<JSONParcelable>();
+            selectedIndex = galleryOptions.indexOf(gallery);
+        }
     }
 
     @Override
@@ -214,118 +241,56 @@ public class GalleryFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        boolean newData = false;
-        final MainActivity activity = (MainActivity) getActivity();
-        final SharedPreferences settings = activity.getSettings();
-        if (savedInstanceState != null) {
-            gallery = savedInstanceState.getString("gallery");
-            sort = savedInstanceState.getString("sort");
-            window = savedInstanceState.getString("window");
-            subreddit = savedInstanceState.getString("subreddit");
-            search = savedInstanceState.getString("search");
-            urls = savedInstanceState.getStringArrayList("urls");
-            try {
-                ids = savedInstanceState.getParcelableArrayList("ids");
-            } catch (Exception e) {
-                Log.e("Error!", e.toString());
-            }
-            page = savedInstanceState.getInt("page");
-            selectedIndex = savedInstanceState.getInt("selectedIndex");
-            spinner = savedInstanceState.getCharSequence("spinner");
-        } else if (subreddit == null && search == null) {
-            page = 0;
-            subreddit = "pics";
-            memeType = "top";
-            gallery = settings.getString("DefaultGallery", "hot");
-            ArrayList<String> galleryOptions = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.galleryOptions)));
-            sort = "viral";
-            window = "day";
-            urls = new ArrayList<String>();
-            ids = new ArrayList<JSONParcelable>();
-            selectedIndex = galleryOptions.indexOf(gallery);
-            newData = true;
-        }
-        Log.d("NOT HERE EITHER", gallery);
-        View view = inflater.inflate(R.layout.image_layout, container, false);
+        Log.d("Instance null?", (savedInstanceState == null) + "");
+        MainActivity activity = (MainActivity) getActivity();
+        actionBar = activity.getActionBar();
+        SharedPreferences settings = activity.getSettings();
+        View view;
+        view = inflater.inflate(R.layout.image_layout, container, false);
         errorText = (TextView) view.findViewById(R.id.error);
         gridview = (GridView) view.findViewById(R.id.grid_layout);
-        gridview.setColumnWidth(activity.dpToPx(Integer.parseInt(settings.getString("IconSize", "90"))));
+        gridview.setColumnWidth(activity.dpToPx(Integer.parseInt(settings.getString("IconSize", "120"))));
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
-        gridview.setOnItemClickListener(new GridItemClickListener());
-        gridview.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        if(imageAdapter.getNumColumns() == 0 || gridview.getWidth() != oldwidth)
-                            setNumColumns();
-                    }
-                });
-        gridview.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
+            gridview.setOnItemClickListener(new GridItemClickListener());
+            gridview.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            if(imageAdapter.getNumColumns() == 0 || gridview.getWidth() != oldwidth)
+                                setNumColumns();
+                        }
+                    });
+            gridview.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView absListView, int i) {
 
-            }
-            @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if(lastInView == -1)
-                    lastInView = firstVisibleItem;
-                else if (lastInView > firstVisibleItem) {
-                    actionBar.show();
-                    lastInView = firstVisibleItem;
                 }
-                else if (lastInView < firstVisibleItem) {
-                    actionBar.hide();
-                    lastInView = firstVisibleItem;
-                }
-                int lastInScreen = firstVisibleItem + visibleItemCount;
-                if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0) {
-                    try {
-                        Log.d("Extending", "Getting more images!");
-                        JSONArray imageArray = imagesData.getJSONArray("data");
-                        int imageLength = Math.min(urls.size() + 30, imageArray.length());
-                        boolean loadedMore = false;
-                        for (int i = urls.size(); i < imageLength; i++) {
-                            loadedMore = true;
-                            JSONObject imageData = imageArray.getJSONObject(i);
-                            String s = settings.getString("IconQuality", "m");
-                            if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
-                                if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + s + ".png"))
-                                {
-                                    urls.add("http://imgur.com/" + imageData.getString("cover") + s + ".png");
-                                    UrlImageViewHelper.loadUrlDrawable(getActivity(), "http://imgur.com/" + imageData.getString("cover") + s + ".png");
-                                }
-                            }
-                            else {
-                                if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png"))
-                                {
-                                    UrlImageViewHelper.loadUrlDrawable(getActivity(), "http://imgur.com/" + imageData.getString("id") + s + ".png");
-                                    urls.add("http://imgur.com/" + imageData.getString("id") + s + ".png");
-                                }
-                            }
-                            JSONParcelable dataParcel = new JSONParcelable();
-                            dataParcel.setJSONObject(imageData);
-                            ids.add(dataParcel);
-                            imageAdapter.notifyDataSetChanged();
+                @Override
+                public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    if(lastInView == -1)
+                        lastInView = firstVisibleItem;
+                    else if (lastInView > firstVisibleItem) {
+                        actionBar.show();
+                        lastInView = firstVisibleItem;
+                    }
+                    else if (lastInView < firstVisibleItem) {
+                        actionBar.hide();
+                        lastInView = firstVisibleItem;
+                    }
+                    int lastInScreen = firstVisibleItem + visibleItemCount;
+                    if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0 && !fetchingImages) {
+                        if(!gallery.equals("search")) {
+                            page += 1;
+                            getImages();
                         }
-                        if(!loadedMore) {
-                            if(!gallery.equals("search")) {
-                                page += 1;
-                                getImages();
-                            }
-                        }
-                    } catch (Exception e) {
-                        Log.e("Error!", e.toString());
                     }
                 }
-            }
-        });
-        if(!newData)
-            firstPass = 0;
+            });
         setupActionBar();
-        if(newData)
+        if(savedInstanceState == null && urls.size() < 1) {
             makeGallery();
+        }
         return view;
     }
 
@@ -336,9 +301,9 @@ public class GalleryFragment extends Fragment {
             oldwidth = gridview.getWidth();
             SharedPreferences settings = activity.getSettings();
             Log.d("numColumnsWidth", gridview.getWidth()+"");
-            Log.d("numColumnsIconWidth", activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "90"))))+"");
+            Log.d("numColumnsIconWidth", activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "120"))))+"");
             final int numColumns = (int) Math.floor(
-                    gridview.getWidth() / (activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "90")))) + activity.dpToPx(4)));
+                    gridview.getWidth() / (activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "120")))) + activity.dpToPx(4)));
             if (numColumns > 0) {
                 imageAdapter.setNumColumns(numColumns);
                 if (BuildConfig.DEBUG) {
@@ -417,73 +382,67 @@ public class GalleryFragment extends Fragment {
         getImages();
     }
 
+
     private void getImages() {
+        fetchingImages = true;
         errorText.setVisibility(View.GONE);
-        async = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                MainActivity activity = (MainActivity) getActivity();
-                imagesData = new JSONObject();
-                Log.d("imagesData", "loading");
-                if (gallery.equals("hot") || gallery.equals("top") || gallery.equals("user")) {
-                    imagesData = activity.makeCall("3/gallery/" + gallery + "/" + sort + "/" + window + "/" + page, "get", null);
-                } else if (gallery.equals("memes")) {
-                    imagesData = activity.makeCall("3/gallery/g/memes/" + sort + "/" + window + "/" + page, "get", null);
-                } else if (gallery.equals("random")) {
-                    imagesData = activity.makeCall("3/gallery/random/random/" + page, "get", null);
-                } else if (gallery.equals("subreddit")) {
-                    imagesData = activity.makeCall("3/gallery/r/" + subreddit + "/" + sort + "/" + window + "/" + page, "get", null);
-                } else if (gallery.equals("search")) {
-                    imagesData = activity.makeCall("3/gallery/search?q=" + search, "get", null);
-                }
-                Log.d("imagesData", "checking");
-                if(imagesData == null) {
-                    return null;
-                }
-                Log.d("imagesData", "failed");
-                try {
-                    Log.d("URI", imagesData.toString());
-                    JSONArray imageArray = imagesData.getJSONArray("data");
-                    int imageLength = Math.min(30, imageArray.length());
-                    for (int i = 0; i < imageLength; i++) {
-                        JSONObject imageData = imageArray.getJSONObject(i);
-                        Log.d("Data", imageData.toString());
-                        SharedPreferences settings = activity.getSettings();
-                        String s = settings.getString("IconQuality", "m");
-                        if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
-                            if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + s + ".png")) {
-                                urls.add("http://imgur.com/" + imageData.getString("cover") + s + ".png");
-                                UrlImageViewHelper.loadUrlDrawable(getActivity(), "http://imgur.com/" + imageData.getString("cover") + s + ".png");
-                                JSONParcelable dataParcel = new JSONParcelable();
-                                dataParcel.setJSONObject(imageData);
-                                ids.add(dataParcel);
-                            }
-                        }
-                        else {
-                            if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png"))
-                            {
-                                urls.add("http://imgur.com/" + imageData.getString("id") + s + ".png");
-                                UrlImageViewHelper.loadUrlDrawable(getActivity(), "http://imgur.com/" + imageData.getString("id") + s + ".png");
-                                JSONParcelable dataParcel = new JSONParcelable();
-                                dataParcel.setJSONObject(imageData);
-                                ids.add(dataParcel);
-                            }
-                        }
+        String call = "";
+        if (gallery.equals("hot") || gallery.equals("top") || gallery.equals("user")) {
+            call = "3/gallery/" + gallery + "/" + sort + "/" + window + "/" + page;
+        } else if (gallery.equals("memes")) {
+            call = "3/gallery/g/memes/" + sort + "/" + window + "/" + page;
+        } else if (gallery.equals("random")) {
+            call = "3/gallery/random/random/" + page;
+        } else if (gallery.equals("subreddit")) {
+            call = "3/gallery/r/" + subreddit + "/" + sort + "/" + window + "/" + page;
+        } else if (gallery.equals("search")) {
+            call = "3/gallery/search?q=" + search;
+        }
+        Fetcher fetcher = new Fetcher(this, call, (MainActivity)getActivity());
+        fetcher.execute();
+    }
+
+    public void onGetObject(Object object) {
+        JSONObject data = (JSONObject) object;
+        MainActivity activity = (MainActivity) getActivity();
+        Log.d("imagesData", "checking");
+        if(data == null) {
+            return;
+        }
+        Log.d("imagesData", "failed");
+        try {
+            Log.d("URI", data.toString());
+            JSONArray imageArray = data.getJSONArray("data");
+            for (int i = 0; i < imageArray.length(); i++) {
+                JSONObject imageData = imageArray.getJSONObject(i);
+                Log.d("Data", imageData.toString());
+                SharedPreferences settings = activity.getSettings();
+                String s = settings.getString("IconQuality", "m");
+                if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
+                    if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + s + ".png")) {
+                        urls.add("http://imgur.com/" + imageData.getString("cover") + s + ".png");
+                        UrlImageViewHelper.loadUrlDrawable(activity, "http://imgur.com/" + imageData.getString("cover") + s + ".png");
+                        JSONParcelable dataParcel = new JSONParcelable();
+                        dataParcel.setJSONObject(imageData);
+                        ids.add(dataParcel);
                     }
-                } catch (Exception e) {
-                    Log.e("Error!", e.toString());
                 }
-                return null;
+                else {
+                    if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png"))
+                    {
+                        urls.add("http://imgur.com/" + imageData.getString("id") + s + ".png");
+                        UrlImageViewHelper.loadUrlDrawable(activity, "http://imgur.com/" + imageData.getString("id") + s + ".png");
+                        JSONParcelable dataParcel = new JSONParcelable();
+                        dataParcel.setJSONObject(imageData);
+                        ids.add(dataParcel);
+                    }
+                }
             }
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                if(imagesData != null)
-                    imageAdapter.notifyDataSetChanged();
-                else
-                    errorText.setVisibility(View.VISIBLE);
-            }
-        };
-        async.execute();
+        } catch (JSONException e) {
+            Log.e("Error!", e.toString());
+        }
+        imageAdapter.notifyDataSetChanged();
+        fetchingImages = false;
     }
 
     public class ImageAdapter extends BaseAdapter {
@@ -568,13 +527,14 @@ public class GalleryFragment extends Fragment {
             //    MainActivity activity = (MainActivity) getActivity();
             //    activity.changeFragment(fragment);
             //} else {
-                ImagePager pager = new ImagePager(position);
+                ImagePager pager = new ImagePager();
+                pager.setStart(position);
                 /*SingleImageFragment fragment = new SingleImageFragment();
                 fragment.setGallery(true);
                 fragment.setParams(id);*/
                 pager.setImageData(new ArrayList<JSONParcelable>(ids));
                 MainActivity activity = (MainActivity) getActivity();
-                activity.changeFragment(pager);
+                activity.changeFragment(pager, true);
            // }
         //} catch (Exception e) {
         //    Log.e("Error!", e.toString());
@@ -587,10 +547,7 @@ public class GalleryFragment extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         ActionBar actionBar = activity.getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        if (async != null)
-            async.cancel(true);
     }
-
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the user's current state
@@ -613,7 +570,6 @@ public class GalleryFragment extends Fragment {
 
     private void setupActionBar() {
         MainActivity activity = (MainActivity) getActivity();
-        actionBar = activity.getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         Resources res = activity.getResources();
         List<CharSequence> options = new ArrayList(Arrays.asList(res.getStringArray(R.array.galleryOptions)));
@@ -624,46 +580,40 @@ public class GalleryFragment extends Fragment {
         ActionBar.OnNavigationListener mNavigationCallback = new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int i, long l) {
-                Log.d("URI", String.valueOf(firstPass));
-                if (firstPass > 1) {
+                String newGallery = "";
                     switch (i) {
                         case 0:
-                            gallery = "hot";
+                            newGallery = "hot";
                             sort = "viral";
                             break;
                         case 1:
-                            gallery = "top";
+                            newGallery = "top";
                             sort = "day";
                             break;
                         case 2:
-                            gallery = "user";
+                            newGallery = "user";
                             sort = "viral";
                             break;
                         case 3:
-                            gallery = "memes";
+                            newGallery = "memes";
                             sort = "viral";
                             break;
                         case 4:
-                            gallery = "random";
+                            newGallery = "random";
                             break;
                     }
+                    if(newGallery.equals(gallery))
+                        return true;
+                    else
+                        gallery = newGallery;
                     selectedIndex = i;
                     if (mSpinnerAdapter.getCount() > 5 && !gallery.equals("subreddit") && !gallery.equals("search")) {
                         mSpinnerAdapter.remove(mSpinnerAdapter.getItem(5));
                         subreddit = null;
                         search = null;
                     }
-                    Log.d("URI", gallery);
-                    Log.d("URI", "" + i);
                     page = 0;
                     makeGallery();
-                } else {
-                    Log.d("URI4", String.valueOf(firstPass));
-                    Log.d("index", String.valueOf(selectedIndex));
-                        firstPass += 2;
-                    Log.d("URI2", String.valueOf(firstPass));
-                }
-                Log.d("URI3", String.valueOf(firstPass));
                 return true;
             }
         };
@@ -674,8 +624,8 @@ public class GalleryFragment extends Fragment {
             else
                 mSpinnerAdapter.add("search: " + search);
         }
-        actionBar.setListNavigationCallbacks(mSpinnerAdapter, mNavigationCallback);
         actionBar.setSelectedNavigationItem(selectedIndex);
+        Log.d("Setting Item", "Setting Item");
+        actionBar.setListNavigationCallbacks(mSpinnerAdapter, mNavigationCallback);
     }
-
 }

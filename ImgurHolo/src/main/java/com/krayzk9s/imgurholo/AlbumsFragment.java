@@ -43,6 +43,7 @@ import android.widget.TextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -51,25 +52,25 @@ import java.util.HashMap;
 /**
  * Created by Kurt Zimmer on 7/23/13.
  */
-public class AlbumsFragment extends Fragment {
+public class AlbumsFragment extends Fragment implements GetData {
 
     ImageAdapter imageAdapter;
-    AsyncTask<Void, Void, Void> async;
     String username;
     TextView noImageView;
     private ArrayList<String> urls;
     private ArrayList<String> ids;
     int lastInView = -1;
-    JSONObject imagesData;
     TextView errorText;
 
-    public AlbumsFragment(String _username) {
+
+    public void setUsername(String _username) {
         username = _username;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         setHasOptionsMenu(true);
     }
 
@@ -112,7 +113,7 @@ public class AlbumsFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         try {
                             Log.d("Header", newTitle.getText().toString());
-                            NewAlbumAsync messagingAsync = new NewAlbumAsync(newTitle.getText().toString(), newDescription.getText().toString());
+                            NewAlbumAsync messagingAsync = new NewAlbumAsync(newTitle.getText().toString(), newDescription.getText().toString(), (MainActivity) getActivity());
                             messagingAsync.execute();
                         } catch (Exception e) {
                             Log.e("Error!", "oops, some text fields missing values");
@@ -181,42 +182,37 @@ public class AlbumsFragment extends Fragment {
         return view;
     }
 
+    public void onGetObject(Object object) {
+        Boolean hasImages = false;
+        JSONObject imagesData = (JSONObject) object;
+        try {
+            JSONArray imageArray = imagesData.getJSONArray("data");
+            for (int i = 0; i < imageArray.length(); i++) {
+                JSONObject imageData = imageArray.getJSONObject(i);
+                Log.d("adding album...", imageData.getString("id"));
+                urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
+                ids.add(imageData.getString("id"));
+            }
+            if (imageArray.length() > 0)
+                hasImages = true;
+            else
+                hasImages = false;
+
+        } catch (JSONException e) {
+            Log.e("Error!", e.toString());
+            imagesData = null;
+        }
+        if (hasImages)
+            imageAdapter.notifyDataSetChanged();
+        else if(imagesData != null)
+            noImageView.setVisibility(View.VISIBLE);
+        else
+            errorText.setVisibility(View.VISIBLE);
+    }
+
     public void getImages() {
-        AsyncTask<Void, Void, Boolean> imageAsync = new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... voids) {
-                MainActivity activity = (MainActivity) getActivity();
-                imagesData = activity.makeCall("3/account/" + username + "/albums", "get", null);
-                try {
-                    JSONArray imageArray = imagesData.getJSONArray("data");
-                    for (int i = 0; i < imageArray.length(); i++) {
-                        JSONObject imageData = imageArray.getJSONObject(i);
-                        Log.d("adding album...", imageData.getString("id"));
-                        urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
-                        ids.add(imageData.getString("id"));
-                    }
-                    if (imageArray.length() > 0)
-                        return true;
-                    else return false;
-
-                } catch (Exception e) {
-                    Log.e("Error!", e.toString());
-                    imagesData = null;
-                }
-                return false;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean hasImages) {
-                if (hasImages)
-                    imageAdapter.notifyDataSetChanged();
-                else if(imagesData != null)
-                    noImageView.setVisibility(View.VISIBLE);
-                else
-                    errorText.setVisibility(View.VISIBLE);
-            }
-        };
-        imageAsync.execute();
+        Fetcher fetcher = new Fetcher(this, "3/account/" + username + "/albums", (MainActivity) getActivity());
+        fetcher.execute();
     }
 
     public void selectItem(int position) {
@@ -225,7 +221,7 @@ public class AlbumsFragment extends Fragment {
         fragment.albumId = id;
         fragment.setImageCall(id, "/3/album/" + id + "/images", null);
         MainActivity activity = (MainActivity) getActivity();
-        activity.changeFragment(fragment);
+        activity.changeFragment(fragment, true);
     }
 
     @Override
@@ -234,13 +230,6 @@ public class AlbumsFragment extends Fragment {
         savedInstanceState.putStringArrayList("ids", ids);
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (async != null)
-            async.cancel(true);
     }
 
     public class ImageAdapter extends BaseAdapter {
@@ -280,18 +269,18 @@ public class AlbumsFragment extends Fragment {
         }
     }
 
-    private class NewAlbumAsync extends AsyncTask<Void, Void, Void> {
+    private static class NewAlbumAsync extends AsyncTask<Void, Void, Void> {
         private String title;
         private String description;
+        MainActivity activity;
 
-        public NewAlbumAsync(String _title, String _description) {
+        public NewAlbumAsync(String _title, String _description, MainActivity _activity) {
             title = _title;
             description = _description;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            MainActivity activity = (MainActivity) getActivity();
             HashMap<String, Object> albumMap = new HashMap<String, Object>();
             albumMap.put("title", title);
             albumMap.put("description", description);
