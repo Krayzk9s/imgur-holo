@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -144,6 +145,7 @@ public class SettingsActivity extends Activity {
                     return true;
                 }
             });
+
             CheckBoxPreference autoCopy = (CheckBoxPreference) findPreference("AutoCopy");
             final ListPreference autoCopyType = (ListPreference) findPreference("AutoCopyType");
             autoCopyType.setSummary(autoCopyType.getValue().toString());
@@ -166,6 +168,69 @@ public class SettingsActivity extends Activity {
                     return true;
                 }
             });
+
+            CheckBoxPreference widthBoolean = (CheckBoxPreference) findPreference("WidthBoolean");
+            final EditTextPreference widthSize = (EditTextPreference) findPreference("WidthSize");
+            widthSize.setSummary(widthSize.getText());
+            if (!widthBoolean.isChecked())
+                widthSize.setEnabled(false);
+            widthSize.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object o) {
+                    try
+                    {
+                        Integer.parseInt(o.toString());
+                    }
+                    catch(NumberFormatException nfe)
+                    {
+                        return false;
+                    }
+                    preference.setSummary(o.toString());
+                    return true;
+                }
+            });
+            widthBoolean.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object o) {
+                    if (Boolean.parseBoolean(o.toString()))
+                        widthSize.setEnabled(true);
+                    else
+                        widthSize.setEnabled(false);
+                    return true;
+                }
+            });
+
+            CheckBoxPreference heightBoolean = (CheckBoxPreference) findPreference("HeightBoolean");
+            final EditTextPreference heightSize = (EditTextPreference) findPreference("HeightSize");
+            heightSize.setSummary(heightSize.getText());
+            if (!heightBoolean.isChecked())
+                heightSize.setEnabled(false);
+            heightSize.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object o) {
+                    try
+                    {
+                         Integer.parseInt(o.toString());
+                    }
+                    catch(NumberFormatException nfe)
+                    {
+                        return false;
+                    }
+                    preference.setSummary(o.toString());
+                    return true;
+                }
+            });
+            heightBoolean.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object o) {
+                    if (Boolean.parseBoolean(o.toString()))
+                        heightSize.setEnabled(true);
+                    else
+                        heightSize.setEnabled(false);
+                    return true;
+                }
+            });
+            
             final CheckBoxPreference showVotes = (CheckBoxPreference) findPreference("ShowVotes");
             CheckBoxPreference showComments = (CheckBoxPreference) findPreference("ShowComments");
             if (!showComments.isChecked()) {

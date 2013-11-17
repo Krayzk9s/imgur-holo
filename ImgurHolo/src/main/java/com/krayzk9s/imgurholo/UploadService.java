@@ -68,6 +68,47 @@ public class UploadService extends IntentService {
         sendImage.execute();
     }
 
+    /* From http://stackoverflow.com/users/1946055/tobiel at http://stackoverflow.com/questions/17839388/creating-a-scaled-bitmap-with-createscaledbitmap-in-android */
+    public static Bitmap lessResolution (String filePath, int width, int height)
+    {   int reqHeight=width;
+        int reqWidth=height;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+
+        // Calculate inSampleSize
+        float factor = calculateSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+
+        return Bitmap.createScaledBitmap(BitmapFactory.decodeFile(filePath), (int)Math.floor(options.outWidth*factor), (int)Math.floor(options.outHeight*factor), false);
+    }
+
+    private static float calculateSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        Log.d("reqHeight", reqHeight + "");
+        Log.d("reqWidth", reqWidth + "");
+        Log.d("height", height + "");
+        Log.d("width", width + "");
+        float factor;
+        if (height > reqHeight || width > reqWidth) {
+            final float heightRatio = (float) reqHeight / (float) height;
+            final float widthRatio = (float) reqWidth / (float) width;
+            Log.d("heightRatio", heightRatio + "");
+            Log.d("widthRatio", widthRatio + "");
+            factor = heightRatio < widthRatio ? heightRatio : widthRatio;
+            Log.d("factor", factor + "");
+        }
+        else
+            factor = 1;
+        return factor;
+    }
+
     private static class SendImage extends AsyncTask<Void, Void, JSONObject> {
         Uri uri;
         Bitmap photo;
@@ -101,7 +142,13 @@ public class UploadService extends IntentService {
             cursor.moveToFirst();
             final String filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
             Log.d("Image Upload", filePath);
-            photo = BitmapFactory.decodeFile(filePath);
+            int maxHeight = Integer.MAX_VALUE;
+            if(settings.getBoolean("HeightBoolean", false))
+                maxHeight = Integer.parseInt(settings.getString("HeightSize", "1080"));
+            int maxWidth = Integer.MAX_VALUE;
+            if(settings.getBoolean("HeightBoolean", false))
+                maxWidth = Integer.parseInt(settings.getString("WidthSize", "1920"));
+            photo = lessResolution(filePath, maxWidth, maxHeight);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] byteArray = stream.toByteArray();

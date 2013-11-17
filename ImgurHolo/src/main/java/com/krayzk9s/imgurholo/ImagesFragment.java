@@ -21,10 +21,8 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ActionMode;
@@ -48,19 +46,10 @@ import android.widget.Toast;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -71,14 +60,12 @@ public class ImagesFragment extends Fragment implements GetData {
 
     public boolean selecting = false;
     ImageAdapter imageAdapter;
-    AsyncTask<Void, Void, Void> async;
     String imageCall;
     GridView gridview;
     MultiChoiceModeListener multiChoiceModeListener;
     ArrayList<String> intentReturn;
     String albumId;
     JSONObject galleryAlbumData;
-    JSONObject imageParam;
     TextView noImageView;
     int page;
     boolean gettingImages = false;
@@ -102,10 +89,18 @@ public class ImagesFragment extends Fragment implements GetData {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        albumId = bundle.getString("id");
+        if(bundle.containsKey("id"))
+            albumId = bundle.getString("id");
+        else
+            albumId = null;
         imageCall = bundle.getString("imageCall");
-        JSONParcelable dataParcel = bundle.getParcelable("albumData");
-        galleryAlbumData = dataParcel.getJSONObject();
+        if(bundle.containsKey("albumData")) {
+            JSONParcelable dataParcel = bundle.getParcelable("albumData");
+            galleryAlbumData = dataParcel.getJSONObject();
+        }
+        else
+            galleryAlbumData = null;
+
         setHasOptionsMenu(true);
     }
 
@@ -143,51 +138,9 @@ public class ImagesFragment extends Fragment implements GetData {
                 duration = Toast.LENGTH_SHORT;
                 toast = Toast.makeText(activity, "Downloading " + urls.size() + " images! This may take a while...", duration);
                 toast.show();
-                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        try {
-                            for (int i = 0; i < urls.size(); i++) {
-                                String type = ids.get(i).getJSONObject().getString("type").split("/")[1];
-                                Log.d("URL", "http://i.imgur.com/" + ids.get(i).getJSONObject().getString("id") + "." + type);
-                                Log.d("IDs", ids.get(i).getJSONObject().getString("id"));
-                                URL url = new URL("http://i.imgur.com/" + ids.get(i).getJSONObject().getString("id") + "." + type);
-                                File file = new File(android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + ids.get(i).getJSONObject().getString("id") + "." + type);
-                                URLConnection ucon = url.openConnection();
-                                InputStream is = ucon.getInputStream();
-                                BufferedInputStream bis = new BufferedInputStream(is);
-                                ByteArrayBuffer baf = new ByteArrayBuffer(500);
-                                int current = 0;
-                                while ((current = bis.read()) != -1) {
-                                    baf.append((byte) current);
-                                }
-                                FileOutputStream fos = new FileOutputStream(file);
-                                fos.write(baf.toByteArray());
-                                fos.close();
-                            }
-                        } catch (MalformedURLException e) {
-                            Log.e("Error!", e.toString());
-                        } catch (IOException e) {
-                            Log.e("Error!", e.toString());
-                        } catch (JSONException e) {
-                            Log.e("Error!", e.toString());
-                        }
-
-
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                                + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))));
-                        int duration = Toast.LENGTH_SHORT;
-                        Toast toast;
-                        toast = Toast.makeText(activity, "Downloaded All!", duration);
-                        toast.show();
-                    }
-                };
-                async.execute();
+                Intent serviceIntent = new Intent(activity, DownloadService.class);
+                serviceIntent.putParcelableArrayListExtra("ids", ids);
+                activity.startService(serviceIntent);
                 return true;
             case R.id.action_refresh:
                 urls = new ArrayList<String>();
@@ -218,40 +171,8 @@ public class ImagesFragment extends Fragment implements GetData {
                 //select image
                 return true;
             case R.id.action_comments:
-                async = new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        MainActivity activity = (MainActivity) getActivity();
-                        try {
-                            imageParam = activity.makeCall("3/image/" + galleryAlbumData.getString("cover"), "get", null).getJSONObject("data");
-                            Log.d("Params", imageParam.toString());
-                            galleryAlbumData.put("width", imageParam.getInt("width"));
-                            galleryAlbumData.put("type", imageParam.getString("type"));
-                            galleryAlbumData.put("height", imageParam.getInt("height"));
-                            galleryAlbumData.put("size", imageParam.getInt("size"));
-                            Log.d("Params w/ new data", galleryAlbumData.toString());
-                        } catch (JSONException e) {
-                            Log.e("Error!", "bad single image call" + e.toString());
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        if(galleryAlbumData != null) {
-                            SingleImageFragment fragment = new SingleImageFragment();
-                            Bundle bundle = new Bundle();
-                            bundle.putBoolean("gallery", true);
-                            JSONParcelable data = new JSONParcelable();
-                            data.setJSONObject(galleryAlbumData);
-                            bundle.putParcelable("imageData", data);
-                            fragment.setArguments(bundle);
-                            MainActivity activity = (MainActivity) getActivity();
-                            activity.changeFragment(fragment, true);
-                        }
-                    }
-                };
-                async.execute();
+                CommentAsync commentAsync = new CommentAsync(activity, galleryAlbumData);
+                commentAsync.execute();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -270,7 +191,7 @@ public class ImagesFragment extends Fragment implements GetData {
                 super.onActivityResult(requestCode, resultCode, data);
                 imageIds = data.getStringArrayListExtra("data");
                 Log.d("Ids!", imageIds.toString());
-                imageAsync = new AddImagesToAlbum(imageIds, true);
+                imageAsync = new AddImagesToAlbum(imageIds, true, (MainActivity) getActivity(), albumId);
                 imageAsync.execute();
                 break;
         }
@@ -414,11 +335,8 @@ public class ImagesFragment extends Fragment implements GetData {
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (async != null)
-            async.cancel(true);
+    public ImagesFragment getOuter() {
+        return this;
     }
 
     @Override
@@ -525,28 +443,10 @@ public class ImagesFragment extends Fragment implements GetData {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete:
-                    Log.d("Action clicked", (albumId == null) + "");
                     if (albumId == null) {
                         getChecked();
-                        async = new AsyncTask<Void, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Void... voids) {
-                                MainActivity activity = (MainActivity) getActivity();
-                                for(int i = 0; i < intentReturn.size(); i++) {
-                                    activity.makeCall("3/image/" + intentReturn.get(i), "delete", null);
-                                }
-                                return null;
-                            }
-                            @Override
-                            protected void onPostExecute(Void aVoid) {
-                                urls = new ArrayList<String>();
-                                ids = new ArrayList<JSONParcelable>();
-                                page = 0;
-                                imageAdapter.notifyDataSetChanged();
-                                getImages();
-                            }
-                        };
-                        async.execute();
+                        DeleteImages deleteImages = new DeleteImages(getOuter(), (MainActivity) getActivity(), intentReturn);
+                        deleteImages.execute();
                     }
                     break;
                 default:
@@ -621,18 +521,85 @@ public class ImagesFragment extends Fragment implements GetData {
 
     }
 
-    private class AddImagesToAlbum extends AsyncTask<Void, Void, Void> {
+    private static class DeleteImages extends AsyncTask<Void, Void, Void> {
+        ImagesFragment imagesFragment;
+        MainActivity activity;
+        ArrayList<String> intentReturn;
+        public DeleteImages(ImagesFragment _imagesFragment, MainActivity _activity, ArrayList<String> _intentReturn) {
+            imagesFragment = _imagesFragment;
+            activity = _activity;
+            intentReturn = _intentReturn;
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            for(int i = 0; i < intentReturn.size(); i++) {
+                activity.makeCall("3/image/" + intentReturn.get(i), "delete", null);
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            imagesFragment.urls = new ArrayList<String>();
+            imagesFragment.ids = new ArrayList<JSONParcelable>();
+            imagesFragment.page = 0;
+            imagesFragment.imageAdapter.notifyDataSetChanged();
+            imagesFragment.getImages();
+        }
+    }
+
+    private static class CommentAsync extends AsyncTask<Void, Void, Void> {
+        MainActivity activity;
+        JSONObject galleryAlbumData;
+        public CommentAsync(MainActivity _activity, JSONObject _galleryAlbumData) {
+            galleryAlbumData = _galleryAlbumData;
+            activity = _activity;
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                JSONObject imageParam = activity.makeCall("3/image/" + galleryAlbumData.getString("cover"), "get", null).getJSONObject("data");
+                Log.d("Params", imageParam.toString());
+                galleryAlbumData.put("width", imageParam.getInt("width"));
+                galleryAlbumData.put("type", imageParam.getString("type"));
+                galleryAlbumData.put("height", imageParam.getInt("height"));
+                galleryAlbumData.put("size", imageParam.getInt("size"));
+                Log.d("Params w/ new data", galleryAlbumData.toString());
+            } catch (JSONException e) {
+                Log.e("Error!", "bad single image call" + e.toString());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if(galleryAlbumData != null) {
+                SingleImageFragment fragment = new SingleImageFragment();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("gallery", true);
+                JSONParcelable data = new JSONParcelable();
+                data.setJSONObject(galleryAlbumData);
+                bundle.putParcelable("imageData", data);
+                fragment.setArguments(bundle);
+                activity.changeFragment(fragment, true);
+            }
+        }
+    }
+
+    private static class AddImagesToAlbum extends AsyncTask<Void, Void, Void> {
         boolean add;
         private ArrayList<String> imageIDsAsync;
+        MainActivity activity;
+        String albumId;
 
-        public AddImagesToAlbum(ArrayList<String> _imageIDs, boolean _add) {
+        public AddImagesToAlbum(ArrayList<String> _imageIDs, boolean _add, MainActivity _activity, String _albumId) {
             imageIDsAsync = _imageIDs;
             add = _add;
+            activity = _activity;
+            albumId = _albumId;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            MainActivity activity = (MainActivity) getActivity();
             String albumids = "";
             for (int i = 0; i < imageIDsAsync.size(); i++) {
                 if (i != 0)
@@ -645,6 +612,5 @@ public class ImagesFragment extends Fragment implements GetData {
             activity.makeCall("3/album/" + albumId, "post", editMap);
             return null;
         }
-
     }
 }

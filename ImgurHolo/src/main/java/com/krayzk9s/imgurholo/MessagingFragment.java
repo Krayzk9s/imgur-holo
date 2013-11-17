@@ -134,21 +134,8 @@ public class MessagingFragment extends Fragment {
         errorText.setVisibility(View.GONE);
         messageAdapter.clear();
         messageAdapter.notifyDataSetChanged();
-        AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
-            @Override
-            protected JSONObject doInBackground(Void... voids) {
-                MainActivity activity = (MainActivity) getActivity();
-                JSONObject messages = activity.makeCall("/3/account/me/notifications/messages?new=false", "get", null);
-                return messages;
-            }
-
-            @Override
-            protected void onPostExecute(JSONObject messages) {
-                if(messageAdapter != null)
-                    addMessages(messages);
-            }
-        };
-        async.execute();
+        MessageAsync messagingAsync = new MessageAsync((MainActivity) getActivity(), this);
+        messagingAsync.execute();
     }
 
     private void addMessages(JSONObject messages) {
@@ -272,11 +259,11 @@ public class MessagingFragment extends Fragment {
                     public void onClick(View v) {
                         LinearLayout layout = (LinearLayout) v.getParent().getParent();
                         final ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                        MainActivity activity = (MainActivity) getActivity();
+                        final MainActivity activity = (MainActivity) getActivity();
                         new AlertDialog.Builder(activity).setTitle("Report and Block User").setMessage("Are you sure you want to report this user and block them?")
                                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                            ReportAsync reportAsync = new ReportAsync(dataHolder.from);
+                                            ReportAsync reportAsync = new ReportAsync(dataHolder.from, activity);
                                             reportAsync.execute();
                                     }
                                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -355,21 +342,41 @@ public class MessagingFragment extends Fragment {
         }
     }
 
-    private class ReportAsync extends AsyncTask<Void, Void, Void> {
+    private static class ReportAsync extends AsyncTask<Void, Void, Void> {
         private String username;
-
-        public ReportAsync(String _username) {
+        MainActivity activity;
+        public ReportAsync(String _username, MainActivity _activity) {
             username = _username;
+            activity = _activity;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            MainActivity activity = (MainActivity) getActivity();
             activity.makeCall("3/message/report/" + username, "post", null);
             activity.makeCall("3/message/block/" + username, "post", null);
             return null;
         }
     }
+
+    private static class MessageAsync extends AsyncTask<Void, Void, JSONObject> {
+        MainActivity activity;
+        MessagingFragment messagingFragment;
+        public MessageAsync(MainActivity _activity, MessagingFragment _messagingFragment) {
+            activity = _activity;
+            messagingFragment = _messagingFragment;
+        }
+        @Override
+        protected JSONObject doInBackground(Void... voids) {
+            JSONObject messages = activity.makeCall("/3/account/me/notifications/messages?new=false", "get", null);
+            return messages;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject messages) {
+            if(messagingFragment.messageAdapter != null)
+                messagingFragment.addMessages(messages);
+        }
+    };
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {

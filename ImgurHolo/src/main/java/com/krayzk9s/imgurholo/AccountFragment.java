@@ -217,8 +217,6 @@ public class AccountFragment extends Fragment implements GetData {
                 imagesFragment = new ImagesFragment();
                 bundle = new Bundle();
                 bundle.putString("imageCall", "3/account/" + username + "/images");
-                bundle.putString("id", null);
-                bundle.putParcelable("albumData", null);
                 imagesFragment.setArguments(bundle);
                 activity.changeFragment(imagesFragment, true);
                 break;
@@ -226,8 +224,6 @@ public class AccountFragment extends Fragment implements GetData {
                 imagesFragment = new ImagesFragment();
                 bundle = new Bundle();
                 bundle.putString("imageCall", "3/account/" + username + "/likes");
-                bundle.putString("id", null);
-                bundle.putParcelable("albumData", null);
                 imagesFragment.setArguments(bundle);
                 activity.changeFragment(imagesFragment, true);
                 break;

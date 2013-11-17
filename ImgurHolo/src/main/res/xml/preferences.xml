@@ -54,6 +54,22 @@
                             android:defaultValue="Direct Link"
                             android:entries="@array/copyTypes"
                             android:entryValues="@array/copyTypes"/>
+        <CheckBoxPreference android:key="WidthBoolean"
+            android:title="Set max width"
+            android:summary="Max width on uploads"
+            android:defaultValue="false"/>
+        <EditTextPreference android:key="WidthSize"
+            android:title= "Maximum width"
+            android:summary= "Set maximum width on uploads"
+            android:defaultValue="1920"/>
+        <CheckBoxPreference android:key="HeightBoolean"
+            android:title="Set max height"
+            android:summary="Max height on uploads"
+            android:defaultValue="false"/>
+        <EditTextPreference android:key="HeightSize"
+            android:title= "Maximum height"
+            android:summary= "Set maximum height on uploads"
+            android:defaultValue="1080"/>
     </PreferenceCategory>
     <PreferenceCategory
             android:title="Theme Settings"

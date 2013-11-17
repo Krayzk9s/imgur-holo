@@ -251,30 +251,7 @@ public class CommentsFragment extends Fragment implements GetData {
                     public void onClick(View view) {
                             View convertView = (View) view.getParent().getParent();
                             final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-                            AsyncTask<Void, Void, JSONObject> async = new AsyncTask<Void, Void, JSONObject>() {
-                                @Override
-                                protected JSONObject doInBackground(Void... voids) {
-                                    try {
-                                    MainActivity activity = (MainActivity) getActivity();
-                                    JSONObject imageData = activity.makeCall("/3/gallery/image/" + viewHolder.image_id, "get", null);
-                                    return imageData.getJSONObject("data");
-                                    } catch (JSONException e) {
-                                        Log.e("Error!", "missing data");
-                                    }
-                                    return null;
-                                }
-                                protected void onPostExecute(JSONObject imageData) {
-                                    MainActivity activity = (MainActivity) getActivity();
-                                    SingleImageFragment singleImageFragment = new SingleImageFragment();
-                                    Bundle bundle = new Bundle();
-                                    bundle.putBoolean("gallery", true);
-                                    JSONParcelable data = new JSONParcelable();
-                                    data.setJSONObject(imageData);
-                                    bundle.putParcelable("imageData", data);
-                                    singleImageFragment.setArguments(bundle);
-                                    activity.changeFragment(singleImageFragment, true);
-                                }
-                            };
+                            ImageAsync async = new ImageAsync((MainActivity) getActivity(),  viewHolder.image_id);
                             async.execute();
                     }
                 });
@@ -287,6 +264,35 @@ public class CommentsFragment extends Fragment implements GetData {
             return convertView;
         }
     }
+
+    private static class ImageAsync extends AsyncTask<Void, Void, JSONObject> {
+        MainActivity activity;
+        String image_id;
+        public ImageAsync(MainActivity _activity, String _image_id) {
+            activity = _activity;
+            image_id = _image_id;
+        }
+        @Override
+        protected JSONObject doInBackground(Void... voids) {
+            try {
+                JSONObject imageData =  activity.makeCall("/3/gallery/image/" + image_id, "get", null);
+                return imageData.getJSONObject("data");
+            } catch (JSONException e) {
+                Log.e("Error!", "missing data");
+            }
+            return null;
+        }
+        protected void onPostExecute(JSONObject imageData) {
+            SingleImageFragment singleImageFragment = new SingleImageFragment();
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("gallery", true);
+            JSONParcelable data = new JSONParcelable();
+            data.setJSONObject(imageData);
+            bundle.putParcelable("imageData", data);
+            singleImageFragment.setArguments(bundle);
+            activity.changeFragment(singleImageFragment, true);
+        }
+    };
 
     private static class DeleteAsync extends AsyncTask<Void, Void, Void> {
         private String id;

@@ -215,10 +215,6 @@ public class MainActivity extends FragmentActivity {
             ImagesFragment imagesFragment = new ImagesFragment();
             Bundle bundle = new Bundle();
             bundle.putString("imageCall", "3/account/me/images");
-            bundle.putString("id", null);
-            JSONParcelable data = new JSONParcelable();
-            data.setJSONObject(null);
-            bundle.putParcelable("albumData", data);
             imagesFragment.setArguments(bundle);
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
@@ -227,10 +223,6 @@ public class MainActivity extends FragmentActivity {
             ImagesFragment imagesFragment = new ImagesFragment();
             Bundle bundle = new Bundle();
             bundle.putString("imageCall", "3/account/me/likes");
-            bundle.putString("id", null);
-            JSONParcelable data = new JSONParcelable();
-            data.setJSONObject(null);
-            bundle.putParcelable("albumData", data);
             imagesFragment.setArguments(bundle);
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
@@ -498,10 +490,6 @@ public class MainActivity extends FragmentActivity {
                     ImagesFragment imagesFragment = new ImagesFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("imageCall", "3/account/me/images");
-                    bundle.putString("id", null);
-                    JSONParcelable data = new JSONParcelable();
-                    data.setJSONObject(null);
-                    bundle.putParcelable("albumData", data);
                     imagesFragment.setArguments(bundle);
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)
@@ -526,10 +514,6 @@ public class MainActivity extends FragmentActivity {
                     ImagesFragment imagesFragment = new ImagesFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("imageCall", "3/account/me/likes");
-                    bundle.putString("id", null);
-                    JSONParcelable data = new JSONParcelable();
-                    data.setJSONObject(null);
-                    bundle.putParcelable("albumData", data);
                     imagesFragment.setArguments(bundle);
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)

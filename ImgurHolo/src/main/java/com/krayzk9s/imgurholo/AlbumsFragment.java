@@ -221,9 +221,6 @@ public class AlbumsFragment extends Fragment implements GetData {
         Bundle bundle = new Bundle();
         bundle.putString("imageCall", "3/album/" + id);
         bundle.putString("id", id);
-        JSONParcelable data = new JSONParcelable();
-        data.setJSONObject(null);
-        bundle.putParcelable("albumData", data);
         fragment.setArguments(bundle);
         MainActivity activity = (MainActivity) getActivity();
         activity.changeFragment(fragment, true);
