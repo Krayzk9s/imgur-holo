@@ -56,15 +56,22 @@ public class CommentsFragment extends Fragment implements GetData {
     String username;
     TextView errorText;
 
-    public void setUsername(String _username) {
-        username = _username;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        username = bundle.getString("username");
         setHasOptionsMenu(true);
-        setRetainInstance(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainActivity activity = (MainActivity) getActivity();
+        if(username != "me")
+            activity.setTitle(username + "'s Comments");
+        else
+            activity.setTitle("My Comments");
     }
 
     @Override
@@ -263,8 +270,12 @@ public class CommentsFragment extends Fragment implements GetData {
                                 protected void onPostExecute(JSONObject imageData) {
                                     MainActivity activity = (MainActivity) getActivity();
                                     SingleImageFragment singleImageFragment = new SingleImageFragment();
-                                    singleImageFragment.setGallery(true);
-                                    singleImageFragment.setParams(imageData);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putBoolean("gallery", true);
+                                    JSONParcelable data = new JSONParcelable();
+                                    data.setJSONObject(imageData);
+                                    bundle.putParcelable("imageData", data);
+                                    singleImageFragment.setArguments(bundle);
                                     activity.changeFragment(singleImageFragment, true);
                                 }
                             };

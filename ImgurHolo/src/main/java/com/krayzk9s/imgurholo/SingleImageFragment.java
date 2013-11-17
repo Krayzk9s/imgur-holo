@@ -107,19 +107,21 @@ public class SingleImageFragment extends Fragment {
         sort = "Best";
     }
 
-    public void setParams(JSONObject _params) {
-        imageData = new JSONParcelable();
-        imageData.setJSONObject(_params);
-    }
-
-    public void setGallery(boolean gallery) {
-        inGallery = gallery;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if(bundle.containsKey("gallery"))
+            inGallery = bundle.getBoolean("gallery");
+        imageData = bundle.getParcelable("imageData");
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setTitle("Image");
     }
 
     @Override
@@ -543,7 +545,9 @@ public class SingleImageFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         AccountFragment accountFragment = new AccountFragment();
-                        accountFragment.setUsername(imageData.getJSONObject().getString("account_url"));
+                        Bundle bundle = new Bundle();
+                        bundle.putString("username", imageData.getJSONObject().getString("account_url"));
+                        accountFragment.setArguments(bundle);
                         MainActivity activity = (MainActivity) getActivity();
                         activity.changeFragment(accountFragment, true);
                     } catch (Exception e) {
@@ -842,6 +846,10 @@ public class SingleImageFragment extends Fragment {
 
     private void updateImageFont() {
         try {
+                if (!imageData.getJSONObject().has("vote")) {
+                    imageScore.setVisibility(View.GONE);
+                    return;
+                }
                 if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
                     imageScore.setText(Html.fromHtml("<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points </font> (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
                 else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
@@ -851,6 +859,7 @@ public class SingleImageFragment extends Fragment {
         }
         catch (Exception e) {
             Log.e("Error font!", e.toString());
+
         }
     }
 
@@ -1156,7 +1165,10 @@ public class SingleImageFragment extends Fragment {
                             public void onClick(View view) {
                                 try {
                                     AccountFragment accountFragment = new AccountFragment();
-                                    accountFragment.setUsername(viewData.getString("author"));
+
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("username", viewData.getString("author"));
+                                    accountFragment.setArguments(bundle);
                                     MainActivity activity = (MainActivity) getActivity();
                                     activity.changeFragment(accountFragment, true);
                                 } catch (Exception e) {

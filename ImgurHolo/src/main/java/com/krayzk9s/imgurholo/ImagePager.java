@@ -39,8 +39,19 @@ public class ImagePager extends Fragment {
     ArrayList<JSONParcelable> imageData;
     int start;
 
-    public void setStart(int _start) {
-        start = _start;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        start = bundle.getInt("start");
+        imageData = bundle.getParcelableArrayList("ids");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setTitle("Images");
     }
 
     @Override
@@ -56,10 +67,6 @@ public class ImagePager extends Fragment {
         pager.setCurrentItem(start);
 
         return(result);
-    }
-
-    public void setImageData(ArrayList<JSONParcelable> _ids) {
-        imageData = _ids;
     }
 
     public class ImageAdapter extends android.support.v4.app.FragmentPagerAdapter {
@@ -82,12 +89,22 @@ public class ImagePager extends Fragment {
             try {
             if (id.has("is_album") && id.getBoolean("is_album")) {
                 ImagesFragment fragment = new ImagesFragment();
-                fragment.setImageCall(id.getString("id"), "3/album/" + id.getString("id"), id);
+                Bundle bundle = new Bundle();
+                bundle.putString("imageCall", "3/album/" + id.getString("id"));
+                bundle.putString("id", id.getString("id"));
+                JSONParcelable data = new JSONParcelable();
+                data.setJSONObject(id);
+                bundle.putParcelable("albumData", data);
+                fragment.setArguments(bundle);
                 return fragment;
             } else {
                 SingleImageFragment singleImageFragment = new SingleImageFragment();
-                singleImageFragment.setGallery(true);
-                singleImageFragment.setParams(id);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("gallery", true);
+                JSONParcelable data = new JSONParcelable();
+                data.setJSONObject(id);
+                bundle.putParcelable("imageData", data);
+                singleImageFragment.setArguments(bundle);
                 return singleImageFragment;
              }
             } catch (Exception e) {

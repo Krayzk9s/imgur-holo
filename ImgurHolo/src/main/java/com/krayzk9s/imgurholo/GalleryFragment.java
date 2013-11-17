@@ -80,10 +80,6 @@ public class GalleryFragment extends Fragment implements GetData {
     int oldwidth = 0;
     private boolean fetchingImages;
 
-    public GalleryFragment() {
-
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +118,13 @@ public class GalleryFragment extends Fragment implements GetData {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setTitle("Gallery");
     }
 
     @Override
@@ -241,7 +244,6 @@ public class GalleryFragment extends Fragment implements GetData {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("Instance null?", (savedInstanceState == null) + "");
         MainActivity activity = (MainActivity) getActivity();
         actionBar = activity.getActionBar();
         SharedPreferences settings = activity.getSettings();
@@ -289,6 +291,7 @@ public class GalleryFragment extends Fragment implements GetData {
             });
         setupActionBar();
         if(savedInstanceState == null && urls.size() < 1) {
+            Log.d("urls", urls.size() + "");
             makeGallery();
         }
         return view;
@@ -519,26 +522,13 @@ public class GalleryFragment extends Fragment implements GetData {
     }
 
     public void selectItem(int position) {
-        JSONObject id = ids.get(position).getJSONObject();
-        //try {
-            //if (id.has("is_album") && id.getBoolean("is_album")) {
-            //    ImagesFragment fragment = new ImagesFragment();
-            //    fragment.setImageCall(id.getString("id"), "3/album/" + id.getString("id"), id);
-            //    MainActivity activity = (MainActivity) getActivity();
-            //    activity.changeFragment(fragment);
-            //} else {
                 ImagePager pager = new ImagePager();
-                pager.setStart(position);
-                /*SingleImageFragment fragment = new SingleImageFragment();
-                fragment.setGallery(true);
-                fragment.setParams(id);*/
-                pager.setImageData(new ArrayList<JSONParcelable>(ids));
+                Bundle bundle = new Bundle();
+                bundle.putInt("start", position);
+                bundle.putParcelableArrayList("ids", new ArrayList<JSONParcelable>(ids));
                 MainActivity activity = (MainActivity) getActivity();
+                pager.setArguments(bundle);
                 activity.changeFragment(pager, true);
-           // }
-        //} catch (Exception e) {
-        //    Log.e("Error!", e.toString());
-        //}
     }
 
     @Override

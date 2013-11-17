@@ -30,7 +30,13 @@ public class ImageSelectActivity extends MainActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         ImagesFragment imagesFragment = new ImagesFragment();
         imagesFragment.selecting = true;
-        imagesFragment.setImageCall(null, "3/account/me/images/0", null);
+        Bundle bundle = new Bundle();
+        bundle.putString("imageCall", "3/account/me/images/0");
+        bundle.putString("id", null);
+        JSONParcelable data = new JSONParcelable();
+        data.setJSONObject(null);
+        bundle.putParcelable("albumData", null);
+        imagesFragment.setArguments(bundle);
         fragmentManager.beginTransaction()
                 .replace(R.id.frame_layout, imagesFragment)
                 .commit();
@@ -44,9 +50,7 @@ public class ImageSelectActivity extends MainActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
         return true;
-
     }
 
 

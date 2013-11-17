@@ -117,7 +117,7 @@ public class MainActivity extends FragmentActivity {
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         if(savedInstanceState == null)
-            loadDefaultPage();
+            processIntent(getIntent());
     }
 
     public void updateMenu() {
@@ -198,36 +198,47 @@ public class MainActivity extends FragmentActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         SharedPreferences settings = getSettings();
         if (!apiCall.loggedin || !settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery")) {
-            setTitle("Gallery");
             GalleryFragment galleryFragment = new GalleryFragment();
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, galleryFragment)
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Albums")) {
-            setTitle("Your Albums");
             AlbumsFragment albumsFragment = new AlbumsFragment();
-            albumsFragment.setUsername("me");
+            Bundle bundle = new Bundle();
+            bundle.putString("username", "me");
+            albumsFragment.setArguments(bundle);
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, albumsFragment)
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Images")) {
-            setTitle("Your Images");
             ImagesFragment imagesFragment = new ImagesFragment();
-            imagesFragment.setImageCall(null, "3/account/me/images", null);
+            Bundle bundle = new Bundle();
+            bundle.putString("imageCall", "3/account/me/images");
+            bundle.putString("id", null);
+            JSONParcelable data = new JSONParcelable();
+            data.setJSONObject(null);
+            bundle.putParcelable("albumData", data);
+            imagesFragment.setArguments(bundle);
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Favorites")) {
-            setTitle("Your Favorites");
             ImagesFragment imagesFragment = new ImagesFragment();
-            imagesFragment.setImageCall(null, "3/account/me/likes", null);
+            Bundle bundle = new Bundle();
+            bundle.putString("imageCall", "3/account/me/likes");
+            bundle.putString("id", null);
+            JSONParcelable data = new JSONParcelable();
+            data.setJSONObject(null);
+            bundle.putParcelable("albumData", data);
+            imagesFragment.setArguments(bundle);
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, imagesFragment)
                     .commit();
         } else if (settings.getString("DefaultPage", "").equals("Account")) {
-            setTitle("Your Account");
             AccountFragment accountFragment = new AccountFragment();
-            accountFragment.setUsername("me");
+            Bundle bundle = new Bundle();
+            bundle.putString("username", "me");
+            accountFragment.setArguments(bundle);
             fragmentManager.beginTransaction()
                     .add(R.id.frame_layout, accountFragment)
                     .commit();
@@ -405,7 +416,6 @@ public class MainActivity extends FragmentActivity {
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         switch (position) {
             case 0:
-                setTitle("Gallery");
                 GalleryFragment galleryFragment = new GalleryFragment();
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_layout, galleryFragment)
@@ -413,14 +423,14 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 1:
                 if (apiCall.loggedin) {
-                    setTitle("Your Account");
                     AccountFragment accountFragment = new AccountFragment();
-                    accountFragment.setUsername("me");
+                    Bundle bundle = new Bundle();
+                    bundle.putString("username", "me");
+                    accountFragment.setArguments(bundle);
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, accountFragment)
                             .commit();
                 } else {
-                    setTitle("Your Settings");
                     Intent myIntent = new Intent(this, SettingsActivity.class);
                     startActivity(myIntent);
                     updateMenu();
@@ -484,9 +494,14 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 3:
                 if (apiCall.loggedin) {
-                    setTitle("Your Images");
                     ImagesFragment imagesFragment = new ImagesFragment();
-                    imagesFragment.setImageCall(null, "3/account/me/images", null);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("imageCall", "3/account/me/images");
+                    bundle.putString("id", null);
+                    JSONParcelable data = new JSONParcelable();
+                    data.setJSONObject(null);
+                    bundle.putParcelable("albumData", data);
+                    imagesFragment.setArguments(bundle);
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)
                             .commit();
@@ -495,9 +510,10 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 4:
                 if (apiCall.loggedin) {
-                    setTitle("Your Albums");
                     AlbumsFragment albumsFragment = new AlbumsFragment();
-                    albumsFragment.setUsername("me");
+                    Bundle bundle = new Bundle();
+                    bundle.putString("username", "me");
+                    albumsFragment.setArguments(bundle);
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, albumsFragment)
                             .commit();
@@ -506,9 +522,14 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 5:
                 if (apiCall.loggedin) {
-                    setTitle("Your Favorites");
                     ImagesFragment imagesFragment = new ImagesFragment();
-                    imagesFragment.setImageCall(null, "3/account/me/likes", null);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("imageCall", "3/account/me/likes");
+                    bundle.putString("id", null);
+                    JSONParcelable data = new JSONParcelable();
+                    data.setJSONObject(null);
+                    bundle.putParcelable("albumData", data);
+                    imagesFragment.setArguments(bundle);
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)
                             .commit();
@@ -517,7 +538,6 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 6:
                 if (apiCall.loggedin) {
-                    setTitle("Your Messages");
                     MessagingFragment messagingFragment = new MessagingFragment();
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, messagingFragment)
@@ -527,7 +547,6 @@ public class MainActivity extends FragmentActivity {
                 break;
             case 7:
                 if (apiCall.loggedin) {
-                    setTitle("Your Settings");
                     Intent myIntent = new Intent(this, SettingsActivity.class);
                     startActivity(myIntent);
                     //SettingsFragment settingsFragment = new SettingsFragment();
@@ -680,7 +699,13 @@ public class MainActivity extends FragmentActivity {
             try {
                 Log.d("data", albumData.toString());
                 ImagesFragment fragment = new ImagesFragment();
-                fragment.setImageCall(album, "/3/album/" + album, albumData.getJSONObject("data"));
+                Bundle bundle = new Bundle();
+                bundle.putString("imageCall", "/3/album/" + album);
+                bundle.putString("id", album);
+                JSONParcelable data = new JSONParcelable();
+                data.setJSONObject(albumData.getJSONObject("data"));
+                bundle.putParcelable("albumData", data);
+                fragment.setArguments(bundle);
                 activity.changeFragment(fragment, false);
             } catch (Exception e) {
                 Log.e("Error!", e.toString());
@@ -705,8 +730,12 @@ public class MainActivity extends FragmentActivity {
             try {
                 Log.d("data", singleImageData.toString());
                 SingleImageFragment singleImageFragment = new SingleImageFragment();
-                singleImageFragment.setParams(singleImageData.getJSONObject("data"));
-                singleImageFragment.setGallery(true);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("gallery", true);
+                JSONParcelable data = new JSONParcelable();
+                data.setJSONObject(singleImageData.getJSONObject("data"));
+                bundle.putParcelable("imageData", data);
+                singleImageFragment.setArguments(bundle);
                 activity.changeFragment(singleImageFragment, false);
             } catch (Exception e) {
                 Log.e("Error!", e.toString());

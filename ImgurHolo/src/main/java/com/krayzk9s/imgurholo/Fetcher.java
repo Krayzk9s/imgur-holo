@@ -20,8 +20,7 @@ public class Fetcher extends AsyncTask<Void, Void, JSONObject> {
     }
     @Override
     protected JSONObject doInBackground(Void... voids) {
-        JSONObject data = new JSONObject();
-        Log.d("imagesData", "loading");
+        Log.d("imagesData", call);
         return activity.makeCall(call, "get", null);
     }
     @Override

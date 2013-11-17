@@ -89,15 +89,21 @@ public class ImagesFragment extends Fragment implements GetData {
         page = 0;
     }
 
-    public void setImageCall(String _Album, String _imageCall, JSONObject _data) {
-        albumId = _Album;
-        imageCall = _imageCall;
-        galleryAlbumData = _data;
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setTitle("Images");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        albumId = bundle.getString("id");
+        imageCall = bundle.getString("imageCall");
+        JSONParcelable dataParcel = bundle.getParcelable("albumData");
+        galleryAlbumData = dataParcel.getJSONObject();
         setHasOptionsMenu(true);
     }
 
@@ -235,8 +241,12 @@ public class ImagesFragment extends Fragment implements GetData {
                     protected void onPostExecute(Void aVoid) {
                         if(galleryAlbumData != null) {
                             SingleImageFragment fragment = new SingleImageFragment();
-                            fragment.setParams(galleryAlbumData);
-                            fragment.setGallery(true);
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean("gallery", true);
+                            JSONParcelable data = new JSONParcelable();
+                            data.setJSONObject(galleryAlbumData);
+                            bundle.putParcelable("imageData", data);
+                            fragment.setArguments(bundle);
                             MainActivity activity = (MainActivity) getActivity();
                             activity.changeFragment(fragment, true);
                         }
@@ -341,7 +351,6 @@ public class ImagesFragment extends Fragment implements GetData {
             urls = savedInstanceState.getStringArrayList("urls");
             ids = savedInstanceState.getParcelableArrayList("ids");
         }
-
         return view;
     }
 
@@ -396,9 +405,11 @@ public class ImagesFragment extends Fragment implements GetData {
     public void selectItem(int position) {
         if (!selecting) {
             ImagePager imagePager = new ImagePager();
-            imagePager.setStart(position);
             ArrayList<JSONParcelable> idCopy = ids;
-            imagePager.setImageData(idCopy);
+            Bundle bundle = new Bundle();
+            bundle.putInt("start", position);
+            bundle.putParcelableArrayList("ids", idCopy);
+            imagePager.setArguments(bundle);
             MainActivity activity = (MainActivity) getActivity();
             activity.changeFragment(imagePager, true);
         }

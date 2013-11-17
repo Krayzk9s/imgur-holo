@@ -62,16 +62,22 @@ public class AlbumsFragment extends Fragment implements GetData {
     int lastInView = -1;
     TextView errorText;
 
-
-    public void setUsername(String _username) {
-        username = _username;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        Bundle bundle = getArguments();
+        username = bundle.getString("username");
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainActivity activity = (MainActivity) getActivity();
+        if(username != "me")
+            activity.setTitle(username + "'s Albums");
+        else
+            activity.setTitle("My Albums");
     }
 
     @Override
@@ -218,8 +224,13 @@ public class AlbumsFragment extends Fragment implements GetData {
     public void selectItem(int position) {
         String id = ids.get(position);
         ImagesFragment fragment = new ImagesFragment();
-        fragment.albumId = id;
-        fragment.setImageCall(id, "/3/album/" + id + "/images", null);
+        Bundle bundle = new Bundle();
+        bundle.putString("imageCall", "3/album/" + id);
+        bundle.putString("id", id);
+        JSONParcelable data = new JSONParcelable();
+        data.setJSONObject(null);
+        bundle.putParcelable("albumData", data);
+        fragment.setArguments(bundle);
         MainActivity activity = (MainActivity) getActivity();
         activity.changeFragment(fragment, true);
     }

@@ -60,13 +60,11 @@ public class AccountFragment extends Fragment implements GetData {
     TextView created;
     TextView reputation;
 
-    public void setUsername(String _username) {
-        username = _username;
-    }
-
     @Override
-    public void onCreate(Bundle save) {
-        super.onCreate(save);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        username = bundle.getString("username");
         setHasOptionsMenu(true);
     }
 
@@ -95,7 +93,9 @@ public class AccountFragment extends Fragment implements GetData {
                 Log.d("searching", mSearchView.getQuery() + "");
                 MainActivity activity = (MainActivity) getActivity();
                 AccountFragment accountFragment = new AccountFragment();
-                accountFragment.setUsername(mSearchView.getQuery().toString());
+                Bundle bundle = new Bundle();
+                bundle.putString("username", mSearchView.getQuery().toString());
+                accountFragment.setArguments(bundle);
                 activity.changeFragment(accountFragment, true);
                 return true;
             }
@@ -117,17 +117,22 @@ public class AccountFragment extends Fragment implements GetData {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        MainActivity activity = (MainActivity) getActivity();
+        if(username != "me")
+            activity.setTitle(username + "'s Account");
+        else
+            activity.setTitle("My Account");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         Log.d("Username", username);
         MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
-
         Log.d("SettingTitle", username);
-        if(username != "me")
-            activity.setTitle(username + "'s Account");
-        else
-            activity.setTitle("My Account");
         View view = inflater.inflate(R.layout.account_layout, container, false);
         LinearLayout header = (LinearLayout) view.findViewById(R.id.header);
         if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
@@ -145,7 +150,6 @@ public class AccountFragment extends Fragment implements GetData {
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         if (savedInstanceState == null && accountData == null) {
             getAccount();
-
         } else if(savedInstanceState != null) {
             Bundle extras = savedInstanceState.getBundle("accountData");
             accountData = (HashMap<String, String>) extras.getSerializable("HashMap");
@@ -199,41 +203,39 @@ public class AccountFragment extends Fragment implements GetData {
     private void selectItem(int position) {
         final MainActivity activity = (MainActivity) getActivity();
         ImagesFragment imagesFragment;
+        Bundle bundle;
+        JSONParcelable data;
         switch (position) {
             case 0:
-                if(username != "me")
-                    activity.setTitle(username + "'s Albums");
-                else
-                    activity.setTitle("My Albums");
                 AlbumsFragment albumsFragment = new AlbumsFragment();
-                albumsFragment.setUsername(username);
+                bundle = new Bundle();
+                bundle.putString("username", "me");
+                albumsFragment.setArguments(bundle);
                 activity.changeFragment(albumsFragment, true);
                 break;
             case 1:
-                if(username != "me")
-                    activity.setTitle(username + "'s Images");
-                else
-                    activity.setTitle("My Images");
                 imagesFragment = new ImagesFragment();
-                imagesFragment.setImageCall(null, "3/account/" + username + "/images", null);
+                bundle = new Bundle();
+                bundle.putString("imageCall", "3/account/" + username + "/images");
+                bundle.putString("id", null);
+                bundle.putParcelable("albumData", null);
+                imagesFragment.setArguments(bundle);
                 activity.changeFragment(imagesFragment, true);
                 break;
             case 2:
-                if(username != "me")
-                    activity.setTitle(username + "'s Favorites");
-                else
-                    activity.setTitle("My Favorites");
                 imagesFragment = new ImagesFragment();
-                imagesFragment.setImageCall(null, "3/account/" + username + "/likes", null);
+                bundle = new Bundle();
+                bundle.putString("imageCall", "3/account/" + username + "/likes");
+                bundle.putString("id", null);
+                bundle.putParcelable("albumData", null);
+                imagesFragment.setArguments(bundle);
                 activity.changeFragment(imagesFragment, true);
                 break;
             case 3:
-                if(username != "me")
-                    activity.setTitle(username + "'s Comments");
-                else
-                    activity.setTitle("My Comments");
                 CommentsFragment commentsFragment = new CommentsFragment();
-                commentsFragment.setUsername(username);
+                bundle = new Bundle();
+                bundle.putString("username", username);
+                commentsFragment.setArguments(bundle);
                 activity.changeFragment(commentsFragment, true);
                 break;
             default:
@@ -254,6 +256,7 @@ public class AccountFragment extends Fragment implements GetData {
         Bundle extras = new Bundle();
         extras.putSerializable("HashMap", accountData);
         savedInstanceState.putBundle("accountData", extras);
+        savedInstanceState.putString("username", username);
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }

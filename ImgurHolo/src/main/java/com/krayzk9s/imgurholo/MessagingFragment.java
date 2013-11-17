@@ -52,14 +52,17 @@ public class MessagingFragment extends Fragment {
     ArrayList<JSONParcelable> messageDataArray;
     TextView errorText;
 
-    public MessagingFragment() {
-
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setTitle("My Messages");
     }
 
     @Override
