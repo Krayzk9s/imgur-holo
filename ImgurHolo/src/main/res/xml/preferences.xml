@@ -54,6 +54,10 @@
                             android:defaultValue="Direct Link"
                             android:entries="@array/copyTypes"
                             android:entryValues="@array/copyTypes"/>
+        <CheckBoxPreference android:key="AlbumUpload"
+            android:title="Upload as album"
+            android:summary="Create new album and add uploads when multiple images uploaded"
+            android:defaultValue="true"/>
         <CheckBoxPreference android:key="WidthBoolean"
             android:title="Set max width"
             android:summary="Max width on uploads"

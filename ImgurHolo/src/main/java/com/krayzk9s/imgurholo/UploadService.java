@@ -29,6 +29,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
@@ -39,13 +40,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by info on 8/30/13.
  */
-public class UploadService extends IntentService {
+public class UploadService extends IntentService implements GetData {
     public ApiCall apiCall;
+    private ArrayList<String> ids;
+    private int totalUpload;
 
     public UploadService() {
         super("UploadService");
@@ -62,15 +66,82 @@ public class UploadService extends IntentService {
         apiCall.setSettings(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
     }
 
+    public void onGetObject(Object o) {
+        String id = (String) o;
+        if(id.length() == 7) {
+            if(totalUpload != -1)
+                ids.add(id);
+            if(ids.size() == totalUpload) {
+                ids.add(0, ""); //weird hack because imgur eats the first item of the array for some bizarre reason
+                NewAlbumAsync newAlbumAsync = new NewAlbumAsync("", "", apiCall, ids, this);
+                newAlbumAsync.execute();
+            }
+        }
+        else if (apiCall.settings.getBoolean("AlbumUpload", true)) {
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
+            Intent viewImageIntent = new Intent();
+            viewImageIntent.setAction(Intent.ACTION_VIEW);
+            viewImageIntent.setData(Uri.parse("http://imgur.com/a/" + id));
+            Intent shareIntent = new Intent();
+            shareIntent.setType("text/plain");
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "http://imgur.com/a/" + id);
+            PendingIntent viewImagePendingIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), viewImageIntent, 0);
+            PendingIntent sharePendingIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), shareIntent, 0);
+            Notification notification = notificationBuilder
+                    .setSmallIcon(R.drawable.icon_desaturated)
+                    .setContentText("Finished Uploading Album")
+                    .setContentTitle("imgur Image Uploader")
+                    .setContentIntent(viewImagePendingIntent)
+                    .addAction(R.drawable.dark_social_share, "Share", sharePendingIntent)
+                    .build();
+            Log.d("Built", "Notification built");
+            notificationManager.cancel(0);
+            notificationManager.notify(1, notification);
+            Log.d("Built", "Notification display");
+        }
+        else {
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
+            Notification notification = notificationBuilder
+                    .setSmallIcon(R.drawable.icon_desaturated)
+                    .setContentText("Finished Uploading All Images")
+                    .setContentTitle("imgur Image Uploader")
+                    .build();
+            Log.d("Built", "Notification built");
+            notificationManager.cancel(0);
+            notificationManager.notify(1, notification);
+            Log.d("Built", "Notification display");
+        }
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
-        SendImage sendImage = new SendImage(intent.getData(), apiCall, getContentResolver().query(intent.getData(), null, null, null, null), getApplicationContext(), getResources());
-        sendImage.execute();
+        ids = new ArrayList<String>();
+        if(intent.hasExtra("images")) {
+            Log.d("recieving", "handling multiple");
+            ArrayList<Parcelable> list = intent.getParcelableArrayListExtra("images");
+            totalUpload = list.size();
+            for (Parcelable parcel : list) {
+                Uri uri = (Uri) parcel;
+                Log.d("recieving", uri.toString());
+                SendImage sendImage = new SendImage(uri, apiCall, getContentResolver().query(uri, null, null, null, null), getApplicationContext(), getResources(), this);
+                Log.d("recieving", "executing");
+                sendImage.execute();
+            }
+        }
+        else {
+            totalUpload = -1;
+            SendImage sendImage = new SendImage(intent.getData(), apiCall, getContentResolver().query(intent.getData(), null, null, null, null), getApplicationContext(), getResources(), this);
+            sendImage.execute();
+        }
     }
 
     /* From http://stackoverflow.com/users/1946055/tobiel at http://stackoverflow.com/questions/17839388/creating-a-scaled-bitmap-with-createscaledbitmap-in-android */
     public static Bitmap lessResolution (String filePath, int width, int height)
-    {   int reqHeight=width;
+    {
+        int reqHeight=width;
         int reqWidth=height;
         BitmapFactory.Options options = new BitmapFactory.Options();
 
@@ -118,8 +189,23 @@ public class UploadService extends IntentService {
         Context context;
         Resources resources;
         NotificationManager notificationManager;
+        UploadService uploadService;
 
-        public SendImage(Uri _uri, ApiCall _apiCallStatic, Cursor _cursor, Context _context, Resources _resources) {
+        private void throwError(String error) {
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
+            notificationManager.cancel(0);
+            notificationBuilder = new NotificationCompat.Builder(context);
+            Notification notification = notificationBuilder
+                    .setSmallIcon(R.drawable.icon_desaturated)
+                    .setContentText(error)
+                    .setContentTitle("Error - Image Upload Failed")
+                    .build();
+            notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(0, notification);
+        }
+
+        public SendImage(Uri _uri, ApiCall _apiCallStatic, Cursor _cursor, Context _context, Resources _resources, UploadService _uploadService) {
+            uploadService = _uploadService;
             uri = _uri;
             apiCallStatic = _apiCallStatic;
             cursor = _cursor;
@@ -139,6 +225,7 @@ public class UploadService extends IntentService {
 
         @Override
         protected JSONObject doInBackground(Void... voids) {
+            Log.d("recieved", "in background");
             cursor.moveToFirst();
             final String filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
             Log.d("Image Upload", filePath);
@@ -160,6 +247,12 @@ public class UploadService extends IntentService {
             hashMap.put("image", image);
             hashMap.put("type", "binary");
             JSONObject data = apiCallStatic.makeCall("3/image", "post", hashMap);
+            if(data == null)
+                data = apiCallStatic.makeCall("3/image", "post", hashMap);
+            if(data == null) {
+                throwError("imgur Not Responding");
+                return null;
+            }
             Log.d("Image Upload", data.toString());
             try {
                 JSONObject returner = apiCallStatic.makeCall("3/image/" + data.getJSONObject("data").getString("id"), "get", null);
@@ -173,6 +266,8 @@ public class UploadService extends IntentService {
 
         @Override
         protected void onPostExecute(JSONObject data) {
+            if(data == null)
+                return;
             Log.d("Built", "Notification building");
             NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
             bigPictureStyle.bigPicture(photo);
@@ -180,6 +275,9 @@ public class UploadService extends IntentService {
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
             try {
             Log.d("data", data.toString());
+            String id = data.getString("id");
+            Log.d("id", id);
+            uploadService.onGetObject(id);
             Intent viewImageIntent = new Intent();
             viewImageIntent.setAction(Intent.ACTION_VIEW);
             viewImageIntent.setData(Uri.parse(data.getString("link")));
@@ -209,31 +307,26 @@ public class UploadService extends IntentService {
                     shareIntent.putExtra(Intent.EXTRA_TEXT, link);
             PendingIntent viewImagePendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), viewImageIntent, 0);
             PendingIntent sharePendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), shareIntent, 0);
-            Notification notification = notificationBuilder
-                    .setSmallIcon(R.drawable.icon_desaturated)
-                    .setContentText("Finished Uploading")
-                    .setStyle(bigPictureStyle)
-                    .setContentTitle("imgur Image Uploader")
-                    .setContentIntent(viewImagePendingIntent)
-                    .addAction(R.drawable.dark_social_share, "Share", sharePendingIntent)
-                    .build();
-            Log.d("Built", "Notification built");
-            notificationManager.cancel(0);
-            notificationManager.notify(1, notification);
-            Log.d("Built", "Notification display");
+            if(uploadService.totalUpload == -1) {
+                Notification notification = notificationBuilder
+                        .setSmallIcon(R.drawable.icon_desaturated)
+                        .setContentText("Finished Uploading")
+                        .setStyle(bigPictureStyle)
+                        .setContentTitle("imgur Image Uploader")
+                        .setContentIntent(viewImagePendingIntent)
+                        .addAction(R.drawable.dark_social_share, "Share", sharePendingIntent)
+                        .build();
+                    Log.d("Built", "Notification built");
+                    notificationManager.cancel(0);
+                    notificationManager.notify(1, notification);
+                    Log.d("Built", "Notification display");
+                }
             }
             catch (JSONException e) {
                 Log.e("Error!", e.toString());
-                notificationManager.cancel(0);
-                notificationBuilder = new NotificationCompat.Builder(context);
-                Notification notification = notificationBuilder
-                        .setSmallIcon(R.drawable.icon_desaturated)
-                        .setContentText("Error - Image Upload Failed")
-                        .setContentTitle("imgur Image Uploader")
-                        .build();
-                notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.notify(0, notification);
+                throwError("imgur Response Malformed");
             }
+
         }
     }
 }

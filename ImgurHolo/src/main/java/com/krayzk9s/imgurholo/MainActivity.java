@@ -75,7 +75,7 @@ public class MainActivity extends FragmentActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private ApiCall apiCall;
+    public ApiCall apiCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -268,15 +268,10 @@ public class MainActivity extends FragmentActivity {
             toast.show();
             ArrayList<Parcelable> list =
                     intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-            for (Parcelable parcel : list) {
-                Uri uri = (Uri) parcel;
-                Log.d("sending", uri.toString());
-                Intent serviceIntent = new Intent(this, UploadService.class);
-                serviceIntent.setData(uri);
-                serviceIntent.putExtra("album", true);
-                startService(serviceIntent);
-                finish();
-            }
+            Intent serviceIntent = new Intent(this, UploadService.class);
+            serviceIntent.putParcelableArrayListExtra("images", list);
+            startService(serviceIntent);
+            finish();
         } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http://imgur.com/a")) {
             String uri = intent.getData().toString();
             final String album = uri.split("/")[4];
@@ -401,6 +396,58 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    private void displayUpload() {
+        new AlertDialog.Builder(this).setTitle("Upload Options")
+                .setItems(R.array.upload_options, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Intent intent;
+                        MainActivity activity = MainActivity.this;
+                        switch (whichButton) {
+                            case 0:
+                                final EditText urlText = new EditText(activity);
+                                urlText.setSingleLine();
+                                new AlertDialog.Builder(activity).setTitle("Enter URL").setView(urlText).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        UrlAsync urlAsync = new UrlAsync(urlText.getText().toString(), MainActivity.this);
+                                        urlAsync.execute();
+                                    }
+                                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        // Do nothing.
+                                    }
+                                }).show();
+                                break;
+                            case 1:
+                                intent = new Intent();
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                                startActivityForResult(Intent.createChooser(intent,
+                                        "Select Picture"), 3);
+                                break;
+                            case 2:
+                                intent = new Intent("android.media.action.IMAGE_CAPTURE");
+                                startActivityForResult(intent, 4);
+                                break;
+                            case 3:
+                                new AlertDialog.Builder(activity).setTitle("Image Explanation").setMessage("You can! You just have to do it from the gallery or other app by multiselecting. :(" +
+                                        " The ELI5 explanation is that basically the Android API is a bit weird in this area. More explicitly, I cannot determine a way to request multiple files via intent" +
+                                        ", if you know a work around feel free to contact me on Google Play.").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        //do nothing
+                                    }
+                                }).show();
+                            default:
+                                break;
+                        }
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Do nothing.
+            }
+        }).show();
+    }
+
     private void selectItem(int position) {
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
@@ -424,65 +471,17 @@ public class MainActivity extends FragmentActivity {
                             .replace(R.id.frame_layout, accountFragment)
                             .commit();
                 } else {
+                    displayUpload();
+                }
+
+                break;
+            case 2:
+                if(apiCall.loggedin) {
+                    displayUpload();
+                } else {
                     Intent myIntent = new Intent(this, SettingsActivity.class);
                     startActivity(myIntent);
                     updateMenu();
-                }
-                break;
-            case 2:
-                if (apiCall.loggedin) {
-                    new AlertDialog.Builder(this).setTitle("Upload Options")
-                            .setItems(R.array.upload_options, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    Intent intent;
-                                    MainActivity activity = MainActivity.this;
-                                    switch (whichButton) {
-                                        case 0:
-                                            final EditText urlText = new EditText(activity);
-                                            urlText.setSingleLine();
-                                            new AlertDialog.Builder(activity).setTitle("Enter URL").setView(urlText).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int whichButton) {
-                                                    UrlAsync urlAsync = new UrlAsync(urlText.getText().toString(), MainActivity.this);
-                                                    urlAsync.execute();
-                                                }
-                                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int whichButton) {
-                                                    // Do nothing.
-                                                }
-                                            }).show();
-                                            break;
-                                        case 1:
-                                            intent = new Intent();
-                                            intent.setType("image/*");
-                                            intent.setAction(Intent.ACTION_GET_CONTENT);
-                                            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                                            startActivityForResult(Intent.createChooser(intent,
-                                                    "Select Picture"), 3);
-                                            break;
-                                        case 2:
-                                            intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                                            startActivityForResult(intent, 4);
-                                            break;
-                                        case 3:
-                                            new AlertDialog.Builder(activity).setTitle("Image Explanation").setMessage("You can! You just have to do it from the gallery or other app by multiselecting. :(" +
-                                                    " The ELI5 explanation is that basically the Android API is a bit weird in this area. More explicitly, I cannot determine a way to request multiple files via intent" +
-                                                    ", if you know a work around feel free to contact me on Google Play.").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int whichButton) {
-                                                    //do nothing
-                                                }
-                                            }).show();
-                                        default:
-                                            break;
-                                    }
-                                }
-                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // Do nothing.
-                        }
-                    }).show();
-                } else {
-                    LoginAsync loginAsync = new LoginAsync(apiCall, this);
-                    loginAsync.execute();
                 }
                 break;
             case 3:
@@ -495,6 +494,9 @@ public class MainActivity extends FragmentActivity {
                             .replace(R.id.frame_layout, imagesFragment)
                             .commit();
                     updateMenu();
+                } else {
+                    LoginAsync loginAsync = new LoginAsync(apiCall, this);
+                    loginAsync.execute();
                 }
                 break;
             case 4:

@@ -40,18 +40,21 @@
     <array
             name="imgurMenuListLoggedOut">
         <item>@string/menu_gallery</item>
+        <item>@string/menu_upload</item>
         <item>@string/menu_settings</item>
         <item>@string/menu_login</item>
     </array>
     <array
             name="imgurMenuListDarkIconsLoggedOut">
         <item>@drawable/dark_social_group</item>
+        <item>@drawable/dark_av_upload</item>
         <item>@drawable/dark_action_settings</item>
         <item>@drawable/dark_device_access_accounts</item>
     </array>
     <array
             name="imgurMenuListIconsLoggedOut">
         <item>@drawable/social_group</item>
+        <item>@drawable/av_upload</item>
         <item>@drawable/action_settings</item>
         <item>@drawable/device_access_accounts</item>
     </array>

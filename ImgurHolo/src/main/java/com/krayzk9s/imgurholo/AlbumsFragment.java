@@ -20,7 +20,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -47,7 +46,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Kurt Zimmer on 7/23/13.
@@ -117,7 +115,7 @@ public class AlbumsFragment extends Fragment implements GetData {
                 new AlertDialog.Builder(activity).setTitle("New Album")
                         .setView(linearLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        NewAlbumAsync messagingAsync = new NewAlbumAsync(newTitle.getText().toString(), newDescription.getText().toString(), (MainActivity) getActivity());
+                        NewAlbumAsync messagingAsync = new NewAlbumAsync(newTitle.getText().toString(), newDescription.getText().toString(), ((MainActivity) getActivity()).apiCall, null, null);
                         messagingAsync.execute();
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -268,26 +266,6 @@ public class AlbumsFragment extends Fragment implements GetData {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
-        }
-    }
-
-    private static class NewAlbumAsync extends AsyncTask<Void, Void, Void> {
-        private String title;
-        private String description;
-        MainActivity activity;
-
-        public NewAlbumAsync(String _title, String _description, MainActivity _activity) {
-            title = _title;
-            description = _description;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            HashMap<String, Object> albumMap = new HashMap<String, Object>();
-            albumMap.put("title", title);
-            albumMap.put("description", description);
-            activity.makeCall("/3/album/", "post", albumMap);
-            return null;
         }
     }
 }
