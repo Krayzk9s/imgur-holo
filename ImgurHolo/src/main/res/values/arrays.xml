@@ -179,7 +179,6 @@
 
     <array
             name="iconsizes">
-        <item>@string/ninety</item>
         <item>@string/onetwenty</item>
         <item>@string/oneeighty</item>
         <item>@string/threesixty</item>

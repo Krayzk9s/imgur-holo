@@ -150,7 +150,7 @@ public class AlbumsFragment extends Fragment implements GetData {
         GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
         MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
-        gridview.setColumnWidth(activity.dpToPx(Integer.parseInt(settings.getString("IconSize", "90"))));
+        gridview.setColumnWidth(activity.dpToPx(Integer.parseInt(settings.getString("IconSize", "120"))));
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());

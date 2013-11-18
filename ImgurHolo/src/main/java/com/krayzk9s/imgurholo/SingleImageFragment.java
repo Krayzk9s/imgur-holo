@@ -878,7 +878,9 @@ public class SingleImageFragment extends Fragment {
                 MainActivity activity = (MainActivity) getActivity();
                 if (inGallery) {
                     try {
-                        commentData.setJSONObject(activity.makeCall("3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments", "get", null));
+                        JSONObject jsonObject = activity.makeCall("3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments", "get", null);
+                        if(jsonObject != null)
+                            commentData.setJSONObject(jsonObject);
                     } catch (JSONException e) {
                         Log.e("Error3!", e.toString());
                     }

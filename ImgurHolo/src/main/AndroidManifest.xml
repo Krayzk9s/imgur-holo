@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.krayzk9s.imgurholo"
-    android:versionCode="23"
-    android:versionName="0.9.1" >
+    android:versionCode="25"
+    android:versionName="0.10.1" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -14,6 +14,7 @@
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="imgur Holo"
+        android:debuggable="false"
             >
         <activity
             android:name="com.krayzk9s.imgurholo.SettingsActivity"
@@ -27,6 +28,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE"/>
+                <action android:name="android.intent.extra.LOCAL_ONLY"/>
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*" />
             </intent-filter>

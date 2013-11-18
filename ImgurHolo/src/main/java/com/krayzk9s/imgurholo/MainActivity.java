@@ -81,6 +81,10 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences settings = getSettings();
         apiCall = new ApiCall();
+        if(Integer.parseInt(settings.getString("IconSize", "120")) < 120) { //getting rid of 90 because it may crash the app for large screens
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("IconSize", "120");
+        }
         apiCall.setSettings(settings);
         theme = settings.getString("theme", HOLO_LIGHT);
         if (theme.equals(HOLO_LIGHT))

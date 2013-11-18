@@ -59,7 +59,7 @@ public class ApiCall {
     public JSONObject makeCall(String url, String method, HashMap<String, Object> args) {
         Log.d("Call", url);
             JSONObject data = null;
-            String methodString = null;
+            String methodString;
             if (url.contains("?"))
                 methodString = "&_method=" + method;
             else

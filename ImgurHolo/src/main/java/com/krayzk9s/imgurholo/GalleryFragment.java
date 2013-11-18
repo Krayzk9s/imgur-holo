@@ -52,6 +52,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * Created by Kurt Zimmer on 7/23/13.
@@ -405,7 +406,7 @@ public class GalleryFragment extends Fragment implements GetData {
         JSONObject data = (JSONObject) object;
         MainActivity activity = (MainActivity) getActivity();
         Log.d("imagesData", "checking");
-        if(data == null) {
+        if(activity == null || data == null) {
             return;
         }
         Log.d("imagesData", "failed");
@@ -417,24 +418,29 @@ public class GalleryFragment extends Fragment implements GetData {
                 Log.d("Data", imageData.toString());
                 SharedPreferences settings = activity.getSettings();
                 String s = settings.getString("IconQuality", "m");
-                if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
-                    if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + s + ".png")) {
-                        urls.add("http://imgur.com/" + imageData.getString("cover") + s + ".png");
-                        UrlImageViewHelper.loadUrlDrawable(activity, "http://imgur.com/" + imageData.getString("cover") + s + ".png");
-                        JSONParcelable dataParcel = new JSONParcelable();
-                        dataParcel.setJSONObject(imageData);
-                        ids.add(dataParcel);
+                try {
+                    if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
+                        if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + s + ".png")) {
+                            urls.add("http://imgur.com/" + imageData.getString("cover") + s + ".png");
+                            UrlImageViewHelper.loadUrlDrawable(activity, "http://imgur.com/" + imageData.getString("cover") + s + ".png");
+                            JSONParcelable dataParcel = new JSONParcelable();
+                            dataParcel.setJSONObject(imageData);
+                            ids.add(dataParcel);
+                        }
+                    }
+                    else {
+                        if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png"))
+                        {
+                            urls.add("http://imgur.com/" + imageData.getString("id") + s + ".png");
+                            UrlImageViewHelper.loadUrlDrawable(activity, "http://imgur.com/" + imageData.getString("id") + s + ".png");
+                            JSONParcelable dataParcel = new JSONParcelable();
+                            dataParcel.setJSONObject(imageData);
+                            ids.add(dataParcel);
+                        }
                     }
                 }
-                else {
-                    if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png"))
-                    {
-                        urls.add("http://imgur.com/" + imageData.getString("id") + s + ".png");
-                        UrlImageViewHelper.loadUrlDrawable(activity, "http://imgur.com/" + imageData.getString("id") + s + ".png");
-                        JSONParcelable dataParcel = new JSONParcelable();
-                        dataParcel.setJSONObject(imageData);
-                        ids.add(dataParcel);
-                    }
+                catch (RejectedExecutionException e) {
+                    Log.e("Rejected", e.toString());
                 }
             }
         } catch (JSONException e) {
@@ -590,7 +596,7 @@ public class GalleryFragment extends Fragment implements GetData {
                     }
                     if(newGallery.equals(gallery))
                         return true;
-                    else
+                    else if(i < 5)
                         gallery = newGallery;
                     selectedIndex = i;
                     if (mSpinnerAdapter.getCount() > 5 && !gallery.equals("subreddit") && !gallery.equals("search")) {

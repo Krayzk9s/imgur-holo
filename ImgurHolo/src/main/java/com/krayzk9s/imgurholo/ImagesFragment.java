@@ -276,6 +276,8 @@ public class ImagesFragment extends Fragment implements GetData {
 
     public void onGetObject(Object object) {
         JSONObject data = (JSONObject) object;
+        if(data == null)
+            return;
         Boolean changed = false;
         JSONArray imageArray;
         try {

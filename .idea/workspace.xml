@@ -14,9 +14,7 @@
   </component>
   <component name="AndroidLayoutPreviewToolWindow">
     <option name="state">
-      <GlobalState>
-        <option name="visible" value="false" />
-      </GlobalState>
+      <GlobalState />
     </option>
   </component>
   <component name="AndroidLayouts">
@@ -28,12 +26,6 @@
         <config>
           <device>Nexus 10</device>
           <theme>@android:style/Theme.Holo</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/comment_list_item.xml">
-        <config>
-          <device>Nexus 4</device>
-          <theme>@android:style/Theme.Holo.Light</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_layout.xml">
@@ -48,27 +40,30 @@
           <theme>@android:style/Theme.Holo</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/single_image_layout.xml">
-        <config>
-          <device>Nexus 7 2013</device>
-          <theme>@android:style/Theme.Holo</theme>
-        </config>
-      </layout>
     </layouts>
   </component>
   <component name="AndroidLogFilters">
     <option name="TOOL_WINDOW_CUSTOM_FILTER" value="krayzk9s" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="DEBUG" />
   </component>
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="bd7191f9-071f-4e7c-a8f1-8f8b811e97ef" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/NewAlbumAsync.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ApiCall.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ApiCall.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" afterPath="$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHoloProject.iml" afterPath="$PROJECT_DIR$/ImgurHoloProject.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/UploadService.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/UploadService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/xml/preferences.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/xml/preferences.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/single_image_layout.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/single_image_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/imgur-holo.iml" afterPath="$PROJECT_DIR$/imgur-holo.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ImgurHolo.iws" />
@@ -87,7 +82,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -124,6 +118,7 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -133,50 +128,92 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SettingsActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SettingsActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="209" column="30" selection-start="9341" selection-end="9341" vertical-scroll-proportion="0.0" vertical-offset="2592" max-vertical-offset="3944">
-              <folding>
-                <element signature="e#9762#9763#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="496" column="24" selection-start="22128" selection-end="22128" vertical-scroll-proportion="0.0" vertical-offset="6905" max-vertical-offset="12937">
+            <state line="325" column="0" selection-start="14080" selection-end="14080" vertical-scroll-proportion="0.0" vertical-offset="2532" max-vertical-offset="7922">
               <folding>
-                <element signature="e#3740#3760#0" expanded="true" />
-                <element signature="e#3829#3850#0" expanded="true" />
-                <element signature="e#16785#19815#0" expanded="true" />
-                <element signature="e#19796#19797#0" expanded="true" />
-                <element signature="e#27685#27724#0" expanded="true" />
-                <element signature="e#27879#27918#0" expanded="true" />
-                <element signature="e#28060#28099#0" expanded="true" />
-                <element signature="e#28363#28402#0" expanded="true" />
-                <element signature="e#28569#28608#0" expanded="true" />
-                <element signature="e#28836#28875#0" expanded="true" />
+                <element signature="method#onCreate#0;class#MainActivity#0" expanded="true" />
+                <element signature="e#4005#4025#0" expanded="true" />
+                <element signature="e#4094#4115#0" expanded="true" />
+                <element signature="e#7574#7883#0" expanded="true" />
+                <element signature="e#7859#7860#0" expanded="true" />
+                <element signature="method#processIntent#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#onActivityResult#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#displayUpload#0;class#MainActivity#0" expanded="true" />
+                <element signature="e#17050#20080#0" expanded="true" />
+                <element signature="e#17629#18022#0" expanded="true" />
+                <element signature="e#17987#17988#0" expanded="true" />
+                <element signature="e#18052#18317#0" expanded="true" />
+                <element signature="e#18282#18283#0" expanded="true" />
+                <element signature="e#19666#19929#0" expanded="true" />
+                <element signature="e#19894#19895#0" expanded="true" />
+                <element signature="e#20061#20062#0" expanded="true" />
+                <element signature="e#20110#20279#0" expanded="true" />
+                <element signature="e#20268#20269#0" expanded="true" />
+                <element signature="method#onConfigurationChanged#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#getView#0;class#DrawerAdapter#0;class#MainActivity#0" expanded="true" />
+                <element signature="e#27950#27989#0" expanded="true" />
+                <element signature="e#28144#28183#0" expanded="true" />
+                <element signature="e#28325#28364#0" expanded="true" />
+                <element signature="e#28628#28667#0" expanded="true" />
+                <element signature="e#28834#28873#0" expanded="true" />
+                <element signature="e#29101#29140#0" expanded="true" />
+                <element signature="method#onItemClick#0;class#DrawerItemClickListener#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#AlbumAsync#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#doInBackground#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#onPostExecute#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#ImageAsync#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#doInBackground#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#onPostExecute#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#UrlAsync#0;class#UrlAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#doInBackground#0;class#UrlAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="e#32798#32814#0" expanded="true" />
+                <element signature="method#LoginAsync#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#doInBackground#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#onPostExecute#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#CallbackAsync#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#doInBackground#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#onPostExecute#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="method#NewAlbumAsync#0;class#NewAlbumAsync#0;class#MainActivity#0" expanded="true" />
+                <element signature="e#35419#35435#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="arrays.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml">
+      <file leaf-file-name="GalleryFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="53" column="10" selection-start="2024" selection-end="2024" vertical-scroll-proportion="0.0" vertical-offset="561" max-vertical-offset="3349">
-              <folding />
+            <state line="400" column="0" selection-start="18135" selection-end="18135" vertical-scroll-proportion="-8.72" vertical-offset="4423" max-vertical-offset="6919">
+              <folding>
+                <element signature="e#3627#3635#0" expanded="true" />
+                <element signature="method#onCreateOptionsMenu#0;class#GalleryFragment#0" expanded="true" />
+                <element signature="method#onQueryTextSubmit#0;class#5059:5931" expanded="true" />
+                <element signature="method#onOptionsItemSelected#0;class#GalleryFragment#0" expanded="true" />
+                <element signature="e#6975#7608#0" expanded="true" />
+                <element signature="e#7589#7590#0" expanded="true" />
+                <element signature="e#7638#7839#0" expanded="true" />
+                <element signature="e#7820#7821#0" expanded="true" />
+                <element signature="e#9785#10119#0" expanded="true" />
+                <element signature="e#10096#10097#0" expanded="true" />
+                <element signature="method#setNumColumns#0;class#GalleryFragment#0" expanded="true" />
+                <element signature="method#onPrepareOptionsMenu#0;class#GalleryFragment#0" expanded="true" />
+                <element signature="method#makeGallery#0;class#GalleryFragment#0" expanded="true" />
+                <element signature="method#onDestroyView#0;class#GalleryFragment#0" expanded="true" />
+                <element signature="method#onSaveInstanceState#0;class#GalleryFragment#0" expanded="true" />
+                <element signature="method#setupActionBar#0;class#GalleryFragment#0" expanded="true" />
+                <element signature="e#25346#26949#0" expanded="true" />
+                <element signature="e#26938#26939#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ImageSelectActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImageSelectActivity.java">
+      <file leaf-file-name="Fetcher.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/Fetcher.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="0" selection-start="1505" selection-end="1505" vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="1071">
+            <state line="23" column="0" selection-start="568" selection-end="568" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="425">
               <folding />
             </state>
           </provider>
@@ -185,18 +222,57 @@
       <file leaf-file-name="ApiCall.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ApiCall.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="13" selection-start="1122" selection-end="1122" vertical-scroll-proportion="0.0" vertical-offset="161" max-vertical-offset="2142">
+            <state line="91" column="0" selection-start="3848" selection-end="3848" vertical-scroll-proportion="0.0" vertical-offset="981" max-vertical-offset="1768">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="preferences.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/xml/preferences.xml">
+      <file leaf-file-name="SingleImageFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="58" column="91" selection-start="3134" selection-end="3134" vertical-scroll-proportion="0.6331471" vertical-offset="646" max-vertical-offset="2006">
+            <state line="881" column="46" selection-start="49933" selection-end="49933" vertical-scroll-proportion="0.0" vertical-offset="1021" max-vertical-offset="2771">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.gradle" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="18" column="53" selection-start="444" selection-end="444" vertical-scroll-proportion="0.0" vertical-offset="122" max-vertical-offset="731">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ImagesFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="276" column="43" selection-start="11402" selection-end="11402" vertical-scroll-proportion="0.0" vertical-offset="4692" max-vertical-offset="10608">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="3" column="28" selection-start="173" selection-end="173" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1462">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AlbumsFragment.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="264" column="0" selection-start="9968" selection-end="9968" vertical-scroll-proportion="2.3846154" vertical-offset="0" max-vertical-offset="1717">
               <folding>
-                <element signature="e#4894#4907#0" expanded="true" />
+                <element signature="method#onCreateView#0;class#AlbumsFragment#0" expanded="true" />
+                <element signature="class#ImageAdapter#0;class#AlbumsFragment#0" expanded="false" />
+                <element signature="method#getView#0;class#ImageAdapter#0;class#AlbumsFragment#0" expanded="true" />
+                <element signature="class#GridItemClickListener#0;class#AlbumsFragment#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -210,11 +286,12 @@
     </FindUsagesManager>
   </component>
   <component name="GenerateSignedApkSettings">
-    <option name="KEY_STORE_PATH" value="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\ImgurHolo.keystore" />
+    <option name="KEY_STORE_PATH" value="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo\ImgurHolo.keystore" />
     <option name="KEY_ALIAS" value="imgur" />
     <option name="REMEMBER_PASSWORDS" value="true" />
   </component>
   <component name="Git.Settings">
+    <option name="SYNC_SETTING" value="DONT" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitLogSettings">
@@ -233,23 +310,7 @@
         <entry>
           <key>
             <ExternalProjectPojo>
-              <option name="name" value="Users" />
-              <option name="path" value="C:\Users" />
-            </ExternalProjectPojo>
-          </key>
-          <value>
-            <list>
-              <ExternalProjectPojo>
-                <option name="name" value="Users" />
-                <option name="path" value="C://Users" />
-              </ExternalProjectPojo>
-            </list>
-          </value>
-        </entry>
-        <entry>
-          <key>
-            <ExternalProjectPojo>
-              <option name="name" value="imgur-holo" />
+              <option name="name" value="ImgurHoloProject" />
               <option name="path" value="$PROJECT_DIR$" />
             </ExternalProjectPojo>
           </key>
@@ -260,8 +321,24 @@
                 <option name="path" value="$PROJECT_DIR$/ImgurHolo" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value="imgur-holo" />
+                <option name="name" value="ImgurHoloProject" />
                 <option name="path" value="$PROJECT_DIR$" />
+              </ExternalProjectPojo>
+            </list>
+          </value>
+        </entry>
+        <entry>
+          <key>
+            <ExternalProjectPojo>
+              <option name="name" value="Users" />
+              <option name="path" value="C:\Users" />
+            </ExternalProjectPojo>
+          </key>
+          <value>
+            <list>
+              <ExternalProjectPojo>
+                <option name="name" value="Users" />
+                <option name="path" value="C://Users" />
               </ExternalProjectPojo>
             </list>
           </value>
@@ -603,7 +680,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="C:\Users" value="1377291373987" />
+        <entry key="C:\Users" value="1375296267883" />
         <entry key="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo" value="1374745140285" />
         <entry key="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject" value="1374674928501" />
       </map>
@@ -612,22 +689,25 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImageSelectActivity.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SettingsActivity.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/CommentsFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/DownloadService.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MessagingFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/single_image_layout.xml" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumAsync.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/NewAlbumAsync.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/PreferenceListFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/preference_list_content.xml" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SettingsFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/Settings.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SettingsActivity.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/build.gradle" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagePager.java" />
+        <option value="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/AccountFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/UploadService.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/xml/preferences.xml" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/UploadService.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ApiCall.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java" />
       </list>
     </option>
   </component>
@@ -639,10 +719,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
+    <option name="x" value="-1288" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="width" value="1296" />
+    <option name="height" value="1040" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -670,6 +750,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -677,10 +759,6 @@
               <option name="myItemId" value="ImgurHolo" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -688,7 +766,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="imgur-holo" />
+              <option name="myItemId" value="ImgurHoloProject" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -698,7 +776,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="imgur-holo" />
+              <option name="myItemId" value="ImgurHoloProject" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -712,7 +790,25 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="imgur-holo" />
+              <option name="myItemId" value="ImgurHoloProject" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHolo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHolo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHoloProject" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -734,93 +830,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="imgur-holo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ImgurHolo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="xml" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ImgurHolo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="imgur-holo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ImgurHolo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ImgurHolo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="imgur-holo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ImgurHolo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="layout" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ImgurHolo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="imgur-holo" />
+              <option name="myItemId" value="ImgurHoloProject" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -844,56 +854,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ImgurHolo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="imgur-holo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gradle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wrapper" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
-      </pane>
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="imgur-holo">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="imgur-holo">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="ImgurHolo">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="PackagesPane">
-        <subPane />
       </pane>
     </panes>
   </component>
@@ -905,7 +866,7 @@
     <property name="recentsLimit" value="5" />
     <property name="ExportedApkPath" value="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\ImgurHoloGallery.apk" />
     <property name="ExportedModule" value="ImgurHolo" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../AppData/Local/Programs/Git/cmd/git.exe" />
     <property name="UI_DESIGNER_EDITOR_MODE.PaletteToolWindowManager.WIDTH" value="238" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="nexu7" />
@@ -915,7 +876,7 @@
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager2.WIDTH" value="293" />
-    <property name="options.lastSelected" value="editor.preferences.import" />
+    <property name="options.lastSelected" value="vcs.Git" />
     <property name="project.structure.side.proportion" value="0.3765933" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="0174d18ddd5b2d9d" />
     <property name="MemberChooser.copyJavadoc" value="false" />
@@ -931,13 +892,13 @@
       <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res" />
       <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\values" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.krayzk9s.imgurholo" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res" />
       <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\java\com\krayzk9s\imgurholo" />
       <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-hdpi" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="com.krayzk9s.imgurholo" />
     </key>
   </component>
   <component name="RunManager" selected="Android Application.ImgurHolo">
@@ -962,6 +923,32 @@
     </configuration>
     <configuration default="false" name="build (1)" type="GroovyScriptRunConfiguration" factoryName="Groovy" temporary="true">
       <module name="imgur-holo" />
+      <setting name="path" value="file://$PROJECT_DIR$/ImgurHolo/build.gradle" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workDir" value="file://$PROJECT_DIR$/ImgurHolo" />
+      <setting name="debug" value="false" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method>
+        <option name="Make" enabled="false" />
+      </method>
+    </configuration>
+    <configuration default="false" name="build (2)" type="GroovyScriptRunConfiguration" factoryName="Groovy" temporary="true">
+      <module name="ImgurHolo" />
+      <setting name="path" value="file://$PROJECT_DIR$/ImgurHolo/build.gradle" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workDir" value="file://$PROJECT_DIR$/ImgurHolo" />
+      <setting name="debug" value="false" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method>
+        <option name="Make" enabled="false" />
+      </method>
+    </configuration>
+    <configuration default="false" name="build (3)" type="GroovyScriptRunConfiguration" factoryName="Groovy" temporary="true">
+      <module name="ImgurHolo" />
       <setting name="path" value="file://$PROJECT_DIR$/ImgurHolo/build.gradle" />
       <setting name="vmparams" value="" />
       <setting name="params" value="" />
@@ -1010,6 +997,19 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -1035,19 +1035,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -1089,6 +1076,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
       <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
       <option name="USE_LAST_SELECTED_DEVICE" value="false" />
       <option name="PREFERRED_AVD" value="" />
@@ -1107,6 +1095,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
       <option name="TARGET_SELECTION_MODE" value="USB_DEVICE" />
       <option name="USE_LAST_SELECTED_DEVICE" value="false" />
       <option name="PREFERRED_AVD" value="" />
@@ -1122,17 +1111,19 @@
       <ConfigurationWrapper RunnerId="AndroidDebugRunner" />
       <method />
     </configuration>
-    <list size="3">
+    <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Android Application.ImgurHolo" />
       <item index="1" class="java.lang.String" itemvalue="Groovy.build" />
       <item index="2" class="java.lang.String" itemvalue="Groovy.build (1)" />
+      <item index="3" class="java.lang.String" itemvalue="Groovy.build (2)" />
+      <item index="4" class="java.lang.String" itemvalue="Groovy.build (3)" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Groovy.build" />
-        <item index="1" class="java.lang.String" itemvalue="Groovy.build (1)" />
+        <item index="0" class="java.lang.String" itemvalue="Groovy.build (3)" />
+        <item index="1" class="java.lang.String" itemvalue="Groovy.build (2)" />
         <item index="2" class="java.lang.String" itemvalue="Groovy.build" />
-        <item index="3" class="java.lang.String" itemvalue="Groovy.build" />
+        <item index="3" class="java.lang.String" itemvalue="Groovy.build (1)" />
         <item index="4" class="java.lang.String" itemvalue="Groovy.build" />
       </list>
     </recent_temporary>
@@ -1204,36 +1195,43 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-1288" y="-8" width="1296" height="1040" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3724653" sideWeight="0.7659115" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32964602" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37721238" sideWeight="0.49791667" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23408845" sideWeight="0.50208336" order="12" side_tool="true" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32964602" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24118942" sideWeight="0.49765626" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3006608" sideWeight="0.5023438" order="13" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31858408" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25995576" sideWeight="0.49895832" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="14" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31828195" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25995576" sideWeight="0.49895832" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977587" sideWeight="0.6707317" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19477054" sideWeight="0.76106197" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3279396" sideWeight="0.49791667" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.303125" sideWeight="0.76106197" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3279396" sideWeight="0.49791667" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32743362" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37291667" sideWeight="0.7659115" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32792208" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USERS">
+      <collection />
+    </option>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -1248,125 +1246,89 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/Fetcher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="0" selection-start="296" selection-end="296" vertical-scroll-proportion="0.3482309" vertical-offset="0" max-vertical-offset="595">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SettingsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="209" column="30" selection-start="9341" selection-end="9341" vertical-scroll-proportion="0.0" vertical-offset="2592" max-vertical-offset="3944">
-          <folding>
-            <element signature="e#9762#9763#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImageSelectActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="0" selection-start="1505" selection-end="1505" vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="1071">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ApiCall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="13" selection-start="1122" selection-end="1122" vertical-scroll-proportion="0.0" vertical-offset="161" max-vertical-offset="2142">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/CommentsFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="281" column="13" selection-start="12367" selection-end="12367" vertical-scroll-proportion="0.0" vertical-offset="3141" max-vertical-offset="4743">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="881" column="0" selection-start="49890" selection-end="49890" vertical-scroll-proportion="0.0" vertical-offset="13218" max-vertical-offset="21879">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="133" column="55" selection-start="4969" selection-end="4969" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4641">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/NewAlbumAsync.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="50" selection-start="1148" selection-end="1148" vertical-scroll-proportion="0.0" vertical-offset="449" max-vertical-offset="986">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#901#917#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/menu/main.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2278">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/activity_main.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="512">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/account_layout.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1989">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="10" selection-start="2024" selection-end="2024" vertical-scroll-proportion="0.0" vertical-offset="561" max-vertical-offset="3349">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="496" column="24" selection-start="22128" selection-end="22128" vertical-scroll-proportion="0.0" vertical-offset="6905" max-vertical-offset="12937">
+        <state line="83" column="142" selection-start="2898" selection-end="2898" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7191">
           <folding>
-            <element signature="e#3740#3760#0" expanded="true" />
-            <element signature="e#3829#3850#0" expanded="true" />
-            <element signature="e#16785#19815#0" expanded="true" />
-            <element signature="e#19796#19797#0" expanded="true" />
-            <element signature="e#27685#27724#0" expanded="true" />
-            <element signature="e#27879#27918#0" expanded="true" />
-            <element signature="e#28060#28099#0" expanded="true" />
-            <element signature="e#28363#28402#0" expanded="true" />
-            <element signature="e#28569#28608#0" expanded="true" />
-            <element signature="e#28836#28875#0" expanded="true" />
+            <element signature="method#onCreate#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#4005#4025#0" expanded="true" />
+            <element signature="e#4094#4115#0" expanded="true" />
+            <element signature="e#7574#7883#0" expanded="true" />
+            <element signature="e#7859#7860#0" expanded="true" />
+            <element signature="method#processIntent#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onActivityResult#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#displayUpload#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#17050#20080#0" expanded="true" />
+            <element signature="e#17629#18022#0" expanded="true" />
+            <element signature="e#17987#17988#0" expanded="true" />
+            <element signature="e#18052#18317#0" expanded="true" />
+            <element signature="e#18282#18283#0" expanded="true" />
+            <element signature="e#19666#19929#0" expanded="true" />
+            <element signature="e#19894#19895#0" expanded="true" />
+            <element signature="e#20061#20062#0" expanded="true" />
+            <element signature="e#20110#20279#0" expanded="true" />
+            <element signature="e#20268#20269#0" expanded="true" />
+            <element signature="method#onConfigurationChanged#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#getView#0;class#DrawerAdapter#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#27950#27989#0" expanded="true" />
+            <element signature="e#28144#28183#0" expanded="true" />
+            <element signature="e#28325#28364#0" expanded="true" />
+            <element signature="e#28628#28667#0" expanded="true" />
+            <element signature="e#28834#28873#0" expanded="true" />
+            <element signature="e#29101#29140#0" expanded="true" />
+            <element signature="method#onItemClick#0;class#DrawerItemClickListener#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#AlbumAsync#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#ImageAsync#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#UrlAsync#0;class#UrlAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#UrlAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#32798#32814#0" expanded="true" />
+            <element signature="method#LoginAsync#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#CallbackAsync#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#NewAlbumAsync#0;class#NewAlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#35419#35435#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="303" column="112" selection-start="11954" selection-end="12008" vertical-scroll-proportion="0.0" vertical-offset="5151" max-vertical-offset="10676">
+          <folding>
+            <element signature="e#3627#3635#0" expanded="true" />
+            <element signature="method#onCreateOptionsMenu#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#onQueryTextSubmit#0;class#5059:5931" expanded="true" />
+            <element signature="method#onOptionsItemSelected#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="e#6975#7608#0" expanded="true" />
+            <element signature="e#7589#7590#0" expanded="true" />
+            <element signature="e#7638#7839#0" expanded="true" />
+            <element signature="e#7820#7821#0" expanded="true" />
+            <element signature="e#9785#10119#0" expanded="true" />
+            <element signature="e#10096#10097#0" expanded="true" />
+            <element signature="method#setNumColumns#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#onPrepareOptionsMenu#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#makeGallery#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#onDestroyView#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#onSaveInstanceState#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#setupActionBar#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="e#25346#26949#0" expanded="true" />
+            <element signature="e#26938#26939#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/UploadService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="108" column="66" selection-start="4700" selection-end="4700" vertical-scroll-proportion="0.68342644" vertical-offset="1044" max-vertical-offset="5321">
+        <state line="228" column="33" selection-start="10086" selection-end="10086" vertical-scroll-proportion="0.0" vertical-offset="3876" max-vertical-offset="5746">
           <folding>
+            <element signature="e#11154#11170#0" expanded="true" />
             <element signature="e#13003#13044#0" expanded="true" />
             <element signature="e#13053#13094#0" expanded="true" />
             <element signature="e#13234#13275#0" expanded="true" />
@@ -1383,18 +1345,524 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="885" column="21" selection-start="50126" selection-end="50126" vertical-scroll-proportion="0.0" vertical-offset="15045" max-vertical-offset="24378">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="53" selection-start="444" selection-end="444" vertical-scroll-proportion="0.0" vertical-offset="122" max-vertical-offset="731">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="464" column="40" selection-start="18524" selection-end="18524" vertical-scroll-proportion="0.6331471" vertical-offset="6834" max-vertical-offset="9826">
+        <state line="276" column="43" selection-start="11402" selection-end="11402" vertical-scroll-proportion="0.0" vertical-offset="4692" max-vertical-offset="10608">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="72" selection-start="1172" selection-end="1172" vertical-scroll-proportion="0.0" vertical-offset="493" max-vertical-offset="1445">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="83" column="142" selection-start="2898" selection-end="2898" vertical-scroll-proportion="0.0" vertical-offset="1411" max-vertical-offset="7752">
+          <folding>
+            <element signature="method#onCreate#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#4005#4025#0" expanded="true" />
+            <element signature="e#4094#4115#0" expanded="true" />
+            <element signature="e#7574#7883#0" expanded="true" />
+            <element signature="e#7859#7860#0" expanded="true" />
+            <element signature="method#processIntent#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onActivityResult#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#displayUpload#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#17050#20080#0" expanded="true" />
+            <element signature="e#17629#18022#0" expanded="true" />
+            <element signature="e#17987#17988#0" expanded="true" />
+            <element signature="e#18052#18317#0" expanded="true" />
+            <element signature="e#18282#18283#0" expanded="true" />
+            <element signature="e#19666#19929#0" expanded="true" />
+            <element signature="e#19894#19895#0" expanded="true" />
+            <element signature="e#20061#20062#0" expanded="true" />
+            <element signature="e#20110#20279#0" expanded="true" />
+            <element signature="e#20268#20269#0" expanded="true" />
+            <element signature="method#onConfigurationChanged#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#getView#0;class#DrawerAdapter#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#27950#27989#0" expanded="true" />
+            <element signature="e#28144#28183#0" expanded="true" />
+            <element signature="e#28325#28364#0" expanded="true" />
+            <element signature="e#28628#28667#0" expanded="true" />
+            <element signature="e#28834#28873#0" expanded="true" />
+            <element signature="e#29101#29140#0" expanded="true" />
+            <element signature="method#onItemClick#0;class#DrawerItemClickListener#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#AlbumAsync#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#ImageAsync#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#UrlAsync#0;class#UrlAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#UrlAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#32798#32814#0" expanded="true" />
+            <element signature="method#LoginAsync#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#CallbackAsync#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#NewAlbumAsync#0;class#NewAlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#35419#35435#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="303" column="112" selection-start="11954" selection-end="12008" vertical-scroll-proportion="0.0" vertical-offset="5151" max-vertical-offset="10676">
+          <folding>
+            <element signature="e#3627#3635#0" expanded="true" />
+            <element signature="method#onCreateOptionsMenu#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#onQueryTextSubmit#0;class#5059:5931" expanded="true" />
+            <element signature="method#onOptionsItemSelected#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="e#6975#7608#0" expanded="true" />
+            <element signature="e#7589#7590#0" expanded="true" />
+            <element signature="e#7638#7839#0" expanded="true" />
+            <element signature="e#7820#7821#0" expanded="true" />
+            <element signature="e#9785#10119#0" expanded="true" />
+            <element signature="e#10096#10097#0" expanded="true" />
+            <element signature="method#setNumColumns#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#onPrepareOptionsMenu#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#makeGallery#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#onDestroyView#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#onSaveInstanceState#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#setupActionBar#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="e#25346#26949#0" expanded="true" />
+            <element signature="e#26938#26939#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/UploadService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="228" column="33" selection-start="10086" selection-end="10086" vertical-scroll-proportion="0.0" vertical-offset="3876" max-vertical-offset="5746">
+          <folding>
+            <element signature="e#11154#11170#0" expanded="true" />
+            <element signature="e#13003#13044#0" expanded="true" />
+            <element signature="e#13053#13094#0" expanded="true" />
+            <element signature="e#13234#13275#0" expanded="true" />
+            <element signature="e#13284#13318#0" expanded="true" />
+            <element signature="e#13439#13480#0" expanded="true" />
+            <element signature="e#13489#13528#0" expanded="true" />
+            <element signature="e#13766#13807#0" expanded="true" />
+            <element signature="e#13816#13857#0" expanded="true" />
+            <element signature="e#13999#14040#0" expanded="true" />
+            <element signature="e#14049#14097#0" expanded="true" />
+            <element signature="e#14296#14337#0" expanded="true" />
+            <element signature="e#14346#14389#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="885" column="21" selection-start="50126" selection-end="50126" vertical-scroll-proportion="0.0" vertical-offset="15045" max-vertical-offset="24378">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="53" selection-start="444" selection-end="444" vertical-scroll-proportion="0.0" vertical-offset="122" max-vertical-offset="731">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="276" column="43" selection-start="11402" selection-end="11402" vertical-scroll-proportion="0.0" vertical-offset="4692" max-vertical-offset="10608">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="72" selection-start="1172" selection-end="1172" vertical-scroll-proportion="0.0" vertical-offset="493" max-vertical-offset="1445">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="265" column="24" selection-start="11175" selection-end="11175" vertical-scroll-proportion="0.0" vertical-offset="4335" max-vertical-offset="6511">
+          <folding>
+            <element signature="method#onCreate#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#4005#4025#0" expanded="true" />
+            <element signature="e#4094#4115#0" expanded="true" />
+            <element signature="e#7574#7883#0" expanded="true" />
+            <element signature="e#7859#7860#0" expanded="true" />
+            <element signature="method#processIntent#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onActivityResult#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#displayUpload#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#17050#20080#0" expanded="true" />
+            <element signature="e#17629#18022#0" expanded="true" />
+            <element signature="e#17987#17988#0" expanded="true" />
+            <element signature="e#18052#18317#0" expanded="true" />
+            <element signature="e#18282#18283#0" expanded="true" />
+            <element signature="e#19666#19929#0" expanded="true" />
+            <element signature="e#19894#19895#0" expanded="true" />
+            <element signature="e#20061#20062#0" expanded="true" />
+            <element signature="e#20110#20279#0" expanded="true" />
+            <element signature="e#20268#20269#0" expanded="true" />
+            <element signature="method#onConfigurationChanged#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#getView#0;class#DrawerAdapter#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#27950#27989#0" expanded="true" />
+            <element signature="e#28144#28183#0" expanded="true" />
+            <element signature="e#28325#28364#0" expanded="true" />
+            <element signature="e#28628#28667#0" expanded="true" />
+            <element signature="e#28834#28873#0" expanded="true" />
+            <element signature="e#29101#29140#0" expanded="true" />
+            <element signature="method#onItemClick#0;class#DrawerItemClickListener#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#AlbumAsync#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#ImageAsync#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#UrlAsync#0;class#UrlAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#UrlAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#32798#32814#0" expanded="true" />
+            <element signature="method#LoginAsync#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#CallbackAsync#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#NewAlbumAsync#0;class#NewAlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#35419#35435#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="72" selection-start="226" selection-end="226" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="204" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="30" selection-start="21" selection-end="30" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="5746" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="17" selection-start="604" selection-end="604" vertical-scroll-proportion="0.0" vertical-offset="289" max-vertical-offset="1428">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="0" selection-start="146" selection-end="146" vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="731">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="36" selection-start="2268" selection-end="2268" vertical-scroll-proportion="0.0" vertical-offset="1156" max-vertical-offset="4233">
+          <folding>
+            <element signature="method#onCreate#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#4005#4025#0" expanded="true" />
+            <element signature="e#4094#4115#0" expanded="true" />
+            <element signature="e#7574#7883#0" expanded="true" />
+            <element signature="e#7859#7860#0" expanded="true" />
+            <element signature="method#processIntent#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onActivityResult#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#displayUpload#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#17050#20080#0" expanded="true" />
+            <element signature="e#17629#18022#0" expanded="true" />
+            <element signature="e#17987#17988#0" expanded="true" />
+            <element signature="e#18052#18317#0" expanded="true" />
+            <element signature="e#18282#18283#0" expanded="true" />
+            <element signature="e#19666#19929#0" expanded="true" />
+            <element signature="e#19894#19895#0" expanded="true" />
+            <element signature="e#20061#20062#0" expanded="true" />
+            <element signature="e#20110#20279#0" expanded="true" />
+            <element signature="e#20268#20269#0" expanded="true" />
+            <element signature="method#onConfigurationChanged#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#getView#0;class#DrawerAdapter#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#27950#27989#0" expanded="true" />
+            <element signature="e#28144#28183#0" expanded="true" />
+            <element signature="e#28325#28364#0" expanded="true" />
+            <element signature="e#28628#28667#0" expanded="true" />
+            <element signature="e#28834#28873#0" expanded="true" />
+            <element signature="e#29101#29140#0" expanded="true" />
+            <element signature="method#onItemClick#0;class#DrawerItemClickListener#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#AlbumAsync#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#ImageAsync#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#UrlAsync#0;class#UrlAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#UrlAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#32798#32814#0" expanded="true" />
+            <element signature="method#LoginAsync#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#CallbackAsync#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#NewAlbumAsync#0;class#NewAlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#35419#35435#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="72" selection-start="226" selection-end="226" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="221" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="30" selection-start="21" selection-end="30" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5168" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="64" selection-start="669" selection-end="669" vertical-scroll-proportion="0.0" vertical-offset="306" max-vertical-offset="1462">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="0" selection-start="146" selection-end="146" vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="731">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/ImgurHolo/libs/android-support-v13.jar!/android/support/v4/app/Fragment.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="102" column="79" selection-start="3997" selection-end="4012" vertical-scroll-proportion="0.33212996" vertical-offset="1533" max-vertical-offset="4573" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagePager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="13" selection-start="728" selection-end="728" vertical-scroll-proportion="0.0" vertical-offset="561" max-vertical-offset="1666" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.5675676" vertical-offset="986" max-vertical-offset="1870" />
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/android/content/ContextWrapper.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="41" selection-start="579" selection-end="579" vertical-scroll-proportion="0.33279222" vertical-offset="33" max-vertical-offset="3179" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SettingsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="25" selection-start="1741" selection-end="1741" vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="646" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AccountFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="30" selection-start="21" selection-end="30" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="5746" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ImagesFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="276" column="43" selection-start="11402" selection-end="11402" vertical-scroll-proportion="0.0" vertical-offset="4692" max-vertical-offset="10608">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/xml/preferences.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="91" selection-start="3134" selection-end="3134" vertical-scroll-proportion="0.6331471" vertical-offset="646" max-vertical-offset="2006">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.9589491" vertical-offset="1193" max-vertical-offset="2006" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="180" column="29" selection-start="5605" selection-end="5605" vertical-scroll-proportion="0.5533662" vertical-offset="2723" max-vertical-offset="3332" />
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/android/content/SharedPreferences.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="38" selection-start="499" selection-end="499" vertical-scroll-proportion="0.39932886" vertical-offset="0" max-vertical-offset="1003" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/local.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="609" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="53" selection-start="444" selection-end="444" vertical-scroll-proportion="0.0" vertical-offset="122" max-vertical-offset="731">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="72" selection-start="226" selection-end="226" vertical-scroll-proportion="0.16748768" vertical-offset="0" max-vertical-offset="609" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/UploadService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="228" column="33" selection-start="10086" selection-end="10086" vertical-scroll-proportion="-0.49107143" vertical-offset="1240" max-vertical-offset="1836">
           <folding>
-            <element signature="e#4894#4907#0" expanded="true" />
+            <element signature="e#11154#11170#0" expanded="true" />
+            <element signature="e#13003#13044#0" expanded="true" />
+            <element signature="e#13053#13094#0" expanded="true" />
+            <element signature="e#13234#13275#0" expanded="true" />
+            <element signature="e#13284#13318#0" expanded="true" />
+            <element signature="e#13439#13480#0" expanded="true" />
+            <element signature="e#13489#13528#0" expanded="true" />
+            <element signature="e#13766#13807#0" expanded="true" />
+            <element signature="e#13816#13857#0" expanded="true" />
+            <element signature="e#13999#14040#0" expanded="true" />
+            <element signature="e#14049#14097#0" expanded="true" />
+            <element signature="e#14296#14337#0" expanded="true" />
+            <element signature="e#14346#14389#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GetData.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="17" selection-start="97" selection-end="97" vertical-scroll-proportion="0.11383928" vertical-offset="0" max-vertical-offset="448">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ApiCall.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="91" column="0" selection-start="3848" selection-end="3848" vertical-scroll-proportion="0.0" vertical-offset="981" max-vertical-offset="1768">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/Fetcher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="0" selection-start="568" selection-end="568" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="425">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/GalleryFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="400" column="0" selection-start="18135" selection-end="18135" vertical-scroll-proportion="-8.72" vertical-offset="4423" max-vertical-offset="6919">
+          <folding>
+            <element signature="e#3627#3635#0" expanded="true" />
+            <element signature="method#onCreateOptionsMenu#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#onQueryTextSubmit#0;class#5059:5931" expanded="true" />
+            <element signature="method#onOptionsItemSelected#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="e#6975#7608#0" expanded="true" />
+            <element signature="e#7589#7590#0" expanded="true" />
+            <element signature="e#7638#7839#0" expanded="true" />
+            <element signature="e#7820#7821#0" expanded="true" />
+            <element signature="e#9785#10119#0" expanded="true" />
+            <element signature="e#10096#10097#0" expanded="true" />
+            <element signature="method#setNumColumns#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#onPrepareOptionsMenu#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#makeGallery#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#onDestroyView#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#onSaveInstanceState#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#setupActionBar#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="e#25346#26949#0" expanded="true" />
+            <element signature="e#26938#26939#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="325" column="0" selection-start="14080" selection-end="14080" vertical-scroll-proportion="0.0" vertical-offset="2532" max-vertical-offset="7922">
+          <folding>
+            <element signature="method#onCreate#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#4005#4025#0" expanded="true" />
+            <element signature="e#4094#4115#0" expanded="true" />
+            <element signature="e#7574#7883#0" expanded="true" />
+            <element signature="e#7859#7860#0" expanded="true" />
+            <element signature="method#processIntent#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onActivityResult#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#displayUpload#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#17050#20080#0" expanded="true" />
+            <element signature="e#17629#18022#0" expanded="true" />
+            <element signature="e#17987#17988#0" expanded="true" />
+            <element signature="e#18052#18317#0" expanded="true" />
+            <element signature="e#18282#18283#0" expanded="true" />
+            <element signature="e#19666#19929#0" expanded="true" />
+            <element signature="e#19894#19895#0" expanded="true" />
+            <element signature="e#20061#20062#0" expanded="true" />
+            <element signature="e#20110#20279#0" expanded="true" />
+            <element signature="e#20268#20269#0" expanded="true" />
+            <element signature="method#onConfigurationChanged#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#getView#0;class#DrawerAdapter#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#27950#27989#0" expanded="true" />
+            <element signature="e#28144#28183#0" expanded="true" />
+            <element signature="e#28325#28364#0" expanded="true" />
+            <element signature="e#28628#28667#0" expanded="true" />
+            <element signature="e#28834#28873#0" expanded="true" />
+            <element signature="e#29101#29140#0" expanded="true" />
+            <element signature="method#onItemClick#0;class#DrawerItemClickListener#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#AlbumAsync#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#AlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#ImageAsync#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#ImageAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#UrlAsync#0;class#UrlAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#UrlAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#32798#32814#0" expanded="true" />
+            <element signature="method#LoginAsync#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#LoginAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#CallbackAsync#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#doInBackground#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#onPostExecute#0;class#CallbackAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="method#NewAlbumAsync#0;class#NewAlbumAsync#0;class#MainActivity#0" expanded="true" />
+            <element signature="e#35419#35435#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/SingleImageFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="881" column="46" selection-start="49933" selection-end="49933" vertical-scroll-proportion="0.0" vertical-offset="1021" max-vertical-offset="2771">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="28" selection-start="173" selection-end="173" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1462">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/AlbumsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="264" column="0" selection-start="9968" selection-end="9968" vertical-scroll-proportion="2.3846154" vertical-offset="0" max-vertical-offset="1717">
+          <folding>
+            <element signature="method#onCreateView#0;class#AlbumsFragment#0" expanded="true" />
+            <element signature="class#ImageAdapter#0;class#AlbumsFragment#0" expanded="false" />
+            <element signature="method#getView#0;class#ImageAdapter#0;class#AlbumsFragment#0" expanded="true" />
+            <element signature="class#GridItemClickListener#0;class#AlbumsFragment#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1439,7 +1907,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>Android API 10 Platform</last-edited>
+          <last-edited>1.6</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
