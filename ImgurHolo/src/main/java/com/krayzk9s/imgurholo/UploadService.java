@@ -39,7 +39,11 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -141,24 +145,54 @@ public class UploadService extends IntentService implements GetData {
     /* From http://stackoverflow.com/users/1946055/tobiel at http://stackoverflow.com/questions/17839388/creating-a-scaled-bitmap-with-createscaledbitmap-in-android */
     public static Bitmap lessResolution (String filePath, int width, int height)
     {
-        int reqHeight=width;
-        int reqWidth=height;
+        int reqHeight=height;
+        int reqWidth=width;
         BitmapFactory.Options options = new BitmapFactory.Options();
 
         // First decode with inJustDecodeBounds=true to check dimensions
+        options.inPurgeable = true;
+        options.inInputShareable = true;
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, options);
 
         // Calculate inSampleSize
-        float factor = calculateSize(options, reqWidth, reqHeight);
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        BitmapFactory.decodeFile(filePath, options);
+        float factor = calculateFactor(options, reqWidth, reqHeight);
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
 
-        return Bitmap.createScaledBitmap(BitmapFactory.decodeFile(filePath), (int)Math.floor(options.outWidth*factor), (int)Math.floor(options.outHeight*factor), false);
+        return Bitmap.createScaledBitmap(BitmapFactory.decodeFile(filePath, options), (int)Math.floor(options.outWidth*factor), (int)Math.floor(options.outHeight*factor), false);
     }
 
-    private static float calculateSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            Log.d("reqHeight", ""+reqHeight);
+            Log.d("reqWidth", ""+reqWidth);
+            // Calculate ratios of height and width to requested height and width
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+
+            inSampleSize = (heightRatio < widthRatio ? heightRatio : widthRatio);
+            Log.d("inSampleSize", ""+inSampleSize);
+            // We round the value to the highest, always.
+            if ((height / inSampleSize) > reqHeight || (width / inSampleSize > reqWidth)) {
+                inSampleSize++;
+            }
+
+        }
+
+        return inSampleSize;
+    }
+
+    private static float calculateFactor(BitmapFactory.Options options, int reqWidth, int reqHeight) {
 
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -233,12 +267,27 @@ public class UploadService extends IntentService implements GetData {
             if(settings.getBoolean("HeightBoolean", false))
                 maxHeight = Integer.parseInt(settings.getString("HeightSize", "1080"));
             int maxWidth = Integer.MAX_VALUE;
-            if(settings.getBoolean("HeightBoolean", false))
+            if(settings.getBoolean("WidthBoolean", false))
                 maxWidth = Integer.parseInt(settings.getString("WidthSize", "1920"));
-            photo = lessResolution(filePath, maxWidth, maxHeight);
+            byte[] byteArray;
+            try {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] byteArray = stream.toByteArray();
+            if(maxHeight != Integer.MAX_VALUE || maxWidth != Integer.MAX_VALUE) {
+
+                photo = lessResolution(filePath, maxWidth, maxHeight);
+                photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byteArray = stream.toByteArray();
+            }
+            else {
+                InputStream is = new BufferedInputStream(new FileInputStream(filePath));
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                while (is.available() > 0) {
+                    bos.write(is.read());
+                }
+                byteArray =  bos.toByteArray();
+                photo = lessResolution(filePath, 500, 500);
+                photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            }
             if (byteArray == null)
                 Log.d("Image Upload", "NULL :(");
             String image = Base64.encodeToString(byteArray, Base64.DEFAULT);
@@ -254,11 +303,14 @@ public class UploadService extends IntentService implements GetData {
                 return null;
             }
             Log.d("Image Upload", data.toString());
-            try {
                 JSONObject returner = apiCallStatic.makeCall("3/image/" + data.getJSONObject("data").getString("id"), "get", null);
                 Log.d("returning", returner.toString());
                 return returner.getJSONObject("data");
-            } catch (JSONException e) {
+            }
+            catch (JSONException e) {
+                Log.e("Error!", e.toString());
+            }
+            catch (IOException e) {
                 Log.e("Error!", e.toString());
             }
             return new JSONObject();

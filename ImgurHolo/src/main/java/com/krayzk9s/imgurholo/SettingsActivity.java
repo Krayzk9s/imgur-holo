@@ -185,7 +185,8 @@ public class SettingsActivity extends Activity {
                     {
                         return false;
                     }
-                    preference.setSummary(o.toString());
+                    if(Integer.parseInt(o.toString()) > 10 && Integer.parseInt(o.toString()) < 1920)
+                        preference.setSummary(o.toString());
                     return true;
                 }
             });
@@ -216,7 +217,8 @@ public class SettingsActivity extends Activity {
                     {
                         return false;
                     }
-                    preference.setSummary(o.toString());
+                    if(Integer.parseInt(o.toString()) > 10 && Integer.parseInt(o.toString()) < 1080)
+                        preference.setSummary(o.toString());
                     return true;
                 }
             });

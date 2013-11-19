@@ -64,7 +64,7 @@
             android:defaultValue="false"/>
         <EditTextPreference android:key="WidthSize"
             android:title= "Maximum width"
-            android:summary= "Set maximum width on uploads"
+            android:summary= "Set maximum width on uploads (10-1920)"
             android:defaultValue="1920"/>
         <CheckBoxPreference android:key="HeightBoolean"
             android:title="Set max height"
@@ -72,12 +72,16 @@
             android:defaultValue="false"/>
         <EditTextPreference android:key="HeightSize"
             android:title= "Maximum height"
-            android:summary= "Set maximum height on uploads"
+            android:summary= "Set maximum height on uploads (10-1080)"
             android:defaultValue="1080"/>
     </PreferenceCategory>
     <PreferenceCategory
             android:title="Theme Settings"
             android:key="pref_cat_theme">
+        <CheckBoxPreference android:key="VerticalHeight"
+            android:title="Constrain images to vertical screen height"
+            android:summary="Force resizing of images to fit on screen in the vertical direction"
+            android:defaultValue="true"/>
         <ListPreference android:key="theme"
                         android:title= "Theme"
                         android:summary= "Holo Light"

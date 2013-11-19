@@ -56,7 +56,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -803,11 +802,24 @@ public class SingleImageFragment extends Fragment {
                 imageView.loadUrl(imageData.getJSONObject().getString("link"));
             int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("height"), getResources().getDisplayMetrics());
             int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("width"), getResources().getDisplayMetrics());
-            if (width < size.x)
-                imageView.setLayoutParams(new TableRow.LayoutParams(
-                        width, height));
-            else
-                imageView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+            Log.d("height", ""+height);
+            Log.d("width", ""+width);
+            ViewGroup.LayoutParams params = imageView.getLayoutParams();
+            int statusBarHeight = (int)Math.ceil(25 * getActivity().getResources().getDisplayMetrics().density);
+            TypedValue tv = new TypedValue();
+            getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+            int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId) + statusBarHeight;
+            if (settings.getBoolean("VerticalHeight", true) && height > (size.y-actionBarHeight))
+                params.width = Math.min(size.x, (int) (((float) (size.y - actionBarHeight) / (float) height) * width));
+            if (width < size.x && (width < params.width || params.width < 0)) {
+                params.width = width;
+                Log.d("params", ""+params.width);
+            }
+            if(params.width > size.x)
+            Log.d("params", ""+params.width);
+            imageView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+
+
         } catch (JSONException e) {
             Log.e("drawable Error!", e.toString());
         }
@@ -901,6 +913,8 @@ public class SingleImageFragment extends Fragment {
     }
 
     private void addComments() {
+        if(commentData == null || commentData.getJSONObject() == null)
+            return;
         try {
             JSONArray commentJSONArray = commentData.getJSONObject().getJSONArray("data");
             commentArray = new ArrayList<JSONParcelable>();
