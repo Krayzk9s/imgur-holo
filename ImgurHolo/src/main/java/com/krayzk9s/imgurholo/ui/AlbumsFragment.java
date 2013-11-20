@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.ui;
 
 /*
  * Copyright 2013 Kurt Zimmer
@@ -16,6 +16,7 @@ package com.krayzk9s.imgurholo;
  * limitations under the License.
  */
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,6 +41,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import com.krayzk9s.imgurholo.R;
+import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
+import com.krayzk9s.imgurholo.activities.MainActivity;
+import com.krayzk9s.imgurholo.libs.SquareImageView;
+import com.krayzk9s.imgurholo.tools.ApiCall;
+import com.krayzk9s.imgurholo.tools.Fetcher;
+import com.krayzk9s.imgurholo.tools.GetData;
+import com.krayzk9s.imgurholo.tools.NewAlbumAsync;
+import com.krayzk9s.imgurholo.tools.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,18 +81,18 @@ public class AlbumsFragment extends Fragment implements GetData {
     @Override
     public void onResume() {
         super.onResume();
-        MainActivity activity = (MainActivity) getActivity();
-        if(username != "me")
-            activity.setTitle(username + "'s Albums");
+        Activity activity = getActivity();
+        if(username.equals("me"))
+            activity.getActionBar().setTitle(username + "'s Albums");
         else
-            activity.setTitle("My Albums");
+            activity.getActionBar().setTitle("My Albums");
     }
 
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        MainActivity activity = (MainActivity)getActivity();
-        if(activity.theme.equals(activity.HOLO_LIGHT))
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        if(activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -95,7 +105,7 @@ public class AlbumsFragment extends Fragment implements GetData {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
-        MainActivity activity = (MainActivity) getActivity();
+        Activity activity = getActivity();
         switch (item.getItemId()) {
             case R.id.action_refresh:
                 urls = new ArrayList<String>();
@@ -115,7 +125,7 @@ public class AlbumsFragment extends Fragment implements GetData {
                 new AlertDialog.Builder(activity).setTitle("New Album")
                         .setView(linearLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        NewAlbumAsync messagingAsync = new NewAlbumAsync(newTitle.getText().toString(), newDescription.getText().toString(), ((MainActivity) getActivity()).apiCall, null, null);
+                        NewAlbumAsync messagingAsync = new NewAlbumAsync(newTitle.getText().toString(), newDescription.getText().toString(), ((ImgurHoloActivity)getActivity()).getApiCall(), null, null);
                         messagingAsync.execute();
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -148,9 +158,9 @@ public class AlbumsFragment extends Fragment implements GetData {
         view.setPadding(0, getActivity().getActionBar().getHeight(), 0, 0);
         noImageView = (TextView) view.findViewById(R.id.no_images);
         GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
-        MainActivity activity = (MainActivity) getActivity();
-        SharedPreferences settings = activity.getSettings();
-        gridview.setColumnWidth(activity.dpToPx(Integer.parseInt(settings.getString("IconSize", "120"))));
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        SharedPreferences settings = activity.getApiCall().settings;
+        gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString("IconSize", "120")), getActivity()));
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
         gridview.setOnItemClickListener(new GridItemClickListener());
@@ -180,7 +190,11 @@ public class AlbumsFragment extends Fragment implements GetData {
         return view;
     }
 
-    public void onGetObject(Object object) {
+    public void handleException(Exception e, String tag) {
+
+    }
+
+    public void onGetObject(Object object, String tag) {
         Boolean hasImages = false;
         JSONObject imagesData = (JSONObject) object;
         try {
@@ -209,7 +223,7 @@ public class AlbumsFragment extends Fragment implements GetData {
     }
 
     public void getImages() {
-        Fetcher fetcher = new Fetcher(this, "3/account/" + username + "/albums", (MainActivity) getActivity());
+        Fetcher fetcher = new Fetcher(this, "3/account/" + username + "/albums", ApiCall.GET, null, ((ImgurHoloActivity)getActivity()).getApiCall(), "images");
         fetcher.execute();
     }
 

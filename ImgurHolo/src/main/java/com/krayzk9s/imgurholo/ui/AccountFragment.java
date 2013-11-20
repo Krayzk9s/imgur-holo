@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.ui;
 
 /*
  * Copyright 2013 Kurt Zimmer
@@ -16,10 +16,9 @@ package com.krayzk9s.imgurholo;
  * limitations under the License.
  */
 
-import android.support.v4.app.Fragment;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,7 +32,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.krayzk9s.imgurholo.R;
+import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
+import com.krayzk9s.imgurholo.activities.MainActivity;
+import com.krayzk9s.imgurholo.tools.ApiCall;
+import com.krayzk9s.imgurholo.tools.Fetcher;
+import com.krayzk9s.imgurholo.tools.GetData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,7 +46,6 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 
 /**
  * Created by Kurt Zimmer on 7/22/13.
@@ -50,7 +54,6 @@ public class AccountFragment extends Fragment implements GetData {
 
     String[] mMenuList;
     ArrayAdapter<String> adapter;
-    private HashMap<String, String> accountData;
     String username;
     SearchView mSearchView;
     MenuItem searchItem;
@@ -59,6 +62,11 @@ public class AccountFragment extends Fragment implements GetData {
     TextView biography;
     TextView created;
     TextView reputation;
+    final static String ACCOUNTDATA = "accountData";
+    final static String COUNTDATA = "countData";
+    final static String LIKEDATA = "likeData";
+    final static String COMMENTDATA = "commentData";
+    final static String ALBUMDATA = "albumData";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,8 +79,8 @@ public class AccountFragment extends Fragment implements GetData {
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        MainActivity activity = (MainActivity)getActivity();
-        if(activity.theme.equals(activity.HOLO_LIGHT))
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        if(activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -120,7 +128,7 @@ public class AccountFragment extends Fragment implements GetData {
     public void onResume() {
         super.onResume();
         MainActivity activity = (MainActivity) getActivity();
-        if(username != "me")
+        if(!username.equals("me"))
             activity.setTitle(username + "'s Account");
         else
             activity.setTitle("My Account");
@@ -135,7 +143,7 @@ public class AccountFragment extends Fragment implements GetData {
         Log.d("SettingTitle", username);
         View view = inflater.inflate(R.layout.account_layout, container, false);
         LinearLayout header = (LinearLayout) view.findViewById(R.id.header);
-        if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
+        if(settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             header.setBackgroundColor(0xFFCCCCCC);
         biography = (TextView) view.findViewById(R.id.biography);
         usernameText = (TextView) view.findViewById(R.id.username);
@@ -148,17 +156,68 @@ public class AccountFragment extends Fragment implements GetData {
                 R.layout.drawer_list_item, mMenuList);
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        if (savedInstanceState == null && accountData == null) {
+        if (savedInstanceState == null) {
             getAccount();
-        } else if(savedInstanceState != null) {
-            Bundle extras = savedInstanceState.getBundle("accountData");
-            accountData = (HashMap<String, String>) extras.getSerializable("HashMap");
-            updateData();
-        } else
-        {
-            updateData();
         }
         return view;
+    }
+
+    public void onGetObject(Object data, String tag) {
+        try {
+        if(data == null ) {
+            return;
+        }
+        JSONObject jsonData;
+
+        /*int duration = Toast.LENGTH_SHORT;
+                Toast toast;
+                MainActivity activity = (MainActivity) getActivity();
+                toast = Toast.makeText(activity, "User not found", duration);
+                toast.show();
+                activity.getFragmentManager().popBackStack();*/
+
+        if(tag.equals(ACCOUNTDATA)) {
+            jsonData = ((JSONObject)data).getJSONObject("data");
+            if(jsonData.has("error"))
+                return;
+            Calendar accountCreationDate = Calendar.getInstance();
+            accountCreationDate.setTimeInMillis((long) jsonData.getInt("created") * 1000);
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            String accountcreated = sdf.format(accountCreationDate.getTime());
+            created.setText(accountcreated);
+            reputation.setText(Integer.toString(jsonData.getInt("reputation")));
+            if (jsonData.getString("bio") != null && !jsonData.getString("bio").equals("null") && !jsonData.getString("bio").equals(""))
+                biography.setText(jsonData.getString("bio"));
+            else
+                biography.setText("No Biography");
+        } else if(tag.equals(COUNTDATA)) {
+            jsonData = ((JSONObject)data).getJSONObject("data");
+            if(jsonData.has("error"))
+                return;
+            if(jsonData.getInt("status") == 200)
+                mMenuList[1] = mMenuList[1] + " (" + Integer.toString(jsonData.getInt("data")) + ")";
+            else
+                mMenuList[1] = mMenuList[1] + " (0)";
+        } else if(tag.equals(ALBUMDATA)) {
+            jsonData = ((JSONObject)data);
+            if(jsonData.has("error"))
+                return;
+            if(jsonData.getInt("status") == 200)
+                mMenuList[0] = mMenuList[0] + " (" + Integer.toString(jsonData.getJSONObject("data").length()) + ")";
+            else
+                mMenuList[0] = mMenuList[0] + " (0)";
+        } else if(tag.equals(LIKEDATA)) {
+            JSONArray jsonArray = ((JSONObject)data).getJSONArray("data");
+            mMenuList[2] = mMenuList[2] + " (" + String.valueOf(jsonArray.length()) + ")";
+        } else if(tag.equals(COMMENTDATA)) {
+            jsonData = ((JSONObject)data);
+            mMenuList[3] = mMenuList[3] + " (" + String.valueOf(jsonData.getInt("data")) + ")";
+        }
+        adapter.notifyDataSetChanged();
+        }
+        catch (JSONException e) {
+            Log.e("Error!", e.toString());
+        }
     }
 
     private void getAccount() {
@@ -166,45 +225,22 @@ public class AccountFragment extends Fragment implements GetData {
         adapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.drawer_list_item, mMenuList);
         mDrawerList.setAdapter(adapter);
-        AccountAsync async = new AccountAsync(this, (MainActivity) getActivity(), username);
-        async.execute();
-    }
-
-    private void updateData() {
-        if(isAdded()) {
-            if (accountData.get("bio") != null && !accountData.get("bio").equals("null") && !accountData.get("bio").equals(""))
-                biography.setText(accountData.get("bio"));
-            else
-                biography.setText("No Biography");
-            reputation.setText(accountData.get("reputation"));
-            created.setText(accountData.get("created"));
-            mMenuList = getResources().getStringArray(R.array.accountMenu);
-            adapter = new ArrayAdapter<String>(getActivity(),
-                    R.layout.drawer_list_item, mMenuList);
-            mDrawerList.setAdapter(adapter);
-            if(accountData != null) {
-                mMenuList[0] = mMenuList[0] + " (" + accountData.get("total_albums") + ")";
-                mMenuList[1] = mMenuList[1] + " (" + accountData.get("total_images") + ")";
-                mMenuList[2] = mMenuList[2] + " (" + accountData.get("total_likes") + ")";
-                mMenuList[3] = mMenuList[3] + " (" + accountData.get("total_comments") + ")";
-            }
-            else {
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast;
-                MainActivity activity = (MainActivity) getActivity();
-                toast = Toast.makeText(activity, "User not found", duration);
-                toast.show();
-                activity.getFragmentManager().popBackStack();
-            }
-            adapter.notifyDataSetChanged();
-        }
+        Fetcher fetcher = new Fetcher(this, "3/account/" + username, ApiCall.GET, null, ((ImgurHoloActivity)getActivity()).getApiCall(), ACCOUNTDATA);
+        fetcher.execute();
+        fetcher = new Fetcher(this, "3/account/" + username + "/likes", ApiCall.GET, null, ((ImgurHoloActivity)getActivity()).getApiCall(), LIKEDATA);
+        fetcher.execute();
+        fetcher = new Fetcher(this, "3/account/" + username + "/images/count", ApiCall.GET, null, ((ImgurHoloActivity)getActivity()).getApiCall(), COUNTDATA);
+        fetcher.execute();
+        fetcher = new Fetcher(this, "3/account/" + username + "/comments/count", ApiCall.GET, null, ((ImgurHoloActivity)getActivity()).getApiCall(), COMMENTDATA);
+        fetcher.execute();
+        fetcher = new Fetcher(this, "/3/account/" + username + "/albums/ids", ApiCall.GET, null, ((ImgurHoloActivity)getActivity()).getApiCall(), ALBUMDATA);
+        fetcher.execute();
     }
 
     private void selectItem(int position) {
         final MainActivity activity = (MainActivity) getActivity();
         ImagesFragment imagesFragment;
         Bundle bundle;
-        JSONParcelable data;
         switch (position) {
             case 0:
                 AlbumsFragment albumsFragment = new AlbumsFragment();
@@ -247,86 +283,7 @@ public class AccountFragment extends Fragment implements GetData {
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        Bundle extras = new Bundle();
-        extras.putSerializable("HashMap", accountData);
-        savedInstanceState.putBundle("accountData", extras);
-        savedInstanceState.putString("username", username);
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
+    public void handleException(Exception e, String tag) {
+        Log.e("Error!", e.toString());
     }
-
-    public void onGetObject(Object data) {
-        accountData = (HashMap<String, String>) data;
-        if(mMenuList != null && accountData != null)
-            updateData();
-    }
-
-    private static class AccountAsync extends AsyncTask<Void, Void, HashMap<String, String>> {
-        GetData dataReturn;
-        MainActivity activity;
-        String username;
-
-        public AccountAsync(GetData _dataReturn, MainActivity _activity, String _username) {
-            dataReturn = _dataReturn;
-            activity = _activity;
-            username = _username;
-        }
-        @Override
-        protected HashMap<String, String> doInBackground(Void... voids) {
-            try {
-                JSONObject accountInfoJSON = activity.makeCall("3/account/" + username, "get", null);
-                if(accountInfoJSON.getJSONObject("data").has("error")) {
-                    return null;
-                }
-                HashMap<String, String> _accountData = new HashMap<String, String>();
-                JSONObject likesJSON = activity.makeCall("3/account/" + username + "/likes", "get", null);
-                JSONObject commentJSON = activity.makeCall("3/account/" + username + "/comments/count", "get", null);
-                try {
-                    JSONObject imagesJSON = activity.makeCall("3/account/" + username + "/images/count", "get", null);
-                    if(imagesJSON.getInt("status") == 200)
-                        _accountData.put("total_images", Integer.toString(imagesJSON.getInt("data")));
-                    else
-                        _accountData.put("total_images", "0");
-                    JSONObject albumsJSON = activity.makeCall("/3/account/" + username + "/albums/ids", "get", null);
-                    if(albumsJSON.getInt("status") == 200)
-                        _accountData.put("total_albums", Integer.toString(albumsJSON.getJSONArray("data").length()));
-                    else
-                        _accountData.put("total_albums", "0");
-                }
-                catch (JSONException e) {
-                    Log.e("Account get error", e.toString());
-                }
-                accountInfoJSON = accountInfoJSON.getJSONObject("data");
-                Log.d("URI", accountInfoJSON.toString());
-                Log.d("URI", Integer.toString(accountInfoJSON.getInt("id")));
-                _accountData.put("id", Integer.toString(accountInfoJSON.getInt("id")));
-                _accountData.put("reputation", Integer.toString(accountInfoJSON.getInt("reputation")));
-                Calendar accountCreationDate = Calendar.getInstance();
-                accountCreationDate.setTimeInMillis((long) accountInfoJSON.getInt("created") * 1000);
-                Log.d("URI", accountInfoJSON.getInt("created") + "");
-                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                String accountcreated = sdf.format(accountCreationDate.getTime());
-                Log.d("URI", accountcreated);
-                _accountData.put("created", accountcreated);
-                _accountData.put("bio", accountInfoJSON.getString("bio"));
-                _accountData.put("name", accountInfoJSON.getString("url"));
-                _accountData.put("reputation", Integer.toString(accountInfoJSON.getInt("reputation")));
-
-                JSONArray likesJSONArray = likesJSON.getJSONArray("data");
-                _accountData.put("total_likes", String.valueOf(likesJSONArray.length()));
-                _accountData.put("total_comments", String.valueOf(commentJSON.getInt("data")));
-                return _accountData;
-            } catch (JSONException e) {
-                Log.e("Error!", e.toString());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(HashMap<String, String> _accountData) {
-            dataReturn.onGetObject(_accountData);
-        }
-    };
 }

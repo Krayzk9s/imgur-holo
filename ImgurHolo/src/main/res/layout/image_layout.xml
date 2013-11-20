@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="?android:actionBarSize"
             android:layout_height="wrap_content"
-            android:text="No Public Albums/Images"
+            android:text="Error Loading Images"
             android:visibility="gone"/>
     <TextView
             xmlns:android="http://schemas.android.com/apk/res/android"

@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.ui;
 
 /*
  * Copyright 2013 Kurt Zimmer
@@ -16,6 +16,7 @@ package com.krayzk9s.imgurholo;
  * limitations under the License.
  */
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -23,14 +24,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Html;
@@ -59,20 +55,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.util.ByteArrayBuffer;
+import com.krayzk9s.imgurholo.R;
+import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
+import com.krayzk9s.imgurholo.activities.MainActivity;
+import com.krayzk9s.imgurholo.libs.JSONParcelable;
+import com.krayzk9s.imgurholo.libs.ZoomableImageView;
+import com.krayzk9s.imgurholo.tools.ApiCall;
+import com.krayzk9s.imgurholo.tools.DownloadAsync;
+import com.krayzk9s.imgurholo.tools.Fetcher;
+import com.krayzk9s.imgurholo.tools.GetData;
+import com.krayzk9s.imgurholo.tools.LoadImageAsync;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,7 +79,7 @@ import java.util.HashMap;
 /**
  * Created by Kurt Zimmer on 7/22/13.
  */
-public class SingleImageFragment extends Fragment {
+public class SingleImageFragment extends Fragment implements GetData {
 
     String[] mMenuList;
     JSONParcelable imageData;
@@ -103,6 +100,20 @@ public class SingleImageFragment extends Fragment {
     String sort;
     TextView imageScore;
     TextView imageDetails;
+    String newGalleryString;
+    final SingleImageFragment singleImageFragment = this;
+    final static String DELETE = "delete";
+    final static String FAVORITE = "favorite";
+    final static String POSTCOMMENT = "postComment";
+    final static String GALLERY = "gallery";
+    final static String GALLERYPOST = "galleryPost";
+    final static String GALLERYDELETE = "galleryDelete";
+    final static String UPVOTE = "upvote";
+    final static String COMMENTS = "comments";
+    final static String DOWNVOTECOMMENT = "downvoteComment";
+    final static String UPVOTECOMMENT = "upvoteComment";
+    final static String REPLY = "reply";
+    final static String EDITIMAGE = "editImage";
 
     public SingleImageFragment() {
         inGallery = false;
@@ -122,8 +133,9 @@ public class SingleImageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        MainActivity activity = (MainActivity) getActivity();
-        activity.setTitle("Image");
+        Activity activity = getActivity();
+        if(activity != null && activity.getActionBar() != null)
+            activity.getActionBar().setTitle("Image");
     }
 
     @Override
@@ -139,8 +151,8 @@ public class SingleImageFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        MainActivity activity = (MainActivity) getActivity();
-        if (activity.theme.equals(activity.HOLO_LIGHT))
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        if (activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -163,8 +175,7 @@ public class SingleImageFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
-        final MainActivity activity = (MainActivity) getActivity();
-        SharedPreferences settings = activity.getSettings();
+        final Activity activity = getActivity();
         switch (item.getItemId()) {
             case R.id.action_sort:
                 return true;
@@ -193,39 +204,19 @@ public class SingleImageFragment extends Fragment {
                 new AlertDialog.Builder(activity).setTitle("Set Gallery Title/Press OK to remove")
                         .setView(newGalleryTitle).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        AsyncTask<Void, Void, Boolean> galleryAsync = new AsyncTask<Void, Void, Boolean>() {
-                            @Override
-                            protected Boolean doInBackground(Void... voids) {
-                                try {
-                                    JSONObject jsonObject = activity.makeCall("3/gallery/image/" + imageData.getJSONObject().getString("id"), "get", null);
-                                    if (jsonObject.getJSONObject("data").has("error")) {
-                                        HashMap<String, Object> galleryMap = new HashMap<String, Object>();
-                                        galleryMap.put("terms", "1");
-                                        galleryMap.put("title", newGalleryTitle.getText().toString());
-                                        activity.makeCall("3/gallery/" + imageData.getJSONObject().getString("id"), "post", galleryMap);
-                                        return true;
-                                    } else {
-                                        activity.makeCall("3/gallery/" + imageData.getJSONObject().getString("id"), "delete", null);
-                                        return false;
-                                    }
-                                } catch (JSONException e) {
-                                    Log.e("Error!", "oops, some text fields missing values" + e.toString());
-                                }
-                                return false;
-                            }
-
-                            @Override
-                            protected void onPostExecute(Boolean bool) {
-                                int duration = Toast.LENGTH_SHORT;
-                                Toast toast;
-                                if (bool)
-                                    toast = Toast.makeText(activity, "Submitted!", duration);
-                                else
-                                    toast = Toast.makeText(activity, "Removed!", duration);
-                                toast.show();
-                            }
-                        };
-                        galleryAsync.execute();
+                        if(newGalleryTitle.getText() == null)
+                            return;
+                        HashMap<String, Object> galleryMap = new HashMap<String, Object>();
+                        galleryMap.put("terms", "1");
+                        galleryMap.put("title", newGalleryTitle.getText().toString());
+                        newGalleryString = newGalleryTitle.getText().toString();
+                        try {
+                            Fetcher fetcher = new Fetcher(singleImageFragment, "3/gallery/image/" + imageData.getJSONObject().getString("id"), ApiCall.GET, galleryMap, ((ImgurHoloActivity)getActivity()).getApiCall(), GALLERY);
+                            fetcher.execute();
+                        }
+                        catch (Exception e) {
+                            Log.e("Error!", e.toString());
+                        }
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -238,12 +229,12 @@ public class SingleImageFragment extends Fragment {
                 try {
                     final EditText newTitle = new EditText(activity);
                     newTitle.setSingleLine();
-                    if (imageData.getJSONObject().getString("title") != "null")
+                    if (!imageData.getJSONObject().getString("title").equals("null"))
                         newTitle.setText(imageData.getJSONObject().getString("title"));
                     final EditText newBody = new EditText(activity);
                     newBody.setHint("Description");
                     newTitle.setHint("Title");
-                    if (imageData.getJSONObject().getString("description") != "null")
+                    if (!imageData.getJSONObject().getString("description").equals("null"))
                         newBody.setText(imageData.getJSONObject().getString("description"));
                     LinearLayout linearLayout = new LinearLayout(activity);
                     linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -254,31 +245,26 @@ public class SingleImageFragment extends Fragment {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             TextView imageTitle = (TextView) imageLayoutView.findViewById(R.id.single_image_title);
                             TextView imageDescription = (TextView) imageLayoutView.findViewById(R.id.single_image_description);
-                            if (!newTitle.getText().toString().equals("")) {
+                            if (newTitle.getText() != null && !newTitle.getText().toString().equals("")) {
                                 imageTitle.setText(newTitle.getText().toString());
                                 imageTitle.setVisibility(View.VISIBLE);
                             } else
                                 imageTitle.setVisibility(View.GONE);
-                            if (!newBody.getText().toString().equals("")) {
+                            if (newBody.getText() != null && !newBody.getText().toString().equals("")) {
                                 imageDescription.setText(newBody.getText().toString());
                                 imageDescription.setVisibility(View.VISIBLE);
                             } else
                                 imageDescription.setVisibility(View.GONE);
-                            AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                                @Override
-                                protected Void doInBackground(Void... voids) {
-                                    try {
-                                        HashMap<String, Object> editImageMap = new HashMap<String, Object>();
-                                        editImageMap.put("title", newTitle.getText().toString());
-                                        editImageMap.put("description", newBody.getText().toString());
-                                        activity.makeCall("3/image/" + imageData.getJSONObject().getString("id"), "post", editImageMap);
-                                    } catch (JSONException e) {
-                                        Log.e("Error!", "oops, some text fields missing values" + e.toString());
-                                    }
-                                    return null;
-                                }
-                            };
-                            async.execute();
+                            HashMap<String, Object> editImageMap = new HashMap<String, Object>();
+                            editImageMap.put("title", newTitle.getText().toString());
+                            editImageMap.put("description", newBody.getText().toString());
+                            try {
+                                Fetcher fetcher = new Fetcher(singleImageFragment, "3/image/" + imageData.getJSONObject().getString("id"), ApiCall.POST, editImageMap, ((ImgurHoloActivity)getActivity()).getApiCall(), EDITIMAGE);
+                                fetcher.execute();
+                            }
+                            catch (JSONException e) {
+                                Log.e("Error!", e.toString());
+                            }
                         }
                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -290,69 +276,21 @@ public class SingleImageFragment extends Fragment {
                 }
                 return true;
             case R.id.action_download:
-                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        try {
-                            URL url = new URL(imageData.getJSONObject().getString("link"));
-                            String type = imageData.getJSONObject().getString("link").split("/")[3];
-                            File file = new File(android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + imageData.getJSONObject().getString("id") + "." + type);
-                            URLConnection ucon = url.openConnection();
-                            InputStream is = ucon.getInputStream();
-                            BufferedInputStream bis = new BufferedInputStream(is);
-                            ByteArrayBuffer baf = new ByteArrayBuffer(50);
-                            int current = 0;
-                            while ((current = bis.read()) != -1) {
-                                baf.append((byte) current);
-                            }
-                            FileOutputStream fos = new FileOutputStream(file);
-                            fos.write(baf.toByteArray());
-                            fos.close();
-                            activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                                    + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))));
-                        } catch (JSONException e) {
-                            Log.e("Error!", e.toString());
-                        } catch (MalformedURLException e) {
-                            Log.e("Error!", e.toString());
-                        } catch (IOException e) {
-                            Log.e("Error!", e.toString());
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        int duration = Toast.LENGTH_SHORT;
-                        Toast toast;
-                        toast = Toast.makeText(activity, "Downloaded!", duration);
-                        toast.show();
-                    }
-                };
-                async.execute();
+                DownloadAsync downloadAsync = new DownloadAsync(getActivity(), imageData);
+                downloadAsync.execute();
                 return true;
             case R.id.action_delete:
                 new AlertDialog.Builder(activity).setTitle("Delete Image?")
                         .setMessage("Are you sure you want to delete this image? This cannot be undone")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                                    @Override
-                                    protected Void doInBackground(Void... voids) {
-                                        try {
-                                            MainActivity activity = (MainActivity) getActivity();
-                                            activity.makeCall("3/image/" + imageData.getJSONObject().getString("id"), "delete", null);
-                                        } catch (JSONException e) {
-                                            Log.e("Error!", e.toString());
-                                        }
-                                        return null;
-                                    }
-
-                                    @Override
-                                    protected void onPostExecute(Void aVoid) {
-                                        getActivity().getFragmentManager().popBackStack();
-                                    }
-                                };
-                                async.execute();
+                                try {
+                                    Fetcher fetcher = new Fetcher(singleImageFragment, "3/image/" + imageData.getJSONObject().getString("id"), ApiCall.DELETE, null, ((ImgurHoloActivity)getActivity()).getApiCall(), DELETE);
+                                    fetcher.execute();
+                                }
+                                catch (JSONException e) {
+                                    Log.e("Error!", e.toString());
+                                }
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -376,7 +314,7 @@ public class SingleImageFragment extends Fragment {
                 new AlertDialog.Builder(activity).setTitle("Set Link Type to Copy")
                         .setItems(copyTypes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                MainActivity activity = (MainActivity) getActivity();
+                                Activity activity = getActivity();
                                 ClipboardManager clipboard = (ClipboardManager)
                                         activity.getSystemService(Context.CLIPBOARD_SERVICE);
                                 try {
@@ -436,6 +374,62 @@ public class SingleImageFragment extends Fragment {
         }
     }
 
+    public void onGetObject(Object o, String tag) {
+        if(tag.equals(REPLY)) {
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast;
+            toast = Toast.makeText(getActivity(), "Comment Posted!", duration);
+            toast.show();
+            refreshComments();
+        }
+        else if(tag.equals(COMMENTS)) {
+            JSONObject jsonObject = (JSONObject) o;
+            if(jsonObject != null)
+                commentData.setJSONObject(jsonObject);
+            if (inGallery && commentAdapter != null) {
+                addComments();
+                commentAdapter.notifyDataSetChanged();
+            }
+        }
+        else if(tag.equals(DELETE)) {
+            getActivity().getFragmentManager().popBackStack();
+        }
+        else if(tag.equals(POSTCOMMENT)) {
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast;
+            toast = Toast.makeText(getActivity(), "Comment Posted!", duration);
+            toast.show();
+            refreshComments();
+        }
+        else if(tag.equals(GALLERY)) {
+            JSONObject jsonObject = (JSONObject) o;
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast;
+            try {
+            if (jsonObject.getJSONObject("data").has("error")) {
+                HashMap<String, Object> galleryMap = new HashMap<String, Object>();
+                galleryMap.put("terms", "1");
+                galleryMap.put("title", newGalleryString);
+                Fetcher fetcher = new Fetcher(this, "3/gallery/" + imageData.getJSONObject().getString("id"), ApiCall.POST, galleryMap, ((ImgurHoloActivity)getActivity()).getApiCall(), GALLERYPOST);
+                fetcher.execute();
+                toast = Toast.makeText(getActivity(), "Submitted!", duration);
+            } else {
+                Fetcher fetcher = new Fetcher(this, "3/gallery/" + imageData.getJSONObject().getString("id"), ApiCall.DELETE, null, ((ImgurHoloActivity)getActivity()).getApiCall(), GALLERYDELETE);
+                fetcher.execute();
+                toast = Toast.makeText(getActivity(), "Removed!", duration);
+            }
+            toast.show();
+            }
+            catch (JSONException e) {
+                Log.e("Error!", e.toString());
+            }
+        }
+    }
+
+    public void handleException(Exception e, String tag) {
+
+    }
+
     public void refreshComments() {
         commentAdapter.clear();
         commentAdapter.hiddenViews.clear();
@@ -446,8 +440,8 @@ public class SingleImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        final MainActivity activity = (MainActivity) getActivity();
-        SharedPreferences settings = activity.getSettings();
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        final SharedPreferences settings = activity.getApiCall().settings;
         sort = settings.getString("CommentSort", "Best");
         boolean newData = true;
         if (commentData != null) {
@@ -459,10 +453,10 @@ public class SingleImageFragment extends Fragment {
         if(commentAdapter == null)
             commentAdapter = new CommentAdapter(mainView.getContext(), R.id.comment_item);
         commentLayout = (ListView) mainView.findViewById(R.id.comment_thread);
-        if (activity.theme.equals(activity.HOLO_LIGHT))
-            imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.image_view, null);
+        if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
+            imageLayoutView = (LinearLayout) View.inflate(getActivity(), R.layout.image_view, null);
         else
-            imageLayoutView = (LinearLayout) View.inflate(activity, R.layout.dark_image_view, null);
+            imageLayoutView = (LinearLayout) View.inflate(getActivity(), R.layout.dark_image_view, null);
         final WebView imageView = (WebView) imageLayoutView.findViewById(R.id.single_image_view);
         imageView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -489,7 +483,8 @@ public class SingleImageFragment extends Fragment {
             imageScore = (TextView) imageLayoutView.findViewById(R.id.single_image_score);
             imageScore.setVisibility(View.VISIBLE);
             ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) imageScore.getLayoutParams();
-            mlp.setMargins(0, 0, 0, 4);
+            if(mlp != null)
+                mlp.setMargins(0, 0, 0, 4);
             updateImageFont();
             imageUpvote.setVisibility(View.VISIBLE);
             imageDownvote.setVisibility(View.VISIBLE);
@@ -497,7 +492,7 @@ public class SingleImageFragment extends Fragment {
             imageFavorite.setVisibility(View.VISIBLE);
             imageComment.setVisibility(View.VISIBLE);
             try {
-                if (!imageData.getJSONObject().has("account_url") || imageData.getJSONObject().getString("account_url") == "null" || imageData.getJSONObject().getString("account_url") == "[deleted]")
+                if (!imageData.getJSONObject().has("account_url") || imageData.getJSONObject().getString("account_url").equals("null") || imageData.getJSONObject().getString("account_url").equals("[deleted]"))
                     imageUser.setVisibility(View.GONE);
                 if (!imageData.getJSONObject().has("vote")) {
                     imageUpvote.setVisibility(View.GONE);
@@ -522,28 +517,16 @@ public class SingleImageFragment extends Fragment {
                             imageData.getJSONObject().put("favorite", true);
                         } else {
                             imageData.getJSONObject().put("favorite", false);
-                            if (activity.theme.equals(activity.HOLO_LIGHT))
+                            if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
                                 imageFavorite.setImageResource(R.drawable.rating_favorite);
                             else
                                 imageFavorite.setImageResource(R.drawable.dark_rating_favorite);
                         }
+                        Fetcher fetcher = new Fetcher(singleImageFragment, "3/image/" + imageData.getJSONObject().getString("id") + "/favorite", ApiCall.POST, null, ((ImgurHoloActivity)getActivity()).getApiCall(), FAVORITE);
+                        fetcher.execute();
                     } catch (JSONException e) {
                         Log.e("Error!", "missing data" + e.toString());
                     }
-
-                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... voids) {
-                            MainActivity activity = (MainActivity) getActivity();
-                            try {
-                                activity.makeCall("3/image/" + imageData.getJSONObject().getString("id") + "/favorite", "post", null);
-                            } catch (JSONException e) {
-                                Log.e("Error!", e.toString());
-                            }
-                            return null;
-                        }
-                    };
-                    async.execute();
                 }
             });
             imageUser.setOnClickListener(new View.OnClickListener() {
@@ -554,8 +537,8 @@ public class SingleImageFragment extends Fragment {
                         Bundle bundle = new Bundle();
                         bundle.putString("username", imageData.getJSONObject().getString("account_url"));
                         accountFragment.setArguments(bundle);
-                        MainActivity activity = (MainActivity) getActivity();
-                        activity.changeFragment(accountFragment, true);
+                        //MainActivity activity = (MainActivity) getActivity();
+                        //activity.changeFragment(accountFragment, true);
                     } catch (JSONException e) {
                         Log.e("Error!", e.toString());
                     }
@@ -565,73 +548,55 @@ public class SingleImageFragment extends Fragment {
             imageComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                        MainActivity activity = (MainActivity) getActivity();
-                        final EditText newBody = new EditText(activity);
-                        newBody.setHint("Body");
-                        newBody.setLines(3);
-                        final TextView characterCount = new TextView(activity);
-                        characterCount.setText("140");
-                        LinearLayout commentReplyLayout = new LinearLayout(activity);
-                        newBody.addTextChangedListener(new TextWatcher() {
-                            @Override
-                            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                                //
-                            }
+                    Activity activity = getActivity();
+                    final EditText newBody = new EditText(activity);
+                    newBody.setHint("Body");
+                    newBody.setLines(3);
+                    final TextView characterCount = new TextView(activity);
+                    characterCount.setText("140");
+                    LinearLayout commentReplyLayout = new LinearLayout(activity);
+                    newBody.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                            //
+                        }
 
-                            @Override
-                            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                                characterCount.setText(String.valueOf(140 - charSequence.length()));
-                            }
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                            characterCount.setText(String.valueOf(140 - charSequence.length()));
+                        }
 
-                            @Override
-                            public void afterTextChanged(Editable editable) {
-                                for (int i = editable.length(); i > 0; i--) {
-                                    if (editable.subSequence(i - 1, i).toString().equals("\n"))
-                                        editable.replace(i - 1, i, "");
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+                            for (int i = editable.length(); i > 0; i--) {
+                                if (editable.subSequence(i - 1, i).toString().equals("\n"))
+                                    editable.replace(i - 1, i, "");
+                            }
+                        }
+                    });
+                    commentReplyLayout.setOrientation(LinearLayout.VERTICAL);
+                    commentReplyLayout.addView(newBody);
+                    commentReplyLayout.addView(characterCount);
+                    new AlertDialog.Builder(activity).setTitle("Comment on Image")
+                            .setView(commentReplyLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            if (newBody.getText() != null && newBody.getText().toString().length() < 141) {
+                                HashMap<String, Object> commentMap = new HashMap<String, Object>();
+                                try {
+                                    commentMap.put("comment", newBody.getText().toString());
+                                    commentMap.put("image_id", imageData.getJSONObject().getString("id"));
+                                    Fetcher fetcher = new Fetcher(singleImageFragment, "3/comment/", ApiCall.POST, commentMap, ((ImgurHoloActivity)getActivity()).getApiCall(), POSTCOMMENT);
+                                    fetcher.execute();
+                                } catch (JSONException e) {
+                                    Log.e("Error!", e.toString());
                                 }
                             }
-                        });
-                        commentReplyLayout.setOrientation(LinearLayout.VERTICAL);
-                        commentReplyLayout.addView(newBody);
-                        commentReplyLayout.addView(characterCount);
-                        new AlertDialog.Builder(activity).setTitle("Comment on Image")
-                                .setView(commentReplyLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                if (newBody.getText().toString().length() < 141) {
-                                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                                        @Override
-                                        protected Void doInBackground(Void... voids) {
-                                            MainActivity activity = (MainActivity) getActivity();
-                                            try {
-                                                HashMap<String, Object> commentMap = new HashMap<String, Object>();
-                                                commentMap.put("comment", newBody.getText().toString());
-                                                commentMap.put("image_id", imageData.getJSONObject().getString("id"));
-                                                activity.makeCall("3/comment/", "post", commentMap);
-                                            } catch (JSONException e) {
-                                                Log.e("Error!", "oops, some text fields missing values" + e.toString());
-                                            }
-                                            return null;
-                                        }
-
-                                        @Override
-                                        protected void onPostExecute(Void aVoid) {
-                                            int duration = Toast.LENGTH_SHORT;
-                                            Toast toast;
-                                            toast = Toast.makeText(getActivity(), "Comment Posted!", duration);
-                                            toast.show();
-                                            refreshComments();
-                                        }
-                                    };
-                                    async.execute();
-                                } else {
-                                    //do nothing
-                                }
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // Do nothing.
-                            }
-                        }).show();
+                        }
+                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Do nothing.
+                        }
+                    }).show();
                 }
             });
             imageUpvote.setOnClickListener(new View.OnClickListener() {
@@ -639,7 +604,7 @@ public class SingleImageFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         if (!imageData.getJSONObject().getString("vote").equals("up")) {
-                            if (activity.theme.equals(activity.HOLO_LIGHT)) {
+                            if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
                                 imageUpvote.setImageResource(R.drawable.green_rating_good);
                                 imageDownvote.setImageResource(R.drawable.rating_bad);
                             } else {
@@ -656,7 +621,7 @@ public class SingleImageFragment extends Fragment {
                             }
                             imageData.getJSONObject().put("vote", "up");
                         } else {
-                            if (activity.theme.equals(activity.HOLO_LIGHT)) {
+                            if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
                                 imageUpvote.setImageResource(R.drawable.rating_good);
                                 imageDownvote.setImageResource(R.drawable.rating_bad);
                             } else {
@@ -671,19 +636,13 @@ public class SingleImageFragment extends Fragment {
                         Log.e("Error!", e.toString());
                     }
                     updateImageFont();
-                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... voids) {
-                            MainActivity activity = (MainActivity) getActivity();
-                            try {
-                                activity.makeCall("3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/up", "post", null);
-                            } catch (JSONException e) {
-                                Log.e("Error!", e.toString());
-                            }
-                            return null;
-                        }
-                    };
-                    async.execute();
+                    try {
+                        Fetcher fetcher = new Fetcher(singleImageFragment, "3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/up", ApiCall.POST, null, ((ImgurHoloActivity)getActivity()).getApiCall(), UPVOTE);
+                        fetcher.execute();
+                    }
+                    catch (Exception e) {
+                        Log.e("Error!", e.toString());
+                    }
                 }
             });
             imageDownvote.setOnClickListener(new View.OnClickListener() {
@@ -691,7 +650,7 @@ public class SingleImageFragment extends Fragment {
                 public void onClick(View view) {
                     try {
                         if (!imageData.getJSONObject().getString("vote").equals("down")) {
-                            if (activity.theme.equals(activity.HOLO_LIGHT)) {
+                            if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
                                 imageData.getJSONObject().put("vote", "down");
                                 imageUpvote.setImageResource(R.drawable.rating_good);
                                 imageDownvote.setImageResource(R.drawable.red_rating_bad);
@@ -700,16 +659,15 @@ public class SingleImageFragment extends Fragment {
                                 imageDownvote.setImageResource(R.drawable.red_rating_bad);
                             }
                             imageData.getJSONObject().put("downs", (Integer.parseInt(imageData.getJSONObject().getString("downs")) + 1) + "");
-                            if(imageData.getJSONObject().getString("vote").equals("up")) {
+                            if (imageData.getJSONObject().getString("vote").equals("up")) {
                                 imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) - 2) + "");
                                 imageData.getJSONObject().put("ups", (Integer.parseInt(imageData.getJSONObject().getString("ups")) - 1) + "");
-                            }
-                            else {
+                            } else {
                                 imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) - 1) + "");
                             }
                             imageData.getJSONObject().put("vote", "down");
                         } else {
-                            if (activity.theme.equals(activity.HOLO_LIGHT)) {
+                            if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
                                 imageUpvote.setImageResource(R.drawable.rating_good);
                                 imageDownvote.setImageResource(R.drawable.rating_bad);
                             } else {
@@ -724,22 +682,15 @@ public class SingleImageFragment extends Fragment {
                         Log.e("Error!", e.toString());
                     }
                     updateImageFont();
-                    AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... voids) {
-                            MainActivity activity = (MainActivity) getActivity();
-                            try {
-                                activity.makeCall("3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/down", "post", null);
-                            } catch (JSONException e) {
-                                Log.e("Error!", e.toString());
-                            }
-                            return null;
-                        }
-                    };
-                    async.execute();
+                    try {
+                    Fetcher fetcher = new Fetcher(singleImageFragment, "3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/down", ApiCall.POST, null, ((ImgurHoloActivity)getActivity()).getApiCall(), UPVOTE);
+                    fetcher.execute();
+                    }
+                    catch (JSONException e) {
+                        Log.e("Error!", e.toString());
+                    }
                 }
             });
-
         }
         imageFullscreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -755,45 +706,15 @@ public class SingleImageFragment extends Fragment {
                 final ZoomableImageView zoomableImageView = new ZoomableImageView(getActivity());
                 popupWindow.setContentView(zoomableImageView);
                 popupWindow.showAtLocation(mainView, Gravity.TOP, 0, 0);
-                AsyncTask<Void, Void, Bitmap> asyncTask = new AsyncTask<Void, Void, Bitmap>() {
-                    @Override
-                    protected Bitmap doInBackground(Void... voids) {
-                        try {
-                            URL url;
-                            if (imageData.getJSONObject().has("cover"))
-                                url = new URL("http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png");
-                            else
-                                url = new URL(imageData.getJSONObject().getString("link"));
-                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                            connection.setDoInput(true);
-                            connection.connect();
-                            InputStream input = connection.getInputStream();
-                            Bitmap bitmap = BitmapFactory.decodeStream(input);
-                            return bitmap;
-                        } catch (JSONException e) {
-                            Log.e("Error!", e.toString());
-                        } catch (IOException e) {
-                            Log.e("Error!", e.toString());
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Bitmap bitmap) {
-                        Log.e("set zoomable view", "set");
-                        zoomableImageView.setImageBitmap(bitmap);
-                    }
-                };
-                asyncTask.execute();
+                LoadImageAsync loadImageAsync = new LoadImageAsync(zoomableImageView, imageData);
+                loadImageAsync.execute();
             }
         });
         ArrayAdapter<String> tempAdapter = new ArrayAdapter<String>(mainView.getContext(),
                 R.layout.drawer_list_item, mMenuList);
-
-
         Log.d("URI", "YO I'M IN YOUR SINGLE FRAGMENT gallery:" + inGallery);
         try {
-            Display display = ((WindowManager) activity.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+            Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
             if (imageData.getJSONObject().has("cover"))
@@ -816,7 +737,7 @@ public class SingleImageFragment extends Fragment {
                 Log.d("params", ""+params.width);
             }
             if(params.width > size.x)
-            Log.d("params", ""+params.width);
+                Log.d("params", ""+params.width);
             imageView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 
 
@@ -831,11 +752,11 @@ public class SingleImageFragment extends Fragment {
             String initial = imageData.getJSONObject().getString("type") + " | " + size + " | Views: " + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("views"));
             imageDetails.setText(initial);
             Log.d("imagedata", imageData.getJSONObject().toString());
-            if (imageData.getJSONObject().getString("title") != "null")
+            if (!imageData.getJSONObject().getString("title").equals("null"))
                 imageTitle.setText(imageData.getJSONObject().getString("title"));
             else
                 imageTitle.setVisibility(View.GONE);
-            if (imageData.getJSONObject().getString("description") != "null")
+            if (!imageData.getJSONObject().getString("description").equals("null"))
                 imageDescription.setText(imageData.getJSONObject().getString("description"));
             else
                 imageDescription.setVisibility(View.GONE);
@@ -863,16 +784,16 @@ public class SingleImageFragment extends Fragment {
 
     private void updateImageFont() {
         try {
-                if (!imageData.getJSONObject().has("vote")) {
-                    imageScore.setVisibility(View.GONE);
-                    return;
-                }
-                if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
-                    imageScore.setText(Html.fromHtml("<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points </font> (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
-                else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
-                    imageScore.setText(Html.fromHtml("<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points </font> (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
-                else
-                    imageScore.setText(Html.fromHtml(NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
+            if (!imageData.getJSONObject().has("vote")) {
+                imageScore.setVisibility(View.GONE);
+                return;
+            }
+            if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
+                imageScore.setText(Html.fromHtml("<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points </font> (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
+            else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
+                imageScore.setText(Html.fromHtml("<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points </font> (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
+            else
+                imageScore.setText(Html.fromHtml(NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
         }
         catch (JSONException e) {
             Log.e("Error font!", e.toString());
@@ -881,40 +802,18 @@ public class SingleImageFragment extends Fragment {
     }
 
     public void getComments() {
-        MainActivity activity = (MainActivity) getActivity();
-        if(!activity.getSettings().getBoolean("ShowComments", true))
+        if(!((ImgurHoloActivity)getActivity()).getApiCall().settings.getBoolean("ShowComments", true))
             return;
-        AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                MainActivity activity = (MainActivity) getActivity();
-                if (inGallery) {
-                    try {
-                        JSONObject jsonObject = activity.makeCall("3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments", "get", null);
-                        if(jsonObject != null)
-                            commentData.setJSONObject(jsonObject);
-                    } catch (JSONException e) {
-                        Log.e("Error3!", e.toString());
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                    if (inGallery && commentAdapter != null) {
-                        addComments();
-                        commentAdapter.notifyDataSetChanged();
-                    }
-            }
-        };
-        async.execute();
-
+        try {
+            Fetcher fetcher = new Fetcher(this, "3/gallery/image/" + imageData.getJSONObject().getString("id") + "/comments", ApiCall.GET, null, ((ImgurHoloActivity)getActivity()).getApiCall(), COMMENTS);
+            fetcher.execute();
+        }
+        catch (JSONException e) {
+            Log.e("Error!", e.toString());
+        }
     }
 
     private void addComments() {
-        if(commentData == null || commentData.getJSONObject() == null)
-            return;
         try {
             JSONArray commentJSONArray = commentData.getJSONObject().getJSONArray("data");
             commentArray = new ArrayList<JSONParcelable>();
@@ -940,7 +839,6 @@ public class SingleImageFragment extends Fragment {
         JSONArray children;
         try {
             comment.put("indent", currentIndent);
-            children = null;
             ArrayList<JSONObject> childrenArray = null;
             if (comment.has("children")) {
                 children = comment.getJSONArray("children");
@@ -973,14 +871,14 @@ public class SingleImageFragment extends Fragment {
         {
             //valA and valB could be any simple type, such as number, string, whatever
             try {
-            int valA = a.getInt("datetime");
-            int valB = b.getInt("datetime");
+                int valA = a.getInt("datetime");
+                int valB = b.getInt("datetime");
 
-            if(valA > valB)
-                return -1;
-            if(valA < valB)
-                return 1;
-            return 0;
+                if(valA > valB)
+                    return -1;
+                if(valA < valB)
+                    return 1;
+                return 0;
             }
             catch (JSONException e) {
                 Log.e("Error!", e.toString());
@@ -1088,8 +986,8 @@ public class SingleImageFragment extends Fragment {
         }
 
         public void addHiddenItem(int position) {
-            if (!hiddenViews.contains(Integer.valueOf(position)))
-                hiddenViews.add(Integer.valueOf(position));
+            if (!hiddenViews.contains(position))
+                hiddenViews.add(position);
         }
 
         public void removeHiddenItem(int position) {
@@ -1118,11 +1016,11 @@ public class SingleImageFragment extends Fragment {
                         convertView = mInflater.inflate(R.layout.zerolayout, null);
                         return convertView;
                     case VISIBLE_TYPE:
-                        MainActivity activity = (MainActivity) getActivity();
-                        if (activity.theme.equals(activity.HOLO_LIGHT))
-                            convertView = (LinearLayout) View.inflate(activity, R.layout.comment_list_item, null);
+                        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+                        if (activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
+                            convertView = View.inflate(getActivity(), R.layout.comment_list_item, null);
                         else
-                            convertView = (LinearLayout) View.inflate(activity, R.layout.comment_list_item_dark, null);
+                            convertView = View.inflate(getActivity(), R.layout.comment_list_item_dark, null);
                         holder = new ViewHolder();
                         holder.body = (TextView) convertView.findViewById(R.id.body);
                         holder.username = (TextView) convertView.findViewById(R.id.username);
@@ -1173,6 +1071,8 @@ public class SingleImageFragment extends Fragment {
                         holder.header.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                if(view == null || view.getParent() == null || view.getParent().getParent() == null || view.getParent().getParent().getParent() == null)
+                                    return;
                                 setDescendantsHidden((View) view.getParent().getParent().getParent());
                             }
                         });
@@ -1185,23 +1085,26 @@ public class SingleImageFragment extends Fragment {
                                     Bundle bundle = new Bundle();
                                     bundle.putString("username", viewData.getString("author"));
                                     accountFragment.setArguments(bundle);
-                                    MainActivity activity = (MainActivity) getActivity();
-                                    activity.changeFragment(accountFragment, true);
+                                    //MainActivity activity = (MainActivity) getActivity();
+                                    //activity.changeFragment(accountFragment, true);
                                 } catch (JSONException e) {
                                     Log.e("Error!", e.toString());
                                 }
 
                             }
                         });
-                        convertView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                setDescendantsHidden(view);
-                            }
-                        });
+                        if(convertView != null)
+                            convertView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    setDescendantsHidden(view);
+                                }
+                            });
                         holder.body.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                if(view == null || view.getParent() == null || view.getParent().getParent() == null || view.getParent().getParent().getParent() == null)
+                                    return;
                                 View convertView = (View) view.getParent().getParent().getParent();
                                 ViewHolder viewHolder = (ViewHolder) convertView.getTag();
                                 try {
@@ -1223,89 +1126,76 @@ public class SingleImageFragment extends Fragment {
                         holder.reply.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                if(view == null || view.getParent() == null || view.getParent().getParent() == null)
+                                    return;
                                 LinearLayout layout = (LinearLayout) view.getParent().getParent();
                                 final ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                                    MainActivity activity = (MainActivity) getActivity();
-                                    final EditText newBody = new EditText(activity);
-                                    newBody.setLines(3);
-                                    final TextView characterCount = new TextView(activity);
-                                    characterCount.setText("140");
-                                    LinearLayout commentReplyLayout = new LinearLayout(activity);
-                                    newBody.addTextChangedListener(new TextWatcher() {
-                                        @Override
-                                        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                                            //
-                                        }
+                                Activity activity = getActivity();
+                                final EditText newBody = new EditText(activity);
+                                newBody.setLines(3);
+                                final TextView characterCount = new TextView(activity);
+                                characterCount.setText("140");
+                                LinearLayout commentReplyLayout = new LinearLayout(activity);
+                                newBody.addTextChangedListener(new TextWatcher() {
+                                    @Override
+                                    public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                                        //
+                                    }
 
-                                        @Override
-                                        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                                            characterCount.setText(String.valueOf(140 - charSequence.length()));
-                                        }
+                                    @Override
+                                    public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                                        characterCount.setText(String.valueOf(140 - charSequence.length()));
+                                    }
 
-                                        @Override
-                                        public void afterTextChanged(Editable editable) {
-                                            for (int i = editable.length(); i > 0; i--) {
-                                                if (editable.subSequence(i - 1, i).toString().equals("\n"))
-                                                    editable.replace(i - 1, i, "");
+                                    @Override
+                                    public void afterTextChanged(Editable editable) {
+                                        for (int i = editable.length(); i > 0; i--) {
+                                            if (editable.subSequence(i - 1, i).toString().equals("\n"))
+                                                editable.replace(i - 1, i, "");
+                                        }
+                                    }
+                                });
+                                commentReplyLayout.setOrientation(LinearLayout.VERTICAL);
+                                commentReplyLayout.addView(newBody);
+                                commentReplyLayout.addView(characterCount);
+                                newBody.setHint("Body");
+                                new AlertDialog.Builder(activity).setTitle("Reply to Comment")
+                                        .setView(commentReplyLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        if (newBody.getText() != null && newBody.getText().toString().length() < 141) {
+                                            try {
+                                            HashMap<String, Object> commentMap = new HashMap<String, Object>();
+                                            commentMap.put("comment", newBody.getText().toString());
+                                            commentMap.put("image_id", imageData.getJSONObject().getString("id"));
+                                            commentMap.put("parent_id", dataHolder.id);
+                                            Fetcher fetcher = new Fetcher(singleImageFragment, "3/comment/", ApiCall.POST, commentMap, ((ImgurHoloActivity)getActivity()).getApiCall(), REPLY);
+                                            fetcher.execute();
+                                            }
+                                            catch(JSONException e) {
+                                                Log.e("Error!", e.toString());
                                             }
                                         }
-                                    });
-                                    commentReplyLayout.setOrientation(LinearLayout.VERTICAL);
-                                    commentReplyLayout.addView(newBody);
-                                    commentReplyLayout.addView(characterCount);
-                                    newBody.setHint("Body");
-                                    new AlertDialog.Builder(activity).setTitle("Reply to Comment")
-                                            .setView(commentReplyLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int whichButton) {
-                                            if (newBody.getText().toString().length() < 141) {
-                                                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                                                    @Override
-                                                    protected Void doInBackground(Void... voids) {
-                                                        MainActivity activity = (MainActivity) getActivity();
-                                                        try {
-                                                            Log.d("comment", dataHolder.id + newBody.getText().toString() + imageData.getJSONObject().getString("id"));
-                                                            HashMap<String, Object> commentMap = new HashMap<String, Object>();
-                                                            commentMap.put("comment", newBody.getText().toString());
-                                                            commentMap.put("image_id", imageData.getJSONObject().getString("id"));
-                                                            commentMap.put("parent_id", dataHolder.id);
-                                                            activity.makeCall("3/comment/", "post", commentMap);
-                                                        } catch (JSONException e) {
-                                                            Log.e("Error!", "oops, some text fields missing values" + e.toString());
-                                                        }
-                                                        return null;
-                                                    }
-
-                                                    @Override
-                                                    protected void onPostExecute(Void aVoid) {
-                                                        int duration = Toast.LENGTH_SHORT;
-                                                        Toast toast;
-                                                        toast = Toast.makeText(getActivity(), "Comment Posted!", duration);
-                                                        toast.show();
-                                                        refreshComments();
-                                                    }
-                                                };
-                                                async.execute();
-                                            } else {
-                                                //do nothing
-                                            }
-                                        }
-                                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int whichButton) {
-                                            // Do nothing.
-                                        }
-                                    }).show();
+                                    }
+                                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        // Do nothing.
+                                    }
+                                }).show();
                             }
                         });
                         holder.upvote.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                MainActivity activity = (MainActivity) getActivity();
+                                ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+                                SharedPreferences settings = activity.getApiCall().settings;
+                                if(view == null || view.getParent() == null || view.getParent().getParent() == null)
+                                    return;
                                 LinearLayout layout = (LinearLayout) view.getParent().getParent();
                                 final ViewHolder dataHolder = (ViewHolder) layout.getTag();
                                 try {
                                     if (!viewData.getString("vote").equals("up")) {
                                         dataHolder.upvote.setImageResource(R.drawable.green_rating_good);
-                                        if (activity.theme.equals(activity.HOLO_LIGHT))
+                                        if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
                                             dataHolder.downvote.setImageResource(R.drawable.rating_bad);
                                         else
                                             dataHolder.downvote.setImageResource(R.drawable.dark_rating_bad);
@@ -1321,7 +1211,7 @@ public class SingleImageFragment extends Fragment {
                                     } else {
                                         viewData.put("ups", (Integer.parseInt(viewData.getString("ups")) - 1) + "");
                                         viewData.put("points", (Integer.parseInt(viewData.getString("points")) - 1) + "");
-                                        if (activity.theme.equals(activity.HOLO_LIGHT)) {
+                                        if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
                                             dataHolder.upvote.setImageResource(R.drawable.rating_good);
                                             dataHolder.downvote.setImageResource(R.drawable.rating_bad);
                                         } else {
@@ -1334,27 +1224,23 @@ public class SingleImageFragment extends Fragment {
                                     Log.e("Error!", e.toString());
                                 }
                                 updateFontColor(dataHolder, viewData);
-                                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                                    @Override
-                                    protected Void doInBackground(Void... voids) {
-                                        MainActivity activity = (MainActivity) getActivity();
-                                        activity.makeCall("/3/comment/" + dataHolder.id + "/vote/up", "post", null);
-                                        return null;
-                                    }
-                                };
-                                async.execute();
+                                Fetcher fetcher = new Fetcher(singleImageFragment, "/3/comment/" + dataHolder.id + "/vote/up", ApiCall.POST, null, ((ImgurHoloActivity)getActivity()).getApiCall(), UPVOTECOMMENT);
+                                fetcher.execute();
                             }
                         });
                         holder.downvote.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                MainActivity activity = (MainActivity) getActivity();
+                                ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+                                SharedPreferences settings = activity.getApiCall().settings;
+                                if(view == null || view.getParent() == null || view.getParent().getParent() == null)
+                                    return;
                                 LinearLayout layout = (LinearLayout) view.getParent().getParent();
                                 final ViewHolder dataHolder = (ViewHolder) layout.getTag();
                                 try {
                                     if (!viewData.getString("vote").equals("down")) {
                                         dataHolder.downvote.setImageResource(R.drawable.red_rating_bad);
-                                        if (activity.theme.equals(activity.HOLO_LIGHT)) {
+                                        if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
                                             dataHolder.upvote.setImageResource(R.drawable.rating_good);
                                         } else {
                                             dataHolder.upvote.setImageResource(R.drawable.dark_rating_good);
@@ -1370,7 +1256,7 @@ public class SingleImageFragment extends Fragment {
                                     } else {
                                         viewData.put("points", (Integer.parseInt(viewData.getString("points")) + 1) + "");
                                         viewData.put("downs", (Integer.parseInt(viewData.getString("downs")) - 1) + "");
-                                        if (activity.theme.equals(activity.HOLO_LIGHT)) {
+                                        if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
                                             dataHolder.upvote.setImageResource(R.drawable.rating_good);
                                             dataHolder.downvote.setImageResource(R.drawable.rating_bad);
                                         } else {
@@ -1383,15 +1269,8 @@ public class SingleImageFragment extends Fragment {
                                     Log.e("Error!", e.toString());
                                 }
                                 updateFontColor(dataHolder, viewData);
-                                AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
-                                    @Override
-                                    protected Void doInBackground(Void... voids) {
-                                        MainActivity activity = (MainActivity) getActivity();
-                                        activity.makeCall("/3/comment/" + dataHolder.id + "/vote/down", "post", null);
-                                        return null;
-                                    }
-                                };
-                                async.execute();
+                                Fetcher fetcher = new Fetcher(singleImageFragment, "/3/comment/" + dataHolder.id + "/vote/up", ApiCall.POST, null, ((ImgurHoloActivity)getActivity()).getApiCall(), DOWNVOTECOMMENT);
+                                fetcher.execute();
                             }
                         });
                         holder.report.setOnClickListener(new View.OnClickListener() {
@@ -1407,7 +1286,8 @@ public class SingleImageFragment extends Fragment {
                     } catch (JSONException e) {
                         Log.e("View Error!", e.toString());
                     }
-                    convertView.setTag(holder);
+                    if(convertView != null && holder != null)
+                        convertView.setTag(holder);
                     return convertView;
                 case HIDDEN_TYPE:
                     return convertView;
@@ -1416,14 +1296,14 @@ public class SingleImageFragment extends Fragment {
             }
         }
         private void updateFontColor(ViewHolder dataHolder, JSONObject viewData) {
-            MainActivity activity = (MainActivity) getActivity();
-            String username = "";
+            ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+            String username;
             try {
                 if (viewData.getString("author").length() < 25)
-                   username = viewData.getString("author") + " &#8226; ";
+                    username = viewData.getString("author") + " &#8226; ";
                 else
-                   username = viewData.getString("author").substring(0, 25) + "..." + " &#8226; ";
-                if(activity.getSettings().getBoolean("ShowVotes", true))
+                    username = viewData.getString("author").substring(0, 25) + "..." + " &#8226; ";
+                if(activity.getApiCall().settings.getBoolean("ShowVotes", true))
                 {
                     if (viewData.getString("vote") != null && viewData.getString("vote").equals("up"))
                         dataHolder.points.setText(Html.fromHtml(username + "<font color=#89c624>" + NumberFormat.getIntegerInstance().format(viewData.getInt("points")) + " points </font> (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(viewData.getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(viewData.getInt("downs")) + "</font>)"));
@@ -1434,7 +1314,7 @@ public class SingleImageFragment extends Fragment {
                 }
                 else
                     dataHolder.points.setText(username);
-                }
+            }
             catch (JSONException e) {
                 Log.e("Error!", e.toString());
             }

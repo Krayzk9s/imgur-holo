@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.activities;
 
 /*
  * Copyright 2013 Kurt Zimmer
@@ -20,6 +20,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
+
+import com.krayzk9s.imgurholo.R;
+import com.krayzk9s.imgurholo.ui.ImagesFragment;
 
 public class ImageSelectActivity extends MainActivity {
 

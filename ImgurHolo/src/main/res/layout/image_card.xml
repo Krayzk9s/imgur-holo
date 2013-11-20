@@ -4,7 +4,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <com.krayzk9s.imgurholo.SquareImageView
+    <com.krayzk9s.imgurholo.libs.SquareImageView
             android:id="@+id/picture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

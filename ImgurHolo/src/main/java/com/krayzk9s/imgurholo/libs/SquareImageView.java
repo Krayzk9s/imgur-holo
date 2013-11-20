@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.libs;
 
 /*
  * Copyright 2013 Kurt Zimmer

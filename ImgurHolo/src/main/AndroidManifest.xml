@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.krayzk9s.imgurholo"
-    android:versionCode="26"
-    android:versionName="0.11.0" >
+    android:versionCode="27"
+    android:versionName="0.11.1" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -14,14 +14,13 @@
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="imgur Holo"
-        android:debuggable="false"
             >
         <activity
-            android:name="com.krayzk9s.imgurholo.SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="imgur Holo Settings"
             > </activity>
         <activity
-            android:name="com.krayzk9s.imgurholo.MainActivity"
+            android:name=".activities.MainActivity"
             android:label="imgur Holo"
             android:launchMode="standard"
                 >
@@ -31,29 +30,6 @@
                 <action android:name="android.intent.extra.LOCAL_ONLY"/>
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
-                      android:host="i.imgur.com" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
-                      android:host="imgur.com"
-                      android:pathPrefix="/a/"  />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
-                    android:host="imgur.com"
-                    android:pathPrefix="/gallery/"  />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -71,10 +47,53 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.krayzk9s.imgurholo.ImageSelectActivity"
+            android:name=".activities.ImagePagerActivity"
+            android:label="imgur Holo"
+            android:launchMode="standard"
+            android:parentActivityName=".activities.MainActivity">
+            <intent-filter>
+                <action android:name="com.krayzk9s.imgurholo.IMAGE_PAGER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.ImgurLinkActivity"
+            android:label="imgur Holo"
+            android:launchMode="standard"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="i.imgur.com" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="imgur.com"
+                    android:pathPrefix="/a/"  />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="imgur.com"
+                    android:pathPrefix="/gallery/"  />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.ImageSelectActivity"
             android:label="@string/title_activity_image_select" >
         </activity>
-        <service android:name="com.krayzk9s.imgurholo.UploadService" />
+        <service android:name=".services.UploadService" />
     </application>
 
 </manifest>

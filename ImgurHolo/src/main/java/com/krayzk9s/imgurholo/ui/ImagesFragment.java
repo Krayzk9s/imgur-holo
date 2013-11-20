@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.ui;
 
 /*
  * Copyright 2013 Kurt Zimmer
@@ -16,12 +16,12 @@ package com.krayzk9s.imgurholo;
  * limitations under the License.
  */
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -45,13 +45,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import com.krayzk9s.imgurholo.BuildConfig;
+import com.krayzk9s.imgurholo.R;
+import com.krayzk9s.imgurholo.activities.ImageSelectActivity;
+import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
+import com.krayzk9s.imgurholo.activities.MainActivity;
+import com.krayzk9s.imgurholo.libs.JSONParcelable;
+import com.krayzk9s.imgurholo.libs.SquareImageView;
+import com.krayzk9s.imgurholo.services.DownloadService;
+import com.krayzk9s.imgurholo.tools.AddImagesToAlbumAsync;
+import com.krayzk9s.imgurholo.tools.ApiCall;
+import com.krayzk9s.imgurholo.tools.CommentsAsync;
+import com.krayzk9s.imgurholo.tools.Fetcher;
+import com.krayzk9s.imgurholo.tools.GetData;
+import com.krayzk9s.imgurholo.tools.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Kurt Zimmer on 7/22/13.
@@ -73,6 +86,8 @@ public class ImagesFragment extends Fragment implements GetData {
     private ArrayList<String> urls;
     private ArrayList<JSONParcelable> ids;
     TextView errorText;
+    final static String DELETE = "delete";
+    final static String IMAGES = "images";
 
     public ImagesFragment() {
         page = 0;
@@ -81,8 +96,7 @@ public class ImagesFragment extends Fragment implements GetData {
     @Override
     public void onResume() {
         super.onResume();
-        MainActivity activity = (MainActivity) getActivity();
-        activity.setTitle("Images");
+        getActivity().getActionBar().setTitle("Images");
     }
 
     @Override
@@ -96,7 +110,8 @@ public class ImagesFragment extends Fragment implements GetData {
         imageCall = bundle.getString("imageCall");
         if(bundle.containsKey("albumData")) {
             JSONParcelable dataParcel = bundle.getParcelable("albumData");
-            galleryAlbumData = dataParcel.getJSONObject();
+            if(dataParcel != null)
+                galleryAlbumData = dataParcel.getJSONObject();
         }
         else
             galleryAlbumData = null;
@@ -107,8 +122,8 @@ public class ImagesFragment extends Fragment implements GetData {
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        MainActivity activity = (MainActivity) getActivity();
-        if (activity.theme.equals(activity.HOLO_LIGHT))
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        if (activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -130,7 +145,7 @@ public class ImagesFragment extends Fragment implements GetData {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle item selection
-        final MainActivity activity = (MainActivity) getActivity();
+        final Activity activity = getActivity();
         Toast toast;
         int duration;
         switch (item.getItemId()) {
@@ -171,8 +186,8 @@ public class ImagesFragment extends Fragment implements GetData {
                 //select image
                 return true;
             case R.id.action_comments:
-                CommentAsync commentAsync = new CommentAsync(activity, galleryAlbumData);
-                commentAsync.execute();
+                CommentsAsync commentsAsync = new CommentsAsync(((ImgurHoloActivity)getActivity()).getApiCall(), galleryAlbumData);
+                commentsAsync.execute();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -181,17 +196,18 @@ public class ImagesFragment extends Fragment implements GetData {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        AddImagesToAlbum imageAsync;
-        ArrayList<String> imageIds;
         Log.d("requestcode", requestCode + "");
+        if(data.getExtras() == null)
+            return;
         Object bundle = data.getExtras().get("data");
         Log.d("HELO", bundle.getClass().toString());
         switch (requestCode) {
             case 1:
                 super.onActivityResult(requestCode, resultCode, data);
-                imageIds = data.getStringArrayListExtra("data");
-                Log.d("Ids!", imageIds.toString());
-                imageAsync = new AddImagesToAlbum(imageIds, true, (MainActivity) getActivity(), albumId);
+                ArrayList<String> imageIds = data.getStringArrayListExtra("data");
+                if(imageIds != null)
+                    Log.d("Ids!", imageIds.toString());
+                AddImagesToAlbumAsync imageAsync = new AddImagesToAlbumAsync(imageIds, true, ((ImgurHoloActivity)getActivity()).getApiCall(), albumId);
                 imageAsync.execute();
                 break;
         }
@@ -210,9 +226,9 @@ public class ImagesFragment extends Fragment implements GetData {
         noImageView = (TextView) view.findViewById(R.id.no_images);
         imageAdapter = new ImageAdapter(view.getContext());
         gridview.setAdapter(imageAdapter);
-        final MainActivity activity = (MainActivity) getActivity();
-        SharedPreferences settings = activity.getSettings();
-        gridview.setColumnWidth(activity.dpToPx(Integer.parseInt(settings.getString("IconSize", "120"))));
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        final SharedPreferences settings = activity.getApiCall().settings;
+        gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString("IconSize", "120")), getActivity()));
         gridview.setOnItemClickListener(new GridItemClickListener());
         gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         multiChoiceModeListener = new MultiChoiceModeListener();
@@ -221,11 +237,10 @@ public class ImagesFragment extends Fragment implements GetData {
                     @Override
                     public void onGlobalLayout() {
                         if (imageAdapter.getNumColumns() == 0) {
-                            SharedPreferences settings = activity.getSettings();
                             Log.d("numColumnsWidth", gridview.getWidth() + "");
-                            Log.d("numColumnsIconWidth", activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "120")))) + "");
+                            Log.d("numColumnsIconWidth", Utils.dpToPx((Integer.parseInt(settings.getString("IconSize", "120"))), getActivity()) + "");
                             final int numColumns = (int) Math.floor(
-                                    gridview.getWidth() / (activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "120")))) + activity.dpToPx(2)));
+                                    gridview.getWidth() / (Utils.dpToPx((Integer.parseInt(settings.getString("IconSize", "120"))), getActivity()) + Utils.dpToPx(2, getActivity())));
                             if (numColumns > 0) {
                                 imageAdapter.setNumColumns(numColumns);
                                 if (BuildConfig.DEBUG) {
@@ -248,10 +263,10 @@ public class ImagesFragment extends Fragment implements GetData {
                 public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                     if (lastInView == -1)
                         lastInView = firstVisibleItem;
-                    else if (lastInView > firstVisibleItem) {
+                    else if (getActivity().getActionBar() != null && lastInView > firstVisibleItem) {
                         getActivity().getActionBar().show();
                         lastInView = firstVisibleItem;
-                    } else if (lastInView < firstVisibleItem) {
+                    } else if (getActivity().getActionBar() != null && lastInView < firstVisibleItem) {
                         getActivity().getActionBar().hide();
                         lastInView = firstVisibleItem;
                     }
@@ -274,66 +289,79 @@ public class ImagesFragment extends Fragment implements GetData {
         return view;
     }
 
-    public void onGetObject(Object object) {
-        JSONObject data = (JSONObject) object;
-        if(data == null)
-            return;
-        Boolean changed = false;
-        JSONArray imageArray;
-        try {
-            if (data.optJSONObject("data") != null)
-                imageArray = data.getJSONObject("data").getJSONArray("images");
-            else
-                imageArray = data.getJSONArray("data");
-            Log.d("single image array", imageArray.toString());
-            for (int i = 0; i < imageArray.length(); i++) {
-                JSONObject imageData = imageArray.getJSONObject(i);
-                Log.d("Data", imageData.toString());
-                if(imageCall.equals("3/account/me/likes") && !imageData.getBoolean("favorite"))
-                    continue;
-                JSONParcelable dataParcel = new JSONParcelable();
-                dataParcel.setJSONObject(imageData);
-                if (imageData.has("is_album") && imageData.getBoolean("is_album") && !urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png")) {
-                    urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
-                    ids.add(dataParcel);
-                    changed = true;
-                } else if(!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png")) {
-                    urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
-                    ids.add(dataParcel);
-                    changed = true;
+    public void onGetObject(Object object, String tag) {
+        if(tag.equals(DELETE)) {
+            urls = new ArrayList<String>();
+            ids = new ArrayList<JSONParcelable>();
+            page = 0;
+            imageAdapter.notifyDataSetChanged();
+            getImages();
+        }
+        else if(tag.equals(IMAGES)) {
+            JSONObject data = (JSONObject) object;
+            if(data == null)
+                return;
+            Boolean changed = false;
+            JSONArray imageArray;
+            try {
+                if (data.optJSONObject("data") != null)
+                    imageArray = data.getJSONObject("data").getJSONArray("images");
+                else
+                    imageArray = data.getJSONArray("data");
+                Log.d("single image array", imageArray.toString());
+                for (int i = 0; i < imageArray.length(); i++) {
+                    JSONObject imageData = imageArray.getJSONObject(i);
+                    Log.d("Data", imageData.toString());
+                    if(imageCall.equals("3/account/me/likes") && !imageData.getBoolean("favorite"))
+                        continue;
+                    JSONParcelable dataParcel = new JSONParcelable();
+                    dataParcel.setJSONObject(imageData);
+                    if (imageData.has("is_album") && imageData.getBoolean("is_album") && !urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png")) {
+                        urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
+                        ids.add(dataParcel);
+                        changed = true;
+                    } else if(!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png")) {
+                        urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
+                        ids.add(dataParcel);
+                        changed = true;
+                    }
                 }
             }
+            catch (JSONException e) {
+                Log.e("JSON error!", "oops");
+            }
+            gettingImages = !changed;
+            if (urls.size() > 0)
+                imageAdapter.notifyDataSetChanged();
+            else if (urls.size() == 0 && noImageView != null)
+                noImageView.setVisibility(View.VISIBLE);
+            else
+                gettingImages = true;
         }
-        catch (JSONException e) {
-            Log.e("JSON error!", "oops");
-        }
-        gettingImages = !changed;
-        if (data != null && urls.size() > 0)
-            imageAdapter.notifyDataSetChanged();
-        else if (data == null && errorText != null)
-            errorText.setVisibility(View.VISIBLE);
-        else if (urls.size() == 0 && noImageView != null)
-            noImageView.setVisibility(View.VISIBLE);
-        else
-            gettingImages = true;
+    }
+
+    public void handleException(Exception e, String tag) {
+        Log.e("Error!", e.toString());
+        noImageView.setVisibility(View.VISIBLE);
     }
 
     private void getImages() {
         errorText.setVisibility(View.GONE);
-        Fetcher fetcher = new Fetcher(this, imageCall + "/" + page, (MainActivity)getActivity());
+        Fetcher fetcher = new Fetcher(this, imageCall + "/" + page, ApiCall.GET, null, ((ImgurHoloActivity)getActivity()).getApiCall(), IMAGES);
         fetcher.execute();
     }
 
     public void selectItem(int position) {
         if (!selecting) {
-            ImagePager imagePager = new ImagePager();
             ArrayList<JSONParcelable> idCopy = ids;
-            Bundle bundle = new Bundle();
-            bundle.putInt("start", position);
-            bundle.putParcelableArrayList("ids", idCopy);
-            imagePager.setArguments(bundle);
-            MainActivity activity = (MainActivity) getActivity();
-            activity.changeFragment(imagePager, true);
+            Intent intent = new Intent();
+            intent.putExtra("start", position);
+            intent.putExtra("ids", idCopy);
+            intent.setAction(ImgurHoloActivity.IMAGE_PAGER_INTENT);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            startActivity(intent);
+            //MainActivity activity = (MainActivity) getActivity();
+            //activity.changeFragment(imagePager, true);
         }
     }
 
@@ -388,7 +416,10 @@ public class ImagesFragment extends Fragment implements GetData {
         }
 
         public int getCount() {
-            return urls.size() + mNumColumns;
+            if(urls != null)
+                return urls.size() + mNumColumns;
+            else
+                return 0;
         }
 
         public Object getItem(int position) {
@@ -402,6 +433,7 @@ public class ImagesFragment extends Fragment implements GetData {
                 if (convertView == null) {
                     convertView = new View(mContext);
                 }
+                if(getActivity().getActionBar() != null)
                 convertView.setLayoutParams(new AbsListView.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, getActivity().getActionBar().getHeight()));
                 return convertView;
@@ -409,7 +441,7 @@ public class ImagesFragment extends Fragment implements GetData {
                 if (convertView == null) {
                     i = new SquareImageView(mContext);
                     i.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    l = new CheckableLayout((MainActivity) getActivity());
+                    l = new CheckableLayout(getActivity());
                     l.setPadding(2, 2, 2, 2);
                     l.addView(i);
                 } else {
@@ -447,8 +479,10 @@ public class ImagesFragment extends Fragment implements GetData {
                 case R.id.action_delete:
                     if (albumId == null) {
                         getChecked();
-                        DeleteImages deleteImages = new DeleteImages(getOuter(), (MainActivity) getActivity(), intentReturn);
-                        deleteImages.execute();
+                        for(int i = 0; i < intentReturn.size(); i++) {
+                            Fetcher fetcher = new Fetcher(getOuter(), "3/image/" + intentReturn.get(i), ApiCall.DELETE, null, ((ImgurHoloActivity)getActivity()).getApiCall(), DELETE);
+                            fetcher.execute();
+                        }
                     }
                     break;
                 default:
@@ -464,7 +498,7 @@ public class ImagesFragment extends Fragment implements GetData {
                 getChecked();
                 intent.putExtra("data", intentReturn);
                 ImageSelectActivity imageSelectActivity = (ImageSelectActivity) getActivity();
-                imageSelectActivity.setResult(imageSelectActivity.RESULT_OK, intent);
+                imageSelectActivity.setResult(ImageSelectActivity.RESULT_OK, intent);
                 imageSelectActivity.finish();
             }
         }
@@ -521,98 +555,5 @@ public class ImagesFragment extends Fragment implements GetData {
             setChecked(!mChecked);
         }
 
-    }
-
-    private static class DeleteImages extends AsyncTask<Void, Void, Void> {
-        ImagesFragment imagesFragment;
-        MainActivity activity;
-        ArrayList<String> intentReturn;
-        public DeleteImages(ImagesFragment _imagesFragment, MainActivity _activity, ArrayList<String> _intentReturn) {
-            imagesFragment = _imagesFragment;
-            activity = _activity;
-            intentReturn = _intentReturn;
-        }
-        @Override
-        protected Void doInBackground(Void... voids) {
-            for(int i = 0; i < intentReturn.size(); i++) {
-                activity.makeCall("3/image/" + intentReturn.get(i), "delete", null);
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            imagesFragment.urls = new ArrayList<String>();
-            imagesFragment.ids = new ArrayList<JSONParcelable>();
-            imagesFragment.page = 0;
-            imagesFragment.imageAdapter.notifyDataSetChanged();
-            imagesFragment.getImages();
-        }
-    }
-
-    private static class CommentAsync extends AsyncTask<Void, Void, Void> {
-        MainActivity activity;
-        JSONObject galleryAlbumData;
-        public CommentAsync(MainActivity _activity, JSONObject _galleryAlbumData) {
-            galleryAlbumData = _galleryAlbumData;
-            activity = _activity;
-        }
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                JSONObject imageParam = activity.makeCall("3/image/" + galleryAlbumData.getString("cover"), "get", null).getJSONObject("data");
-                Log.d("Params", imageParam.toString());
-                galleryAlbumData.put("width", imageParam.getInt("width"));
-                galleryAlbumData.put("type", imageParam.getString("type"));
-                galleryAlbumData.put("height", imageParam.getInt("height"));
-                galleryAlbumData.put("size", imageParam.getInt("size"));
-                Log.d("Params w/ new data", galleryAlbumData.toString());
-            } catch (JSONException e) {
-                Log.e("Error!", "bad single image call" + e.toString());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if(galleryAlbumData != null) {
-                SingleImageFragment fragment = new SingleImageFragment();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("gallery", true);
-                JSONParcelable data = new JSONParcelable();
-                data.setJSONObject(galleryAlbumData);
-                bundle.putParcelable("imageData", data);
-                fragment.setArguments(bundle);
-                activity.changeFragment(fragment, true);
-            }
-        }
-    }
-
-    private static class AddImagesToAlbum extends AsyncTask<Void, Void, Void> {
-        boolean add;
-        private ArrayList<String> imageIDsAsync;
-        MainActivity activity;
-        String albumId;
-
-        public AddImagesToAlbum(ArrayList<String> _imageIDs, boolean _add, MainActivity _activity, String _albumId) {
-            imageIDsAsync = _imageIDs;
-            add = _add;
-            activity = _activity;
-            albumId = _albumId;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            String albumids = "";
-            for (int i = 0; i < imageIDsAsync.size(); i++) {
-                if (i != 0)
-                    albumids += ",";
-                albumids += imageIDsAsync.get(i);
-            }
-            HashMap<String, Object> editMap = new HashMap<String, Object>();
-            editMap.put("ids", albumids);
-            editMap.put("id", albumId);
-            activity.makeCall("3/album/" + albumId, "post", editMap);
-            return null;
-        }
     }
 }

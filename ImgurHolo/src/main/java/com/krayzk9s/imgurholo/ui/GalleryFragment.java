@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.ui;
 
 /*
  * Copyright 2013 Kurt Zimmer
@@ -20,6 +20,7 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -44,6 +45,16 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import com.krayzk9s.imgurholo.BuildConfig;
+import com.krayzk9s.imgurholo.R;
+import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
+import com.krayzk9s.imgurholo.activities.MainActivity;
+import com.krayzk9s.imgurholo.libs.JSONParcelable;
+import com.krayzk9s.imgurholo.libs.SquareImageView;
+import com.krayzk9s.imgurholo.tools.ApiCall;
+import com.krayzk9s.imgurholo.tools.Fetcher;
+import com.krayzk9s.imgurholo.tools.GetData;
+import com.krayzk9s.imgurholo.tools.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,6 +91,7 @@ public class GalleryFragment extends Fragment implements GetData {
     GridView gridview;
     int oldwidth = 0;
     private boolean fetchingImages;
+    TextView noImageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,8 +139,8 @@ public class GalleryFragment extends Fragment implements GetData {
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        MainActivity activity = (MainActivity)getActivity();
-        if(activity.theme.equals(activity.HOLO_LIGHT))
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        if(activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -188,7 +200,8 @@ public class GalleryFragment extends Fragment implements GetData {
                 subredditText.setSingleLine();
                 new AlertDialog.Builder(activity).setTitle("Choose SubReddit").setView(subredditText).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        subreddit = subredditText.getText().toString();
+                        if(subredditText.getText() != null)
+                            subreddit = subredditText.getText().toString();
                         mSpinnerAdapter.add("/r/" + subreddit);
                         search = null;
                         if (mSpinnerAdapter.getCount() > 6) {
@@ -248,8 +261,9 @@ public class GalleryFragment extends Fragment implements GetData {
         view = inflater.inflate(R.layout.image_layout, container, false);
         errorText = (TextView) view.findViewById(R.id.error);
         gridview = (GridView) view.findViewById(R.id.grid_layout);
-        gridview.setColumnWidth(activity.dpToPx(Integer.parseInt(settings.getString("IconSize", "120"))));
+        gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString("IconSize", "120")), getActivity()));
         imageAdapter = new ImageAdapter(view.getContext());
+        noImageView = (TextView) view.findViewById(R.id.no_images);
         gridview.setAdapter(imageAdapter);
             gridview.setOnItemClickListener(new GridItemClickListener());
             gridview.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -301,9 +315,9 @@ public class GalleryFragment extends Fragment implements GetData {
             oldwidth = gridview.getWidth();
             SharedPreferences settings = activity.getSettings();
             Log.d("numColumnsWidth", gridview.getWidth()+"");
-            Log.d("numColumnsIconWidth", activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "120"))))+"");
+            Log.d("numColumnsIconWidth", Utils.dpToPx((Integer.parseInt(settings.getString("IconSize", "120"))), getActivity())+"");
             final int numColumns = (int) Math.floor(
-                    gridview.getWidth() / (activity.dpToPx((Integer.parseInt(settings.getString("IconSize", "120")))) + activity.dpToPx(4)));
+                    gridview.getWidth() / (Utils.dpToPx((Integer.parseInt(settings.getString("IconSize", "120"))), getActivity()) + Utils.dpToPx(4, getActivity())));
             if (numColumns > 0) {
                 imageAdapter.setNumColumns(numColumns);
                 if (BuildConfig.DEBUG) {
@@ -398,11 +412,16 @@ public class GalleryFragment extends Fragment implements GetData {
         } else if (gallery.equals("search")) {
             call = "3/gallery/search?q=" + search;
         }
-        Fetcher fetcher = new Fetcher(this, call, (MainActivity)getActivity());
+        Fetcher fetcher = new Fetcher(this, call, ApiCall.GET, null, ((ImgurHoloActivity)getActivity()).getApiCall(), "images");
         fetcher.execute();
     }
 
-    public void onGetObject(Object object) {
+    public void handleException(Exception e, String tag) {
+        Log.e("Error!", e.toString());
+        noImageView.setVisibility(View.VISIBLE);
+    }
+
+    public void onGetObject(Object object, String tag) {
         JSONObject data = (JSONObject) object;
         MainActivity activity = (MainActivity) getActivity();
         Log.d("imagesData", "checking");
@@ -496,6 +515,7 @@ public class GalleryFragment extends Fragment implements GetData {
                 if (convertView == null) {
                     convertView = new View(mContext);
                 }
+                if(getActivity().getActionBar() != null)
                 convertView.setLayoutParams(new AbsListView.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, getActivity().getActionBar().getHeight()));
                 return convertView;
@@ -524,13 +544,12 @@ public class GalleryFragment extends Fragment implements GetData {
     }
 
     public void selectItem(int position) {
-                ImagePager pager = new ImagePager();
-                Bundle bundle = new Bundle();
-                bundle.putInt("start", position);
-                bundle.putParcelableArrayList("ids", new ArrayList<JSONParcelable>(ids));
-                MainActivity activity = (MainActivity) getActivity();
-                pager.setArguments(bundle);
-                activity.changeFragment(pager, true);
+        Intent intent = new Intent();
+        intent.putExtra("start", position);
+        intent.putExtra("ids", new ArrayList<JSONParcelable>(ids));
+        intent.setAction(ImgurHoloActivity.IMAGE_PAGER_INTENT);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        startActivity(intent);
     }
 
     @Override
@@ -538,7 +557,8 @@ public class GalleryFragment extends Fragment implements GetData {
         super.onDestroyView();
         MainActivity activity = (MainActivity) getActivity();
         ActionBar actionBar = activity.getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        if(actionBar != null)
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     }
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {

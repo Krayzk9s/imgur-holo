@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.ui;
 
 /*
  * Copyright 2013 Kurt Zimmer
@@ -37,6 +37,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
+import com.krayzk9s.imgurholo.libs.JSONParcelable;
+import com.krayzk9s.imgurholo.activities.MainActivity;
+import com.krayzk9s.imgurholo.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,8 +74,8 @@ public class MessagingFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        MainActivity activity = (MainActivity)getActivity();
-        if(activity.theme.equals(activity.HOLO_LIGHT))
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        if(activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -104,14 +109,14 @@ public class MessagingFragment extends Fragment {
         mDrawerList = (ListView) view.findViewById(R.id.account_list);
         MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
-        Log.d("Theme", settings.getString("theme", activity.HOLO_LIGHT) + "");
-        if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
+        Log.d("Theme", settings.getString("theme", MainActivity.HOLO_LIGHT) + "");
+        if(settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             messageAdapter = new MessageAdapter(activity, R.layout.message_layout);
         else
             messageAdapter = new MessageAdapter(activity, R.layout.message_layout_dark);
         String[] mMenuList = getResources().getStringArray(R.array.emptyList);
         ArrayAdapter<String> tempAdapter = null;
-        if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
+        if(settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             tempAdapter = new ArrayAdapter<String>(activity,
                     R.layout.message_layout, mMenuList);
         else
@@ -219,7 +224,7 @@ public class MessagingFragment extends Fragment {
             if (convertView == null) {
                 MainActivity activity = (MainActivity) getActivity();
                 SharedPreferences settings = activity.getSettings();
-                if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
+                if(settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
                     convertView = mInflater.inflate(R.layout.message_layout, null);
                 else
                     convertView = mInflater.inflate(R.layout.message_layout_dark, null);
@@ -322,7 +327,7 @@ public class MessagingFragment extends Fragment {
             messageMap.put("subject", header);
             messageMap.put("body", body);
             messageMap.put("recipient", username);
-            activity.makeCall("/3/message", "post", messageMap);
+            ((ImgurHoloActivity)getActivity()).getApiCall().makeCall("/3/message", "post", messageMap);
             return null;
         }
     }
@@ -337,7 +342,7 @@ public class MessagingFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             MainActivity activity = (MainActivity) getActivity();
-            activity.makeCall("3/message/" + id, "delete", null);
+            ((ImgurHoloActivity)getActivity()).getApiCall().makeCall("3/message/" + id, "delete", null);
             return null;
         }
     }
@@ -352,8 +357,8 @@ public class MessagingFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            activity.makeCall("3/message/report/" + username, "post", null);
-            activity.makeCall("3/message/block/" + username, "post", null);
+            activity.getApiCall().makeCall("3/message/report/" + username, "post", null);
+            activity.getApiCall().makeCall("3/message/block/" + username, "post", null);
             return null;
         }
     }
@@ -367,7 +372,7 @@ public class MessagingFragment extends Fragment {
         }
         @Override
         protected JSONObject doInBackground(Void... voids) {
-            JSONObject messages = activity.makeCall("/3/account/me/notifications/messages?new=false", "get", null);
+            JSONObject messages = activity.getApiCall().makeCall("/3/account/me/notifications/messages?new=false", "get", null);
             return messages;
         }
 

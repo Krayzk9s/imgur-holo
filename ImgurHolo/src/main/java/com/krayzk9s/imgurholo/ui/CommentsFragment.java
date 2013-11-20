@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.ui;
 
 /*
  * Copyright 2013 Kurt Zimmer
@@ -20,7 +20,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -38,6 +37,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import com.krayzk9s.imgurholo.R;
+import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
+import com.krayzk9s.imgurholo.activities.MainActivity;
+import com.krayzk9s.imgurholo.libs.JSONParcelable;
+import com.krayzk9s.imgurholo.tools.ApiCall;
+import com.krayzk9s.imgurholo.tools.Fetcher;
+import com.krayzk9s.imgurholo.tools.GetData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,6 +62,10 @@ public class CommentsFragment extends Fragment implements GetData {
     ArrayList<JSONParcelable> commentDataArray;
     String username;
     TextView errorText;
+    final CommentsFragment commentsFragment = this;
+    final static String DELETE = "delete";
+    final static String COMMENTS = "comments";
+    final static String IMAGE = "image";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +79,7 @@ public class CommentsFragment extends Fragment implements GetData {
     public void onResume() {
         super.onResume();
         MainActivity activity = (MainActivity) getActivity();
-        if(username != "me")
+        if(!username.equals("me"))
             activity.setTitle(username + "'s Comments");
         else
             activity.setTitle("My Comments");
@@ -78,8 +88,8 @@ public class CommentsFragment extends Fragment implements GetData {
     @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        MainActivity activity = (MainActivity)getActivity();
-        if(activity.theme.equals(activity.HOLO_LIGHT))
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        if(activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
         else
             inflater.inflate(R.menu.main_dark, menu);
@@ -110,13 +120,13 @@ public class CommentsFragment extends Fragment implements GetData {
         mDrawerList = (ListView) view.findViewById(R.id.account_list);
         MainActivity activity = (MainActivity) getActivity();
         SharedPreferences settings = activity.getSettings();
-        if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
+        if(settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             commentsAdapter = new MessageAdapter(activity, R.layout.comment_layout);
         else
             commentsAdapter = new MessageAdapter(activity, R.layout.comment_layout_dark);
         String[] mMenuList = getResources().getStringArray(R.array.emptyList);
-        ArrayAdapter<String> tempAdapter = null;
-        if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
+        ArrayAdapter<String> tempAdapter;
+        if(settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             tempAdapter = new ArrayAdapter<String>(activity,
                     R.layout.comment_layout, mMenuList);
         else
@@ -134,17 +144,41 @@ public class CommentsFragment extends Fragment implements GetData {
         return view;
     }
 
-    public void onGetObject(Object object) {
-        JSONObject comments = (JSONObject) object;
-        if(commentsAdapter != null)
-            addComments(comments);
+    public void onGetObject(Object object, String tag) {
+        if(tag.equals(DELETE))
+            getComments();
+        else if (tag.equals(IMAGE)) {
+            SingleImageFragment singleImageFragment = new SingleImageFragment();
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("gallery", true);
+            JSONParcelable data = new JSONParcelable();
+            try {
+            data.setJSONObject(((JSONObject) object).getJSONObject("data"));
+            bundle.putParcelable("imageData", data);
+            singleImageFragment.setArguments(bundle);
+            MainActivity activity = (MainActivity) getActivity();
+            activity.changeFragment(singleImageFragment, true);
+            }
+            catch(JSONException e) {
+                Log.e("Error!", e.toString());
+            }
+        }
+        else if (tag.equals(COMMENTS)) {
+            JSONObject comments = (JSONObject) object;
+            if(commentsAdapter != null)
+                addComments(comments);
+        }
+    }
+
+    public void handleException(Exception e, String tag) {
+        Log.e("Error!", e.toString());
     }
 
     private void getComments() {
         commentsAdapter.clear();
         commentsAdapter.notifyDataSetChanged();
         errorText.setVisibility(View.GONE);
-        Fetcher fetcher = new Fetcher(this, "/3/account/" + username + "/comments", (MainActivity) getActivity());
+        Fetcher fetcher = new Fetcher(this, "/3/account/" + username + "/comments", ApiCall.GET, null, ((ImgurHoloActivity)getActivity()).getApiCall(), COMMENTS);
         fetcher.execute();
     }
 
@@ -194,7 +228,7 @@ public class CommentsFragment extends Fragment implements GetData {
             if (convertView == null) {
                 MainActivity activity = (MainActivity) getActivity();
                 SharedPreferences settings = activity.getSettings();
-                if(settings.getString("theme", activity.HOLO_LIGHT).equals(activity.HOLO_LIGHT))
+                if(settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
                     convertView = mInflater.inflate(R.layout.comment_layout, null);
                 else
                     convertView = mInflater.inflate(R.layout.comment_layout_dark, null);
@@ -223,12 +257,15 @@ public class CommentsFragment extends Fragment implements GetData {
                 holder.id = commentContent.getString("id");
                 holder.image_id = commentContent.getString("image_id");
                 UrlImageViewHelper.setUrlDrawable(holder.image, "http://imgur.com/" + commentContent.getString("image_id") + "t.png", R.drawable.icon);
+
                 if (!username.equals("me"))
                     holder.delete.setVisibility(View.GONE);
                 holder.delete.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        LinearLayout layout = (LinearLayout) v.getParent().getParent();
+                    public void onClick(View view) {
+                        if(view == null || view.getParent() == null || view.getParent().getParent() == null)
+                            return;
+                        LinearLayout layout = (LinearLayout) view.getParent().getParent();
                         final ViewHolder dataHolder = (ViewHolder) layout.getTag();
                         MainActivity activity = (MainActivity) getActivity();
                             new AlertDialog.Builder(activity).setTitle("Delete Comment").setMessage("Are you sure you want to delete this comment?")
@@ -236,8 +273,8 @@ public class CommentsFragment extends Fragment implements GetData {
                                         public void onClick(DialogInterface dialog, int whichButton) {
                                             commentsAdapter.remove(commentsAdapter.getItem(commentPosition));
                                             commentsAdapter.notifyDataSetChanged();
-                                            DeleteAsync deleteAsync = new DeleteAsync(dataHolder.id, (MainActivity) getActivity());
-                                            deleteAsync.execute();
+                                            Fetcher fetcher = new Fetcher(commentsFragment, "/3/comment/" + dataHolder.id, ApiCall.DELETE, null, ((ImgurHoloActivity)getActivity()).getApiCall(), DELETE);
+                                            fetcher.execute();
                                         }
                                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -249,10 +286,12 @@ public class CommentsFragment extends Fragment implements GetData {
                 holder.link.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                            if(view == null || view.getParent() == null || view.getParent().getParent() == null)
+                                return;
                             View convertView = (View) view.getParent().getParent();
                             final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-                            ImageAsync async = new ImageAsync((MainActivity) getActivity(),  viewHolder.image_id);
-                            async.execute();
+                            Fetcher fetcher = new Fetcher(commentsFragment, "/3/gallery/image/" + viewHolder.image_id, ApiCall.GET, null, ((ImgurHoloActivity)getActivity()).getApiCall(), IMAGE);
+                            fetcher.execute();
                     }
                 });
 
@@ -262,51 +301,6 @@ public class CommentsFragment extends Fragment implements GetData {
                 Log.e("Error!", e.toString());
             }
             return convertView;
-        }
-    }
-
-    private static class ImageAsync extends AsyncTask<Void, Void, JSONObject> {
-        MainActivity activity;
-        String image_id;
-        public ImageAsync(MainActivity _activity, String _image_id) {
-            activity = _activity;
-            image_id = _image_id;
-        }
-        @Override
-        protected JSONObject doInBackground(Void... voids) {
-            try {
-                JSONObject imageData =  activity.makeCall("/3/gallery/image/" + image_id, "get", null);
-                return imageData.getJSONObject("data");
-            } catch (JSONException e) {
-                Log.e("Error!", "missing data");
-            }
-            return null;
-        }
-        protected void onPostExecute(JSONObject imageData) {
-            SingleImageFragment singleImageFragment = new SingleImageFragment();
-            Bundle bundle = new Bundle();
-            bundle.putBoolean("gallery", true);
-            JSONParcelable data = new JSONParcelable();
-            data.setJSONObject(imageData);
-            bundle.putParcelable("imageData", data);
-            singleImageFragment.setArguments(bundle);
-            activity.changeFragment(singleImageFragment, true);
-        }
-    };
-
-    private static class DeleteAsync extends AsyncTask<Void, Void, Void> {
-        private String id;
-        MainActivity activity;
-
-        public DeleteAsync(String _id, MainActivity _activity) {
-            id = _id;
-            activity = _activity;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            activity.makeCall("/3/comment/" + id, "delete", null);
-            return null;
         }
     }
 }

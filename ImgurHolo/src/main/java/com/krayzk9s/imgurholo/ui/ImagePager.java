@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.ui;
 
 /*
  * Copyright 2013 Kurt Zimmer
@@ -26,6 +26,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.krayzk9s.imgurholo.R;
+import com.krayzk9s.imgurholo.libs.JSONParcelable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,8 +54,8 @@ public class ImagePager extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        MainActivity activity = (MainActivity) getActivity();
-        activity.setTitle("Images");
+        if(getActivity().getActionBar() != null)
+            getActivity().getActionBar().setTitle("Images");
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.tools;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -42,7 +42,7 @@ public class NewAlbumAsync extends AsyncTask<Void, Void, Void> {
         try {
             Log.d("Album Data", albumdata.toString());
             if(listener != null)
-                listener.onGetObject(albumdata.getJSONObject("data").getString("id"));
+                listener.onGetObject(albumdata.getJSONObject("data").getString("id"), "album");
         }
         catch (JSONException e) {
             Log.e("Error!", e.toString());

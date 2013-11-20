@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.tools;
 
 /*
  * Copyright 2013 Kurt Zimmer
@@ -32,9 +32,6 @@ import org.scribe.oauth.OAuthService;
 
 import java.util.HashMap;
 
-/**
- * Created by info on 8/30/13.
- */
 public class ApiCall {
     public static final String OAUTH_CALLBACK_SCHEME = "imgur-holo";
     public static final String OAUTH_CALLBACK_HOST = "authcallback";
@@ -44,11 +41,14 @@ public class ApiCall {
     private static final String CLIENTID = "4cd3f96f162ac80";
     private static final String SECRETID = "9cd3c621a4e064422e60aba4ccf84d6b149b4463";
     public static final Token EMPTY_TOKEN = null;
-    final OAuthService service = new ServiceBuilder().provider(ImgUr3Api.class).apiKey(CLIENTID).debug().callback(OAUTH_CALLBACK_URL).apiSecret(SECRETID).build();
-    Token accessToken;
-    Verifier verifier;
-    boolean loggedin;
-    SharedPreferences settings;
+    public final OAuthService service = new ServiceBuilder().provider(ImgUr3Api.class).apiKey(CLIENTID).debug().callback(OAUTH_CALLBACK_URL).apiSecret(SECRETID).build();
+    public Token accessToken;
+    public Verifier verifier;
+    public boolean loggedin;
+    public SharedPreferences settings;
+    public static final String DELETE = "delete";
+    public static final String GET = "get";
+    public static final String POST = "post";
 
     public void setSettings(SharedPreferences _settings) {
         settings = _settings;

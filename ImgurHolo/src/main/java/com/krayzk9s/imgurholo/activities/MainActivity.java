@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.activities;
 
 /*
  * Copyright 2013 Kurt Zimmer
@@ -16,144 +16,52 @@ package com.krayzk9s.imgurholo;
  * limitations under the License.
  */
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.krayzk9s.imgurholo.R;
+import com.krayzk9s.imgurholo.services.UploadService;
+import com.krayzk9s.imgurholo.tools.ApiCall;
+import com.krayzk9s.imgurholo.tools.GetData;
+import com.krayzk9s.imgurholo.ui.AccountFragment;
+import com.krayzk9s.imgurholo.ui.AlbumsFragment;
+import com.krayzk9s.imgurholo.ui.GalleryFragment;
+import com.krayzk9s.imgurholo.ui.ImagesFragment;
+import com.krayzk9s.imgurholo.ui.MessagingFragment;
+
 import org.scribe.model.Token;
 import org.scribe.model.Verifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends FragmentActivity {
-
-
-    public static String HOLO_DARK = "Holo Dark";
-    public static String HOLO_LIGHT = "Holo Light";
-    public String theme;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-    public ApiCall apiCall;
+public class MainActivity extends ImgurHoloActivity implements GetData {
+    private final static String IMAGE = "image";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences settings = getSettings();
-        apiCall = new ApiCall();
-        if(Integer.parseInt(settings.getString("IconSize", "120")) < 120) { //getting rid of 90 because it may crash the app for large screens
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString("IconSize", "120");
-        }
-        apiCall.setSettings(settings);
-        theme = settings.getString("theme", HOLO_LIGHT);
-        if (theme.equals(HOLO_LIGHT))
-            setTheme(R.style.AppTheme);
-        else
-            setTheme(R.style.AppThemeDark);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        updateMenu();
-
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the sliding drawer and the action bar app icon
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description for accessibility */
-                R.string.drawer_close  /* "close drawer" description for accessibility */
-        ) {
-            public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
-                getActionBar().show();
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
         if(savedInstanceState == null)
             processIntent(getIntent());
-    }
-
-    public void updateMenu() {
-        DrawerAdapter drawerAdapter = new DrawerAdapter(this, R.layout.menu_item);
-        Log.d("theme", theme);
-        Log.d("theme dark?", theme.equals(HOLO_DARK) + "");
-        Log.d("theme light?", theme.equals(HOLO_LIGHT) + "");
-        if (apiCall.loggedin && theme.equals(HOLO_DARK))
-            drawerAdapter.setMenu(R.array.imgurMenuListLoggedIn, R.array.imgurMenuListDarkIcons);
-        else if (!apiCall.loggedin && theme.equals(HOLO_DARK))
-            drawerAdapter.setMenu(R.array.imgurMenuListLoggedOut, R.array.imgurMenuListDarkIconsLoggedOut);
-        else if (apiCall.loggedin && theme.equals(HOLO_LIGHT))
-            drawerAdapter.setMenu(R.array.imgurMenuListLoggedIn, R.array.imgurMenuListIcons);
-        else
-            drawerAdapter.setMenu(R.array.imgurMenuListLoggedOut, R.array.imgurMenuListIconsLoggedOut);
-        mDrawerTitle = getTitle();
-        if (mTitle == null)
-            mTitle = "imgur Holo";
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mDrawerList.setAdapter(drawerAdapter);
-        // set a custom shadow that overlays the main content when the drawer opens
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        // set up the drawer's list
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-    }
-
-    public int dpToPx(int dp) {
-        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
-        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-        return px;
     }
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -173,7 +81,8 @@ public class MainActivity extends FragmentActivity {
         SharedPreferences settings = getSettings();
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            getActionBar().show();
+            if(getActionBar() != null)
+                getActionBar().show();
         }
         if (keyCode == KeyEvent.KEYCODE_BACK && settings.getBoolean("ConfirmExit", false) && isTaskRoot() && fragmentManager.getBackStackEntryCount() == 0) {
             //Ask the user if they want to quit
@@ -260,6 +169,8 @@ public class MainActivity extends FragmentActivity {
                 toast = Toast.makeText(this, "Uploading Image...", duration);
                 toast.show();
                 Intent serviceIntent = new Intent(this, UploadService.class);
+                if(intent.getExtras() == null)
+                    finish();
                 serviceIntent.setData((Uri) intent.getExtras().get("android.intent.extra.STREAM"));
                 startService(serviceIntent);
                 finish();
@@ -276,33 +187,7 @@ public class MainActivity extends FragmentActivity {
             serviceIntent.putParcelableArrayListExtra("images", list);
             startService(serviceIntent);
             finish();
-        } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http://imgur.com/a")) {
-            String uri = intent.getData().toString();
-            final String album = uri.split("/")[4];
-            Log.d("album", album);
-            AlbumAsync async = new AlbumAsync(album, this);
-            async.execute();
-        }  else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http://imgur.com/gallery/")) {
-                String uri = intent.getData().toString();
-                final String album = uri.split("/")[4];
-                if(album.length() == 5) {
-                    Log.d("album", album);
-                    AlbumAsync async = new AlbumAsync(album, this);
-                    async.execute();
-                }
-                else if(album.length() == 7) {
-                    Log.d("image", album);
-                    ImageAsync async = new ImageAsync(album, this);
-                    async.execute();
-                }
-        } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http://i.imgur")) {
-            String uri = intent.getData().toString();
-            final String image = uri.split("/")[3].split("\\.")[0];
-            Log.d("image", image);
-            ImageAsync async = new ImageAsync(image, this);
-            async.execute();
-
-        }else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("imgur-holo")) {
+        } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("imgur-holo")) {
             Uri uri = intent.getData();
             Log.d("URI", "" + action + "/" + type);
             String uripath = "";
@@ -311,29 +196,22 @@ public class MainActivity extends FragmentActivity {
             Log.d("URI", uripath);
             Log.d("URI", "HERE");
 
-            if (uri != null && uripath.startsWith(apiCall.OAUTH_CALLBACK_URL)) {
+            if (uri != null && uripath.startsWith(ApiCall.OAUTH_CALLBACK_URL)) {
                 apiCall.verifier = new Verifier(uri.getQueryParameter("code"));
                 CallbackAsync callbackAsync = new CallbackAsync(apiCall, this);
                 callbackAsync.execute();
             }
         }
-        else {
+        else if (getSupportFragmentManager().getFragments() == null) {
             loadDefaultPage();
         }
     }
 
-    public JSONObject makeCall(String url, String method, HashMap<String, Object> args) {
-        return apiCall.makeCall(url, method, args);
-    }
-
-
     public SharedPreferences getSettings() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        return settings;
-    }
-
-    public void login() {
-
+        if(getApplicationContext() != null)
+            return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        else
+            return null;
     }
 
     @Override
@@ -344,14 +222,6 @@ public class MainActivity extends FragmentActivity {
         else
             inflater.inflate(R.menu.main_dark, menu);
         return super.onCreateOptionsMenu(menu);
-    }
-
-    /* Called whenever we call invalidateOptionsMenu() */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -365,7 +235,7 @@ public class MainActivity extends FragmentActivity {
             toast = Toast.makeText(this, "Uploading Image...", duration);
             toast.show();
             Intent serviceIntent = new Intent(this, UploadService.class);
-            serviceIntent.setAction("com.krayzk9s.imgurholo.UploadService");
+            serviceIntent.setAction("com.krayzk9s.imgurholo.services.UploadService");
             serviceIntent.setData(data.getData());
             startService(serviceIntent);
             return;
@@ -375,10 +245,10 @@ public class MainActivity extends FragmentActivity {
             Toast toast;
             toast = Toast.makeText(this, "Uploading Images...", duration);
             toast.show();
-            Log.d("intent extras", data.getExtras().toString());
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            if(data.getExtras() != null)
+                Log.d("intent extras", data.getExtras().toString());
             Intent serviceIntent = new Intent(this, UploadService.class);
-            serviceIntent.setAction("com.krayzk9s.imgurholo.UploadService");
+            serviceIntent.setAction("com.krayzk9s.imgurholo.services.UploadService");
             serviceIntent.setData(data.getData());
             startService(serviceIntent);
             return;
@@ -412,8 +282,10 @@ public class MainActivity extends FragmentActivity {
                                 urlText.setSingleLine();
                                 new AlertDialog.Builder(activity).setTitle("Enter URL").setView(urlText).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-                                        UrlAsync urlAsync = new UrlAsync(urlText.getText().toString(), MainActivity.this);
-                                        urlAsync.execute();
+                                        if(urlText.getText() != null) {
+                                            UrlAsync urlAsync = new UrlAsync(urlText.getText().toString(), apiCall);
+                                            urlAsync.execute();
+                                        }
                                     }
                                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -451,8 +323,8 @@ public class MainActivity extends FragmentActivity {
             }
         }).show();
     }
-
-    private void selectItem(int position) {
+    @Override
+    protected void selectItem(int position) {
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mDrawerList);
@@ -558,20 +430,12 @@ public class MainActivity extends FragmentActivity {
                     updateMenu();
                 }
                 break;
-            default:
-                return;
         }
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        Log.d("new title", title.toString());
-        getActionBar().setTitle(mTitle);
-    }
-
     public void changeFragment(Fragment newFragment, Boolean backstack) {
-        getActionBar().show();
+        if(getActionBar() != null)
+            getActionBar().show();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if(backstack)
@@ -581,171 +445,26 @@ public class MainActivity extends FragmentActivity {
         updateMenu();
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+    public void onGetObject(Object o, String tag) {
+
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggles
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
+    public void handleException(Exception e, String tag) {
 
-    public class DrawerAdapter extends ArrayAdapter<String> {
-        public String[] mMenuList;
-        public TypedArray mMenuIcons;
-        LayoutInflater mInflater;
-
-        public DrawerAdapter(Context context, int textViewResourceId) {
-            super(context, textViewResourceId);
-            mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        public void setMenu(int list, int array) {
-            mMenuList = getResources().getStringArray(list);
-            mMenuIcons = getResources().obtainTypedArray(array);
-        }
-
-        @Override
-        public int getCount() {
-            return mMenuList.length;
-        }
-
-        @Override
-        public long getItemId(int arg0) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = View.inflate(this.getContext(), R.layout.menu_item, null);
-            TextView menuItem = (TextView) convertView.findViewById(R.id.menu_text);
-            ImageView menuIcon = (ImageView) convertView.findViewById(R.id.menu_icon);
-            menuItem.setText(mMenuList[position]);
-            menuIcon.setImageDrawable(mMenuIcons.getDrawable(position));
-            return convertView;
-        }
-    }
-
-
-    private void copyURL(JSONObject jsonObject) {
-        SharedPreferences settings = getSettings();
-        if(!settings.getBoolean("AutoCopy", true))
-            return;
-        ClipboardManager clipboard = (ClipboardManager)
-                getSystemService(Context.CLIPBOARD_SERVICE);
-        try {
-            String link = "";
-                if (settings.getString("AutoCopyType", getResources().getString(R.string.link)).equals("Link"))
-                    link = "http://imgur.com/" + jsonObject.getString("id");
-                else if (settings.getString("AutoCopyType", getResources().getString(R.string.link)).equals("Direct Link"))
-                    link = jsonObject.getString("link");
-                else if (settings.getString("AutoCopyType", getResources().getString(R.string.link)).equals("HTML Image"))
-                    link = "<a href=\"http://imgur.com/" + jsonObject.getString("id") + "\"><img src=\"" + jsonObject.getString("link") + "\" title=\"Hosted by imgur.com\"/></a>";
-                else if (settings.getString("AutoCopyType", getResources().getString(R.string.link)).equals("BBCode (Forums)"))
-                    link = "[IMG]" + jsonObject.getString("link") + "[/IMG]";
-                else if (settings.getString("AutoCopyType", getResources().getString(R.string.link)).equals("Linked BBCode"))
-                    link = "[URL=http://imgur.com/" + jsonObject.getString("id") + "][IMG]" + jsonObject.getString("link") + "[/IMG][/URL]";
-                else if (settings.getString("AutoCopyType", getResources().getString(R.string.link)).equals("Markdown Link (Reddit)"))
-                    link = "[Imgur](http://i.imgur.com/" + jsonObject.getString("id") + ")";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast;
-            toast = Toast.makeText(this, "URL Copied!", duration);
-            toast.show();
-            ClipData clip = ClipData.newPlainText("imgur Link", link);
-            clipboard.setPrimaryClip(clip);
-        }
-        catch (JSONException e) {
-            Log.e("Error!", e.toString());
-        }
-    }
-
-    /* The click listner for ListView in the navigation drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
-    private static class AlbumAsync extends AsyncTask<Void, Void, JSONObject> {
-
-        String album;
-        MainActivity activity;
-        public AlbumAsync(String _album, MainActivity _activity) {
-            album = _album;
-            activity = _activity;
-        }
-        @Override
-        protected JSONObject doInBackground(Void... voids) {
-            return activity.makeCall("/3/album/" + album, "get", null);
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject albumData) {
-            try {
-                Log.d("data", albumData.toString());
-                ImagesFragment fragment = new ImagesFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("imageCall", "/3/album/" + album);
-                bundle.putString("id", album);
-                JSONParcelable data = new JSONParcelable();
-                data.setJSONObject(albumData.getJSONObject("data"));
-                bundle.putParcelable("albumData", data);
-                fragment.setArguments(bundle);
-                activity.changeFragment(fragment, false);
-            } catch (JSONException e) {
-                Log.e("Error!", e.toString());
-            }
-        }
-    }
-    private static class ImageAsync extends AsyncTask<Void, Void, JSONObject> {
-
-        String album;
-        MainActivity activity;
-        public ImageAsync(String _album, MainActivity _activity) {
-            album = _album;
-            activity = _activity;
-        }
-        @Override
-        protected JSONObject doInBackground(Void... voids) {
-            return activity.makeCall("/3/image/" + album, "get", null);
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject singleImageData) {
-            try {
-                Log.d("data", singleImageData.toString());
-                SingleImageFragment singleImageFragment = new SingleImageFragment();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("gallery", true);
-                JSONParcelable data = new JSONParcelable();
-                data.setJSONObject(singleImageData.getJSONObject("data"));
-                bundle.putParcelable("imageData", data);
-                singleImageFragment.setArguments(bundle);
-                activity.changeFragment(singleImageFragment, false);
-            } catch (JSONException e) {
-                Log.e("Error!", e.toString());
-            }
-        }
     }
 
     private static class UrlAsync extends AsyncTask<Void, Void, Void> {
         String urlText;
-        MainActivity activity;
-        public UrlAsync(String _urlText, MainActivity _activity) {
+        ApiCall apiCall;
+        public UrlAsync(String _urlText, ApiCall _apiCall) {
             urlText = _urlText;
-            activity = _activity;
+            apiCall = _apiCall;
         }
         @Override
         protected Void doInBackground(Void... voids) {
             HashMap<String, Object> hashMap = new HashMap<String, Object>();
             hashMap.put("image", urlText);
-            activity.makeCall("3/image", "post", hashMap);
+            apiCall.makeCall("3/image", "post", hashMap);
             return null;
         }
     }
@@ -760,7 +479,7 @@ public class MainActivity extends FragmentActivity {
         }
             @Override
             protected String doInBackground(Void... voids) {
-                String authURL = apiCall.service.getAuthorizationUrl(apiCall.EMPTY_TOKEN);
+                String authURL = apiCall.service.getAuthorizationUrl(ApiCall.EMPTY_TOKEN);
                 Log.d("AuthURL", authURL);
                 return authURL;
             }
@@ -802,19 +521,7 @@ public class MainActivity extends FragmentActivity {
             activity.updateMenu();
         }
     }
-
-    private static class NewAlbumAsync extends AsyncTask<Void, Void, Void> {
-        MainActivity activity;
-
-        public NewAlbumAsync(MainActivity _activity) {
-            activity = _activity;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            HashMap<String, Object> albumMap = new HashMap<String, Object>();
-            activity.makeCall("/3/album/", "post", albumMap);
-            return null;
-        }
+    public ApiCall getApiCall() {
+        return apiCall;
     }
 }

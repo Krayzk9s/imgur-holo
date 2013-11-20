@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.services;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.util.Log;
+
+import com.krayzk9s.imgurholo.libs.JSONParcelable;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;

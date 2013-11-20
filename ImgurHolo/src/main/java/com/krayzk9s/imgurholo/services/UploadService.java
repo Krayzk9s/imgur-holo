@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.services;
 
 /*
  * Copyright 2013 Kurt Zimmer
@@ -36,6 +36,11 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
 
+import com.krayzk9s.imgurholo.tools.ApiCall;
+import com.krayzk9s.imgurholo.tools.GetData;
+import com.krayzk9s.imgurholo.tools.NewAlbumAsync;
+import com.krayzk9s.imgurholo.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,7 +75,7 @@ public class UploadService extends IntentService implements GetData {
         apiCall.setSettings(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
     }
 
-    public void onGetObject(Object o) {
+    public void onGetObject(Object o, String tag) {
         String id = (String) o;
         if(id.length() == 7) {
             if(totalUpload != -1)
@@ -118,6 +123,10 @@ public class UploadService extends IntentService implements GetData {
             notificationManager.notify(1, notification);
             Log.d("Built", "Notification display");
         }
+    }
+
+    public void handleException(Exception e, String tag) {
+
     }
 
     @Override
@@ -329,7 +338,7 @@ public class UploadService extends IntentService implements GetData {
             Log.d("data", data.toString());
             String id = data.getString("id");
             Log.d("id", id);
-            uploadService.onGetObject(id);
+            uploadService.onGetObject(id, null);
             Intent viewImageIntent = new Intent();
             viewImageIntent.setAction(Intent.ACTION_VIEW);
             viewImageIntent.setData(Uri.parse(data.getString("link")));

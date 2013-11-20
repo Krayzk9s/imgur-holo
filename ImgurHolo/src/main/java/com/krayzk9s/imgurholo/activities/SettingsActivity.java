@@ -1,4 +1,4 @@
-package com.krayzk9s.imgurholo;
+package com.krayzk9s.imgurholo.activities;
 
 /*
  * Copyright 2013 Kurt Zimmer
@@ -30,6 +30,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+
+import com.krayzk9s.imgurholo.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -185,7 +187,7 @@ public class SettingsActivity extends Activity {
                     {
                         return false;
                     }
-                    if(Integer.parseInt(o.toString()) > 10 && Integer.parseInt(o.toString()) < 1920)
+                    if(Integer.parseInt(o.toString()) > 10 && Integer.parseInt(o.toString()) <= 1920)
                         preference.setSummary(o.toString());
                     return true;
                 }
@@ -217,7 +219,7 @@ public class SettingsActivity extends Activity {
                     {
                         return false;
                     }
-                    if(Integer.parseInt(o.toString()) > 10 && Integer.parseInt(o.toString()) < 1080)
+                    if(Integer.parseInt(o.toString()) > 10 && Integer.parseInt(o.toString()) <= 1080)
                         preference.setSummary(o.toString());
                     return true;
                 }
