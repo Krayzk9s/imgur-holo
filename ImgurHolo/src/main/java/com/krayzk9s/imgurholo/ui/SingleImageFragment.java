@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -42,7 +43,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.webkit.WebSettings.LayoutAlgorithm;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
@@ -717,30 +718,44 @@ public class SingleImageFragment extends Fragment implements GetData {
             Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
-            if (imageData.getJSONObject().has("cover"))
-                imageView.loadUrl("http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png");
-            else
-                imageView.loadUrl(imageData.getJSONObject().getString("link"));
             int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("height"), getResources().getDisplayMetrics());
             int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("width"), getResources().getDisplayMetrics());
             Log.d("height", ""+height);
             Log.d("width", ""+width);
-            ViewGroup.LayoutParams params = imageView.getLayoutParams();
             int statusBarHeight = (int)Math.ceil(25 * getActivity().getResources().getDisplayMetrics().density);
             TypedValue tv = new TypedValue();
             getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
             int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId) + statusBarHeight;
-            if (settings.getBoolean("VerticalHeight", true) && height > (size.y-actionBarHeight))
-                params.width = Math.min(size.x, (int) (((float) (size.y - actionBarHeight) / (float) height) * width));
-            if (width < size.x && (width < params.width || params.width < 0)) {
-                params.width = width;
-                Log.d("params", ""+params.width);
+            if (imageData.getJSONObject().has("cover"))
+                imageView.loadUrl("http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png");
+            else
+                imageView.loadUrl(imageData.getJSONObject().getString("link"));
+            if(Build.VERSION.SDK_INT <= 18) {
+                ViewGroup.LayoutParams params = imageView.getLayoutParams();
+                if (Build.VERSION.SDK_INT <= 18 &&settings.getBoolean("VerticalHeight", true) && height > (size.y-actionBarHeight)) {
+                    params.width = Math.min(size.x, (int) (((float) (size.y - actionBarHeight) / (float) height) * width));
+                }
+                if (width < size.x && (width < params.width || params.width < 0)) {
+                    params.width = width;
+                    Log.d("params", ""+params.width);
+                }
+                if(params.width > size.x || params.width < 0) {
+                    params.width = size.x;
+                }
+                imageView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             }
-            if(params.width > size.x)
-                Log.d("params", ""+params.width);
-            imageView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 
 
+            if(Build.VERSION.SDK_INT >= 19) {
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(0,0,-7,0);
+                layoutParams.width = Math.min(size.x, width);
+                layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+                imageView.setLayoutParams(layoutParams);
+                //imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                imageView.getSettings().setUseWideViewPort(true);
+                imageView.getSettings().setLoadWithOverviewMode(true);
+            }
         } catch (JSONException e) {
             Log.e("drawable Error!", e.toString());
         }

@@ -46,9 +46,15 @@ public class ImagePager extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        start = bundle.getInt("start");
-        imageData = bundle.getParcelableArrayList("ids");
+        if(savedInstanceState != null) {
+            imageData = savedInstanceState.getParcelableArrayList("imageData");
+            start = savedInstanceState.getInt("start");
+        }
+        else {
+            Bundle bundle = getArguments();
+            start = bundle.getInt("start");
+            imageData = bundle.getParcelableArrayList("ids");
+        }
     }
 
     @Override
@@ -62,14 +68,12 @@ public class ImagePager extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        if(savedInstanceState != null)
-            imageData = savedInstanceState.getParcelableArrayList("imageData");
         View result=inflater.inflate(R.layout.image_viewpager, container, false);
         pager=(ViewPager)result.findViewById(R.id.pager);
         adapter = new ImageAdapter(getActivity(), getChildFragmentManager());
         pager.setAdapter(adapter);
-        pager.setCurrentItem(start);
-
+        if(savedInstanceState == null)
+            pager.setCurrentItem(start);
         return(result);
     }
 
@@ -120,6 +124,7 @@ public class ImagePager extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelableArrayList("imageData", imageData);
+        savedInstanceState.putInt("start", pager.getCurrentItem());
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
