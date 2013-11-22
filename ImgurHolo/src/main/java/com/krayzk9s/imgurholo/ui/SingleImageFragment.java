@@ -34,6 +34,7 @@ import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ActionMode;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -102,6 +103,7 @@ public class SingleImageFragment extends Fragment implements GetData {
     TextView imageScore;
     TextView imageDetails;
     String newGalleryString;
+    ActionMode mActionMode;
     final SingleImageFragment singleImageFragment = this;
     final static String DELETE = "delete";
     final static String FAVORITE = "favorite";
@@ -534,12 +536,11 @@ public class SingleImageFragment extends Fragment implements GetData {
                 @Override
                 public void onClick(View view) {
                     try {
-                        AccountFragment accountFragment = new AccountFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("username", imageData.getJSONObject().getString("account_url"));
-                        accountFragment.setArguments(bundle);
-                        //MainActivity activity = (MainActivity) getActivity();
-                        //activity.changeFragment(accountFragment, true);
+                        Intent intent = new Intent();
+                        intent.putExtra("username", imageData.getJSONObject().getString("account_url"));
+                        intent.setAction(ImgurHoloActivity.ACCOUNT_INTENT);
+                        intent.addCategory(Intent.CATEGORY_DEFAULT);
+                        startActivity(intent);
                     } catch (JSONException e) {
                         Log.e("Error!", e.toString());
                     }
@@ -744,11 +745,8 @@ public class SingleImageFragment extends Fragment implements GetData {
                 }
                 imageView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             }
-
-
             if(Build.VERSION.SDK_INT >= 19) {
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.setMargins(0,0,-7,0);
                 layoutParams.width = Math.min(size.x, width);
                 layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
                 imageView.setLayoutParams(layoutParams);
@@ -978,13 +976,7 @@ public class SingleImageFragment extends Fragment implements GetData {
         public TextView points;
         public TextView body;
         public View[] indentViews;
-        public LinearLayout buttons;
         public String id;
-        public ImageButton upvote;
-        public ImageButton downvote;
-        public ImageButton reply;
-        public ImageButton report;
-        public ImageButton user;
         int position;
     }
 
@@ -1022,10 +1014,9 @@ public class SingleImageFragment extends Fragment implements GetData {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final JSONObject viewData = this.getItem(position).getJSONObject();
-            ViewHolder holder;
             int type = getItemViewType(position);
+            ViewHolder holder = new ViewHolder();
             if (convertView == null || convertView.getTag() == null) {
-                holder = new ViewHolder();
                 switch (type) {
                     case HIDDEN_TYPE:
                         convertView = mInflater.inflate(R.layout.zerolayout, null);
@@ -1040,13 +1031,6 @@ public class SingleImageFragment extends Fragment implements GetData {
                         holder.body = (TextView) convertView.findViewById(R.id.body);
                         holder.username = (TextView) convertView.findViewById(R.id.username);
                         holder.points = (TextView) convertView.findViewById(R.id.points);
-                        holder.buttons = (LinearLayout) convertView.findViewById(R.id.comment_buttons);
-                        holder.upvote = (ImageButton) holder.buttons.findViewById(R.id.rating_good);
-                        holder.downvote = (ImageButton) holder.buttons.findViewById(R.id.rating_bad);
-                        holder.user = (ImageButton) holder.buttons.findViewById(R.id.user);
-                        holder.reply = (ImageButton) holder.buttons.findViewById(R.id.reply);
-                        holder.report = (ImageButton) holder.buttons.findViewById(R.id.report);
-                        holder.header = (RelativeLayout) convertView.findViewById(R.id.header);
                         holder.id = "";
                         holder.position = position;
                         holder.indentViews = new View[]{
@@ -1064,13 +1048,170 @@ public class SingleImageFragment extends Fragment implements GetData {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
+            final View viewVar = convertView;
+            final ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+                // Called when the action mode is created; startActionMode() was called
+                @Override
+                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                    // Inflate a menu resource providing context menu items
+                    MenuInflater inflater = mode.getMenuInflater();
+                    ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+                    if (activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT) == MainActivity.HOLO_LIGHT)
+                        inflater.inflate(R.menu.comments, menu);
+                    else
+                        inflater.inflate(R.menu.comments_dark, menu);
+                    return true;
+                }
+
+                // Called each time the action mode is shown. Always called after onCreateActionMode, but
+                // may be called multiple times if the mode is invalidated.
+                @Override
+                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                    return false; // Return false if nothing is done
+                }
+
+                // Called when the user selects a contextual menu item
+                @Override
+                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                    Fetcher fetcher;
+                    switch (item.getItemId()) {
+                        case R.id.user:
+                            try {
+                                Intent intent = new Intent();
+                                intent.putExtra("username", viewData.getString("author"));
+                                intent.setAction(ImgurHoloActivity.ACCOUNT_INTENT);
+                                intent.addCategory(Intent.CATEGORY_DEFAULT);
+                                startActivity(intent);
+                            } catch (JSONException e) {
+                                Log.e("Error!", e.toString());
+                            }
+                             // Action picked, so close the CAB
+                            mode.finish();
+                            return true;
+                        case R.id.reply:
+                            Activity activity = getActivity();
+                            final EditText newBody = new EditText(activity);
+                            newBody.setLines(3);
+                            final TextView characterCount = new TextView(activity);
+                            characterCount.setText("140");
+                            LinearLayout commentReplyLayout = new LinearLayout(activity);
+                            newBody.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                                    //
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                                    characterCount.setText(String.valueOf(140 - charSequence.length()));
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable editable) {
+                                    for (int i = editable.length(); i > 0; i--) {
+                                        if (editable.subSequence(i - 1, i).toString().equals("\n"))
+                                            editable.replace(i - 1, i, "");
+                                    }
+                                }
+                            });
+                            commentReplyLayout.setOrientation(LinearLayout.VERTICAL);
+                            commentReplyLayout.addView(newBody);
+                            commentReplyLayout.addView(characterCount);
+                            newBody.setHint("Body");
+                            new AlertDialog.Builder(activity).setTitle("Reply to Comment")
+                                    .setView(commentReplyLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    if (newBody.getText() != null && newBody.getText().toString().length() < 141) {
+                                        try {
+                                            HashMap<String, Object> commentMap = new HashMap<String, Object>();
+                                            commentMap.put("comment", newBody.getText().toString());
+                                            commentMap.put("image_id", imageData.getJSONObject().getString("id"));
+                                            commentMap.put("parent_id", + viewData.getInt("id"));
+                                            Fetcher fetcher = new Fetcher(singleImageFragment, "3/comment/", ApiCall.POST, commentMap, ((ImgurHoloActivity)getActivity()).getApiCall(), REPLY);
+                                            fetcher.execute();
+                                        }
+                                        catch(JSONException e) {
+                                            Log.e("Error!", e.toString());
+                                        }
+                                    }
+                                }
+                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    // Do nothing.
+                                }
+                            }).show();
+                            mode.finish();
+                            return true;
+                        case R.id.rating_good:
+                            try {
+                                Log.d("data", viewData.toString());
+                                if (!viewData.getString("vote").equals("up")) {
+                                    viewData.put("ups", (Integer.parseInt(viewData.getString("ups")) + 1) + "");
+                                    if(viewData.getString("vote").equals("down"))
+                                    {
+                                        viewData.put("points", (Integer.parseInt(viewData.getString("points")) + 2) + "");
+                                        viewData.put("downs", (Integer.parseInt(viewData.getString("downs")) - 1) + "");
+                                    }
+                                    else
+                                        viewData.put("points", (Integer.parseInt(viewData.getString("points")) + 1) + "");
+                                    viewData.put("vote", "up");
+                                } else {
+                                    viewData.put("ups", (Integer.parseInt(viewData.getString("ups")) - 1) + "");
+                                    viewData.put("points", (Integer.parseInt(viewData.getString("points")) - 1) + "");
+                                    viewData.put("vote", "none");
+                                }
+                            updateFontColor((ViewHolder)viewVar.getTag(), viewData);
+                            fetcher = new Fetcher(singleImageFragment, "/3/comment/" + viewData.getInt("id") + "/vote/up", ApiCall.POST, null, ((ImgurHoloActivity)getActivity()).getApiCall(), UPVOTECOMMENT);
+                            fetcher.execute();
+                            } catch (JSONException e) {
+                                Log.e("Error!", e.toString());
+                            }
+                            mode.finish();
+                            return true;
+                        case R.id.rating_bad:
+                            try {
+                                if (!viewData.getString("vote").equals("down")) {
+                                    viewData.put("downs", (Integer.parseInt(viewData.getString("downs")) + 1) + "");
+                                    if(viewData.getString("vote").equals("up")) {
+                                        viewData.put("ups", (Integer.parseInt(viewData.getString("ups")) - 1) + "");
+                                        viewData.put("points", (Integer.parseInt(viewData.getString("points")) - 2) + "");
+                                    }
+                                    else
+                                        viewData.put("points", (Integer.parseInt(viewData.getString("points")) - 1) + "");
+                                    viewData.put("vote", "down");
+                                } else {
+                                    viewData.put("points", (Integer.parseInt(viewData.getString("points")) + 1) + "");
+                                    viewData.put("downs", (Integer.parseInt(viewData.getString("downs")) - 1) + "");
+                                    viewData.put("vote", "none");
+                                }
+                                updateFontColor((ViewHolder)viewVar.getTag(), viewData);
+                            fetcher = new Fetcher(singleImageFragment, "/3/comment/" + viewData.getInt("id") + "/vote/up", ApiCall.POST, null, ((ImgurHoloActivity)getActivity()).getApiCall(), DOWNVOTECOMMENT);
+                            fetcher.execute();
+                            } catch (JSONException e) {
+                                Log.e("Error!", e.toString());
+                            }
+                            mode.finish();
+                            return true;
+                        case R.id.report:
+                            mode.finish();
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+
+                // Called when the user exits the action mode
+                @Override
+                public void onDestroyActionMode(ActionMode mode) {
+                    mActionMode = null;
+                }
+            };
             switch (getItemViewType(position)) {
                 case VISIBLE_TYPE:
                     try {
                         holder.position = position;
                         holder.id = viewData.getString("id");
                         int indentLevel = viewData.getInt("indent");
-                        holder.buttons.setVisibility(View.GONE);
                         int indentPosition = Math.min(indentLevel, holder.indentViews.length - 1);
 
                         for (int i = 0; i < indentPosition - 1; i++) {
@@ -1083,215 +1224,37 @@ public class SingleImageFragment extends Fragment implements GetData {
                         }
                         holder.body.setText(viewData.getString("comment"));
                         updateFontColor(holder, viewData);
-                        holder.header.setOnClickListener(new View.OnClickListener() {
+                        View commentView = convertView.findViewById(R.id.comment_item);
+                        commentView.setOnLongClickListener(new View.OnLongClickListener() {
                             @Override
-                            public void onClick(View view) {
-                                if(view == null || view.getParent() == null || view.getParent().getParent() == null || view.getParent().getParent().getParent() == null)
-                                    return;
-                                setDescendantsHidden((View) view.getParent().getParent().getParent());
+                            public boolean onLongClick(View view) {
+                                if(view == null || view.getParent() == null)
+                                    return false;
+                                setDescendantsHidden((View) view.getParent());
+                                return true;
                             }
                         });
-                        holder.user.setOnClickListener(new View.OnClickListener() {
+                        commentView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                // Start the CAB using the ActionMode.Callback defined above
                                 try {
-                                    AccountFragment accountFragment = new AccountFragment();
-
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("username", viewData.getString("author"));
-                                    accountFragment.setArguments(bundle);
-                                    //MainActivity activity = (MainActivity) getActivity();
-                                    //activity.changeFragment(accountFragment, true);
-                                } catch (JSONException e) {
+                                    if (viewData.has("hidden") && viewData.getInt("hidden") == ViewHolder.VIEW_HIDDEN) {
+                                        setDescendantsHidden((View) view.getParent());
+                                        return;
+                                    }
+                                }
+                                catch (JSONException e) {
                                     Log.e("Error!", e.toString());
                                 }
-
-                            }
-                        });
-                        if(convertView != null)
-                            convertView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    setDescendantsHidden(view);
-                                }
-                            });
-                        holder.body.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if(view == null || view.getParent() == null || view.getParent().getParent() == null || view.getParent().getParent().getParent() == null)
-                                    return;
-                                View convertView = (View) view.getParent().getParent().getParent();
-                                ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+                                mActionMode = getActivity().startActionMode(mActionModeCallback);
                                 try {
-                                    Log.d("testing", viewData.getString("author"));
-                                    Log.d("testing", String.valueOf(viewData.getString("author").equals("[deleted]")));
-                                    if (viewHolder.buttons.getVisibility() == View.GONE && !viewData.getString("author").equals("[deleted]"))
-                                        viewHolder.buttons.setVisibility(View.VISIBLE);
-                                    else
-                                        viewHolder.buttons.setVisibility(View.GONE);
-                                } catch (JSONException e) {
+                                    mActionMode.setTitle(viewData.getString("author"));
+                                }
+                                catch (JSONException e) {
                                     Log.e("Error!", e.toString());
                                 }
-                            }
-                        });
-                        if (viewData.getString("vote") != null && viewData.getString("vote").equals("up"))
-                            holder.upvote.setImageResource(R.drawable.green_rating_good);
-                        else if (viewData.getString("vote") != null && viewData.getString("vote").equals("down"))
-                            holder.downvote.setImageResource(R.drawable.red_rating_bad);
-                        holder.reply.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if(view == null || view.getParent() == null || view.getParent().getParent() == null)
-                                    return;
-                                LinearLayout layout = (LinearLayout) view.getParent().getParent();
-                                final ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                                Activity activity = getActivity();
-                                final EditText newBody = new EditText(activity);
-                                newBody.setLines(3);
-                                final TextView characterCount = new TextView(activity);
-                                characterCount.setText("140");
-                                LinearLayout commentReplyLayout = new LinearLayout(activity);
-                                newBody.addTextChangedListener(new TextWatcher() {
-                                    @Override
-                                    public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                                        //
-                                    }
-
-                                    @Override
-                                    public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                                        characterCount.setText(String.valueOf(140 - charSequence.length()));
-                                    }
-
-                                    @Override
-                                    public void afterTextChanged(Editable editable) {
-                                        for (int i = editable.length(); i > 0; i--) {
-                                            if (editable.subSequence(i - 1, i).toString().equals("\n"))
-                                                editable.replace(i - 1, i, "");
-                                        }
-                                    }
-                                });
-                                commentReplyLayout.setOrientation(LinearLayout.VERTICAL);
-                                commentReplyLayout.addView(newBody);
-                                commentReplyLayout.addView(characterCount);
-                                newBody.setHint("Body");
-                                new AlertDialog.Builder(activity).setTitle("Reply to Comment")
-                                        .setView(commentReplyLayout).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        if (newBody.getText() != null && newBody.getText().toString().length() < 141) {
-                                            try {
-                                            HashMap<String, Object> commentMap = new HashMap<String, Object>();
-                                            commentMap.put("comment", newBody.getText().toString());
-                                            commentMap.put("image_id", imageData.getJSONObject().getString("id"));
-                                            commentMap.put("parent_id", dataHolder.id);
-                                            Fetcher fetcher = new Fetcher(singleImageFragment, "3/comment/", ApiCall.POST, commentMap, ((ImgurHoloActivity)getActivity()).getApiCall(), REPLY);
-                                            fetcher.execute();
-                                            }
-                                            catch(JSONException e) {
-                                                Log.e("Error!", e.toString());
-                                            }
-                                        }
-                                    }
-                                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        // Do nothing.
-                                    }
-                                }).show();
-                            }
-                        });
-                        holder.upvote.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
-                                SharedPreferences settings = activity.getApiCall().settings;
-                                if(view == null || view.getParent() == null || view.getParent().getParent() == null)
-                                    return;
-                                LinearLayout layout = (LinearLayout) view.getParent().getParent();
-                                final ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                                try {
-                                    if (!viewData.getString("vote").equals("up")) {
-                                        dataHolder.upvote.setImageResource(R.drawable.green_rating_good);
-                                        if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
-                                            dataHolder.downvote.setImageResource(R.drawable.rating_bad);
-                                        else
-                                            dataHolder.downvote.setImageResource(R.drawable.dark_rating_bad);
-                                        viewData.put("ups", (Integer.parseInt(viewData.getString("ups")) + 1) + "");
-                                        if(viewData.getString("vote").equals("down"))
-                                        {
-                                            viewData.put("points", (Integer.parseInt(viewData.getString("points")) + 2) + "");
-                                            viewData.put("downs", (Integer.parseInt(viewData.getString("downs")) - 1) + "");
-                                        }
-                                        else
-                                            viewData.put("points", (Integer.parseInt(viewData.getString("points")) + 1) + "");
-                                        viewData.put("vote", "up");
-                                    } else {
-                                        viewData.put("ups", (Integer.parseInt(viewData.getString("ups")) - 1) + "");
-                                        viewData.put("points", (Integer.parseInt(viewData.getString("points")) - 1) + "");
-                                        if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
-                                            dataHolder.upvote.setImageResource(R.drawable.rating_good);
-                                            dataHolder.downvote.setImageResource(R.drawable.rating_bad);
-                                        } else {
-                                            dataHolder.upvote.setImageResource(R.drawable.dark_rating_good);
-                                            dataHolder.downvote.setImageResource(R.drawable.dark_rating_bad);
-                                        }
-                                        viewData.put("vote", "none");
-                                    }
-                                } catch (JSONException e) {
-                                    Log.e("Error!", e.toString());
-                                }
-                                updateFontColor(dataHolder, viewData);
-                                Fetcher fetcher = new Fetcher(singleImageFragment, "/3/comment/" + dataHolder.id + "/vote/up", ApiCall.POST, null, ((ImgurHoloActivity)getActivity()).getApiCall(), UPVOTECOMMENT);
-                                fetcher.execute();
-                            }
-                        });
-                        holder.downvote.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
-                                SharedPreferences settings = activity.getApiCall().settings;
-                                if(view == null || view.getParent() == null || view.getParent().getParent() == null)
-                                    return;
-                                LinearLayout layout = (LinearLayout) view.getParent().getParent();
-                                final ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                                try {
-                                    if (!viewData.getString("vote").equals("down")) {
-                                        dataHolder.downvote.setImageResource(R.drawable.red_rating_bad);
-                                        if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
-                                            dataHolder.upvote.setImageResource(R.drawable.rating_good);
-                                        } else {
-                                            dataHolder.upvote.setImageResource(R.drawable.dark_rating_good);
-                                        }
-                                        viewData.put("downs", (Integer.parseInt(viewData.getString("downs")) + 1) + "");
-                                        if(viewData.getString("vote").equals("up")) {
-                                            viewData.put("ups", (Integer.parseInt(viewData.getString("ups")) - 1) + "");
-                                            viewData.put("points", (Integer.parseInt(viewData.getString("points")) - 2) + "");
-                                        }
-                                        else
-                                            viewData.put("points", (Integer.parseInt(viewData.getString("points")) - 1) + "");
-                                        viewData.put("vote", "down");
-                                    } else {
-                                        viewData.put("points", (Integer.parseInt(viewData.getString("points")) + 1) + "");
-                                        viewData.put("downs", (Integer.parseInt(viewData.getString("downs")) - 1) + "");
-                                        if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
-                                            dataHolder.upvote.setImageResource(R.drawable.rating_good);
-                                            dataHolder.downvote.setImageResource(R.drawable.rating_bad);
-                                        } else {
-                                            dataHolder.upvote.setImageResource(R.drawable.dark_rating_good);
-                                            dataHolder.downvote.setImageResource(R.drawable.dark_rating_bad);
-                                        }
-                                        viewData.put("vote", "none");
-                                    }
-                                } catch (JSONException e) {
-                                    Log.e("Error!", e.toString());
-                                }
-                                updateFontColor(dataHolder, viewData);
-                                Fetcher fetcher = new Fetcher(singleImageFragment, "/3/comment/" + dataHolder.id + "/vote/up", ApiCall.POST, null, ((ImgurHoloActivity)getActivity()).getApiCall(), DOWNVOTECOMMENT);
-                                fetcher.execute();
-                            }
-                        });
-                        holder.report.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
+                                view.setSelected(true);
                             }
                         });
                         if (viewData.has("hidden") && viewData.getInt("hidden") == ViewHolder.VIEW_HIDDEN) {

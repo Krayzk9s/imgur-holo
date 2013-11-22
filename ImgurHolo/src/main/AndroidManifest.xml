@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.krayzk9s.imgurholo"
-    android:versionCode="27"
-    android:versionName="0.11.1" >
+    android:versionCode="28"
+    android:versionName="0.12.0" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -14,6 +14,7 @@
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="imgur Holo"
+        android:debuggable="false"
             >
         <activity
             android:name=".activities.SettingsActivity"
@@ -53,6 +54,46 @@
             android:parentActivityName=".activities.MainActivity">
             <intent-filter>
                 <action android:name="com.krayzk9s.imgurholo.IMAGE_PAGER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.ImagesActivity"
+            android:label="imgur Holo"
+            android:launchMode="standard"
+            android:parentActivityName=".activities.MainActivity">
+            <intent-filter>
+                <action android:name="com.krayzk9s.imgurholo.IMAGES" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.CommentsActivity"
+            android:label="imgur Holo"
+            android:launchMode="standard"
+            android:parentActivityName=".activities.MainActivity">
+            <intent-filter>
+                <action android:name="com.krayzk9s.imgurholo.COMMENTS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.AlbumsActivity"
+            android:label="imgur Holo"
+            android:launchMode="standard"
+            android:parentActivityName=".activities.MainActivity">
+            <intent-filter>
+                <action android:name="com.krayzk9s.imgurholo.ALBUMS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.AccountActivity"
+            android:label="imgur Holo"
+            android:launchMode="standard"
+            android:parentActivityName=".activities.MainActivity">
+            <intent-filter>
+                <action android:name="com.krayzk9s.imgurholo.ACCOUNT" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

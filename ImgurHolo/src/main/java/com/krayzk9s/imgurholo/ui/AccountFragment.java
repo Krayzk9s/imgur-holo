@@ -16,6 +16,7 @@ package com.krayzk9s.imgurholo.ui;
  * limitations under the License.
  */
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -99,12 +100,11 @@ public class AccountFragment extends Fragment implements GetData {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d("searching", mSearchView.getQuery() + "");
-                MainActivity activity = (MainActivity) getActivity();
-                AccountFragment accountFragment = new AccountFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("username", mSearchView.getQuery().toString());
-                accountFragment.setArguments(bundle);
-                activity.changeFragment(accountFragment, true);
+                Intent intent = new Intent();
+                intent.putExtra("username",  mSearchView.getQuery().toString());
+                intent.setAction(ImgurHoloActivity.ACCOUNT_INTENT);
+                intent.addCategory(Intent.CATEGORY_DEFAULT);
+                startActivity(intent);
                 return true;
             }
         };
@@ -127,7 +127,7 @@ public class AccountFragment extends Fragment implements GetData {
     @Override
     public void onResume() {
         super.onResume();
-        MainActivity activity = (MainActivity) getActivity();
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
         if(!username.equals("me"))
             activity.setTitle(username + "'s Account");
         else
@@ -138,8 +138,8 @@ public class AccountFragment extends Fragment implements GetData {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         Log.d("Username", username);
-        MainActivity activity = (MainActivity) getActivity();
-        SharedPreferences settings = activity.getSettings();
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        SharedPreferences settings = activity.getApiCall().settings;
         Log.d("SettingTitle", username);
         View view = inflater.inflate(R.layout.account_layout, container, false);
         LinearLayout header = (LinearLayout) view.findViewById(R.id.header);
@@ -191,7 +191,7 @@ public class AccountFragment extends Fragment implements GetData {
             else
                 biography.setText("No Biography");
         } else if(tag.equals(COUNTDATA)) {
-            jsonData = ((JSONObject)data).getJSONObject("data");
+            jsonData = ((JSONObject)data);
             if(jsonData.has("error"))
                 return;
             if(jsonData.getInt("status") == 200)
@@ -203,7 +203,7 @@ public class AccountFragment extends Fragment implements GetData {
             if(jsonData.has("error"))
                 return;
             if(jsonData.getInt("status") == 200)
-                mMenuList[0] = mMenuList[0] + " (" + Integer.toString(jsonData.getJSONObject("data").length()) + ")";
+                mMenuList[0] = mMenuList[0] + " (" + Integer.toString(jsonData.getJSONArray("data").length()) + ")";
             else
                 mMenuList[0] = mMenuList[0] + " (0)";
         } else if(tag.equals(LIKEDATA)) {
@@ -238,37 +238,35 @@ public class AccountFragment extends Fragment implements GetData {
     }
 
     private void selectItem(int position) {
-        final MainActivity activity = (MainActivity) getActivity();
-        ImagesFragment imagesFragment;
-        Bundle bundle;
+        Intent intent;
         switch (position) {
             case 0:
-                AlbumsFragment albumsFragment = new AlbumsFragment();
-                bundle = new Bundle();
-                bundle.putString("username", "me");
-                albumsFragment.setArguments(bundle);
-                activity.changeFragment(albumsFragment, true);
+                intent = new Intent();
+                intent.putExtra("username", "me");
+                intent.setAction(ImgurHoloActivity.ALBUMS_INTENT);
+                intent.addCategory(Intent.CATEGORY_DEFAULT);
+                startActivity(intent);
                 break;
             case 1:
-                imagesFragment = new ImagesFragment();
-                bundle = new Bundle();
-                bundle.putString("imageCall", "3/account/" + username + "/images");
-                imagesFragment.setArguments(bundle);
-                activity.changeFragment(imagesFragment, true);
+                intent = new Intent();
+                intent.putExtra("imageCall", "3/account/" + username + "/images");
+                intent.setAction(ImgurHoloActivity.IMAGES_INTENT);
+                intent.addCategory(Intent.CATEGORY_DEFAULT);
+                startActivity(intent);
                 break;
             case 2:
-                imagesFragment = new ImagesFragment();
-                bundle = new Bundle();
-                bundle.putString("imageCall", "3/account/" + username + "/likes");
-                imagesFragment.setArguments(bundle);
-                activity.changeFragment(imagesFragment, true);
+                intent = new Intent();
+                intent.putExtra("imageCall", "3/account/" + username + "/likes");
+                intent.setAction(ImgurHoloActivity.IMAGES_INTENT);
+                intent.addCategory(Intent.CATEGORY_DEFAULT);
+                startActivity(intent);
                 break;
             case 3:
-                CommentsFragment commentsFragment = new CommentsFragment();
-                bundle = new Bundle();
-                bundle.putString("username", username);
-                commentsFragment.setArguments(bundle);
-                activity.changeFragment(commentsFragment, true);
+                intent = new Intent();
+                intent.putExtra("username", username);
+                intent.setAction(ImgurHoloActivity.COMMENTS_INTENT);
+                intent.addCategory(Intent.CATEGORY_DEFAULT);
+                startActivity(intent);
                 break;
             default:
                 break;

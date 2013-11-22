@@ -100,5 +100,10 @@
     <string name="mediumSetting">t</string>
     <string name="lowSetting">s</string>
 
+    <string name="rating_good">Upvote</string>
+    <string name="rating_bad">Downvote</string>
+    <string name="user">Account</string>
+    <string name="reply">Reply</string>
+    <string name="report">Report</string>
 
 </resources>

@@ -360,8 +360,6 @@ public class ImagesFragment extends Fragment implements GetData {
             intent.setAction(ImgurHoloActivity.IMAGE_PAGER_INTENT);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             startActivity(intent);
-            //MainActivity activity = (MainActivity) getActivity();
-            //activity.changeFragment(imagePager, true);
         }
     }
 

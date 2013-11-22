@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -228,14 +229,13 @@ public class AlbumsFragment extends Fragment implements GetData {
     }
 
     public void selectItem(int position) {
+        Intent intent = new Intent();
         String id = ids.get(position);
-        ImagesFragment fragment = new ImagesFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("imageCall", "3/album/" + id);
-        bundle.putString("id", id);
-        fragment.setArguments(bundle);
-        MainActivity activity = (MainActivity) getActivity();
-        activity.changeFragment(fragment, true);
+        intent.putExtra("imageCall", "3/album/" + id);
+        intent.putExtra("id", id);
+        intent.setAction(ImgurHoloActivity.IMAGES_INTENT);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        startActivity(intent);
     }
 
     @Override

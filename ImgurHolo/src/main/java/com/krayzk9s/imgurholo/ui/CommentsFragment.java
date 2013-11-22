@@ -78,7 +78,7 @@ public class CommentsFragment extends Fragment implements GetData {
     @Override
     public void onResume() {
         super.onResume();
-        MainActivity activity = (MainActivity) getActivity();
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
         if(!username.equals("me"))
             activity.setTitle(username + "'s Comments");
         else
@@ -118,8 +118,8 @@ public class CommentsFragment extends Fragment implements GetData {
         headerLayout.setVisibility(View.GONE);
         errorText = (TextView) view.findViewById(R.id.error);
         mDrawerList = (ListView) view.findViewById(R.id.account_list);
-        MainActivity activity = (MainActivity) getActivity();
-        SharedPreferences settings = activity.getSettings();
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        SharedPreferences settings = activity.getApiCall().settings;
         if(settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             commentsAdapter = new MessageAdapter(activity, R.layout.comment_layout);
         else
@@ -147,7 +147,7 @@ public class CommentsFragment extends Fragment implements GetData {
     public void onGetObject(Object object, String tag) {
         if(tag.equals(DELETE))
             getComments();
-        else if (tag.equals(IMAGE)) {
+        else if (tag.equals(IMAGE)) { /*
             SingleImageFragment singleImageFragment = new SingleImageFragment();
             Bundle bundle = new Bundle();
             bundle.putBoolean("gallery", true);
@@ -156,12 +156,12 @@ public class CommentsFragment extends Fragment implements GetData {
             data.setJSONObject(((JSONObject) object).getJSONObject("data"));
             bundle.putParcelable("imageData", data);
             singleImageFragment.setArguments(bundle);
-            MainActivity activity = (MainActivity) getActivity();
+            ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
             activity.changeFragment(singleImageFragment, true);
             }
             catch(JSONException e) {
                 Log.e("Error!", e.toString());
-            }
+            }*/
         }
         else if (tag.equals(COMMENTS)) {
             JSONObject comments = (JSONObject) object;
@@ -226,8 +226,8 @@ public class CommentsFragment extends Fragment implements GetData {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                MainActivity activity = (MainActivity) getActivity();
-                SharedPreferences settings = activity.getSettings();
+                ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+                SharedPreferences settings = activity.getApiCall().settings;
                 if(settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
                     convertView = mInflater.inflate(R.layout.comment_layout, null);
                 else
@@ -267,7 +267,7 @@ public class CommentsFragment extends Fragment implements GetData {
                             return;
                         LinearLayout layout = (LinearLayout) view.getParent().getParent();
                         final ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                        MainActivity activity = (MainActivity) getActivity();
+                        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
                             new AlertDialog.Builder(activity).setTitle("Delete Comment").setMessage("Are you sure you want to delete this comment?")
                                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
