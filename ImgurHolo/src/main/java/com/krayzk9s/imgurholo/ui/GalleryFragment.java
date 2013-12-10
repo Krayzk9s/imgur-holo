@@ -44,7 +44,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import com.koushikdutta.ion.Ion;
 import com.krayzk9s.imgurholo.BuildConfig;
 import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
@@ -432,16 +432,15 @@ public class GalleryFragment extends Fragment implements GetData {
         try {
             Log.d("URI", data.toString());
             JSONArray imageArray = data.getJSONArray("data");
+            errorText.setVisibility(View.GONE);
             for (int i = 0; i < imageArray.length(); i++) {
                 JSONObject imageData = imageArray.getJSONObject(i);
-                Log.d("Data", imageData.toString());
                 SharedPreferences settings = activity.getSettings();
                 String s = settings.getString("IconQuality", "m");
                 try {
                     if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
                         if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + s + ".png")) {
                             urls.add("http://imgur.com/" + imageData.getString("cover") + s + ".png");
-                            UrlImageViewHelper.loadUrlDrawable(activity, "http://imgur.com/" + imageData.getString("cover") + s + ".png");
                             JSONParcelable dataParcel = new JSONParcelable();
                             dataParcel.setJSONObject(imageData);
                             ids.add(dataParcel);
@@ -451,7 +450,6 @@ public class GalleryFragment extends Fragment implements GetData {
                         if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png"))
                         {
                             urls.add("http://imgur.com/" + imageData.getString("id") + s + ".png");
-                            UrlImageViewHelper.loadUrlDrawable(activity, "http://imgur.com/" + imageData.getString("id") + s + ".png");
                             JSONParcelable dataParcel = new JSONParcelable();
                             dataParcel.setJSONObject(imageData);
                             ids.add(dataParcel);
@@ -529,7 +527,7 @@ public class GalleryFragment extends Fragment implements GetData {
                 else {
                     imageView = (ImageView) convertView;
                 }
-                UrlImageViewHelper.setUrlDrawable(imageView, urls.get(position - mNumColumns));
+                Ion.with(imageView).load(urls.get(position - mNumColumns));
                 return imageView;
             }
         }

@@ -44,7 +44,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import com.koushikdutta.ion.Ion;
 import com.krayzk9s.imgurholo.BuildConfig;
 import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.activities.ImageSelectActivity;
@@ -446,7 +446,8 @@ public class ImagesFragment extends Fragment implements GetData {
                     l = (CheckableLayout) convertView;
                     i = (SquareImageView) l.getChildAt(0);
                 }
-                UrlImageViewHelper.setUrlDrawable(i, urls.get(position - mNumColumns));
+
+                Ion.with(i).load(urls.get(position - mNumColumns));
                 return l;
             }
         }

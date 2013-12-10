@@ -41,7 +41,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import com.koushikdutta.ion.Ion;
 import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
 import com.krayzk9s.imgurholo.activities.MainActivity;
@@ -269,8 +269,7 @@ public class AlbumsFragment extends Fragment implements GetData {
         public View getView(int position, View convertView, ViewGroup parent) {
             final ImageView imageView = new SquareImageView(mContext);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            UrlImageViewHelper.setUrlDrawable(imageView, urls.get(position));
+            Ion.with(imageView).load(urls.get(position));
             return imageView;
         }
 

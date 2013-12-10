@@ -2,9 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidAsync/AndroidAsync.iml" filepath="$PROJECT_DIR$/AndroidAsync/AndroidAsync.iml" />
       <module fileurl="file://$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" filepath="$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ImgurHoloProject.iml" filepath="$PROJECT_DIR$/ImgurHoloProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" filepath="$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" />
       <module fileurl="file://$PROJECT_DIR$/imgur-holo.iml" filepath="$PROJECT_DIR$/imgur-holo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/imgur-holo.iml" filepath="$PROJECT_DIR$/imgur-holo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ion/ion.iml" filepath="$PROJECT_DIR$/ion/ion.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ion/ion/ion-ion.iml" filepath="$PROJECT_DIR$/ion/ion/ion-ion.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ion/ion-sample/ion-sample.iml" filepath="$PROJECT_DIR$/ion/ion-sample/ion-sample.iml" />
     </modules>
   </component>
 </project>

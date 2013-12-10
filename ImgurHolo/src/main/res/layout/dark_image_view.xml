@@ -7,11 +7,18 @@
     android:gravity="center_horizontal"
     android:paddingTop="?android:actionBarSize"
     android:clipToPadding="false">
-        <WebView xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/single_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" />
+    <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/image_progress"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+        />
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/single_image_title"

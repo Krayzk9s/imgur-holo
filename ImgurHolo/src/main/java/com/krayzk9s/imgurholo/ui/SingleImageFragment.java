@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -44,19 +43,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.koushikdutta.ion.Ion;
 import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
 import com.krayzk9s.imgurholo.activities.MainActivity;
@@ -104,6 +103,7 @@ public class SingleImageFragment extends Fragment implements GetData {
     TextView imageDetails;
     String newGalleryString;
     ActionMode mActionMode;
+    ImageView imageView;
     final SingleImageFragment singleImageFragment = this;
     final static String DELETE = "delete";
     final static String FAVORITE = "favorite";
@@ -434,6 +434,15 @@ public class SingleImageFragment extends Fragment implements GetData {
     }
 
     public void refreshComments() {
+        try {
+        if (imageData.getJSONObject().has("cover"))
+            Ion.with(imageView).load("http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png");
+        else
+            Ion.with(imageView).load(imageData.getJSONObject().getString("link"));
+        }
+        catch (JSONException e) {
+            Log.e("Error!", e.toString());
+        }
         commentAdapter.clear();
         commentAdapter.hiddenViews.clear();
         commentAdapter.notifyDataSetChanged();
@@ -460,14 +469,8 @@ public class SingleImageFragment extends Fragment implements GetData {
             imageLayoutView = (LinearLayout) View.inflate(getActivity(), R.layout.image_view, null);
         else
             imageLayoutView = (LinearLayout) View.inflate(getActivity(), R.layout.dark_image_view, null);
-        final WebView imageView = (WebView) imageLayoutView.findViewById(R.id.single_image_view);
-        imageView.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                // do your handling codes here, which url is the requested url
-                // probably you need to open that url rather than redirect:
-                return false; // then it is not handled by default action
-            }
-        });
+
+
 
         if (savedInstanceState != null && newData) {
             imageData = savedInstanceState.getParcelable("imageData");
@@ -727,32 +730,28 @@ public class SingleImageFragment extends Fragment implements GetData {
             TypedValue tv = new TypedValue();
             getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
             int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId) + statusBarHeight;
+            imageView = (ImageView) imageLayoutView.findViewById(R.id.single_image_view);
             if (imageData.getJSONObject().has("cover"))
-                imageView.loadUrl("http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png");
+                Ion.with(getActivity(), "http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png")
+                        .setLogging("MyLogs", Log.DEBUG)
+                        .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
+                        .withBitmap()
+                        .intoImageView(imageView);
             else
-                imageView.loadUrl(imageData.getJSONObject().getString("link"));
-            if(Build.VERSION.SDK_INT <= 18) {
-                ViewGroup.LayoutParams params = imageView.getLayoutParams();
-                if (Build.VERSION.SDK_INT <= 18 &&settings.getBoolean("VerticalHeight", true) && height > (size.y-actionBarHeight)) {
-                    params.width = Math.min(size.x, (int) (((float) (size.y - actionBarHeight) / (float) height) * width));
-                }
-                if (width < size.x && (width < params.width || params.width < 0)) {
-                    params.width = width;
-                    Log.d("params", ""+params.width);
-                }
-                if(params.width > size.x || params.width < 0) {
-                    params.width = size.x;
-                }
-                imageView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+                Ion.with(getActivity(), imageData.getJSONObject().getString("link"))
+                        .setLogging("MyLogs", Log.DEBUG)
+                        .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
+                        .withBitmap()
+                        .intoImageView(imageView);
+            ViewGroup.LayoutParams params = imageView.getLayoutParams();
+            if(settings.getBoolean("VerticalHeight", true) && height > (size.y-actionBarHeight))
+                params.width = Math.min(size.x, (int) (((float) (size.y - actionBarHeight) / (float) height) * width));
+            if (width < size.x && (width < params.width || params.width < 0)) {
+               params.width = width;
+               Log.d("params", ""+params.width);
             }
-            if(Build.VERSION.SDK_INT >= 19) {
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.width = Math.min(size.x, width);
-                layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
-                imageView.setLayoutParams(layoutParams);
-                //imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                imageView.getSettings().setUseWideViewPort(true);
-                imageView.getSettings().setLoadWithOverviewMode(true);
+            if(params.width > size.x || params.width < 0) {
+               params.width = size.x;
             }
         } catch (JSONException e) {
             Log.e("drawable Error!", e.toString());

@@ -1,1 +1,4 @@
 include ':ImgurHolo'
+include ':ion:ion'
+include ':AndroidAsync'
+project(':AndroidAsync').projectDir = new File('AndroidAsync/AndroidAsync')

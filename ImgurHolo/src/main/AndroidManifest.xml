@@ -14,14 +14,14 @@
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="imgur Holo"
-        android:debuggable="false"
+        android:debuggable="true"
             >
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name="com.krayzk9s.imgurholo.activities.SettingsActivity"
             android:label="imgur Holo Settings"
             > </activity>
         <activity
-            android:name=".activities.MainActivity"
+            android:name="com.krayzk9s.imgurholo.activities.MainActivity"
             android:label="imgur Holo"
             android:launchMode="standard"
                 >
@@ -48,7 +48,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ImagePagerActivity"
+            android:name="com.krayzk9s.imgurholo.activities.ImagePagerActivity"
             android:label="imgur Holo"
             android:launchMode="standard"
             android:parentActivityName=".activities.MainActivity">
@@ -58,7 +58,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ImagesActivity"
+            android:name="com.krayzk9s.imgurholo.activities.ImagesActivity"
             android:label="imgur Holo"
             android:launchMode="standard"
             android:parentActivityName=".activities.MainActivity">
@@ -78,7 +78,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.AlbumsActivity"
+            android:name="com.krayzk9s.imgurholo.activities.AlbumsActivity"
             android:label="imgur Holo"
             android:launchMode="standard"
             android:parentActivityName=".activities.MainActivity">
@@ -88,7 +88,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.AccountActivity"
+            android:name="com.krayzk9s.imgurholo.activities.AccountActivity"
             android:label="imgur Holo"
             android:launchMode="standard"
             android:parentActivityName=".activities.MainActivity">
@@ -98,7 +98,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ImgurLinkActivity"
+            android:name="com.krayzk9s.imgurholo.activities.ImgurLinkActivity"
             android:label="imgur Holo"
             android:launchMode="standard"
             android:parentActivityName=".activities.MainActivity">
@@ -131,10 +131,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ImageSelectActivity"
+            android:name="com.krayzk9s.imgurholo.activities.ImageSelectActivity"
             android:label="@string/title_activity_image_select" >
         </activity>
-        <service android:name=".services.UploadService" />
+        <service android:name="com.krayzk9s.imgurholo.services.UploadService" />
     </application>
 
 </manifest>
