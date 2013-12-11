@@ -66,10 +66,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
 /**
  * Created by Kurt Zimmer on 7/22/13.
  */
-public class ImagesFragment extends Fragment implements GetData {
+public class ImagesFragment extends Fragment implements GetData, OnRefreshListener {
 
     public boolean selecting = false;
     ImageAdapter imageAdapter;
@@ -86,6 +90,7 @@ public class ImagesFragment extends Fragment implements GetData {
     private ArrayList<String> urls;
     private ArrayList<JSONParcelable> ids;
     TextView errorText;
+    PullToRefreshLayout mPullToRefreshLayout;
     final static String DELETE = "delete";
     final static String IMAGES = "images";
 
@@ -140,6 +145,15 @@ public class ImagesFragment extends Fragment implements GetData {
             menu.findItem(R.id.action_copy).setVisible(true);
             menu.findItem(R.id.action_share).setVisible(true);
         }
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        urls = new ArrayList<String>();
+        ids = new ArrayList<JSONParcelable>();
+        page = 0;
+        imageAdapter.notifyDataSetChanged();
+        getImages();
     }
 
     @Override
@@ -225,6 +239,14 @@ public class ImagesFragment extends Fragment implements GetData {
         errorText = (TextView) view.findViewById(R.id.error);
         noImageView = (TextView) view.findViewById(R.id.no_images);
         imageAdapter = new ImageAdapter(view.getContext());
+        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+        ActionBarPullToRefresh.from(getActivity())
+                // Mark All Children as pullable
+                .allChildrenArePullable()
+                        // Set the OnRefreshListener
+                .listener(this)
+                        // Finally commit the setup to our PullToRefreshLayout
+                .setup(mPullToRefreshLayout);
         gridview.setAdapter(imageAdapter);
         ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
         final SharedPreferences settings = activity.getApiCall().settings;
@@ -337,6 +359,8 @@ public class ImagesFragment extends Fragment implements GetData {
                 noImageView.setVisibility(View.VISIBLE);
             else
                 gettingImages = true;
+            if(mPullToRefreshLayout != null)
+                mPullToRefreshLayout.setRefreshComplete();
         }
     }
 

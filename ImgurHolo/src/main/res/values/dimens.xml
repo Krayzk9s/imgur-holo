@@ -3,4 +3,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="comments_margin">0dp</dimen>
+    <dimen name="action_bar_default_height">48dip</dimen>
+    <dimen name="action_bar_title_text_size">18dp</dimen>
+    <dimen name="action_bar_subtitle_text_size">14dp</dimen>
+    <dimen name="action_bar_subtitle_top_margin">-3dp</dimen>
+    <dimen name="action_bar_subtitle_bottom_margin">5dip</dimen>
 </resources>

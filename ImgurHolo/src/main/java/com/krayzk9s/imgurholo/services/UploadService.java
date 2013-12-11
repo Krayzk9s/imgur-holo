@@ -269,6 +269,8 @@ public class UploadService extends IntentService implements GetData {
         @Override
         protected JSONObject doInBackground(Void... voids) {
             Log.d("recieved", "in background");
+            if(cursor == null)
+                return null;
             cursor.moveToFirst();
             final String filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
             Log.d("Image Upload", filePath);
@@ -327,13 +329,23 @@ public class UploadService extends IntentService implements GetData {
 
         @Override
         protected void onPostExecute(JSONObject data) {
-            if(data == null)
-                return;
-            Log.d("Built", "Notification building");
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
             NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+            if(data == null) {
+                Notification notification = notificationBuilder
+                        .setSmallIcon(R.drawable.icon_desaturated)
+                        .setContentText("Error Uploading to imgur")
+                        .setStyle(bigPictureStyle)
+                        .setContentTitle("imgur Image Uploader")
+                        .build();
+                notificationManager.cancel(0);
+                notificationManager.notify(1, notification);
+                return;
+            }
+            Log.d("Built", "Notification building");
             bigPictureStyle.bigPicture(photo);
             Log.d("Built", "Picture set");
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
+
             try {
             Log.d("data", data.toString());
             String id = data.getString("id");
@@ -366,9 +378,9 @@ public class UploadService extends IntentService implements GetData {
                 shareIntent.setType("text/plain");
                 shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                     shareIntent.putExtra(Intent.EXTRA_TEXT, link);
-            PendingIntent viewImagePendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), viewImageIntent, 0);
-            PendingIntent sharePendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), shareIntent, 0);
-            if(uploadService.totalUpload == -1) {
+                PendingIntent viewImagePendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), viewImageIntent, 0);
+                PendingIntent sharePendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), shareIntent, 0);
+                if(uploadService.totalUpload == -1) {
                 Notification notification = notificationBuilder
                         .setSmallIcon(R.drawable.icon_desaturated)
                         .setContentText("Finished Uploading")

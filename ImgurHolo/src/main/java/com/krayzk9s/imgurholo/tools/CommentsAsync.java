@@ -48,7 +48,8 @@ public class CommentsAsync extends AsyncTask<Void, Void, Void> {
             data.setJSONObject(galleryAlbumData);
             bundle.putParcelable("imageData", data);
             fragment.setArguments(bundle);
-            activity.changeFragment(fragment, true);
+            if(activity != null)
+                activity.changeFragment(fragment, true);
         }
     }
 }

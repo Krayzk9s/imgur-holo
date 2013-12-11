@@ -58,10 +58,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
 /**
  * Created by Kurt Zimmer on 7/23/13.
  */
-public class AlbumsFragment extends Fragment implements GetData {
+public class AlbumsFragment extends Fragment implements GetData, OnRefreshListener {
 
     ImageAdapter imageAdapter;
     String username;
@@ -70,6 +74,7 @@ public class AlbumsFragment extends Fragment implements GetData {
     private ArrayList<String> ids;
     int lastInView = -1;
     TextView errorText;
+    PullToRefreshLayout mPullToRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,6 +106,13 @@ public class AlbumsFragment extends Fragment implements GetData {
             menu.findItem(R.id.action_new).setVisible(true);
         menu.findItem(R.id.action_upload).setVisible(false);
         menu.findItem(R.id.action_refresh).setVisible(true);
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        urls = new ArrayList<String>();
+        imageAdapter.notifyDataSetChanged();
+        getImages();
     }
 
     @Override
@@ -154,6 +166,14 @@ public class AlbumsFragment extends Fragment implements GetData {
         }
         View view = inflater.inflate(R.layout.image_layout, container, false);
         errorText = (TextView) view.findViewById(R.id.error);
+        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+        ActionBarPullToRefresh.from(getActivity())
+                // Mark All Children as pullable
+                .allChildrenArePullable()
+                        // Set the OnRefreshListener
+                .listener(this)
+                        // Finally commit the setup to our PullToRefreshLayout
+                .setup(mPullToRefreshLayout);
         ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) errorText.getLayoutParams();
         mlp.setMargins(0, 0, 0, 0);
         view.setPadding(0, getActivity().getActionBar().getHeight(), 0, 0);
@@ -203,8 +223,10 @@ public class AlbumsFragment extends Fragment implements GetData {
             for (int i = 0; i < imageArray.length(); i++) {
                 JSONObject imageData = imageArray.getJSONObject(i);
                 Log.d("adding album...", imageData.getString("id"));
-                urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
-                ids.add(imageData.getString("id"));
+                if(!imageData.getString("cover").equals("[[")) {
+                    urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
+                    ids.add(imageData.getString("id"));
+                }
             }
             if (imageArray.length() > 0)
                 hasImages = true;
@@ -221,6 +243,8 @@ public class AlbumsFragment extends Fragment implements GetData {
             noImageView.setVisibility(View.VISIBLE);
         else
             errorText.setVisibility(View.VISIBLE);
+        if(mPullToRefreshLayout != null)
+            mPullToRefreshLayout.setRefreshComplete();
     }
 
     public void getImages() {

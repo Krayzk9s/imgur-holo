@@ -80,7 +80,7 @@
             android:key="pref_cat_theme">
         <CheckBoxPreference android:key="VerticalHeight"
             android:title="Constrain images to vertical screen height"
-            android:summary="Force resizing of images to fit on screen in the vertical direction (only 4.3 and below)"
+            android:summary="Force resizing of images to fit on screen in the vertical direction"
             android:defaultValue="true"/>
         <ListPreference android:key="theme"
                         android:title= "Theme"

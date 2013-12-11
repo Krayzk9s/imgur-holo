@@ -12,7 +12,7 @@
         android:icon="@drawable/rating_bad"
         android:showAsAction="always" />
     <item android:id="@+id/user"
-        android:title="@string/user"
+        android:title="@string/account"
         android:orderInCategory="100"
         android:icon="@drawable/social_person"
         android:showAsAction="always" />

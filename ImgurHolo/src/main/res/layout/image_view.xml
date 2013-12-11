@@ -12,8 +12,14 @@
             android:id="@+id/single_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
-
+            android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="true" />
+        <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/image_progress"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+            />
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/single_image_title"
         android:layout_marginTop="4dp"
@@ -116,4 +122,5 @@
             android:layout_height="wrap_content"
             android:src="@drawable/av_full_screen" />
     </LinearLayout>
+
 </LinearLayout>

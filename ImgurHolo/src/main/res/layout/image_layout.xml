@@ -2,7 +2,6 @@
 
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/image_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -25,20 +24,26 @@
             android:text="Error getting images"
             android:visibility="gone"/>
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="horizontal">
-    <GridView
-              android:id="@+id/grid_layout"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:columnWidth="120dp"
-              android:rowHeight="120dp"
-              android:numColumns="auto_fit"
-              android:verticalSpacing="1dp"
-              android:horizontalSpacing="1dp"
-              android:scaleType="fitCenter"
-              android:gravity="center">
-    </GridView>
+        <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/ptr_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <GridView
+                      android:id="@+id/grid_layout"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:columnWidth="120dp"
+                      android:rowHeight="120dp"
+                      android:numColumns="auto_fit"
+                      android:verticalSpacing="1dp"
+                      android:horizontalSpacing="1dp"
+                      android:scaleType="fitCenter"
+                      android:gravity="center">
+            </GridView>
+        </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
     </LinearLayout>
 </LinearLayout>

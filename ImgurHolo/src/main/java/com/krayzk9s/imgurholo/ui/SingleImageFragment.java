@@ -27,6 +27,7 @@ import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Html;
@@ -55,14 +56,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
 import com.krayzk9s.imgurholo.activities.MainActivity;
 import com.krayzk9s.imgurholo.libs.JSONParcelable;
 import com.krayzk9s.imgurholo.libs.ZoomableImageView;
+import com.krayzk9s.imgurholo.services.DownloadService;
 import com.krayzk9s.imgurholo.tools.ApiCall;
-import com.krayzk9s.imgurholo.tools.DownloadAsync;
 import com.krayzk9s.imgurholo.tools.Fetcher;
 import com.krayzk9s.imgurholo.tools.GetData;
 import com.krayzk9s.imgurholo.tools.LoadImageAsync;
@@ -77,10 +79,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
 /**
  * Created by Kurt Zimmer on 7/22/13.
  */
-public class SingleImageFragment extends Fragment implements GetData {
+public class SingleImageFragment extends Fragment implements GetData, OnRefreshListener {
 
     String[] mMenuList;
     JSONParcelable imageData;
@@ -104,6 +110,7 @@ public class SingleImageFragment extends Fragment implements GetData {
     String newGalleryString;
     ActionMode mActionMode;
     ImageView imageView;
+    PullToRefreshLayout mPullToRefreshLayout;
     final SingleImageFragment singleImageFragment = this;
     final static String DELETE = "delete";
     final static String FAVORITE = "favorite";
@@ -173,6 +180,11 @@ public class SingleImageFragment extends Fragment implements GetData {
         menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortNewest).setVisible(true);
         menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortBest).setVisible(true);
         menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setVisible(false);
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        refreshComments();
     }
 
     @Override
@@ -279,8 +291,11 @@ public class SingleImageFragment extends Fragment implements GetData {
                 }
                 return true;
             case R.id.action_download:
-                DownloadAsync downloadAsync = new DownloadAsync(getActivity(), imageData);
-                downloadAsync.execute();
+                Intent serviceIntent = new Intent(activity, DownloadService.class);
+                ArrayList<Parcelable> downloadIDs = new ArrayList<Parcelable>();
+                downloadIDs.add(imageData);
+                serviceIntent.putParcelableArrayListExtra("ids", downloadIDs);
+                activity.startService(serviceIntent);
                 return true;
             case R.id.action_delete:
                 new AlertDialog.Builder(activity).setTitle("Delete Image?")
@@ -393,6 +408,8 @@ public class SingleImageFragment extends Fragment implements GetData {
                 addComments();
                 commentAdapter.notifyDataSetChanged();
             }
+            if(mPullToRefreshLayout != null)
+                mPullToRefreshLayout.setRefreshComplete();
         }
         else if(tag.equals(DELETE)) {
             getActivity().getFragmentManager().popBackStack();
@@ -435,10 +452,29 @@ public class SingleImageFragment extends Fragment implements GetData {
 
     public void refreshComments() {
         try {
-        if (imageData.getJSONObject().has("cover"))
-            Ion.with(imageView).load("http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png");
-        else
-            Ion.with(imageView).load(imageData.getJSONObject().getString("link"));
+        imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.VISIBLE);
+        if (imageData.getJSONObject().getInt("size") < 3250000 && imageData.getJSONObject().has("cover")) //temporary to fix large gif bug
+            Ion.with(getActivity(), "http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png")
+                    .setLogging("MyLogs", Log.DEBUG)
+                    .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
+                    .withBitmap()
+                    .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
+                @Override
+                public void onCompleted(Exception e, ImageView result) {
+                    imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
+                }
+            });
+        else if(imageData.getJSONObject().getInt("size") < 3250000)
+            Ion.with(getActivity(), imageData.getJSONObject().getString("link"))
+                    .setLogging("MyLogs", Log.DEBUG)
+                    .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
+                    .withBitmap()
+                    .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
+                    @Override
+                    public void onCompleted(Exception e, ImageView result) {
+                        imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
+                    }
+            });
         }
         catch (JSONException e) {
             Log.e("Error!", e.toString());
@@ -465,13 +501,21 @@ public class SingleImageFragment extends Fragment implements GetData {
         if(commentAdapter == null)
             commentAdapter = new CommentAdapter(mainView.getContext(), R.id.comment_item);
         commentLayout = (ListView) mainView.findViewById(R.id.comment_thread);
+        commentLayout.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             imageLayoutView = (LinearLayout) View.inflate(getActivity(), R.layout.image_view, null);
         else
             imageLayoutView = (LinearLayout) View.inflate(getActivity(), R.layout.dark_image_view, null);
 
 
-
+        mPullToRefreshLayout = (PullToRefreshLayout) mainView.findViewById(R.id.ptr_layout);
+        ActionBarPullToRefresh.from(getActivity())
+                // Mark All Children as pullable
+                .allChildrenArePullable()
+                        // Set the OnRefreshListener
+                .listener(this)
+                        // Finally commit the setup to our PullToRefreshLayout
+                .setup(mPullToRefreshLayout);
         if (savedInstanceState != null && newData) {
             imageData = savedInstanceState.getParcelable("imageData");
             inGallery = savedInstanceState.getBoolean("inGallery");
@@ -731,28 +775,31 @@ public class SingleImageFragment extends Fragment implements GetData {
             getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
             int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId) + statusBarHeight;
             imageView = (ImageView) imageLayoutView.findViewById(R.id.single_image_view);
-            if (imageData.getJSONObject().has("cover"))
+            imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.VISIBLE);
+            if (imageData.getJSONObject().getInt("size") < 3250000 && imageData.getJSONObject().has("cover"))
                 Ion.with(getActivity(), "http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png")
                         .setLogging("MyLogs", Log.DEBUG)
                         .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
                         .withBitmap()
-                        .intoImageView(imageView);
-            else
+                        .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
+                    @Override
+                    public void onCompleted(Exception e, ImageView result) {
+                        imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
+                    }
+                });
+            else if(imageData.getJSONObject().getInt("size") < 3250000)
                 Ion.with(getActivity(), imageData.getJSONObject().getString("link"))
                         .setLogging("MyLogs", Log.DEBUG)
                         .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
                         .withBitmap()
-                        .intoImageView(imageView);
-            ViewGroup.LayoutParams params = imageView.getLayoutParams();
-            if(settings.getBoolean("VerticalHeight", true) && height > (size.y-actionBarHeight))
-                params.width = Math.min(size.x, (int) (((float) (size.y - actionBarHeight) / (float) height) * width));
-            if (width < size.x && (width < params.width || params.width < 0)) {
-               params.width = width;
-               Log.d("params", ""+params.width);
-            }
-            if(params.width > size.x || params.width < 0) {
-               params.width = size.x;
-            }
+                        .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
+                    @Override
+                    public void onCompleted(Exception e, ImageView result) {
+                        imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
+                    }
+                });
+            if(settings.getBoolean("VerticalHeight", true))
+                imageView.setMaxHeight(size.y - actionBarHeight);
         } catch (JSONException e) {
             Log.e("drawable Error!", e.toString());
         }
@@ -1055,23 +1102,22 @@ public class SingleImageFragment extends Fragment implements GetData {
                     // Inflate a menu resource providing context menu items
                     MenuInflater inflater = mode.getMenuInflater();
                     ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
-                    if (activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT) == MainActivity.HOLO_LIGHT)
+                    if (activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
                         inflater.inflate(R.menu.comments, menu);
                     else
                         inflater.inflate(R.menu.comments_dark, menu);
                     return true;
                 }
-
                 // Called each time the action mode is shown. Always called after onCreateActionMode, but
                 // may be called multiple times if the mode is invalidated.
                 @Override
                 public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
                     return false; // Return false if nothing is done
                 }
-
                 // Called when the user selects a contextual menu item
                 @Override
                 public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
                     Fetcher fetcher;
                     switch (item.getItemId()) {
                         case R.id.user:
@@ -1202,6 +1248,8 @@ public class SingleImageFragment extends Fragment implements GetData {
                 // Called when the user exits the action mode
                 @Override
                 public void onDestroyActionMode(ActionMode mode) {
+                    if(commentLayout.getCheckedItemCount() > 0)
+                        commentLayout.setItemChecked(commentLayout.getCheckedItemPosition(), false);
                     mActionMode = null;
                 }
             };
@@ -1246,6 +1294,12 @@ public class SingleImageFragment extends Fragment implements GetData {
                                 catch (JSONException e) {
                                     Log.e("Error!", e.toString());
                                 }
+                                if(commentLayout.isItemChecked(commentLayout.getPositionForView(view)) && mActionMode != null) {
+                                    commentLayout.setItemChecked(commentLayout.getPositionForView(view), false);
+                                    mActionMode.finish();
+                                    return;
+                                }
+
                                 mActionMode = getActivity().startActionMode(mActionModeCallback);
                                 try {
                                     mActionMode.setTitle(viewData.getString("author"));
@@ -1253,7 +1307,7 @@ public class SingleImageFragment extends Fragment implements GetData {
                                 catch (JSONException e) {
                                     Log.e("Error!", e.toString());
                                 }
-                                view.setSelected(true);
+                                commentLayout.setItemChecked(commentLayout.getPositionForView(view), true);
                             }
                         });
                         if (viewData.has("hidden") && viewData.getInt("hidden") == ViewHolder.VIEW_HIDDEN) {

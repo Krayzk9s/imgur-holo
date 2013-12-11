@@ -3,6 +3,7 @@ package com.krayzk9s.imgurholo.services;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -44,7 +45,7 @@ public class DownloadService extends IntentService {
         downloadAsync.execute();
     }
 
-    private static class DownloadAsync extends AsyncTask<Void, Void, Void> {
+    private static class DownloadAsync extends AsyncTask<Void, Void, String> {
         ArrayList<Parcelable> ids;
         Context context;
         public DownloadAsync(ArrayList<Parcelable> _ids, Context _context) {
@@ -52,7 +53,8 @@ public class DownloadService extends IntentService {
             context = _context;
         }
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected String doInBackground(Void... voids) {
+            String path = "";
             try {
                 for (int i = 0; i < ids.size(); i++) {
                     JSONParcelable idget = (JSONParcelable) ids.get(i);
@@ -60,7 +62,8 @@ public class DownloadService extends IntentService {
                     Log.d("URL", "http://i.imgur.com/" + idget.getJSONObject().getString("id") + "." + type);
                     Log.d("IDs", idget.getJSONObject().getString("id"));
                     URL url = new URL("http://i.imgur.com/" + idget.getJSONObject().getString("id") + "." + type);
-                    File file = new File(android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + idget.getJSONObject().getString("id") + "." + type);
+                    path = android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + idget.getJSONObject().getString("id") + "." + type;
+                    File file = new File(path);
                     URLConnection ucon = url.openConnection();
                     InputStream is = ucon.getInputStream();
                     BufferedInputStream bis = new BufferedInputStream(is);
@@ -80,13 +83,18 @@ public class DownloadService extends IntentService {
             } catch (JSONException e) {
                 Log.e("Error!", e.toString());
             }
-            return null;
+            return path;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                    + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))));
+        protected void onPostExecute(String path) {
+            MediaScannerConnection.scanFile(context, new String[]{path}, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        @Override
+                        public void onScanCompleted(final String path, final Uri uri) {
+                            Log.i("Scanning", String.format("Scanned path %s -> URI = %s", path, uri.toString()));
+                        }
+                    });
         }
     }
 }

@@ -65,10 +65,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
 /**
  * Created by Kurt Zimmer on 7/23/13.
  */
-public class GalleryFragment extends Fragment implements GetData {
+public class GalleryFragment extends Fragment implements GetData, OnRefreshListener {
 
     private ArrayList<String> urls;
     private ArrayList<JSONParcelable> ids;
@@ -79,7 +83,7 @@ public class GalleryFragment extends Fragment implements GetData {
     String subreddit;
     String memeType;
     String window;
-    ArrayAdapter<CharSequence> mSpinnerAdapter;
+    SpinnerAdapter mSpinnerAdapter;
     ActionBar actionBar;
     int selectedIndex;
     SearchView mSearchView;
@@ -92,6 +96,7 @@ public class GalleryFragment extends Fragment implements GetData {
     int oldwidth = 0;
     private boolean fetchingImages;
     TextView noImageView;
+    PullToRefreshLayout mPullToRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,7 +108,7 @@ public class GalleryFragment extends Fragment implements GetData {
             gallery = savedInstanceState.getString("gallery");
             sort = savedInstanceState.getString("sort");
             window = savedInstanceState.getString("window");
-            subreddit = savedInstanceState.getString("subreddit");
+            subreddit = savedInstanceState.getString(getResources().getString(R.string.subreddit));
             search = savedInstanceState.getString("search");
             urls = savedInstanceState.getStringArrayList("urls");
             ids = savedInstanceState.getParcelableArrayList("ids");
@@ -113,11 +118,11 @@ public class GalleryFragment extends Fragment implements GetData {
         } else {
             page = 0;
             subreddit = "pics";
-            memeType = "top";
-            gallery = settings.getString("DefaultGallery", "hot");
+            memeType = getResources().getString(R.string.top);
+            gallery = settings.getString("DefaultGallery", getResources().getString(R.string.viral));
             ArrayList<String> galleryOptions = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.galleryOptions)));
-            sort = "viral";
-            window = "day";
+            sort = getResources().getString(R.string.viralsort);
+            window = getResources().getString(R.string.day);
             urls = new ArrayList<String>();
             ids = new ArrayList<JSONParcelable>();
             selectedIndex = galleryOptions.indexOf(gallery);
@@ -132,8 +137,7 @@ public class GalleryFragment extends Fragment implements GetData {
     @Override
     public void onResume() {
         super.onResume();
-        MainActivity activity = (MainActivity) getActivity();
-        activity.setTitle("Gallery");
+        getActivity().getActionBar().setTitle("");
     }
 
     @Override
@@ -178,6 +182,7 @@ public class GalleryFragment extends Fragment implements GetData {
         };
         mSearchView.setOnQueryTextListener(queryTextListener);
         menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(false);
+        menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortBest).setVisible(false);
         menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setVisible(true);
     }
 
@@ -194,8 +199,8 @@ public class GalleryFragment extends Fragment implements GetData {
                 makeGallery();
                 return true;
             case R.id.subreddit:
-                gallery = "subreddit";
-                sort = "time";
+                gallery = getResources().getString(R.string.subreddit);
+                sort = getResources().getString(R.string.time);
                 final EditText subredditText = new EditText(activity);
                 subredditText.setSingleLine();
                 new AlertDialog.Builder(activity).setTitle("Choose SubReddit").setView(subredditText).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -217,39 +222,45 @@ public class GalleryFragment extends Fragment implements GetData {
                 }).show();
                 return true;
             case R.id.menuSortPopularity:
-                sort = "viral";
+                sort = getResources().getString(R.string.viralsort);
                 break;
             case R.id.menuSortNewest:
-                sort = "time";
+                sort = getResources().getString(R.string.time);
                 break;
             case R.id.menuSortTop:
-                sort = "top";
+                sort = getResources().getString(R.string.top);
                 break;
             case R.id.menuSortDay:
-                sort = "top";
-                window = "day";
+                sort = getResources().getString(R.string.top);
+                window = getResources().getString(R.string.day);
                 break;
             case R.id.menuSortWeek:
-                sort = "top";
-                window = "week";
+                sort = getResources().getString(R.string.top);
+                window = getResources().getString(R.string.week);
                 break;
             case R.id.menuSortMonth:
-                sort = "top";
-                window = "month";
+                sort = getResources().getString(R.string.top);
+                window = getResources().getString(R.string.month);
                 break;
             case R.id.menuSortYear:
-                sort = "top";
-                window = "year";
+                sort = getResources().getString(R.string.top);
+                window = getResources().getString(R.string.year);
                 break;
             case R.id.menuSortAll:
-                sort = "top";
-                window = "all";
+                sort = getResources().getString(R.string.top);
+                window = getResources().getString(R.string.all);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
         }
         makeGallery();
         return true;
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        page = 0;
+        makeGallery();
     }
 
     @Override
@@ -264,6 +275,16 @@ public class GalleryFragment extends Fragment implements GetData {
         gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString("IconSize", "120")), getActivity()));
         imageAdapter = new ImageAdapter(view.getContext());
         noImageView = (TextView) view.findViewById(R.id.no_images);
+        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+
+        // Now setup the PullToRefreshLayout
+        ActionBarPullToRefresh.from(getActivity())
+                // Mark All Children as pullable
+                .allChildrenArePullable()
+                        // Set the OnRefreshListener
+                .listener(this)
+                        // Finally commit the setup to our PullToRefreshLayout
+                .setup(mPullToRefreshLayout);
         gridview.setAdapter(imageAdapter);
             gridview.setOnItemClickListener(new GridItemClickListener());
             gridview.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -330,26 +351,26 @@ public class GalleryFragment extends Fragment implements GetData {
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        if (sort == null || (sort.equals("viral") && !gallery.equals("top")))
+        if (sort == null || (sort.equals(getResources().getString(R.string.viralsort)) && !gallery.equals(getResources().getString(R.string.top))))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setChecked(true);
-        else if (sort.equals("time") && !gallery.equals("top"))
+        else if (sort.equals(getResources().getString(R.string.time)) && !gallery.equals(getResources().getString(R.string.top)))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortNewest).setChecked(true);
-        else if (window.equals("day"))
+        else if (window.equals(getResources().getString(R.string.day)))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortDay).setChecked(true);
-        else if (window.equals("week"))
+        else if (window.equals(getResources().getString(R.string.week)))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortWeek).setChecked(true);
-        else if (window.equals("month"))
+        else if (window.equals(getResources().getString(R.string.month)))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortMonth).setChecked(true);
-        else if (window.equals("year"))
+        else if (window.equals(getResources().getString(R.string.year)))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortYear).setChecked(true);
-        else if (window.equals("all"))
+        else if (window.equals(getResources().getString(R.string.all)))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortAll).setChecked(true);
 
-        if (gallery == null || gallery.equals("hot") || gallery.equals("user")) {
+        if (gallery == null || gallery.equals(getResources().getString(R.string.viral)) || gallery.equals(getResources().getString(R.string.user))) {
             menu.findItem(R.id.action_sort).setVisible(true);
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(false);
             //menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setVisible(true);
-        } else if (gallery.equals("top")) {
+        } else if (gallery.equals(getResources().getString(R.string.top))) {
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(false);
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setVisible(false);
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortNewest).setVisible(false);
@@ -358,11 +379,11 @@ public class GalleryFragment extends Fragment implements GetData {
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortMonth).setVisible(true);
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortYear).setVisible(true);
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortAll).setVisible(true);
-        } else if (gallery.equals("memes")) {
+        } else if (gallery.equals(getResources().getString(R.string.memes))) {
             //menu.findItem(R.id.action_sort).setVisible(true);
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(true);
             //menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setVisible(true);
-            if (sort.equals("top")) {
+            if (sort.equals(getResources().getString(R.string.top))) {
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(false);
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortDay).setVisible(true);
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortWeek).setVisible(true);
@@ -370,13 +391,13 @@ public class GalleryFragment extends Fragment implements GetData {
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortYear).setVisible(true);
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortAll).setVisible(true);
             }
-        } else if (gallery.equals("random")) {
+        } else if (gallery.equals(getResources().getString(R.string.random))) {
             menu.findItem(R.id.action_sort).setVisible(false);
-        } else if (gallery.equals("subreddit")) {
+        } else if (gallery.equals(getResources().getString(R.string.subreddit))) {
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(true);
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setVisible(false);
             //menu.findItem(R.id.action_sort).setVisible(true);
-            if (sort.equals("top")) {
+            if (sort.equals(getResources().getString(R.string.top))) {
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(false);
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortDay).setVisible(true);
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortWeek).setVisible(true);
@@ -401,13 +422,13 @@ public class GalleryFragment extends Fragment implements GetData {
         fetchingImages = true;
         errorText.setVisibility(View.GONE);
         String call = "";
-        if (gallery.equals("hot") || gallery.equals("top") || gallery.equals("user")) {
+        if (gallery.equals(getResources().getString(R.string.viral)) || gallery.equals(getResources().getString(R.string.top)) || gallery.equals(getResources().getString(R.string.user))) {
             call = "3/gallery/" + gallery + "/" + sort + "/" + window + "/" + page;
-        } else if (gallery.equals("memes")) {
+        } else if (gallery.equals(getResources().getString(R.string.memes))) {
             call = "3/gallery/g/memes/" + sort + "/" + window + "/" + page;
-        } else if (gallery.equals("random")) {
+        } else if (gallery.equals(getResources().getString(R.string.random))) {
             call = "3/gallery/random/random/" + page;
-        } else if (gallery.equals("subreddit")) {
+        } else if (gallery.equals(getResources().getString(R.string.subreddit))) {
             call = "3/gallery/r/" + subreddit + "/" + sort + "/" + window + "/" + page;
         } else if (gallery.equals("search")) {
             call = "3/gallery/search?q=" + search;
@@ -418,7 +439,7 @@ public class GalleryFragment extends Fragment implements GetData {
 
     public void handleException(Exception e, String tag) {
         Log.e("Error!", e.toString());
-        noImageView.setVisibility(View.VISIBLE);
+        //errorText.setVisibility(View.VISIBLE);
     }
 
     public void onGetObject(Object object, String tag) {
@@ -463,8 +484,11 @@ public class GalleryFragment extends Fragment implements GetData {
         } catch (JSONException e) {
             Log.e("Error!", e.toString());
         }
+        if(mPullToRefreshLayout != null)
+            mPullToRefreshLayout.setRefreshComplete();
         imageAdapter.notifyDataSetChanged();
         fetchingImages = false;
+        errorText.setVisibility(View.GONE);
     }
 
     public class ImageAdapter extends BaseAdapter {
@@ -564,7 +588,7 @@ public class GalleryFragment extends Fragment implements GetData {
         savedInstanceState.putString("gallery", gallery);
         savedInstanceState.putString("sort", sort);
         savedInstanceState.putString("window", window);
-        savedInstanceState.putString("subreddit", subreddit);
+        savedInstanceState.putString(getResources().getString(R.string.subreddit), subreddit);
         savedInstanceState.putString("search", search);
         savedInstanceState.putStringArrayList("urls", urls);
         savedInstanceState.putParcelableArrayList("ids", ids);
@@ -578,13 +602,42 @@ public class GalleryFragment extends Fragment implements GetData {
         super.onSaveInstanceState(savedInstanceState);
     }
 
+    public class SpinnerAdapter extends ArrayAdapter<CharSequence> {
+        Context mContext;
+        public SpinnerAdapter(Context context, int textViewResourceId, List<CharSequence> options) {
+            super(context, textViewResourceId, options);
+            mContext = context;
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater =
+                    ( LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            ViewHolder holder;
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.gallery_spinner, null);
+                holder = new ViewHolder();
+                holder.title = (TextView) convertView.findViewById(R.id.action_bar_title);
+                holder.subtitle = (TextView) convertView.findViewById(R.id.action_bar_subtitle);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.title.setText("Gallery");
+            holder.subtitle.setText(getItem(position));
+            return convertView;
+        }
+        class ViewHolder {
+            TextView title;
+            TextView subtitle;
+        }
+    }
+
     private void setupActionBar() {
         MainActivity activity = (MainActivity) getActivity();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         Resources res = activity.getResources();
         List<CharSequence> options = new ArrayList(Arrays.asList(res.getStringArray(R.array.galleryOptions)));
-        mSpinnerAdapter = new ArrayAdapter<CharSequence>(activity, android.R.layout.simple_spinner_dropdown_item
-                , options);
+        mSpinnerAdapter = new SpinnerAdapter(activity, android.R.layout.simple_spinner_dropdown_item, options);
         if(spinner != null)
             mSpinnerAdapter.add(spinner);
         ActionBar.OnNavigationListener mNavigationCallback = new ActionBar.OnNavigationListener() {
@@ -593,23 +646,23 @@ public class GalleryFragment extends Fragment implements GetData {
                 String newGallery = "";
                     switch (i) {
                         case 0:
-                            newGallery = "hot";
-                            sort = "viral";
+                            newGallery = getResources().getString(R.string.viral);
+                            sort = getResources().getString(R.string.viralsort);
                             break;
                         case 1:
-                            newGallery = "top";
-                            sort = "day";
+                            newGallery = getResources().getString(R.string.top);
+                            sort = getResources().getString(R.string.day);
                             break;
                         case 2:
-                            newGallery = "user";
-                            sort = "viral";
+                            newGallery = getResources().getString(R.string.user);
+                            sort = getResources().getString(R.string.viralsort);
                             break;
                         case 3:
-                            newGallery = "memes";
-                            sort = "viral";
+                            newGallery = getResources().getString(R.string.memes);
+                            sort = getResources().getString(R.string.viralsort);
                             break;
                         case 4:
-                            newGallery = "random";
+                            newGallery = getResources().getString(R.string.random);
                             break;
                     }
                     if(newGallery.equals(gallery))
@@ -617,7 +670,7 @@ public class GalleryFragment extends Fragment implements GetData {
                     else if(i < 5)
                         gallery = newGallery;
                     selectedIndex = i;
-                    if (mSpinnerAdapter.getCount() > 5 && !gallery.equals("subreddit") && !gallery.equals("search")) {
+                    if (mSpinnerAdapter.getCount() > 5 && !gallery.equals(getResources().getString(R.string.subreddit)) && !gallery.equals("search")) {
                         mSpinnerAdapter.remove(mSpinnerAdapter.getItem(5));
                         subreddit = null;
                         search = null;

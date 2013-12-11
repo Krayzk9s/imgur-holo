@@ -4,7 +4,11 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ptr_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <ListView
             android:id="@+id/comment_thread"
             android:layout_width="fill_parent"
@@ -15,5 +19,6 @@
             android:persistentDrawingCache="scrolling"
             android:scrollingCache="false"
             />
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
 </LinearLayout>

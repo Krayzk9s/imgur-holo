@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Imgur Holo</string>
+    <string name="app_name">imgur Holo</string>
     <string name="action_settings">Settings</string>
     <string name="action_upload">Upload</string>
     <string name="action_share">Share</string>
@@ -37,11 +37,6 @@
     <string name="image_type">Image Type</string>
     <string name="size">Size</string>
     <string name="views">Views</string>
-    <string name="hot">hot</string>
-    <string name="top">top</string>
-    <string name="random">random</string>
-    <string name="user_submitted">user</string>
-    <string name="memes">memes</string>
     <string name="subreddit">SubReddit</string>
     <string name="action_copy">Copy URLs</string>
     <string name="action_delete">Delete</string>
@@ -55,7 +50,6 @@
     <string name="onetwenty">120</string>
     <string name="oneeighty">180</string>
     <string name="threesixty">360</string>
-    <string name="all">All</string>
     <string name="private_string">Private</string>
     <string name="hidden_string">Hidden</string>
     <string name="secret_string">Secret</string>
@@ -102,8 +96,27 @@
 
     <string name="rating_good">Upvote</string>
     <string name="rating_bad">Downvote</string>
-    <string name="user">Account</string>
+    <string name="account">Account</string>
     <string name="reply">Reply</string>
     <string name="report">Report</string>
+
+    <string name="viralsort">viral</string>
+    <string name="popularitysort">popularity</string>
+    <string name="newestsort">newest</string>
+    <string name="time">time</string>
+
+    <string name="viral">most viral</string>
+    <string name="user">user submitted</string>
+    <string name="top">highest scoring</string>
+    <string name="memes">memes</string>
+    <string name="random">random</string>
+
+    <string name="day">day</string>
+    <string name="week">week</string>
+    <string name="month">month</string>
+    <string name="year">year</string>
+    <string name="all">all</string>
+
+
 
 </resources>

@@ -88,14 +88,10 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
                 getActionBar().show();
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
         mDrawerToggle.setDrawerIndicatorEnabled(true);
@@ -155,6 +151,8 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
             mTitle = "imgur Holo";
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        mDrawerList.setSelector(R.drawable.comment_select);
         mDrawerList.setAdapter(drawerAdapter);
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -176,7 +174,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
         mDrawerToggle.syncState();
     }
 
-    /* The click listner for ListView in the navigation drawer */
+    /* The click listener for ListView in the navigation drawer */
     protected class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -221,45 +219,17 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
     }
 
     private void loadDefaultPage() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
         SharedPreferences settings = getSettings();
         if (!apiCall.loggedin || !settings.contains("DefaultPage") || settings.getString("DefaultPage", "").equals("Gallery")) {
-            GalleryFragment galleryFragment = new GalleryFragment();
-            fragmentManager.beginTransaction()
-                    .add(R.id.frame_layout, galleryFragment)
-                    .commit();
+            selectItem(0);
         } else if (settings.getString("DefaultPage", "").equals("Albums")) {
-            AlbumsFragment albumsFragment = new AlbumsFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("username", "me");
-            albumsFragment.setArguments(bundle);
-            fragmentManager.beginTransaction()
-                    .add(R.id.frame_layout, albumsFragment)
-                    .commit();
+            selectItem(4);
         } else if (settings.getString("DefaultPage", "").equals("Images")) {
-            ImagesFragment imagesFragment = new ImagesFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("imageCall", "3/account/me/images");
-            imagesFragment.setArguments(bundle);
-            fragmentManager.beginTransaction()
-                    .add(R.id.frame_layout, imagesFragment)
-                    .commit();
+            selectItem(3);
         } else if (settings.getString("DefaultPage", "").equals("Favorites")) {
-            ImagesFragment imagesFragment = new ImagesFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("imageCall", "3/account/me/likes");
-            imagesFragment.setArguments(bundle);
-            fragmentManager.beginTransaction()
-                    .add(R.id.frame_layout, imagesFragment)
-                    .commit();
+            selectItem(5);
         } else if (settings.getString("DefaultPage", "").equals("Account")) {
-            AccountFragment accountFragment = new AccountFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("username", "me");
-            accountFragment.setArguments(bundle);
-            fragmentManager.beginTransaction()
-                    .add(R.id.frame_layout, accountFragment)
-                    .commit();
+            selectItem(2);
         }
     }
 
@@ -437,13 +407,12 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
     }
 
     protected void selectItem(int position) {
-        // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mDrawerList);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         switch (position) {
             case 0:
+                mDrawerList.setItemChecked(position, true);
                 GalleryFragment galleryFragment = new GalleryFragment();
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_layout, galleryFragment)
@@ -451,6 +420,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                 break;
             case 1:
                 if (apiCall.loggedin) {
+                    mDrawerList.setItemChecked(position, true);
                     AccountFragment accountFragment = new AccountFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("username", "me");
@@ -461,7 +431,6 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                 } else {
                     displayUpload();
                 }
-
                 break;
             case 2:
                 if(apiCall.loggedin) {
@@ -474,6 +443,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                 break;
             case 3:
                 if (apiCall.loggedin) {
+                    mDrawerList.setItemChecked(position, true);
                     ImagesFragment imagesFragment = new ImagesFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("imageCall", "3/account/me/images");
@@ -481,7 +451,6 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)
                             .commit();
-                    updateMenu();
                 } else {
                     LoginAsync loginAsync = new LoginAsync(apiCall, this);
                     loginAsync.execute();
@@ -489,6 +458,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                 break;
             case 4:
                 if (apiCall.loggedin) {
+                    mDrawerList.setItemChecked(position, true);
                     AlbumsFragment albumsFragment = new AlbumsFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("username", "me");
@@ -496,11 +466,11 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, albumsFragment)
                             .commit();
-                    updateMenu();
                 }
                 break;
             case 5:
                 if (apiCall.loggedin) {
+                    mDrawerList.setItemChecked(position, true);
                     ImagesFragment imagesFragment = new ImagesFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("imageCall", "3/account/me/likes");
@@ -508,27 +478,21 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)
                             .commit();
-                    updateMenu();
                 }
                 break;
             case 6:
                 if (apiCall.loggedin) {
+                    mDrawerList.setItemChecked(position, true);
                     MessagingFragment messagingFragment = new MessagingFragment();
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, messagingFragment)
                             .commit();
-                    updateMenu();
                 }
                 break;
             case 7:
                 if (apiCall.loggedin) {
                     Intent myIntent = new Intent(this, SettingsActivity.class);
                     startActivity(myIntent);
-                    //SettingsFragment settingsFragment = new SettingsFragment();
-                    //fragmentManager.beginTransaction()
-                    //        .replace(R.id.frame_layout, settingsFragment)
-                    //        .commit();
-                    updateMenu();
                 }
                 break;
             case 8:
@@ -539,7 +503,6 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                     editor.remove("RefreshToken");
                     editor.commit();
                     apiCall.loggedin = false;
-                    updateMenu();
                 }
                 break;
         }
