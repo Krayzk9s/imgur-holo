@@ -26,6 +26,12 @@
                         android:defaultValue="hot"
                         android:entries="@array/galleryOptions"
                         android:entryValues="@array/galleryOptions"/>
+        <ListPreference android:key="GalleryLayout"
+                        android:title= "Gallery Layou"
+                        android:summary= ""
+                        android:defaultValue="Card View"
+                        android:entries="@array/galleryLayoutOptions"
+                        android:entryValues="@array/galleryLayoutOptions"/>
         <CheckBoxPreference android:key="ShowComments"
                             android:title= "Gallery comments"
                             android:summary= "Show comments in gallery"

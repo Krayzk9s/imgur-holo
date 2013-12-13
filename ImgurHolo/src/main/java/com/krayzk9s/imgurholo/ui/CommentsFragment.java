@@ -36,7 +36,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
 import com.krayzk9s.imgurholo.activities.MainActivity;
@@ -256,7 +255,6 @@ public class CommentsFragment extends Fragment implements GetData {
                 holder.header.setText(accountCreated + " - " + commentContent.getString("points") + "pts (" + commentContent.getString("ups") + "/" + commentContent.getString("downs") +  ")");
                 holder.id = commentContent.getString("id");
                 holder.image_id = commentContent.getString("image_id");
-                UrlImageViewHelper.setUrlDrawable(holder.image, "http://imgur.com/" + commentContent.getString("image_id") + "t.png", R.drawable.icon);
 
                 if (!username.equals("me"))
                     holder.delete.setVisibility(View.GONE);

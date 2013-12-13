@@ -188,4 +188,9 @@
         <item>@string/yes</item>
         <item>@string/no</item>
     </array>
+    <array
+        name="galleryLayoutOptions">
+        <item>@string/card_view</item>
+        <item>@string/grid_view</item>
+    </array>
 </resources>

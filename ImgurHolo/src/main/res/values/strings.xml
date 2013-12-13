@@ -117,6 +117,9 @@
     <string name="year">year</string>
     <string name="all">all</string>
 
+    <string name="card_view">Card View</string>
+    <string name="grid_view">Grid View</string>
+
 
 
 </resources>

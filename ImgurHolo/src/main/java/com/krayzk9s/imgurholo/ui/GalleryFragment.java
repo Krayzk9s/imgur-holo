@@ -65,6 +65,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
+import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.internal.CardThumbnail;
+import it.gmariotti.cardslib.library.view.CardListView;
+import it.gmariotti.cardslib.library.view.CardView;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
@@ -97,6 +103,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
     private boolean fetchingImages;
     TextView noImageView;
     PullToRefreshLayout mPullToRefreshLayout;
+	CardListView cardListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -269,63 +276,69 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
         actionBar = activity.getActionBar();
         SharedPreferences settings = activity.getSettings();
         View view;
-        view = inflater.inflate(R.layout.image_layout, container, false);
-        errorText = (TextView) view.findViewById(R.id.error);
-        gridview = (GridView) view.findViewById(R.id.grid_layout);
-        gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString("IconSize", "120")), getActivity()));
-        imageAdapter = new ImageAdapter(view.getContext());
-        noImageView = (TextView) view.findViewById(R.id.no_images);
-        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+		if(settings.getString("GalleryLayout", "Grid View").equals("Grid View")) {
+			view = inflater.inflate(R.layout.image_layout, container, false);
+			errorText = (TextView) view.findViewById(R.id.error);
+			gridview = (GridView) view.findViewById(R.id.grid_layout);
+			gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString("IconSize", "120")), getActivity()));
+			imageAdapter = new ImageAdapter(view.getContext());
+			noImageView = (TextView) view.findViewById(R.id.no_images);
+			gridview.setAdapter(imageAdapter);
+				gridview.setOnItemClickListener(new GridItemClickListener());
+				gridview.getViewTreeObserver().addOnGlobalLayoutListener(
+						new ViewTreeObserver.OnGlobalLayoutListener() {
+							@Override
+							public void onGlobalLayout() {
+								if(imageAdapter.getNumColumns() == 0 || gridview.getWidth() != oldwidth)
+									setNumColumns();
+							}
+						});
+				gridview.setOnScrollListener(new AbsListView.OnScrollListener() {
+					@Override
+					public void onScrollStateChanged(AbsListView absListView, int i) {
 
-        // Now setup the PullToRefreshLayout
-        ActionBarPullToRefresh.from(getActivity())
-                // Mark All Children as pullable
-                .allChildrenArePullable()
-                        // Set the OnRefreshListener
-                .listener(this)
-                        // Finally commit the setup to our PullToRefreshLayout
-                .setup(mPullToRefreshLayout);
-        gridview.setAdapter(imageAdapter);
-            gridview.setOnItemClickListener(new GridItemClickListener());
-            gridview.getViewTreeObserver().addOnGlobalLayoutListener(
-                    new ViewTreeObserver.OnGlobalLayoutListener() {
-                        @Override
-                        public void onGlobalLayout() {
-                            if(imageAdapter.getNumColumns() == 0 || gridview.getWidth() != oldwidth)
-                                setNumColumns();
-                        }
-                    });
-            gridview.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView absListView, int i) {
-
-                }
-                @Override
-                public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    if(lastInView == -1)
-                        lastInView = firstVisibleItem;
-                    else if (lastInView > firstVisibleItem) {
-                        actionBar.show();
-                        lastInView = firstVisibleItem;
-                    }
-                    else if (lastInView < firstVisibleItem) {
-                        actionBar.hide();
-                        lastInView = firstVisibleItem;
-                    }
-                    int lastInScreen = firstVisibleItem + visibleItemCount;
-                    if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0 && !fetchingImages) {
-                        if(!gallery.equals("search")) {
-                            page += 1;
-                            getImages();
-                        }
-                    }
-                }
-            });
-        setupActionBar();
-        if(savedInstanceState == null && urls.size() < 1) {
-            Log.d("urls", urls.size() + "");
-            makeGallery();
-        }
+					}
+					@Override
+					public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+						if(lastInView == -1)
+							lastInView = firstVisibleItem;
+						else if (lastInView > firstVisibleItem) {
+							actionBar.show();
+							lastInView = firstVisibleItem;
+						}
+						else if (lastInView < firstVisibleItem) {
+							actionBar.hide();
+							lastInView = firstVisibleItem;
+						}
+						int lastInScreen = firstVisibleItem + visibleItemCount;
+						if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0 && !fetchingImages) {
+							if(!gallery.equals("search")) {
+								page += 1;
+								getImages();
+							}
+						}
+					}
+				});
+		}
+		else {
+			view = inflater.inflate(R.layout.image_layout_card_list, container, false);
+			errorText = (TextView) view.findViewById(R.id.error);
+			cardListView = (CardListView) view.findViewById(R.id.grid_layout);
+		}
+		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+		// Now setup the PullToRefreshLayout
+		ActionBarPullToRefresh.from(getActivity())
+				// Mark All Children as pullable
+				.allChildrenArePullable()
+						// Set the OnRefreshListener
+				.listener(this)
+						// Finally commit the setup to our PullToRefreshLayout
+				.setup(mPullToRefreshLayout);
+		setupActionBar();
+		if(savedInstanceState == null && urls.size() < 1) {
+			Log.d("urls", urls.size() + "");
+			makeGallery();
+		}
         return view;
     }
 
@@ -411,7 +424,8 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
     private void makeGallery() {
         urls = new ArrayList<String>();
         ids = new ArrayList<JSONParcelable>();
-        imageAdapter.notifyDataSetChanged();
+		if(imageAdapter != null)
+        	imageAdapter.notifyDataSetChanged();
         MainActivity activity = (MainActivity) getActivity();
         activity.invalidateOptionsMenu();
         getImages();
@@ -422,8 +436,12 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
         fetchingImages = true;
         errorText.setVisibility(View.GONE);
         String call = "";
-        if (gallery.equals(getResources().getString(R.string.viral)) || gallery.equals(getResources().getString(R.string.top)) || gallery.equals(getResources().getString(R.string.user))) {
-            call = "3/gallery/" + gallery + "/" + sort + "/" + window + "/" + page;
+        if (gallery.equals(getResources().getString(R.string.viral))) {
+			call = "3/gallery/hot/" + sort + "/" + window + "/" + page;
+		} else if(gallery.equals(getResources().getString(R.string.top))) {
+            call = "3/gallery/top/" + sort + "/" + window + "/" + page;
+		} else if(gallery.equals(getResources().getString(R.string.user))) {
+			call = "3/gallery/user/" + sort + "/" + window + "/" + page;
         } else if (gallery.equals(getResources().getString(R.string.memes))) {
             call = "3/gallery/g/memes/" + sort + "/" + window + "/" + page;
         } else if (gallery.equals(getResources().getString(R.string.random))) {
@@ -443,50 +461,77 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
     }
 
     public void onGetObject(Object object, String tag) {
-        JSONObject data = (JSONObject) object;
-        MainActivity activity = (MainActivity) getActivity();
-        Log.d("imagesData", "checking");
-        if(activity == null || data == null) {
-            return;
-        }
-        Log.d("imagesData", "failed");
-        try {
-            Log.d("URI", data.toString());
-            JSONArray imageArray = data.getJSONArray("data");
-            errorText.setVisibility(View.GONE);
-            for (int i = 0; i < imageArray.length(); i++) {
-                JSONObject imageData = imageArray.getJSONObject(i);
-                SharedPreferences settings = activity.getSettings();
-                String s = settings.getString("IconQuality", "m");
-                try {
-                    if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
-                        if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + s + ".png")) {
-                            urls.add("http://imgur.com/" + imageData.getString("cover") + s + ".png");
-                            JSONParcelable dataParcel = new JSONParcelable();
-                            dataParcel.setJSONObject(imageData);
-                            ids.add(dataParcel);
-                        }
-                    }
-                    else {
-                        if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png"))
-                        {
-                            urls.add("http://imgur.com/" + imageData.getString("id") + s + ".png");
-                            JSONParcelable dataParcel = new JSONParcelable();
-                            dataParcel.setJSONObject(imageData);
-                            ids.add(dataParcel);
-                        }
-                    }
-                }
-                catch (RejectedExecutionException e) {
-                    Log.e("Rejected", e.toString());
-                }
-            }
-        } catch (JSONException e) {
-            Log.e("Error!", e.toString());
-        }
-        if(mPullToRefreshLayout != null)
-            mPullToRefreshLayout.setRefreshComplete();
-        imageAdapter.notifyDataSetChanged();
+		ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+		SharedPreferences settings = activity.getApiCall().settings;
+			JSONObject data = (JSONObject) object;
+			Log.d("imagesData", "checking");
+			if(activity == null || data == null) {
+				return;
+			}
+			Log.d("imagesData", "failed");
+			try {
+				Log.d("URI", data.toString());
+				JSONArray imageArray = data.getJSONArray("data");
+				errorText.setVisibility(View.GONE);
+				for (int i = 0; i < imageArray.length(); i++) {
+					JSONObject imageData = imageArray.getJSONObject(i);
+					String s = settings.getString("IconQuality", "m");
+					try {
+						if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
+							if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + s + ".png")) {
+								urls.add("http://imgur.com/" + imageData.getString("cover") + ".png");
+								JSONParcelable dataParcel = new JSONParcelable();
+								dataParcel.setJSONObject(imageData);
+								ids.add(dataParcel);
+							}
+						}
+						else {
+							if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png"))
+							{
+								urls.add("http://imgur.com/" + imageData.getString("id") + ".png");
+								JSONParcelable dataParcel = new JSONParcelable();
+								dataParcel.setJSONObject(imageData);
+								ids.add(dataParcel);
+							}
+						}
+					}
+					catch (RejectedExecutionException e) {
+						Log.e("Rejected", e.toString());
+					}
+				}
+			} catch (JSONException e) {
+				Log.e("Error!", e.toString());
+			}
+		if(settings.getString("GalleryLayout", "Card View").equals("Card View")) {
+			try {
+				ArrayList<Card> cards = new ArrayList<Card>();
+				for(int i = 0; i < ids.size(); i++) {
+					Card card = new Card(getActivity());
+					CardHeader header = new CardHeader(getActivity());
+					header.setTitle(ids.get(i).getJSONObject().getString("title"));
+					card.addCardHeader(header);
+					CustomThumbCard thumb = new CustomThumbCard(getActivity());
+					thumb.setExternalUsage(true);
+					thumb.url = urls.get(i);
+					card.addCardThumbnail(thumb);
+					CardView cardView = (CardView) getActivity().findViewById(R.id.list_cardId);
+					card.setCardView(cardView);
+					cards.add(card);
+				}
+				CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
+				if (cardListView!=null){
+					cardListView.setAdapter(mCardArrayAdapter);
+				}
+			}
+			catch (JSONException e) {
+				Log.e("Error!", e.toString());
+			}
+		}
+		else {
+			imageAdapter.notifyDataSetChanged();
+		}
+		if(mPullToRefreshLayout != null)
+			mPullToRefreshLayout.setRefreshComplete();
         fetchingImages = false;
         errorText.setVisibility(View.GONE);
     }
@@ -551,7 +596,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
                 else {
                     imageView = (ImageView) convertView;
                 }
-                Ion.with(imageView).load(urls.get(position - mNumColumns));
+               Ion.with(imageView).load(urls.get(position - mNumColumns));
                 return imageView;
             }
         }
@@ -691,4 +736,16 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
         Log.d("Setting Item", "Setting Item");
         actionBar.setListNavigationCallbacks(mSpinnerAdapter, mNavigationCallback);
     }
+
+	public class CustomThumbCard extends CardThumbnail {
+		public String url;
+		public CustomThumbCard(Context context) {
+			super(context);
+		}
+
+		@Override
+		public void setupInnerViewElements(ViewGroup parent, View viewImage) {
+			Ion.with((ImageView) viewImage).load(url);
+		}
+	}
 }
