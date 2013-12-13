@@ -453,22 +453,21 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
     public void refreshComments() {
         try {
         imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.VISIBLE);
-        if (imageData.getJSONObject().getInt("size") < 3250000 && imageData.getJSONObject().has("cover")) //temporary to fix large gif bug
+        if (imageData.getJSONObject().has("cover")) //temporary to fix large gif bug
            Ion.with(getActivity(), "http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png")
                     .setLogging("MyLogs", Log.DEBUG)
                     .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
-                    .withBitmap().resize(imageData.getJSONObject().getInt("width"),imageData.getJSONObject().getInt("height"))
+                    .withBitmap()
                     .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
                 @Override
                 public void onCompleted(Exception e, ImageView result) {
                     imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
                 }
             });
-        else if(imageData.getJSONObject().getInt("size") < 3250000)
           Ion.with(getActivity(), imageData.getJSONObject().getString("link"))
                     .setLogging("MyLogs", Log.DEBUG)
                     .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
-                    .withBitmap().resize(imageData.getJSONObject().getInt("width"),imageData.getJSONObject().getInt("height"))
+                    .withBitmap()
                     .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
                     @Override
                     public void onCompleted(Exception e, ImageView result) {
@@ -776,22 +775,22 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
             int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId) + statusBarHeight;
             imageView = (ImageView) imageLayoutView.findViewById(R.id.single_image_view);
             imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.VISIBLE);
-            if (imageData.getJSONObject().getInt("size") < 3250000 && imageData.getJSONObject().has("cover")) //temporary to fix large gif bug
+            if (imageData.getJSONObject().has("cover")) //temporary to fix large gif bug
                 Ion.with(getActivity(), "http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png")
                         .setLogging("MyLogs", Log.DEBUG)
                         .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
-                        .withBitmap().resize(imageData.getJSONObject().getInt("width"),imageData.getJSONObject().getInt("height"))
+                        .withBitmap()
                         .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
                     @Override
                     public void onCompleted(Exception e, ImageView result) {
                         imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
                     }
                 });
-            else if(imageData.getJSONObject().getInt("size") < 3250000)
+
                 Ion.with(getActivity(), imageData.getJSONObject().getString("link"))
                         .setLogging("MyLogs", Log.DEBUG)
                         .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
-                        .withBitmap().resize(imageData.getJSONObject().getInt("width"),imageData.getJSONObject().getInt("height"))
+                        .withBitmap()
                         .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
                         @Override
                         public void onCompleted(Exception e, ImageView result) {

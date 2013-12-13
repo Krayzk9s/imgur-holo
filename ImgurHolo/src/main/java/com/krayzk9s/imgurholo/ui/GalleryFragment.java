@@ -475,11 +475,13 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 				errorText.setVisibility(View.GONE);
 				for (int i = 0; i < imageArray.length(); i++) {
 					JSONObject imageData = imageArray.getJSONObject(i);
-					String s = settings.getString("IconQuality", "m");
+					String s = "";
+                    if(!settings.getString("GalleryLayout", "Card View").equals("Card View"))
+                        s = settings.getString("IconQuality", "m");
 					try {
 						if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
 							if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + s + ".png")) {
-								urls.add("http://imgur.com/" + imageData.getString("cover") + ".png");
+								urls.add("http://imgur.com/" + imageData.getString("cover")  + s + ".png");
 								JSONParcelable dataParcel = new JSONParcelable();
 								dataParcel.setJSONObject(imageData);
 								ids.add(dataParcel);
@@ -488,7 +490,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 						else {
 							if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png"))
 							{
-								urls.add("http://imgur.com/" + imageData.getString("id") + ".png");
+								urls.add("http://imgur.com/" + imageData.getString("id")  + s + ".png");
 								JSONParcelable dataParcel = new JSONParcelable();
 								dataParcel.setJSONObject(imageData);
 								ids.add(dataParcel);
@@ -512,10 +514,17 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 					card.addCardHeader(header);
 					CustomThumbCard thumb = new CustomThumbCard(getActivity());
 					thumb.setExternalUsage(true);
-					thumb.url = urls.get(i);
+					thumb.position = i;
+                    final int position = i;
 					card.addCardThumbnail(thumb);
 					CardView cardView = (CardView) getActivity().findViewById(R.id.list_cardId);
 					card.setCardView(cardView);
+                    card.setOnClickListener(new Card.OnCardClickListener() {
+                        @Override
+                        public void onClick(Card card, View view) {
+                            selectItem(position);
+                        }
+                    });
 					cards.add(card);
 				}
 				CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
@@ -738,14 +747,15 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
     }
 
 	public class CustomThumbCard extends CardThumbnail {
-		public String url;
+		public int position;
+
 		public CustomThumbCard(Context context) {
 			super(context);
 		}
 
 		@Override
 		public void setupInnerViewElements(ViewGroup parent, View viewImage) {
-			Ion.with((ImageView) viewImage).load(url);
+            Ion.with((ImageView) viewImage).load(urls.get(position));
 		}
 	}
 }

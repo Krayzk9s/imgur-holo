@@ -53,82 +53,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd7191f9-071f-4e7c-a8f1-8f8b811e97ef" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/libs/android-support-v13.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/AccountFragment.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/OnImageTouchedListener.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/SettingsFragment.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/ZoomableImageView.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/xml/preferences.xml" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\android_support_v7_appcompat.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\android_support_v7_appcompat__2_.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\gson_2_2_4.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\httpasyncclient_4_0_beta4.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\httpclient_4_3_beta1.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\httpcore_4_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\httpcore_4_2_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\httpcore_4_3_beta2.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\httpcore_nio_4_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\httpcore_nio_4_2_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\httpcore_nio_4_3_beta2.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\httpmime_4_2_5.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\scribe_1_3_5__2_.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\signpost_commonshttp4_1_2_1_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\signpost_core_1_2_1_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\signpost_core_1_2_1_2__2_.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\support_v4_13_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\.idea\libraries\support_v4_18_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\libs\gson-2.2.4.jar" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\src\main\java\com\krayzk9s\imgurholo\AccountFragment.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\src\main\java\com\krayzk9s\imgurholo\SettingsFragment.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\.idea\libraries\urlimageviewhelper_1_0_4.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\libs\gson-2.2.4.jar" afterPath="" />
-      <change type="MOVED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\src\main\java\com\krayzk9s\imgurholo\AlbumsFragment.java" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/AlbumsFragment.java" />
-      <change type="MOVED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\src\main\java\com\krayzk9s\imgurholo\CommentsFragment.java" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/CommentsFragment.java" />
-      <change type="MOVED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\src\main\java\com\krayzk9s\imgurholo\GalleryFragment.java" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/GalleryFragment.java" />
-      <change type="MOVED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\src\main\java\com\krayzk9s\imgurholo\ImagePager.java" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/ImagePager.java" />
-      <change type="MOVED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\src\main\java\com\krayzk9s\imgurholo\ImageSelectActivity.java" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/ImageSelectActivity.java" />
-      <change type="MOVED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\src\main\java\com\krayzk9s\imgurholo\ImagesFragment.java" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/ImagesFragment.java" />
-      <change type="MOVED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\src\main\java\com\krayzk9s\imgurholo\JSONParcelable.java" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/JSONParcelable.java" />
-      <change type="MOVED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\src\main\java\com\krayzk9s\imgurholo\MainActivity.java" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/MainActivity.java" />
-      <change type="MOVED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\src\main\java\com\krayzk9s\imgurholo\MessagingFragment.java" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/MessagingFragment.java" />
-      <change type="MOVED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\src\main\java\com\krayzk9s\imgurholo\SingleImageFragment.java" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/SingleImageFragment.java" />
-      <change type="MOVED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\ImgurHolo\src\main\java\com\krayzk9s\imgurholo\SquareImageView.java" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/SquareImageView.java" />
-      <change type="MOVED" beforePath="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo-gallery\imgur-holo.iml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/imgur-holo-gallery.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/.gradle/1.6/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/.gradle/1.6/taskArtifacts/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/.gradle/1.6/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/.gradle/1.6/taskArtifacts/fileSnapshots.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/.gradle/1.6/taskArtifacts/outputFileStates.bin" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/.gradle/1.6/taskArtifacts/outputFileStates.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/.gradle/1.6/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/.gradle/1.6/taskArtifacts/taskArtifacts.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/CommentsFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/CommentsFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImgurHoloProject.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/GalleryFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/GalleryFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/ImgurHolo.iml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/ImgurHolo.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" afterPath="$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/activities/SettingsActivity.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/activities/SettingsActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/SingleImageFragment.java" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/SingleImageFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/account_layout.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/account_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/activity_main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/values/arrays.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/values/arrays.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/build.gradle" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/build.gradle" afterPath="$PROJECT_DIR$/ImgurHolo/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/dark_image_view.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/dark_image_view.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/dimens.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/dimens.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/image_card.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/image_card.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/image_layout.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/image_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/image_view.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/image_view.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/menu/main.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/menu/main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/menu/main_dark.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/menu/main_dark.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/message_layout.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/layout/message_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/dark_image_view.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/dark_image_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/.idea/modules.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/xml/preferences.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/xml/preferences.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/values/styles.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/ImgurHolo/src/main/res/values/styles.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/styles.xml" afterPath="$PROJECT_DIR$/ImgurHolo/src/main/res/values/styles.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../imgur-holo-gallery/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../imgur-holo-gallery/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ImgurHolo.iws" />
@@ -193,153 +127,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SingleImageFragment.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/SingleImageFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="776" column="21" selection-start="42831" selection-end="42840" vertical-scroll-proportion="-122.08" vertical-offset="8287" max-vertical-offset="20978">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="35" selection-start="143" selection-end="143" vertical-scroll-proportion="0.054226477" vertical-offset="0" max-vertical-offset="2465">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="image_view.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="43" selection-start="490" selection-end="673" vertical-scroll-proportion="-10.2" vertical-offset="0" max-vertical-offset="2227">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="GalleryFragment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/GalleryFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="439" column="33" selection-start="20542" selection-end="20542" vertical-scroll-proportion="0.0" vertical-offset="7072" max-vertical-offset="12852">
+            <state line="526" column="23" selection-start="24433" selection-end="24433" vertical-scroll-proportion="0.0" vertical-offset="2064" max-vertical-offset="4947">
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#4146#4190#0" expanded="true" />
-                <element signature="e#4677#4715#0" expanded="true" />
-                <element signature="e#4776#4816#0" expanded="true" />
-                <element signature="e#4879#4887#0" expanded="true" />
-                <element signature="e#4978#5022#0" expanded="true" />
-                <element signature="e#5045#5083#0" expanded="true" />
-                <element signature="e#8135#8179#0" expanded="true" />
-                <element signature="e#8204#8243#0" expanded="true" />
                 <element signature="e#8489#9186#0" expanded="true" />
                 <element signature="e#9167#9168#0" expanded="true" />
                 <element signature="e#9216#9417#0" expanded="true" />
                 <element signature="e#9398#9399#0" expanded="true" />
-                <element signature="e#9521#9565#0" expanded="true" />
-                <element signature="e#9651#9690#0" expanded="true" />
-                <element signature="e#9773#9811#0" expanded="true" />
-                <element signature="e#9894#9932#0" expanded="true" />
-                <element signature="e#9959#9997#0" expanded="true" />
-                <element signature="e#10081#10119#0" expanded="true" />
-                <element signature="e#10146#10185#0" expanded="true" />
-                <element signature="e#10270#10308#0" expanded="true" />
-                <element signature="e#10335#10375#0" expanded="true" />
-                <element signature="e#10459#10497#0" expanded="true" />
-                <element signature="e#10524#10563#0" expanded="true" />
-                <element signature="e#10646#10684#0" expanded="true" />
-                <element signature="e#10711#10749#0" expanded="true" />
-                <element signature="e#11996#12222#0" expanded="true" />
-                <element signature="e#12213#12214#0" expanded="true" />
-                <element signature="e#14995#15039#0" expanded="true" />
-                <element signature="e#15060#15098#0" expanded="true" />
-                <element signature="e#15240#15279#0" expanded="true" />
-                <element signature="e#15300#15338#0" expanded="true" />
-                <element signature="e#15477#15515#0" expanded="true" />
-                <element signature="e#15651#15690#0" expanded="true" />
-                <element signature="e#15827#15867#0" expanded="true" />
-                <element signature="e#16005#16044#0" expanded="true" />
-                <element signature="e#16181#16219#0" expanded="true" />
-                <element signature="e#16371#16411#0" expanded="true" />
-                <element signature="e#16431#16470#0" expanded="true" />
-                <element signature="e#16785#16823#0" expanded="true" />
-                <element signature="e#17695#17735#0" expanded="true" />
-                <element signature="e#18045#18083#0" expanded="true" />
-                <element signature="e#18777#18818#0" expanded="true" />
-                <element signature="e#18920#18964#0" expanded="true" />
-                <element signature="e#19273#19311#0" expanded="true" />
-                <element signature="e#20473#20513#0" expanded="true" />
-                <element signature="e#20608#20646#0" expanded="true" />
-                <element signature="e#20750#20789#0" expanded="true" />
-                <element signature="e#20892#20932#0" expanded="true" />
-                <element signature="e#21047#21088#0" expanded="true" />
-                <element signature="e#21181#21225#0" expanded="true" />
-                <element signature="e#23448#23454#0" expanded="true" />
-                <element signature="e#24642#24643#0" expanded="true" />
-                <element signature="e#24690#24691#0" expanded="true" />
-                <element signature="e#24728#24729#0" expanded="true" />
-                <element signature="e#24770#24771#0" expanded="true" />
-                <element signature="e#27818#27862#0" expanded="true" />
-                <element signature="e#30411#32358#0" expanded="true" />
-                <element signature="e#30687#30727#0" expanded="true" />
-                <element signature="e#30764#30808#0" expanded="true" />
-                <element signature="e#30918#30956#0" expanded="true" />
-                <element signature="e#30993#31031#0" expanded="true" />
-                <element signature="e#31141#31180#0" expanded="true" />
-                <element signature="e#31217#31261#0" expanded="true" />
-                <element signature="e#31371#31411#0" expanded="true" />
-                <element signature="e#31448#31492#0" expanded="true" />
-                <element signature="e#31602#31643#0" expanded="true" />
-                <element signature="e#31984#32028#0" expanded="true" />
-                <element signature="e#32347#32348#0" expanded="true" />
+                <element signature="e#24199#24431#0" expanded="true" />
+                <element signature="e#24408#24409#0" expanded="true" />
+                <element signature="method#onItemClick#0;class#GridItemClickListener#0;class#GalleryFragment#0" expanded="true" />
+                <element signature="method#selectItem#0;class#GalleryFragment#0" expanded="true" />
+                <element signature="class#SpinnerAdapter#0;class#GalleryFragment#0" expanded="false" />
+                <element signature="method#setupActionBar#0;class#GalleryFragment#0" expanded="true" />
+                <element signature="method#CustomThumbCard#0;class#CustomThumbCard#0;class#GalleryFragment#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="arrays.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="193" column="31" selection-start="5954" selection-end="5954" vertical-scroll-proportion="0.0" vertical-offset="2764" max-vertical-offset="3417">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="120" column="38" selection-start="5322" selection-end="5322" vertical-scroll-proportion="0.0" vertical-offset="1421" max-vertical-offset="2227">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="image_layout_card_list.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_layout_card_list.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="65" selection-start="1703" selection-end="1703" vertical-scroll-proportion="-19.32" vertical-offset="146" max-vertical-offset="867">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="list_card_thumbnail_layout.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/list_card_thumbnail_layout.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="60" selection-start="418" selection-end="418" vertical-scroll-proportion="-5.44" vertical-offset="0" max-vertical-offset="255">
-              <folding />
             </state>
           </provider>
         </entry>
@@ -350,7 +154,7 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="40" selection-start="2083" selection-end="2083" vertical-scroll-proportion="-14.96" vertical-offset="459" max-vertical-offset="1513">
+            <state line="53" column="54" selection-start="2340" selection-end="2340" vertical-scroll-proportion="-11.56" vertical-offset="612" max-vertical-offset="1513">
               <folding />
             </state>
           </provider>
@@ -361,6 +165,66 @@
           <provider selected="true" editor-type-id="text-editor">
             <state line="46" column="54" selection-start="1845" selection-end="1845" vertical-scroll-proportion="0.0" vertical-offset="325" max-vertical-offset="986">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SingleImageFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/SingleImageFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="776" column="90" selection-start="42691" selection-end="42691" vertical-scroll-proportion="-8.28" vertical-offset="6117" max-vertical-offset="9282">
+              <folding>
+                <element signature="method#refreshComments#0;class#SingleImageFragment#0" expanded="true" />
+                <element signature="e#43157#43437#0" expanded="true" />
+                <element signature="e#43418#43419#0" expanded="true" />
+                <element signature="method#updateImageFont#0;class#SingleImageFragment#0" expanded="true" />
+                <element signature="method#getIndents#0;class#SingleImageFragment#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="image_view.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml">
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="13" column="48" selection-start="574" selection-end="574" vertical-scroll-proportion="-8.84" vertical-offset="0" max-vertical-offset="2227">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dark_image_view.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/dark_image_view.xml">
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="22" column="0" selection-start="959" selection-end="959" vertical-scroll-proportion="0.5899054" vertical-offset="0" max-vertical-offset="2244">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="preferences.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/xml/preferences.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="28" column="50" selection-start="1407" selection-end="1420" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="2176">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SettingsActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/activities/SettingsActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="125" column="61" selection-start="4938" selection-end="4938" vertical-scroll-proportion="0.0" vertical-offset="786" max-vertical-offset="3604">
+              <folding>
+                <element signature="e#5101#5379#0" expanded="true" />
+                <element signature="e#5364#5365#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -393,86 +257,12 @@
         <entry key="imgur-holo/" value="true" />
       </map>
     </option>
-    <option name="recentTasks">
-      <list>
-        <ExternalTaskExecutionInfo>
-          <option name="executorId" value="Run" />
-          <option name="settings">
-            <ExternalSystemSettings>
-              <option name="externalProjectPath" value="$PROJECT_DIR$" />
-              <option name="externalSystemIdString" value="GRADLE" />
-              <option name="taskNames">
-                <list>
-                  <option value="build" />
-                </list>
-              </option>
-            </ExternalSystemSettings>
-          </option>
-        </ExternalTaskExecutionInfo>
-        <ExternalTaskExecutionInfo>
-          <option name="executorId" value="Run" />
-          <option name="settings">
-            <ExternalSystemSettings>
-              <option name="externalProjectPath" value="$PROJECT_DIR$" />
-              <option name="externalSystemIdString" value="GRADLE" />
-              <option name="taskNames">
-                <list>
-                  <option value="assembleTest" />
-                </list>
-              </option>
-            </ExternalSystemSettings>
-          </option>
-        </ExternalTaskExecutionInfo>
-        <ExternalTaskExecutionInfo>
-          <option name="executorId" value="Run" />
-          <option name="settings">
-            <ExternalSystemSettings>
-              <option name="externalProjectPath" value="$PROJECT_DIR$" />
-              <option name="externalSystemIdString" value="GRADLE" />
-              <option name="taskNames">
-                <list>
-                  <option value="check" />
-                </list>
-              </option>
-            </ExternalSystemSettings>
-          </option>
-        </ExternalTaskExecutionInfo>
-        <ExternalTaskExecutionInfo>
-          <option name="executorId" value="Run" />
-          <option name="settings">
-            <ExternalSystemSettings>
-              <option name="externalProjectPath" value="$PROJECT_DIR$" />
-              <option name="externalSystemIdString" value="GRADLE" />
-              <option name="taskNames">
-                <list>
-                  <option value="clean" />
-                </list>
-              </option>
-            </ExternalSystemSettings>
-          </option>
-        </ExternalTaskExecutionInfo>
-        <ExternalTaskExecutionInfo>
-          <option name="executorId" value="Debug" />
-          <option name="settings">
-            <ExternalSystemSettings>
-              <option name="externalProjectPath" value="$PROJECT_DIR$" />
-              <option name="externalSystemIdString" value="GRADLE" />
-              <option name="taskNames">
-                <list>
-                  <option value="clean" />
-                </list>
-              </option>
-            </ExternalSystemSettings>
-          </option>
-        </ExternalTaskExecutionInfo>
-      </list>
-    </option>
     <option name="availableProjects">
       <map>
         <entry>
           <key>
             <ExternalProjectPojo>
-              <option name="name" value="imgur-holo" />
+              <option name="name" value="ImgurHoloProject" />
               <option name="path" value="$PROJECT_DIR$" />
             </ExternalProjectPojo>
           </key>
@@ -483,7 +273,7 @@
                 <option name="path" value="$PROJECT_DIR$/ImgurHolo" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value="imgur-holo" />
+                <option name="name" value="ImgurHoloProject" />
                 <option name="path" value="$PROJECT_DIR$" />
               </ExternalProjectPojo>
             </list>
@@ -493,407 +283,6 @@
     </option>
     <option name="availableTasks">
       <map>
-        <entry key="$PROJECT_DIR$">
-          <value>
-            <list>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="lintRelease" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles all Release builds" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="assembleRelease" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="packageReleaseAidl" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="validateDebugSigning" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.github.chrisbanes.actionbarpulltorefresh:library:0.9.3" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGithubChrisbanesActionbarpulltorefreshLibrary093Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="generateReleaseSources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="processReleaseResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="processDebugResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="preReleaseBuild" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="copyDebugLint" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="packageDebugAidl" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Uninstalls the Test build for the Debug build" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="uninstallTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="dexTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="compileTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="mergeReleaseResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="generateDebugSources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="packageRelease" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="generateTestBuildConfig" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="processDebugManifest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="generateReleaseBuildConfig" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="packageReleaseJar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles a bundle containing the library in Release." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="bundleRelease" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Uninstall all applications." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="uninstallAll" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="lintDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="mergeReleaseAssets" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="mergeTestAssets" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="mergeReleaseProguardFiles" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="generateTestSources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="packageDebugRenderscript" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles all variants of all applications and secondary packages." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="assemble" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs all checks." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="check" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareReleaseDependencies" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="packageDebugJar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs all device checks on currently connected devices." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="connectedCheck" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Deletes the build directory." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="clean" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareTestDependencies" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="makeJar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="packageDebugLocalJar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="dexRelease" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="build" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project and all projects that depend on it." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="buildDependents" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="copyReleaseLint" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="packageTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs all device checks using Device Providers and Test Servers." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="deviceCheck" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="wrapper" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="processTestResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Installs and runs the tests for Build 'Debug' on connected devices." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="connectedInstrumentTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="compileReleaseRenderscript" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="compileLint" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles the Test build for the Debug build" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="assembleTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Uninstalls the Debug build" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="uninstallDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project and all projects it depends on." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="buildNeeded" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="processTestJavaRes" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="compileDebugAidl" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="mergeDebugProguardFiles" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="preTestBuild" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareDebugDependencies" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="processReleaseManifest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="compileReleaseAidl" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="compileDebugRenderscript" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="preBuild" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="lintTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="packageReleaseLocalJar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="mergeDebugResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Installs the Test build for the Debug build" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="installTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="compileDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="clearJar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="preDebugBuild" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the Android dependencies of the project" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="androidDependencies" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Installs the Debug build" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="installDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="generateDebugBuildConfig" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare imgur-holo:AndroidAsync:unspecified" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareImgurHoloAndroidAsyncUnspecifiedLibrary" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Uninstalls the Release build" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="uninstallRelease" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="compileTestRenderscript" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="mergeTestResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare com.github.castorflex.smoothprogressbar:library:0.2.0" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareComGithubCastorflexSmoothprogressbarLibrary020Library" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="processReleaseJavaRes" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the signing info for each variant" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="signingReport" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="packageDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs lint on all variants." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="lint" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="processTestTestManifest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="processDebugJavaRes" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles a bundle containing the library in Debug." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="bundleDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="compileTestAidl" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="compileRelease" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="dexDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="packageReleaseRenderscript" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="packageDebugResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare imgur-holo.ion:ion:unspecified" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="prepareImgurHoloIonIonUnspecifiedLibrary" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="mergeDebugAssets" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="packageReleaseResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles all Debug builds" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="assembleDebug" />
-              </ExternalTaskPojo>
-            </list>
-          </value>
-        </entry>
         <entry key="$PROJECT_DIR$/ImgurHolo">
           <value>
             <list>
@@ -1212,374 +601,18 @@
             </list>
           </value>
         </entry>
-        <entry key="$PROJECT_DIR$/ion/ion">
-          <value>
-            <list>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the Android dependencies of the project" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="androidDependencies" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles all variants of all applications and secondary packages." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="assemble" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles all Debug builds" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="assembleDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles all Release builds" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="assembleRelease" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles the Test build for the Debug build" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="assembleTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="build" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project and all projects that depend on it." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="buildDependents" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project and all projects it depends on." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="buildNeeded" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles a bundle containing the library in Debug." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="bundleDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles a bundle containing the library in Release." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="bundleRelease" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs all checks." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="check" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Deletes the build directory." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="clean" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="clearJar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="compileDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="compileDebugAidl" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="compileDebugRenderscript" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="compileLint" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="compileRelease" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="compileReleaseAidl" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="compileReleaseRenderscript" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="compileTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="compileTestAidl" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="compileTestRenderscript" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs all device checks on currently connected devices." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="connectedCheck" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Installs and runs the tests for Build 'Debug' on connected devices." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="connectedInstrumentTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="copyDebugLint" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="copyReleaseLint" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs all device checks using Device Providers and Test Servers." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="deviceCheck" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="dexTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="generateDebugBuildConfig" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="generateDebugSources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="generateReleaseBuildConfig" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="generateReleaseSources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="generateTestBuildConfig" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="generateTestSources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Installs the Test build for the Debug build" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="installTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs lint on all variants." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="lint" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="lintDebug" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="lintRelease" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="lintTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="makeJar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="mergeDebugAssets" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="mergeDebugProguardFiles" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="mergeDebugResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="mergeReleaseAssets" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="mergeReleaseProguardFiles" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="mergeReleaseResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="mergeTestAssets" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="mergeTestResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="packageDebugAidl" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="packageDebugJar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="packageDebugLocalJar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="packageDebugRenderscript" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="packageDebugResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="packageReleaseAidl" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="packageReleaseJar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="packageReleaseLocalJar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="packageReleaseRenderscript" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="packageReleaseResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="packageTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="preBuild" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="preDebugBuild" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="preReleaseBuild" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="preTestBuild" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="prepareDebugDependencies" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Prepare imgur-holo:AndroidAsync:unspecified" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="prepareImgurHoloAndroidAsyncUnspecifiedLibrary" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="prepareReleaseDependencies" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="prepareTestDependencies" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="processDebugJavaRes" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="processDebugManifest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="processDebugResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="processReleaseJavaRes" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="processReleaseManifest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="processReleaseResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="processTestJavaRes" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="processTestResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="processTestTestManifest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the signing info for each variant" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="signingReport" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Uninstall all applications." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="uninstallAll" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Uninstalls the Test build for the Debug build" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="uninstallTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="validateDebugSigning" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/ion/ion" />
-                <option name="name" value="wrapper" />
-              </ExternalTaskPojo>
-            </list>
-          </value>
-        </entry>
       </map>
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="1386663374686" />
         <entry key="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo" value="1386663374686" />
+        <entry key="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject" value="1386953425594" />
       </map>
     </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/imgur-holo.iml" />
         <option value="$PROJECT_DIR$/ImgurHoloProject.iml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/libs/SquareImageView.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml" />
@@ -1606,9 +639,6 @@
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/menu/comments.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/menu/comments_dark.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/tools/Fetcher.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/SingleImageFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/dark_image_view.xml" />
         <option value="$PROJECT_DIR$/AndroidAsync/AndroidAsync/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/ui/CommentsFragment.java" />
         <option value="$PROJECT_DIR$/ion/ion/src/com/koushikdutta/ion/bitmap/LruBitmapCache.java" />
@@ -1616,7 +646,6 @@
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/activities/AccountActivity.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/build.gradle" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/ui/SingleImageFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/xml/preferences.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/values/arrays.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/carddemo_grid_gplay.xml" />
@@ -1624,12 +653,17 @@
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/carddemo_grid_gplay_thumbnail_layout.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/list_card_thumbnail_layout.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_layout_card_list.xml" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/gallery_card_layout.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/values/dimens.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurhologallery/ui/GalleryFragment.java" />
-        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/GalleryFragment.java" />
         <option value="$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/gallery_card_layout.xml" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/GalleryFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/SingleImageFragment.java" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/layout/dark_image_view.xml" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/res/xml/preferences.xml" />
+        <option value="$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/activities/SettingsActivity.java" />
       </list>
     </option>
   </component>
@@ -1695,30 +729,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="ImgurHolo">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="imgur-holo">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1733,7 +743,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="imgur-holo" />
+              <option name="myItemId" value="ImgurHoloProject" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1743,7 +753,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="imgur-holo" />
+              <option name="myItemId" value="ImgurHoloProject" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1757,7 +767,25 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHoloProject" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHolo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
               <option name="myItemId" value="imgur-holo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHoloProject" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1779,7 +807,37 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHoloProject" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHolo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="xml" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
               <option name="myItemId" value="imgur-holo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHoloProject" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1805,7 +863,67 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHoloProject" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHolo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
               <option name="myItemId" value="imgur-holo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHoloProject" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHolo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="imgur-holo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHoloProject" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1827,6 +945,132 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="imgurholo" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="imgur-holo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHoloProject" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHolo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="imgurholo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="imgur-holo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHoloProject" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHolo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="imgurholo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="libs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="imgur-holo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHoloProject" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImgurHolo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="imgurholo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="activities" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="ImgurHolo">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="imgur-holo">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -1854,7 +1098,7 @@
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="options.lastSelected" value="reference.settingsdialog.project.gradle" />
+    <property name="options.lastSelected" value="preferences.updates" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
@@ -1872,20 +1116,20 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kuzimmer\AndroidStudioProjects\ImgurHoloProject\ImgurHolo" />
       <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\AndroidAsync\AndroidAsync" />
       <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ion\ion" />
       <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable" />
       <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main" />
-      <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\libs" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.krayzk9s.imgurholo" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo" />
       <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res" />
       <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\java\com\krayzk9s\imgurholo" />
       <recent name="C:\Users\Kurt Zimmer\Documents\GitHub\imgur-holo\ImgurHolo\src\main\res\drawable-hdpi" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="com.krayzk9s.imgurholo" />
     </key>
   </component>
   <component name="RunManager" selected="Android Application.ImgurHolo">
@@ -2031,6 +1275,19 @@
       </ExternalSystemSettings>
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -2056,19 +1313,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2239,13 +1483,13 @@
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3724653" sideWeight="0.7659115" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3289183" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27924946" sideWeight="0.49765626" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25865802" sideWeight="0.49765626" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3006608" sideWeight="0.5023438" order="13" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3112583" sideWeight="0.5" order="14" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3112583" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31057268" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2593819" sideWeight="0.49895832" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23585913" sideWeight="0.6707317" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -2253,7 +1497,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19743863" sideWeight="0.76106197" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19947916" sideWeight="0.76106197" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3130531" sideWeight="0.49791667" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2497332" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -2281,24 +1525,12 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/drawable/error.jpg">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/gallery_spinner.xml">
       <provider editor-type-id="android-designer">
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="60" selection-start="778" selection-end="778" vertical-scroll-proportion="-11.56" vertical-offset="0" max-vertical-offset="578">
-          <folding>
-            <element signature="e#695#717#0" expanded="false" />
-            <element signature="e#743#778#0" expanded="false" />
-            <element signature="e#965#1004#0" expanded="false" />
-            <element signature="e#1096#1134#0" expanded="false" />
-          </folding>
-        </state>
+        <state line="17" column="60" selection-start="778" selection-end="778" vertical-scroll-proportion="-11.56" vertical-offset="0" max-vertical-offset="578" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/comment_layout.xml">
@@ -2447,24 +1679,9 @@
         <state line="0" column="20" selection-start="20" selection-end="20" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="878" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/dark_image_view.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="43" selection-start="673" selection-end="673" vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="2244">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/ImgurHolo.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1717" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/local.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="598" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties">
@@ -2479,16 +1696,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.google.code.gson/gson/2.2.4/jar/a60a5e993c98c864010053cb901b7eab25306568/gson-2.2.4.jar!/com/google/gson/Gson.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="19" selection-start="164" selection-end="164" vertical-scroll-proportion="0.13866232" vertical-offset="0" max-vertical-offset="1598" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="25" selection-start="140" selection-end="140" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="153">
-          <folding />
-        </state>
+        <state line="2" column="25" selection-start="140" selection-end="140" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="153" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/build.gradle">
@@ -2500,23 +1710,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/activities/AccountActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="25" selection-start="107" selection-end="107" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="595">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/xml/preferences.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="73" selection-start="1721" selection-end="1721" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="2176">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Program Files (x86)/Android/android-sdk/sources/android-17/android/view/ViewGroup.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5545" column="19" selection-start="205796" selection-end="205822" vertical-scroll-proportion="0.33333334" vertical-offset="92866" max-vertical-offset="107389">
-          <folding />
-        </state>
+        <state line="3" column="25" selection-start="107" selection-end="107" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="595" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_layout.xml">
@@ -2536,39 +1730,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/values/styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="54" selection-start="1845" selection-end="1845" vertical-scroll-proportion="0.0" vertical-offset="325" max-vertical-offset="986">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/list_card_thumbnail_layout.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="60" selection-start="418" selection-end="418" vertical-scroll-proportion="-5.44" vertical-offset="0" max-vertical-offset="255">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/gallery_card_layout.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="40" selection-start="2083" selection-end="2083" vertical-scroll-proportion="-14.96" vertical-offset="459" max-vertical-offset="1513">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_layout_card_list.xml">
       <provider editor-type-id="android-designer">
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="65" selection-start="1703" selection-end="1703" vertical-scroll-proportion="-19.32" vertical-offset="146" max-vertical-offset="867">
+        <state line="37" column="65" selection-start="1703" selection-end="1703" vertical-scroll-proportion="0.0" vertical-offset="146" max-vertical-offset="867">
           <folding />
         </state>
       </provider>
@@ -2587,103 +1754,129 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="43" selection-start="490" selection-end="673" vertical-scroll-proportion="-10.2" vertical-offset="0" max-vertical-offset="2227">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="882" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="42" selection-start="647" selection-end="647" vertical-scroll-proportion="0.3469388" vertical-offset="0" max-vertical-offset="2465">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/SingleImageFragment.java">
+    <entry file="file://$PROJECT_DIR$/local.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="776" column="21" selection-start="42831" selection-end="42840" vertical-scroll-proportion="-122.08" vertical-offset="8287" max-vertical-offset="20978">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="882" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/local.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="0" selection-start="483" selection-end="483" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="289">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/list_card_thumbnail_layout.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="60" selection-start="418" selection-end="418" vertical-scroll-proportion="0.22516556" vertical-offset="0" max-vertical-offset="604">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/gallery_card_layout.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="54" selection-start="2340" selection-end="2340" vertical-scroll-proportion="-11.56" vertical-offset="612" max-vertical-offset="1513">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="54" selection-start="1845" selection-end="1845" vertical-scroll-proportion="0.0" vertical-offset="325" max-vertical-offset="986">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/libs/SquareImageView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="0" selection-start="541" selection-end="541" vertical-scroll-proportion="0.36899224" vertical-offset="0" max-vertical-offset="645">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/GalleryFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="439" column="33" selection-start="20542" selection-end="20542" vertical-scroll-proportion="0.0" vertical-offset="7072" max-vertical-offset="12852">
+        <state line="526" column="23" selection-start="24433" selection-end="24433" vertical-scroll-proportion="0.0" vertical-offset="2064" max-vertical-offset="4947">
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4146#4190#0" expanded="true" />
-            <element signature="e#4677#4715#0" expanded="true" />
-            <element signature="e#4776#4816#0" expanded="true" />
-            <element signature="e#4879#4887#0" expanded="true" />
-            <element signature="e#4978#5022#0" expanded="true" />
-            <element signature="e#5045#5083#0" expanded="true" />
-            <element signature="e#8135#8179#0" expanded="true" />
-            <element signature="e#8204#8243#0" expanded="true" />
             <element signature="e#8489#9186#0" expanded="true" />
             <element signature="e#9167#9168#0" expanded="true" />
             <element signature="e#9216#9417#0" expanded="true" />
             <element signature="e#9398#9399#0" expanded="true" />
-            <element signature="e#9521#9565#0" expanded="true" />
-            <element signature="e#9651#9690#0" expanded="true" />
-            <element signature="e#9773#9811#0" expanded="true" />
-            <element signature="e#9894#9932#0" expanded="true" />
-            <element signature="e#9959#9997#0" expanded="true" />
-            <element signature="e#10081#10119#0" expanded="true" />
-            <element signature="e#10146#10185#0" expanded="true" />
-            <element signature="e#10270#10308#0" expanded="true" />
-            <element signature="e#10335#10375#0" expanded="true" />
-            <element signature="e#10459#10497#0" expanded="true" />
-            <element signature="e#10524#10563#0" expanded="true" />
-            <element signature="e#10646#10684#0" expanded="true" />
-            <element signature="e#10711#10749#0" expanded="true" />
-            <element signature="e#11996#12222#0" expanded="true" />
-            <element signature="e#12213#12214#0" expanded="true" />
-            <element signature="e#14995#15039#0" expanded="true" />
-            <element signature="e#15060#15098#0" expanded="true" />
-            <element signature="e#15240#15279#0" expanded="true" />
-            <element signature="e#15300#15338#0" expanded="true" />
-            <element signature="e#15477#15515#0" expanded="true" />
-            <element signature="e#15651#15690#0" expanded="true" />
-            <element signature="e#15827#15867#0" expanded="true" />
-            <element signature="e#16005#16044#0" expanded="true" />
-            <element signature="e#16181#16219#0" expanded="true" />
-            <element signature="e#16371#16411#0" expanded="true" />
-            <element signature="e#16431#16470#0" expanded="true" />
-            <element signature="e#16785#16823#0" expanded="true" />
-            <element signature="e#17695#17735#0" expanded="true" />
-            <element signature="e#18045#18083#0" expanded="true" />
-            <element signature="e#18777#18818#0" expanded="true" />
-            <element signature="e#18920#18964#0" expanded="true" />
-            <element signature="e#19273#19311#0" expanded="true" />
-            <element signature="e#20473#20513#0" expanded="true" />
-            <element signature="e#20608#20646#0" expanded="true" />
-            <element signature="e#20750#20789#0" expanded="true" />
-            <element signature="e#20892#20932#0" expanded="true" />
-            <element signature="e#21047#21088#0" expanded="true" />
-            <element signature="e#21181#21225#0" expanded="true" />
-            <element signature="e#23448#23454#0" expanded="true" />
-            <element signature="e#24642#24643#0" expanded="true" />
-            <element signature="e#24690#24691#0" expanded="true" />
-            <element signature="e#24728#24729#0" expanded="true" />
-            <element signature="e#24770#24771#0" expanded="true" />
-            <element signature="e#27818#27862#0" expanded="true" />
-            <element signature="e#30411#32358#0" expanded="true" />
-            <element signature="e#30687#30727#0" expanded="true" />
-            <element signature="e#30764#30808#0" expanded="true" />
-            <element signature="e#30918#30956#0" expanded="true" />
-            <element signature="e#30993#31031#0" expanded="true" />
-            <element signature="e#31141#31180#0" expanded="true" />
-            <element signature="e#31217#31261#0" expanded="true" />
-            <element signature="e#31371#31411#0" expanded="true" />
-            <element signature="e#31448#31492#0" expanded="true" />
-            <element signature="e#31602#31643#0" expanded="true" />
-            <element signature="e#31984#32028#0" expanded="true" />
-            <element signature="e#32347#32348#0" expanded="true" />
+            <element signature="e#24199#24431#0" expanded="true" />
+            <element signature="e#24408#24409#0" expanded="true" />
+            <element signature="method#onItemClick#0;class#GridItemClickListener#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#selectItem#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="class#SpinnerAdapter#0;class#GalleryFragment#0" expanded="false" />
+            <element signature="method#setupActionBar#0;class#GalleryFragment#0" expanded="true" />
+            <element signature="method#CustomThumbCard#0;class#CustomThumbCard#0;class#GalleryFragment#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/AndroidManifest.xml">
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/ui/SingleImageFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="35" selection-start="143" selection-end="143" vertical-scroll-proportion="0.054226477" vertical-offset="0" max-vertical-offset="2465">
+        <state line="776" column="90" selection-start="42691" selection-end="42691" vertical-scroll-proportion="-8.28" vertical-offset="6117" max-vertical-offset="9282">
+          <folding>
+            <element signature="method#refreshComments#0;class#SingleImageFragment#0" expanded="true" />
+            <element signature="e#43157#43437#0" expanded="true" />
+            <element signature="e#43418#43419#0" expanded="true" />
+            <element signature="method#updateImageFont#0;class#SingleImageFragment#0" expanded="true" />
+            <element signature="method#getIndents#0;class#SingleImageFragment#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/image_view.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="48" selection-start="574" selection-end="574" vertical-scroll-proportion="-8.84" vertical-offset="0" max-vertical-offset="2227">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/xml/preferences.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="50" selection-start="1407" selection-end="1420" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="2176">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/java/com/krayzk9s/imgurholo/activities/SettingsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="125" column="61" selection-start="4938" selection-end="4938" vertical-scroll-proportion="0.0" vertical-offset="786" max-vertical-offset="3604">
+          <folding>
+            <element signature="e#5101#5379#0" expanded="true" />
+            <element signature="e#5364#5365#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImgurHolo/src/main/res/layout/dark_image_view.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="0" selection-start="959" selection-end="959" vertical-scroll-proportion="0.5899054" vertical-offset="0" max-vertical-offset="2244">
           <folding />
         </state>
       </provider>
@@ -2728,7 +1921,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>Android API 17 Platform</last-edited>
+          <last-edited>1.6</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -2764,7 +1957,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>ion</last-edited>
+          <last-edited>android-support-v13</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

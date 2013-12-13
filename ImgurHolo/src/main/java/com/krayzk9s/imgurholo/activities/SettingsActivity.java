@@ -123,6 +123,16 @@ public class SettingsActivity extends Activity {
                 }
             });
 
+            ListPreference galleryLayout = (ListPreference) findPreference("GalleryLayout");
+            galleryLayout.setSummary(galleryLayout.getValue().toString());
+            galleryLayout.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object o) {
+                    preference.setSummary(o.toString());
+                    return true;
+                }
+            });
+
             ListPreference iconQuality = (ListPreference) findPreference("IconQuality");
             final ArrayList<String> optionSettings = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.imageQualitiesSettings)));
             final ArrayList<String> options = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.imageQualities)));

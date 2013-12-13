@@ -27,7 +27,7 @@
                         android:entries="@array/galleryOptions"
                         android:entryValues="@array/galleryOptions"/>
         <ListPreference android:key="GalleryLayout"
-                        android:title= "Gallery Layou"
+                        android:title= "Gallery Layout"
                         android:summary= ""
                         android:defaultValue="Card View"
                         android:entries="@array/galleryLayoutOptions"
