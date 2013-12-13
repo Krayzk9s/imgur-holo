@@ -140,6 +140,7 @@
     <color name="DarkBlue">#00008B</color>
     <color name="Navy">#000080</color>
     <color name="Black">#000000</color>
+    <color name="card_background_dark">#1C1C1C</color>
 </resources>
 
 

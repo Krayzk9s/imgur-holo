@@ -36,11 +36,7 @@
         <!-- Compound view for Header Card
              If you want to customize this element use attr card:card_header_layout_resourceID
              You can also use your CardHeader subclass-->
-        <it.gmariotti.cardslib.library.view.component.CardHeaderView
-            style="@style/card.header_outer_layout"
-            android:id="@+id/card_header_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+
 
         <LinearLayout
             android:orientation="horizontal"
@@ -59,8 +55,13 @@
                 style="@style/card.content_outer_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-
         </LinearLayout>
+
+        <it.gmariotti.cardslib.library.view.component.CardHeaderView
+            style="@style/card.header_outer_layout"
+            android:id="@+id/card_header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

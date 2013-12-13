@@ -25,7 +25,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -36,7 +35,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.ActionMode;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,12 +60,11 @@ import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
 import com.krayzk9s.imgurholo.activities.MainActivity;
 import com.krayzk9s.imgurholo.libs.JSONParcelable;
-import com.krayzk9s.imgurholo.libs.ZoomableImageView;
 import com.krayzk9s.imgurholo.services.DownloadService;
 import com.krayzk9s.imgurholo.tools.ApiCall;
 import com.krayzk9s.imgurholo.tools.Fetcher;
 import com.krayzk9s.imgurholo.tools.GetData;
-import com.krayzk9s.imgurholo.tools.LoadImageAsync;
+import com.krayzk9s.imgurholo.tools.ImageUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -112,18 +109,18 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
     ImageView imageView;
     PullToRefreshLayout mPullToRefreshLayout;
     final SingleImageFragment singleImageFragment = this;
-    final static String DELETE = "delete";
-    final static String FAVORITE = "favorite";
-    final static String POSTCOMMENT = "postComment";
-    final static String GALLERY = "gallery";
-    final static String GALLERYPOST = "galleryPost";
-    final static String GALLERYDELETE = "galleryDelete";
-    final static String UPVOTE = "upvote";
-    final static String COMMENTS = "comments";
-    final static String DOWNVOTECOMMENT = "downvoteComment";
-    final static String UPVOTECOMMENT = "upvoteComment";
-    final static String REPLY = "reply";
-    final static String EDITIMAGE = "editImage";
+    final public static String DELETE = "delete";
+    final public static String FAVORITE = "favorite";
+    final public static String POSTCOMMENT = "postComment";
+    final public static String GALLERY = "gallery";
+    final public static String GALLERYPOST = "galleryPost";
+    final public static String GALLERYDELETE = "galleryDelete";
+    final public static String UPVOTE = "upvote";
+    final public static String COMMENTS = "comments";
+    final public static String DOWNVOTECOMMENT = "downvoteComment";
+    final public static String UPVOTECOMMENT = "upvoteComment";
+    final public static String REPLY = "reply";
+    final public static String EDITIMAGE = "editImage";
 
     public SingleImageFragment() {
         inGallery = false;
@@ -487,7 +484,7 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        final ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
         final SharedPreferences settings = activity.getApiCall().settings;
         sort = settings.getString("CommentSort", "Best");
         boolean newData = true;
@@ -534,7 +531,7 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
             ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) imageScore.getLayoutParams();
             if(mlp != null)
                 mlp.setMargins(0, 0, 0, 4);
-            updateImageFont();
+            ImageUtils.updateImageFont(imageData, imageScore);
             imageUpvote.setVisibility(View.VISIBLE);
             imageDownvote.setVisibility(View.VISIBLE);
             imageUser.setVisibility(View.VISIBLE);
@@ -560,37 +557,13 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
             imageFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try {
-                        if (!imageData.getJSONObject().getBoolean("favorite")) {
-                            imageFavorite.setImageResource(R.drawable.green_rating_favorite);
-                            imageData.getJSONObject().put("favorite", true);
-                        } else {
-                            imageData.getJSONObject().put("favorite", false);
-                            if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
-                                imageFavorite.setImageResource(R.drawable.rating_favorite);
-                            else
-                                imageFavorite.setImageResource(R.drawable.dark_rating_favorite);
-                        }
-                        Fetcher fetcher = new Fetcher(singleImageFragment, "3/image/" + imageData.getJSONObject().getString("id") + "/favorite", ApiCall.POST, null, ((ImgurHoloActivity)getActivity()).getApiCall(), FAVORITE);
-                        fetcher.execute();
-                    } catch (JSONException e) {
-                        Log.e("Error!", "missing data" + e.toString());
-                    }
+                    ImageUtils.favoriteImage(singleImageFragment, imageData, (ImageButton) view, activity.getApiCall());
                 }
             });
             imageUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try {
-                        Intent intent = new Intent();
-                        intent.putExtra("username", imageData.getJSONObject().getString("account_url"));
-                        intent.setAction(ImgurHoloActivity.ACCOUNT_INTENT);
-                        intent.addCategory(Intent.CATEGORY_DEFAULT);
-                        startActivity(intent);
-                    } catch (JSONException e) {
-                        Log.e("Error!", e.toString());
-                    }
-
+                    ImageUtils.gotoUser(singleImageFragment, imageData);
                 }
             });
             imageComment.setOnClickListener(new View.OnClickListener() {
@@ -650,112 +623,22 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
             imageUpvote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try {
-                        if (!imageData.getJSONObject().getString("vote").equals("up")) {
-                            if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
-                                imageUpvote.setImageResource(R.drawable.green_rating_good);
-                                imageDownvote.setImageResource(R.drawable.rating_bad);
-                            } else {
-                                imageUpvote.setImageResource(R.drawable.green_rating_good);
-                                imageDownvote.setImageResource(R.drawable.dark_rating_bad);
-                            }
-                            imageData.getJSONObject().put("ups", (Integer.parseInt(imageData.getJSONObject().getString("ups")) + 1) + "");
-                            if(imageData.getJSONObject().getString("vote").equals("down")) {
-                                imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) + 2) + "");
-                                imageData.getJSONObject().put("downs", (Integer.parseInt(imageData.getJSONObject().getString("downs")) - 1) + "");
-                            }
-                            else {
-                                imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) + 1) + "");
-                            }
-                            imageData.getJSONObject().put("vote", "up");
-                        } else {
-                            if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
-                                imageUpvote.setImageResource(R.drawable.rating_good);
-                                imageDownvote.setImageResource(R.drawable.rating_bad);
-                            } else {
-                                imageUpvote.setImageResource(R.drawable.dark_rating_good);
-                                imageDownvote.setImageResource(R.drawable.dark_rating_bad);
-                            }
-                            imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) - 1) + "");
-                            imageData.getJSONObject().put("ups", (Integer.parseInt(imageData.getJSONObject().getString("ups")) - 1) + "");
-                            imageData.getJSONObject().put("vote", "none");
-                        }
-                    } catch (JSONException e) {
-                        Log.e("Error!", e.toString());
-                    }
-                    updateImageFont();
-                    try {
-                        Fetcher fetcher = new Fetcher(singleImageFragment, "3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/up", ApiCall.POST, null, ((ImgurHoloActivity)getActivity()).getApiCall(), UPVOTE);
-                        fetcher.execute();
-                    }
-                    catch (Exception e) {
-                        Log.e("Error!", e.toString());
-                    }
+                    ImageUtils.upVote(singleImageFragment, imageData, imageUpvote, imageDownvote, activity.getApiCall());
+                    ImageUtils.updateImageFont(imageData, imageScore);
                 }
             });
             imageDownvote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try {
-                        if (!imageData.getJSONObject().getString("vote").equals("down")) {
-                            if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
-                                imageData.getJSONObject().put("vote", "down");
-                                imageUpvote.setImageResource(R.drawable.rating_good);
-                                imageDownvote.setImageResource(R.drawable.red_rating_bad);
-                            } else {
-                                imageUpvote.setImageResource(R.drawable.dark_rating_good);
-                                imageDownvote.setImageResource(R.drawable.red_rating_bad);
-                            }
-                            imageData.getJSONObject().put("downs", (Integer.parseInt(imageData.getJSONObject().getString("downs")) + 1) + "");
-                            if (imageData.getJSONObject().getString("vote").equals("up")) {
-                                imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) - 2) + "");
-                                imageData.getJSONObject().put("ups", (Integer.parseInt(imageData.getJSONObject().getString("ups")) - 1) + "");
-                            } else {
-                                imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) - 1) + "");
-                            }
-                            imageData.getJSONObject().put("vote", "down");
-                        } else {
-                            if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT)) {
-                                imageUpvote.setImageResource(R.drawable.rating_good);
-                                imageDownvote.setImageResource(R.drawable.rating_bad);
-                            } else {
-                                imageUpvote.setImageResource(R.drawable.dark_rating_good);
-                                imageDownvote.setImageResource(R.drawable.dark_rating_bad);
-                            }
-                            imageData.getJSONObject().put("score", (Integer.parseInt(imageData.getJSONObject().getString("score")) + 1) + "");
-                            imageData.getJSONObject().put("downs", (Integer.parseInt(imageData.getJSONObject().getString("downs")) - 1) + "");
-                            imageData.getJSONObject().put("vote", "none");
-                        }
-                    } catch (JSONException e) {
-                        Log.e("Error!", e.toString());
-                    }
-                    updateImageFont();
-                    try {
-                    Fetcher fetcher = new Fetcher(singleImageFragment, "3/gallery/" + imageData.getJSONObject().getString("id") + "/vote/down", ApiCall.POST, null, ((ImgurHoloActivity)getActivity()).getApiCall(), UPVOTE);
-                    fetcher.execute();
-                    }
-                    catch (JSONException e) {
-                        Log.e("Error!", e.toString());
-                    }
+                    ImageUtils.downVote(singleImageFragment, imageData, imageUpvote, imageDownvote, activity.getApiCall());
+                    ImageUtils.updateImageFont(imageData, imageScore);
                 }
             });
         }
         imageFullscreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (popupWindow != null) {
-                    popupWindow.dismiss();
-                    popupWindow = null;
-                }
-                popupWindow = new PopupWindow();
-                popupWindow.setBackgroundDrawable(new ColorDrawable(0x80000000));
-                popupWindow.setFocusable(true);
-                popupWindow.setWindowLayoutMode(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                final ZoomableImageView zoomableImageView = new ZoomableImageView(getActivity());
-                popupWindow.setContentView(zoomableImageView);
-                popupWindow.showAtLocation(mainView, Gravity.TOP, 0, 0);
-                LoadImageAsync loadImageAsync = new LoadImageAsync(zoomableImageView, imageData);
-                loadImageAsync.execute();
+                ImageUtils.fullscreen(singleImageFragment, imageData, popupWindow, mainView);
             }
         });
         ArrayAdapter<String> tempAdapter = new ArrayAdapter<String>(mainView.getContext(),
@@ -838,25 +721,6 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
             commentAdapter.notifyDataSetChanged();
         }
         return mainView;
-    }
-
-    private void updateImageFont() {
-        try {
-            if (!imageData.getJSONObject().has("vote")) {
-                imageScore.setVisibility(View.GONE);
-                return;
-            }
-            if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("up"))
-                imageScore.setText(Html.fromHtml("<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points </font> (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
-            else if (imageData.getJSONObject().getString("vote") != null && imageData.getJSONObject().getString("vote").equals("down"))
-                imageScore.setText(Html.fromHtml("<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points </font> (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
-            else
-                imageScore.setText(Html.fromHtml(NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("score")) + " points (<font color=#89c624>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("ups")) + "</font>/<font color=#ee4444>" + NumberFormat.getIntegerInstance().format(imageData.getJSONObject().getInt("downs")) + "</font>)"));
-        }
-        catch (JSONException e) {
-            Log.e("Error font!", e.toString());
-
-        }
     }
 
     public void getComments() {

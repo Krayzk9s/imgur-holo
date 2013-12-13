@@ -23,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -43,6 +44,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.koushikdutta.ion.Ion;
 import com.krayzk9s.imgurholo.BuildConfig;
@@ -54,6 +56,7 @@ import com.krayzk9s.imgurholo.libs.SquareImageView;
 import com.krayzk9s.imgurholo.tools.ApiCall;
 import com.krayzk9s.imgurholo.tools.Fetcher;
 import com.krayzk9s.imgurholo.tools.GetData;
+import com.krayzk9s.imgurholo.tools.ImageUtils;
 import com.krayzk9s.imgurholo.tools.Utils;
 
 import org.json.JSONArray;
@@ -69,6 +72,7 @@ import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.CardThumbnail;
+import it.gmariotti.cardslib.library.internal.base.BaseCard;
 import it.gmariotti.cardslib.library.view.CardListView;
 import it.gmariotti.cardslib.library.view.CardView;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -509,14 +513,23 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 				ArrayList<Card> cards = new ArrayList<Card>();
 				for(int i = 0; i < ids.size(); i++) {
 					Card card = new Card(getActivity());
-					CardHeader header = new CardHeader(getActivity());
+                    CustomHeaderInnerCard header = new CustomHeaderInnerCard(getActivity());
 					header.setTitle(ids.get(i).getJSONObject().getString("title"));
+                    header.position = i;
+                    header.setPopupMenu(R.menu.comments, new CardHeader.OnClickCardHeaderPopupMenuListener(){
+                        @Override
+                        public void onMenuItemClick(BaseCard card, MenuItem item) {
+                            Toast.makeText(getActivity(), "Click on " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
 					card.addCardHeader(header);
 					CustomThumbCard thumb = new CustomThumbCard(getActivity());
 					thumb.setExternalUsage(true);
 					thumb.position = i;
                     final int position = i;
 					card.addCardThumbnail(thumb);
+                    if(!activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
+                        card.setBackgroundResourceId(R.drawable.dark_card_background);
 					CardView cardView = (CardView) getActivity().findViewById(R.id.list_cardId);
 					card.setCardView(cardView);
                     card.setOnClickListener(new Card.OnCardClickListener() {
@@ -758,4 +771,26 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
             Ion.with((ImageView) viewImage).load(urls.get(position));
 		}
 	}
+    public class CustomHeaderInnerCard extends CardHeader {
+        public int position;
+
+        public CustomHeaderInnerCard(Context context) {
+            super(context, R.layout.card_header);
+        }
+
+        @Override
+        public void setupInnerViewElements(ViewGroup parent, View view) {
+            if (view!=null){
+                TextView t1 = (TextView) view.findViewById(R.id.header);
+                if (t1!=null) {
+                    t1.setText(this.getTitle());
+                    ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+                    if(!activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
+                        t1.setTextColor(Color.WHITE);
+                }
+                TextView t2 = (TextView) view.findViewById(R.id.score);
+                ImageUtils.updateImageFont(ids.get(position), t2);
+            }
+        }
+    }
 }
