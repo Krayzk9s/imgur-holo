@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/rating_good"
+          android:title="@string/rating_good"
+          android:orderInCategory="100"
+          android:icon="@drawable/rating_good"
+          android:showAsAction="always" />
+    <item android:id="@+id/rating_bad"
+          android:title="@string/rating_bad"
+          android:orderInCategory="100"
+          android:icon="@drawable/rating_bad"
+          android:showAsAction="always" />
+    <item android:id="@+id/user"
+          android:title="@string/account"
+          android:orderInCategory="100"
+          android:icon="@drawable/social_person"
+          android:showAsAction="always" />
+    <item android:id="@+id/share"
+          android:title="@string/action_share"
+          android:orderInCategory="100"
+          android:icon="@drawable/social_share"
+          android:showAsAction="always" />
+    <item android:id="@+id/copy"
+          android:title="@string/action_copy"
+          android:orderInCategory="100"
+          android:icon="@drawable/content_copy"
+          android:showAsAction="always" />
+    <item android:id="@+id/download"
+          android:title="@string/action_download"
+          android:orderInCategory="100"
+          android:icon="@drawable/av_download"
+          android:showAsAction="always" />
+</menu>

@@ -1,28 +1,25 @@
 package com.krayzk9s.imgurholo.services;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.Parcelable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.ProgressCallback;
+import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.libs.JSONParcelable;
 
-import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 
 /**
@@ -41,60 +38,62 @@ public class DownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        DownloadAsync downloadAsync = new DownloadAsync(intent.getParcelableArrayListExtra("ids"), getApplicationContext());
-        downloadAsync.execute();
-    }
-
-    private static class DownloadAsync extends AsyncTask<Void, Void, String> {
-        ArrayList<Parcelable> ids;
-        Context context;
-        public DownloadAsync(ArrayList<Parcelable> _ids, Context _context) {
-            ids = _ids;
-            context = _context;
-        }
-        @Override
-        protected String doInBackground(Void... voids) {
-            String path = "";
-            try {
-                for (int i = 0; i < ids.size(); i++) {
-                    JSONParcelable idget = (JSONParcelable) ids.get(i);
-                    String type = idget.getJSONObject().getString("type").split("/")[1];
-                    Log.d("URL", "http://i.imgur.com/" + idget.getJSONObject().getString("id") + "." + type);
-                    Log.d("IDs", idget.getJSONObject().getString("id"));
-                    URL url = new URL("http://i.imgur.com/" + idget.getJSONObject().getString("id") + "." + type);
-                    path = android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + idget.getJSONObject().getString("id") + "." + type;
-                    File file = new File(path);
-                    URLConnection ucon = url.openConnection();
-                    InputStream is = ucon.getInputStream();
-                    BufferedInputStream bis = new BufferedInputStream(is);
-                    ByteArrayBuffer baf = new ByteArrayBuffer(500);
-                    int current = 0;
-                    while ((current = bis.read()) != -1) {
-                        baf.append((byte) current);
-                    }
-                    FileOutputStream fos = new FileOutputStream(file);
-                    fos.write(baf.toByteArray());
-                    fos.close();
-                }
-            } catch (MalformedURLException e) {
-                Log.e("Error!", e.toString());
-            } catch (IOException e) {
-                Log.e("Error!", e.toString());
-            } catch (JSONException e) {
-                Log.e("Error!", e.toString());
-            }
-            return path;
-        }
-
-        @Override
-        protected void onPostExecute(String path) {
-            MediaScannerConnection.scanFile(context, new String[]{path}, null,
-                    new MediaScannerConnection.OnScanCompletedListener() {
-                        @Override
-                        public void onScanCompleted(final String path, final Uri uri) {
-                            Log.i("Scanning", String.format("Scanned path %s -> URI = %s", path, uri.toString()));
-                        }
-                    });
-        }
+		final NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+		ArrayList<JSONParcelable> ids = intent.getParcelableArrayListExtra("ids");
+		try {
+			final String type = ids.get(0).getJSONObject().getString("type").split("/")[1];
+			final String id = ids.get(0).getJSONObject().getString("id");
+			final String link = ids.get(0).getJSONObject().getString("link");
+			Log.d("data", ids.get(0).getJSONObject().toString());
+			Log.d("type", ids.get(0).getJSONObject().getString("type").split("/")[1]);
+			Log.d("id", ids.get(0).getJSONObject().getString("id"));
+			Log.d("link", ids.get(0).getJSONObject().getString("link"));
+			final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
+			notificationBuilder.setContentTitle("Picture Download")
+					.setContentText("Download in progress")
+					.setSmallIcon(R.drawable.icon_desaturated);
+			Ion.with(getApplicationContext(), link)
+					.progress(new ProgressCallback() {
+						@Override
+						public void onProgress(int i, int i2) {
+							notificationBuilder.setProgress(i2, i, false);
+						}
+					})
+					.write(new File(android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + id + "." + type))
+					.setCallback(new FutureCallback<File>() {
+						@Override
+						public void onCompleted(Exception e, File file) {
+							//notificationManager.cancel(0);
+							NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+							NotificationCompat.Builder notificationComplete = new NotificationCompat.Builder(getApplicationContext());
+							Intent viewImageIntent = new Intent(Intent.ACTION_VIEW);
+							viewImageIntent.setDataAndType(Uri.fromFile(file),"image/*");
+							Intent shareIntent = new Intent(Intent.ACTION_SEND);
+							shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+							shareIntent.setType("image/*");
+							shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+							PendingIntent viewImagePendingIntent = PendingIntent.getActivity(getApplicationContext(), (int) System.currentTimeMillis(), viewImageIntent, 0);
+							PendingIntent sharePendingIntent = PendingIntent.getActivity(getApplicationContext(), (int) System.currentTimeMillis(), shareIntent, 0);
+							notificationComplete.setContentTitle("Download Complete")
+									.setSmallIcon(R.drawable.icon_desaturated)
+									.setContentText("Image download finished")
+									.setContentIntent(viewImagePendingIntent)
+									.addAction(R.drawable.dark_social_share, "Share", sharePendingIntent);
+							notificationManager.cancel(0);
+							notificationManager.notify(1, notificationComplete.build());
+							MediaScannerConnection.scanFile(getApplicationContext(), new String[]{android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + id + "." + type}, null,
+									new MediaScannerConnection.OnScanCompletedListener() {
+										@Override
+										public void onScanCompleted(final String path, final Uri uri) {
+											Log.i("Scanning", String.format("Scanned path %s -> URI = %s", path, uri.toString()));
+										}
+									});
+						}
+					});
+			notificationManager.notify(0, notificationBuilder.build());
+		}
+		catch (JSONException e) {
+			Log.e("Error!", e.toString());
+		}
     }
 }

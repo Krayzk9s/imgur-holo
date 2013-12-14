@@ -296,6 +296,15 @@ public class SettingsActivity extends Activity {
                     return true;
                 }
             });
+			Preference rate = findPreference("Rate");
+			rate.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.krayzk9s.imgurhologallery"));
+					startActivity(Intent.createChooser(intent, "Go to Google Play"));
+					return true;
+				}
+			});
         }
     }
 }

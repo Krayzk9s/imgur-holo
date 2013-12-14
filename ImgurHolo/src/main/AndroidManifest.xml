@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.krayzk9s.imgurholo"
-    android:versionCode="31"
-    android:versionName="0.13.0" >
+    android:versionCode="33"
+    android:versionName="0.15.0" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-sdk
-        android:minSdkVersion="15"
+        android:minSdkVersion="14"
         android:targetSdkVersion="19"/>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="imgur Holo"
+        android:debuggable="false"
             >
         <activity
             android:name="com.krayzk9s.imgurholo.activities.SettingsActivity"
@@ -37,10 +38,8 @@
                 </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="authcallback"
                     android:scheme="imgur-holo" />
@@ -134,6 +133,7 @@
             android:label="@string/title_activity_image_select" >
         </activity>
         <service android:name="com.krayzk9s.imgurholo.services.UploadService" />
+        <service android:name="com.krayzk9s.imgurholo.services.DownloadService" />
     </application>
 
 </manifest>

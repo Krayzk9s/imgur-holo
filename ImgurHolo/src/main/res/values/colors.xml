@@ -141,6 +141,7 @@
     <color name="Navy">#000080</color>
     <color name="Black">#000000</color>
     <color name="card_background_dark">#1C1C1C</color>
+    <color name="imgur_holo">#89c624</color>
 </resources>
 
 

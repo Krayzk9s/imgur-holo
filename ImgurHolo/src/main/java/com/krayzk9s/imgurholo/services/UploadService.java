@@ -355,7 +355,6 @@ public class UploadService extends IntentService implements GetData {
             viewImageIntent.setAction(Intent.ACTION_VIEW);
             viewImageIntent.setData(Uri.parse(data.getString("link")));
             Intent shareIntent = new Intent();
-
             String link = "";
             if (settings.getString("AutoCopyType", resources.getString(R.string.direct_link)).equals(resources.getString(R.string.direct_link))) {
                link = "http://imgur.com/" + data.getString("id");

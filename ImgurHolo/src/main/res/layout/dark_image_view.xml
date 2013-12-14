@@ -2,7 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:paddingTop="?android:actionBarSize"
@@ -10,8 +10,8 @@
 
         <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/single_image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:adjustViewBounds="true"/>
     <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
@@ -58,17 +58,29 @@
         android:textAppearance="?android:textAppearanceSmall"
         android:visibility="gone"
         android:text="This is the score for the image view" />
-
-    <TextView
-        android:layout_marginBottom="8dp"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/single_image_details"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/Gray"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:text="This is details for the image view" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="horizontal"
+                  android:layout_gravity="center_horizontal"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginBottom="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/single_image_info"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/Gray"
+            android:visibility="gone"
+            />
+        <TextView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/single_image_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/Gray"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:text="This is details for the image view" />
+    </LinearLayout>
 
     <View xmlns:android="http://schemas.android.com/apk/res/android"
         android:background="@color/DarkGray"

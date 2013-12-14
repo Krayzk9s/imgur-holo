@@ -19,36 +19,38 @@ import java.net.URL;
  * Created by Kurt Zimmer on 11/20/13.
  */
 public class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
-    ZoomableImageView zoomableImageView;
-    JSONParcelable imageData;
-    public LoadImageAsync(ZoomableImageView _zoomableImageView, JSONParcelable _imageData) {
-        zoomableImageView = _zoomableImageView;
-        imageData = _imageData;
-    }
-    @Override
-    protected Bitmap doInBackground(Void... voids) {
-        try {
-            URL url;
-            if (imageData.getJSONObject().has("cover"))
-                url = new URL("http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png");
-            else
-                url = new URL(imageData.getJSONObject().getString("link"));
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
-        } catch (JSONException e) {
-            Log.e("Error!", e.toString());
-        } catch (IOException e) {
-            Log.e("Error!", e.toString());
-        }
-        return null;
-    }
+	ZoomableImageView zoomableImageView;
+	JSONParcelable imageData;
 
-    @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        Log.e("set zoomable view", "set");
-        zoomableImageView.setImageBitmap(bitmap);
-    }
+	public LoadImageAsync(ZoomableImageView _zoomableImageView, JSONParcelable _imageData) {
+		zoomableImageView = _zoomableImageView;
+		imageData = _imageData;
+	}
+
+	@Override
+	protected Bitmap doInBackground(Void... voids) {
+		try {
+			URL url;
+			if (imageData.getJSONObject().has("cover"))
+				url = new URL("http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png");
+			else
+				url = new URL(imageData.getJSONObject().getString("link"));
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setDoInput(true);
+			connection.connect();
+			InputStream input = connection.getInputStream();
+			return BitmapFactory.decodeStream(input);
+		} catch (JSONException e) {
+			Log.e("Error!", e.toString());
+		} catch (IOException e) {
+			Log.e("Error!", e.toString());
+		}
+		return null;
+	}
+
+	@Override
+	protected void onPostExecute(Bitmap bitmap) {
+		Log.e("set zoomable view", "set");
+		zoomableImageView.setImageBitmap(bitmap);
+	}
 }

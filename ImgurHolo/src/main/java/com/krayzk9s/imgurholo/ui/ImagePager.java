@@ -38,94 +38,94 @@ import java.util.ArrayList;
  * Created by Kurt Zimmer on 7/30/13.
  */
 public class ImagePager extends Fragment {
-    public ViewPager pager;
-    public ImageAdapter adapter;
-    ArrayList<JSONParcelable> imageData;
-    int start;
+	public ViewPager pager;
+	public ImageAdapter adapter;
+	ArrayList<JSONParcelable> imageData;
+	int start;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if(savedInstanceState != null) {
-            imageData = savedInstanceState.getParcelableArrayList("imageData");
-            start = savedInstanceState.getInt("start");
-        }
-        else {
-            Bundle bundle = getArguments();
-            start = bundle.getInt("start");
-            imageData = bundle.getParcelableArrayList("ids");
-        }
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			imageData = savedInstanceState.getParcelableArrayList("imageData");
+			start = savedInstanceState.getInt("start");
+		} else {
+			Bundle bundle = getArguments();
+			start = bundle.getInt("start");
+			imageData = bundle.getParcelableArrayList("ids");
+		}
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(getActivity().getActionBar() != null)
-            getActivity().getActionBar().setTitle("Images");
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (getActivity().getActionBar() != null)
+			getActivity().getActionBar().setTitle("Images");
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container,
-                             Bundle savedInstanceState) {
-        View result=inflater.inflate(R.layout.image_viewpager, container, false);
-        pager=(ViewPager)result.findViewById(R.id.pager);
-        adapter = new ImageAdapter(getActivity(), getChildFragmentManager());
-        pager.setAdapter(adapter);
-        if(savedInstanceState == null)
-            pager.setCurrentItem(start);
-        return(result);
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater,
+							 ViewGroup container,
+							 Bundle savedInstanceState) {
+		View result = inflater.inflate(R.layout.image_viewpager, container, false);
+		pager = (ViewPager) result.findViewById(R.id.pager);
+		adapter = new ImageAdapter(getActivity(), getChildFragmentManager());
+		pager.setAdapter(adapter);
+		if (savedInstanceState == null)
+			pager.setCurrentItem(start);
+		return (result);
+	}
 
-    public class ImageAdapter extends android.support.v4.app.FragmentPagerAdapter {
+	public class ImageAdapter extends android.support.v4.app.FragmentPagerAdapter {
 
-        Context ctxt=null;
+		Context ctxt = null;
 
-        public ImageAdapter(Context ctxt, FragmentManager mgr) {
-            super(mgr);
-            this.ctxt=ctxt;
-        }
+		public ImageAdapter(Context ctxt, FragmentManager mgr) {
+			super(mgr);
+			this.ctxt = ctxt;
+		}
 
-        @Override
-        public int getCount() {
-            return imageData.size();
-        }
+		@Override
+		public int getCount() {
+			return imageData.size();
+		}
 
-        @Override
-        public Fragment getItem(int position) {
-            JSONObject id = imageData.get(position).getJSONObject();
-            try {
-            if (id.has("is_album") && id.getBoolean("is_album")) {
-                ImagesFragment fragment = new ImagesFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("imageCall", "3/album/" + id.getString("id"));
-                bundle.putString("id", id.getString("id"));
-                JSONParcelable data = new JSONParcelable();
-                data.setJSONObject(id);
-                bundle.putParcelable("albumData", data);
-                fragment.setArguments(bundle);
-                return fragment;
-            } else {
-                SingleImageFragment singleImageFragment = new SingleImageFragment();
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("gallery", true);
-                JSONParcelable data = new JSONParcelable();
-                data.setJSONObject(id);
-                bundle.putParcelable("imageData", data);
-                singleImageFragment.setArguments(bundle);
-                return singleImageFragment;
-             }
-            } catch (JSONException e) {
-                Log.e("Error!", e.toString());
-            }
-            return null;
-        }
-    }
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putParcelableArrayList("imageData", imageData);
-        savedInstanceState.putInt("start", pager.getCurrentItem());
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
-    }
+		@Override
+		public Fragment getItem(int position) {
+			JSONObject id = imageData.get(position).getJSONObject();
+			try {
+				if (id.has("is_album") && id.getBoolean("is_album")) {
+					ImagesFragment fragment = new ImagesFragment();
+					Bundle bundle = new Bundle();
+					bundle.putString("imageCall", "3/album/" + id.getString("id"));
+					bundle.putString("id", id.getString("id"));
+					JSONParcelable data = new JSONParcelable();
+					data.setJSONObject(id);
+					bundle.putParcelable("albumData", data);
+					fragment.setArguments(bundle);
+					return fragment;
+				} else {
+					SingleImageFragment singleImageFragment = new SingleImageFragment();
+					Bundle bundle = new Bundle();
+					bundle.putBoolean("gallery", true);
+					JSONParcelable data = new JSONParcelable();
+					data.setJSONObject(id);
+					bundle.putParcelable("imageData", data);
+					singleImageFragment.setArguments(bundle);
+					return singleImageFragment;
+				}
+			} catch (JSONException e) {
+				Log.e("Error!", e.toString());
+			}
+			return null;
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		savedInstanceState.putParcelableArrayList("imageData", imageData);
+		savedInstanceState.putInt("start", pager.getCurrentItem());
+		// Always call the superclass so it can save the view hierarchy state
+		super.onSaveInstanceState(savedInstanceState);
+	}
 }

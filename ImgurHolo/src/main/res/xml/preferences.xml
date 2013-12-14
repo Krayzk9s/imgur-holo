@@ -119,5 +119,8 @@
         <Preference android:key="Email"
                         android:title= "Email"
                         android:summary= "Send feedback"/>
+        <Preference android:key="Rate"
+                    android:title= "Rate"
+                    android:summary= "Rate this app!"/>
     </PreferenceCategory>
 </PreferenceScreen>
