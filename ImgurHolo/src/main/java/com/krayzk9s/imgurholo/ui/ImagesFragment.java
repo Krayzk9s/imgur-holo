@@ -199,7 +199,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 				//select image
 				return true;
 			case R.id.action_comments:
-				CommentsAsync commentsAsync = new CommentsAsync(((ImgurHoloActivity) getActivity()).getApiCall(), galleryAlbumData);
+				CommentsAsync commentsAsync = new CommentsAsync(((ImgurHoloActivity) getActivity()), galleryAlbumData);
 				commentsAsync.execute();
 				return true;
 			default:

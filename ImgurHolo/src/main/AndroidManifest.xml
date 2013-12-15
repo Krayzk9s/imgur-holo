@@ -14,7 +14,7 @@
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="imgur Holo"
-        android:debuggable="false"
+        android:debuggable="true"
             >
         <activity
             android:name="com.krayzk9s.imgurholo.activities.SettingsActivity"

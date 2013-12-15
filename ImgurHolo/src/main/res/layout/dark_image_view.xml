@@ -45,6 +45,7 @@
         android:textColor="@color/DarkGray"
         android:autoLink="web"
         android:textAppearance="?android:textAppearanceMedium"
+        android:visibility="gone"
         android:text="This is a description for the image view" />
 
     <TextView

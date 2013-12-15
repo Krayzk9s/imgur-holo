@@ -44,6 +44,7 @@
         android:textColor="@color/Gray"
         android:autoLink="web"
         android:textAppearance="?android:textAppearanceMedium"
+        android:visibility="gone"
         android:text="This is a description for the image view" />
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="horizontal"

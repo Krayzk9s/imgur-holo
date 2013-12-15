@@ -29,9 +29,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -132,6 +130,12 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
         }
 
     }
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		updateMenu();
+	}
 
     public void updateMenu() {
         DrawerAdapter drawerAdapter = new DrawerAdapter(this, R.layout.menu_item);
@@ -503,21 +507,10 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                     editor.remove("RefreshToken");
                     editor.commit();
                     apiCall.loggedin = false;
+					updateMenu();
                 }
                 break;
         }
-    }
-
-    public void changeFragment(Fragment newFragment, Boolean backstack) {
-        if(getActionBar() != null)
-            getActionBar().show();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if(backstack)
-            fragmentTransaction.replace(R.id.frame_layout, newFragment).addToBackStack("tag").commit();
-        else
-            fragmentTransaction.replace(R.id.frame_layout, newFragment).commit();
-        updateMenu();
     }
 
     public void onGetObject(Object o, String tag) {

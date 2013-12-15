@@ -24,9 +24,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -42,9 +46,11 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.krayzk9s.imgurholo.BuildConfig;
 import com.krayzk9s.imgurholo.R;
@@ -535,6 +541,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 					});
 					card.addCardHeader(header);
 					CustomThumbCard thumb = new CustomThumbCard(getActivity());
+					thumb.setHeader(header);
 					thumb.setExternalUsage(true);
 					thumb.position = i;
 					final int position = i;
@@ -772,21 +779,51 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 
 	public class CustomThumbCard extends CardThumbnail {
 		public int position;
+		public CustomHeaderInnerCard header;
 
 		public CustomThumbCard(Context context) {
 			super(context);
 		}
 
+		public void setHeader(CustomHeaderInnerCard _header) {
+			header = _header;
+		}
+
 		@Override
 		public void setupInnerViewElements(ViewGroup parent, View viewImage) {
+			if(ids.get(position).getJSONObject().has("width")) {
+				try {
+					Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+					Point size = new Point();
+					display.getSize(size);
+					float imageWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ids.get(position).getJSONObject().getInt("width"), getResources().getDisplayMetrics());
+					float imageHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ids.get(position).getJSONObject().getInt("height"), getResources().getDisplayMetrics());
+					viewImage.getLayoutParams().height = (int) (imageHeight * ((size.x - 32) / imageWidth));
+				}
+				catch (JSONException e) {
+					Log.e("Error!", e.toString());
+				}
+			}
+			else {
+				viewImage.getLayoutParams().height = 500;
+				((ImageView) viewImage).setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+			}
 			if(urls.size() != 0)
-				Ion.with((ImageView) viewImage).load(urls.get(position));
+				Ion.with(getActivity()).load(urls.get(position)).progressBar(header.progressBar).withBitmap().intoImageView((ImageView) viewImage).setCallback(new FutureCallback<ImageView>() {
+					@Override
+					public void onCompleted(Exception e, ImageView imageView) {
+						header.progressBar.setVisibility(View.INVISIBLE);
+					}
+				});
 		}
 	}
 
 	public class CustomHeaderInnerCard extends CardHeader {
 		public int position;
 		public TextView scoreText;
+		public ProgressBar progressBar;
+
 		public CustomHeaderInnerCard(Context context) {
 			super(context, R.layout.card_header);
 		}
@@ -794,6 +831,8 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 		@Override
 		public void setupInnerViewElements(ViewGroup parent, View view) {
 			if (view != null && ids.size() != 0) {
+				progressBar = (ProgressBar) view.findViewById(R.id.image_progress);
+				progressBar.setVisibility(View.VISIBLE);
 				TextView headerText = (TextView) view.findViewById(R.id.header);
 				if (headerText != null) {
 					headerText.setText(this.getTitle());

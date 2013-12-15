@@ -5,22 +5,32 @@
     style="@style/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp">
+    android:layout_marginBottom="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="0dp">
 
     <!-- You can popolate your elements with CardHeader#setupInnerViewElements() method -->
-
+    <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:id="@+id/image_progress"
+                 android:layout_height="8dp"
+                 android:layout_width="match_parent"
+                 style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/header"
         android:textAppearance="?android:textAppearanceMedium"
         android:layout_marginBottom="4dp"
+        android:layout_marginRight="8dp"
         android:fontFamily="sans-serif-condensed"
         />
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="horizontal"
                   android:layout_width="wrap_content"
-                  android:layout_height="wrap_content">
+                  android:layout_height="wrap_content"
+                  android:layout_marginRight="8dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,7 +38,6 @@
             android:textAppearance="?android:textAppearanceSmall"
             android:fontFamily="sans-serif-condensed"
             />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
