@@ -131,12 +131,6 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
 
     }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		updateMenu();
-	}
-
     public void updateMenu() {
         DrawerAdapter drawerAdapter = new DrawerAdapter(this, R.layout.menu_item);
         Log.d("theme", theme);

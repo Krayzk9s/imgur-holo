@@ -67,6 +67,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/DarkGray"
             android:textAppearance="?android:textAppearanceSmall"
+            android:visibility="gone"
             android:text="This is the score for the image view" />
     </LinearLayout>
 

@@ -114,6 +114,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 	PullToRefreshLayout mPullToRefreshLayout;
 	CardListView cardListView;
 	GalleryFragment galleryFragment = this;
+    static final String IMAGES = "images";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -122,6 +123,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 		final MainActivity activity = (MainActivity) getActivity();
 		final SharedPreferences settings = activity.getSettings();
 		if (savedInstanceState != null) {
+            Log.d("Restoring state", "restoring");
 			gallery = savedInstanceState.getString("gallery");
 			sort = savedInstanceState.getString("sort");
 			window = savedInstanceState.getString("window");
@@ -333,6 +335,31 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 			view = inflater.inflate(R.layout.image_layout_card_list, container, false);
 			errorText = (TextView) view.findViewById(R.id.error);
 			cardListView = (CardListView) view.findViewById(R.id.grid_layout);
+            cardListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView absListView, int i) {
+
+                }
+
+                @Override
+                public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    if (lastInView == -1)
+                        lastInView = firstVisibleItem;
+                    else if (lastInView > firstVisibleItem) {
+                        lastInView = firstVisibleItem;
+                    } else if (lastInView < firstVisibleItem) {
+                        lastInView = firstVisibleItem;
+                    }
+                    int lastInScreen = firstVisibleItem + visibleItemCount;
+                    if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0 && !fetchingImages) {
+                        if (!gallery.equals("search")) {
+                            page += 1;
+                            getImages();
+                        }
+                    }
+                }
+            });
+            restoreCards();
 		}
 		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
 		// Now setup the PullToRefreshLayout
@@ -343,8 +370,8 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 				.listener(this)
 						// Finally commit the setup to our PullToRefreshLayout
 				.setup(mPullToRefreshLayout);
-		setupActionBar();
-		if (savedInstanceState == null && urls.size() < 1) {
+        setupActionBar();
+		if (urls.size() < 1) {
 			Log.d("urls", urls.size() + "");
 			makeGallery();
 		}
@@ -462,7 +489,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 		} else if (gallery.equals("search")) {
 			call = "3/gallery/search?q=" + search;
 		}
-		Fetcher fetcher = new Fetcher(this, call, ApiCall.GET, null, ((ImgurHoloActivity) getActivity()).getApiCall(), "images");
+		Fetcher fetcher = new Fetcher(this, call, ApiCall.GET, null, ((ImgurHoloActivity) getActivity()).getApiCall(), IMAGES);
 		fetcher.execute();
 	}
 
@@ -472,107 +499,135 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 	}
 
 	public void onGetObject(Object object, String tag) {
-		ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
-		SharedPreferences settings = activity.getApiCall().settings;
-		JSONObject data = (JSONObject) object;
-		Log.d("imagesData", "checking");
-		if (activity == null || data == null) {
-			//return;
-		}
-		Log.d("imagesData", "failed");
-		try {
-			Log.d("URI", data.toString());
-			JSONArray imageArray = data.getJSONArray("data");
-			errorText.setVisibility(View.GONE);
-			for (int i = 0; i < imageArray.length(); i++) {
-				JSONObject imageData = imageArray.getJSONObject(i);
-				String s = "";
-				if (!settings.getString("GalleryLayout", "Card View").equals("Card View"))
-					s = settings.getString("IconQuality", "m");
-				try {
-					if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
-						if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + s + ".png")) {
-							urls.add("http://imgur.com/" + imageData.getString("cover") + s + ".png");
-							JSONParcelable dataParcel = new JSONParcelable();
-							dataParcel.setJSONObject(imageData);
-							ids.add(dataParcel);
-						}
-					} else {
-						if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png")) {
-							urls.add("http://imgur.com/" + imageData.getString("id") + s + ".png");
-							JSONParcelable dataParcel = new JSONParcelable();
-							dataParcel.setJSONObject(imageData);
-							ids.add(dataParcel);
-						}
-					}
-				} catch (RejectedExecutionException e) {
-					Log.e("Rejected", e.toString());
-				}
-			}
-		} catch (JSONException e) {
-			Log.e("Error!", e.toString());
-		}
-		if (settings.getString("GalleryLayout", "Card View").equals("Card View")) {
-			try {
-				ArrayList<Card> cards = new ArrayList<Card>();
-				for (int i = 0; i < ids.size(); i++) {
-					Card card = new Card(getActivity());
-					final CustomHeaderInnerCard header = new CustomHeaderInnerCard(getActivity());
-					header.setTitle(ids.get(i).getJSONObject().getString("title"));
-					header.position = i;
-					header.setPopupMenu(R.menu.card_image, new CardHeader.OnClickCardHeaderPopupMenuListener() {
-						@Override
-						public void onMenuItemClick(BaseCard card, MenuItem item) {
-							ImgurHoloActivity imgurHoloActivity = (ImgurHoloActivity) getActivity();
-							if(item.getTitle().equals(getString(R.string.rating_good)))
-								ImageUtils.upVote(galleryFragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
-							if(item.getTitle().equals(getString(R.string.rating_bad)))
-								ImageUtils.downVote(galleryFragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
-							if(item.getTitle().equals(getString(R.string.account)))
-								ImageUtils.gotoUser(galleryFragment, ids.get(header.position));
-							if(item.getTitle().equals(getString(R.string.action_share)))
-								ImageUtils.shareImage(galleryFragment, ids.get(header.position));
-							if(item.getTitle().equals(getString(R.string.action_copy)))
-								ImageUtils.copyImageURL(galleryFragment, ids.get(header.position));
-							if(item.getTitle().equals(getString(R.string.action_download)))
-								ImageUtils.downloadImage(galleryFragment, ids.get(header.position));
-							ImageUtils.updateImageFont(ids.get(header.position), header.scoreText);
-						}
-					});
-					card.addCardHeader(header);
-					CustomThumbCard thumb = new CustomThumbCard(getActivity());
-					thumb.setHeader(header);
-					thumb.setExternalUsage(true);
-					thumb.position = i;
-					final int position = i;
-					card.addCardThumbnail(thumb);
-					if (!activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
-						card.setBackgroundResourceId(R.drawable.dark_card_background);
-					CardView cardView = (CardView) getActivity().findViewById(R.id.list_cardId);
-					card.setCardView(cardView);
-					card.setOnClickListener(new Card.OnCardClickListener() {
-						@Override
-						public void onClick(Card card, View view) {
-							selectItem(position);
-						}
-					});
-					cards.add(card);
-				}
-				CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
-				if (cardListView != null) {
-					cardListView.setAdapter(mCardArrayAdapter);
-				}
-			} catch (JSONException e) {
-				Log.e("Error!", e.toString());
-			}
-		} else {
-			imageAdapter.notifyDataSetChanged();
-		}
-		if (mPullToRefreshLayout != null)
-			mPullToRefreshLayout.setRefreshComplete();
-		fetchingImages = false;
-		errorText.setVisibility(View.GONE);
+        if(tag.equals(IMAGES)) {
+            ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+            SharedPreferences settings = activity.getApiCall().settings;
+            JSONObject data = (JSONObject) object;
+            Log.d("imagesData", "checking");
+            if (activity == null || data == null) {
+                //return;
+            }
+            Log.d("imagesData", "failed");
+            try {
+                Log.d("URI", data.toString());
+                JSONArray imageArray = data.getJSONArray("data");
+                errorText.setVisibility(View.GONE);
+                for (int i = 0; i < imageArray.length(); i++) {
+                    JSONObject imageData = imageArray.getJSONObject(i);
+                    String s = "";
+                    if (!settings.getString("GalleryLayout", "Card View").equals("Card View"))
+                        s = settings.getString("IconQuality", "m");
+                    try {
+                        if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
+                            if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + s + ".png")) {
+                                urls.add("http://imgur.com/" + imageData.getString("cover") + s + ".png");
+                                JSONParcelable dataParcel = new JSONParcelable();
+                                dataParcel.setJSONObject(imageData);
+                                ids.add(dataParcel);
+                            }
+                        } else {
+                            if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png")) {
+                                urls.add("http://imgur.com/" + imageData.getString("id") + s + ".png");
+                                JSONParcelable dataParcel = new JSONParcelable();
+                                dataParcel.setJSONObject(imageData);
+                                ids.add(dataParcel);
+                            }
+                        }
+                    } catch (RejectedExecutionException e) {
+                        Log.e("Rejected", e.toString());
+                    }
+                }
+            } catch (JSONException e) {
+                Log.e("Error!", e.toString());
+            }
+            if (settings.getString("GalleryLayout", "Card View").equals("Card View")) {
+                restoreCards();
+            } else {
+                imageAdapter.notifyDataSetChanged();
+            }
+            if (mPullToRefreshLayout != null)
+                mPullToRefreshLayout.setRefreshComplete();
+            fetchingImages = false;
+            errorText.setVisibility(View.GONE);
+        }
 	}
+
+    private void restoreCards() {
+        try {
+            ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+            ArrayList<Card> cards = new ArrayList<Card>();
+            for (int i = 0; i < ids.size(); i++) {
+                Card card = new Card(getActivity());
+                final CustomHeaderInnerCard header = new CustomHeaderInnerCard(getActivity());
+                header.setTitle(ids.get(i).getJSONObject().getString("title"));
+                header.position = i;
+                if(ids.get(i).getJSONObject().has("subreddit"))
+                    header.setPopupMenu(R.menu.card_image, new CardHeader.OnClickCardHeaderPopupMenuListener() {
+                    @Override
+                    public void onMenuItemClick(BaseCard card, MenuItem item) {
+                        ImgurHoloActivity imgurHoloActivity = (ImgurHoloActivity) getActivity();
+                        if(item.getTitle().equals(getString(R.string.rating_good)))
+                            ImageUtils.upVote(galleryFragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
+                        if(item.getTitle().equals(getString(R.string.rating_bad)))
+                            ImageUtils.downVote(galleryFragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
+                        if(item.getTitle().equals(getString(R.string.account)))
+                            ImageUtils.gotoUser(galleryFragment, ids.get(header.position));
+                        if(item.getTitle().equals(getString(R.string.action_share)))
+                            ImageUtils.shareImage(galleryFragment, ids.get(header.position));
+                        if(item.getTitle().equals(getString(R.string.action_copy)))
+                            ImageUtils.copyImageURL(galleryFragment, ids.get(header.position));
+                        if(item.getTitle().equals(getString(R.string.action_download)))
+                            ImageUtils.downloadImage(galleryFragment, ids.get(header.position));
+                        ImageUtils.updateImageFont(ids.get(header.position), header.scoreText);
+                    }
+                });
+                else
+                    header.setPopupMenu(R.menu.card_image_no_account, new CardHeader.OnClickCardHeaderPopupMenuListener() {
+                        @Override
+                        public void onMenuItemClick(BaseCard card, MenuItem item) {
+                            ImgurHoloActivity imgurHoloActivity = (ImgurHoloActivity) getActivity();
+                            if(item.getTitle().equals(getString(R.string.rating_good)))
+                                ImageUtils.upVote(galleryFragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
+                            if(item.getTitle().equals(getString(R.string.rating_bad)))
+                                ImageUtils.downVote(galleryFragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
+                            if(item.getTitle().equals(getString(R.string.account)))
+                                ImageUtils.gotoUser(galleryFragment, ids.get(header.position));
+                            if(item.getTitle().equals(getString(R.string.action_share)))
+                                ImageUtils.shareImage(galleryFragment, ids.get(header.position));
+                            if(item.getTitle().equals(getString(R.string.action_copy)))
+                                ImageUtils.copyImageURL(galleryFragment, ids.get(header.position));
+                            if(item.getTitle().equals(getString(R.string.action_download)))
+                                ImageUtils.downloadImage(galleryFragment, ids.get(header.position));
+                            ImageUtils.updateImageFont(ids.get(header.position), header.scoreText);
+                        }
+                    });
+                card.addCardHeader(header);
+                CustomThumbCard thumb = new CustomThumbCard(getActivity());
+                thumb.setHeader(header);
+                thumb.setExternalUsage(true);
+                thumb.position = i;
+                final int position = i;
+                card.addCardThumbnail(thumb);
+                if (!activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
+                    card.setBackgroundResourceId(R.drawable.dark_card_background);
+                CardView cardView = (CardView) getActivity().findViewById(R.id.list_cardId);
+                card.setCardView(cardView);
+                card.setOnClickListener(new Card.OnCardClickListener() {
+                    @Override
+                    public void onClick(Card card, View view) {
+                        selectItem(position);
+                    }
+                });
+                cards.add(card);
+            }
+            CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
+            if (cardListView != null) {
+                cardListView.setAdapter(mCardArrayAdapter);
+            }
+        } catch (JSONException e) {
+            Log.e("Error!", e.toString());
+        }
+    }
 
 	public class ImageAdapter extends BaseAdapter {
 		private Context mContext;

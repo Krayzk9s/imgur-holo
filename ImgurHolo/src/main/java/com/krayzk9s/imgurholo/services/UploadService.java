@@ -354,7 +354,6 @@ public class UploadService extends IntentService implements GetData {
             Intent viewImageIntent = new Intent();
             viewImageIntent.setAction(Intent.ACTION_VIEW);
             viewImageIntent.setData(Uri.parse(data.getString("link")));
-            Intent shareIntent = new Intent();
             String link = "";
             if (settings.getString("AutoCopyType", resources.getString(R.string.direct_link)).equals(resources.getString(R.string.direct_link))) {
                link = "http://imgur.com/" + data.getString("id");
@@ -374,9 +373,10 @@ public class UploadService extends IntentService implements GetData {
             else if(settings.getString("AutoCopyType", resources.getString(R.string.direct_link)).equals(resources.getString(R.string.markdown_link))) {
                 link = "[Imgur](http://i.imgur.com/" + data.getString("id") + ")";
             }
+                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
                 shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, link);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, link);
                 PendingIntent viewImagePendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), viewImageIntent, 0);
                 PendingIntent sharePendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), shareIntent, 0);
                 if(uploadService.totalUpload == -1) {

@@ -302,7 +302,6 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 		}
 		if (savedInstanceState == null && urls.size() == 0) {
 			getImages();
-
 		} else if (savedInstanceState != null) {
 			urls = savedInstanceState.getStringArrayList("urls");
 			ids = savedInstanceState.getParcelableArrayList("ids");
