@@ -119,7 +119,20 @@
 
     <string name="card_view">Card View</string>
     <string name="grid_view">Grid View</string>
-
+    <string name="username">Username</string>
+    <string name="error_messages">Error getting messages</string>
+    <string name="dash">-</string>
+    <string name="error_loading_images">Error Loading Images</string>
+    <string name="error_getting_images">Error getting images</string>
+    <string name="icon_size">IconSize</string>
+    <string name="picture_download">Picture Download</string>
+    <string name="download_in_progress">Download in progress</string>
+    <string name="download_complete">Download Complete</string>
+    <string name="download_finished">Image download finished</string>
+    <string name="share">Share</string>
+    <string name="error_upload">Error Uploading to imgur</string>
+    <string name="imgur_uploader_title">imgur Image Uploader</string>
+    <string name="finished_uploading">Finished Uploading</string>
 
 
 </resources>

@@ -63,18 +63,30 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
- * Created by Kurt Zimmer on 7/23/13.
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 public class AlbumsFragment extends Fragment implements GetData, OnRefreshListener {
 
-	ImageAdapter imageAdapter;
-	String username;
-	TextView noImageView;
+	private ImageAdapter imageAdapter;
+	private String username;
+	private TextView noImageView;
 	private ArrayList<String> urls;
 	private ArrayList<String> ids;
-	int lastInView = -1;
-	TextView errorText;
-	PullToRefreshLayout mPullToRefreshLayout;
+	private int lastInView = -1;
+	private TextView errorText;
+	private PullToRefreshLayout mPullToRefreshLayout;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -181,7 +193,7 @@ public class AlbumsFragment extends Fragment implements GetData, OnRefreshListen
 		GridView gridview = (GridView) view.findViewById(R.id.grid_layout);
 		ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
 		SharedPreferences settings = activity.getApiCall().settings;
-		gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString("IconSize", "120")), getActivity()));
+		gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty))), getActivity()));
 		imageAdapter = new ImageAdapter(view.getContext());
 		gridview.setAdapter(imageAdapter);
 		gridview.setOnItemClickListener(new GridItemClickListener());
@@ -222,15 +234,12 @@ public class AlbumsFragment extends Fragment implements GetData, OnRefreshListen
 			for (int i = 0; i < imageArray.length(); i++) {
 				JSONObject imageData = imageArray.getJSONObject(i);
 				Log.d("adding album...", imageData.getString("id"));
-				if (!imageData.getString("cover").equals("[[")) {
-					urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
+				if (!imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER).equals("[[")) {
+					urls.add("http://imgur.com/" + imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER) + "m.png");
 					ids.add(imageData.getString("id"));
 				}
 			}
-			if (imageArray.length() > 0)
-				hasImages = true;
-			else
-				hasImages = false;
+            hasImages = imageArray.length() > 0;
 
 		} catch (JSONException e) {
 			Log.e("Error!", e.toString());
@@ -246,12 +255,12 @@ public class AlbumsFragment extends Fragment implements GetData, OnRefreshListen
 			mPullToRefreshLayout.setRefreshComplete();
 	}
 
-	public void getImages() {
+	void getImages() {
 		Fetcher fetcher = new Fetcher(this, "3/account/" + username + "/albums", ApiCall.GET, null, ((ImgurHoloActivity) getActivity()).getApiCall(), "images");
 		fetcher.execute();
 	}
 
-	public void selectItem(int position) {
+	void selectItem(int position) {
 		Intent intent = new Intent();
 		String id = ids.get(position);
 		intent.putExtra("imageCall", "3/album/" + id);
@@ -270,7 +279,7 @@ public class AlbumsFragment extends Fragment implements GetData, OnRefreshListen
 	}
 
 	public class ImageAdapter extends BaseAdapter {
-		private Context mContext;
+		private final Context mContext;
 
 		public ImageAdapter(Context c) {
 			mContext = c;

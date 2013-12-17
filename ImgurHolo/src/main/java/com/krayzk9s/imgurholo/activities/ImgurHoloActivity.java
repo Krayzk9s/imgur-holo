@@ -15,18 +15,40 @@ import com.krayzk9s.imgurholo.tools.ApiCall;
 import java.lang.reflect.Field;
 
 /**
- * Created by Kurt Zimmer on 11/20/13.
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 public class ImgurHoloActivity extends FragmentActivity {
-    protected ApiCall apiCall;
-    protected String theme;
-    public static String IMAGE_PAGER_INTENT = "com.krayzk9s.imgurholo.IMAGE_PAGER";
-    public static String IMAGES_INTENT = "com.krayzk9s.imgurholo.IMAGES";
-    public static String COMMENTS_INTENT = "com.krayzk9s.imgurholo.COMMENTS";
-    public static String ALBUMS_INTENT = "com.krayzk9s.imgurholo.ALBUMS";
-    public static String ACCOUNT_INTENT = "com.krayzk9s.imgurholo.ACCOUNT";
-    public static String HOLO_DARK = "Holo Dark";
-    public static String HOLO_LIGHT = "Holo Light";
+    public static final String IMAGE_DATA_LINK = "link";
+    public static final String IMAGE_DATA_COVER = "cover";
+    public static final String VERTICAL_HEIGHT_SETTING = "VerticalHeight";
+    public static final String IMAGE_DATA_TYPE = "type";
+    public static final String IMAGE_DATA_TITLE = "title";
+    public static final String IMAGE_DATA_DESCRIPTION = "description";
+    public static final String IMAGE_DATA_WIDTH = "width";
+    public static final String IMAGE_DATA_HEIGHT = "height";
+    public static final String IMAGE_DATA_SIZE = "size";
+    public static final String IMAGE_DATA_VIEWS = "views";
+    ApiCall apiCall;
+    String theme;
+    public static final String IMAGE_PAGER_INTENT = "com.krayzk9s.imgurholo.IMAGE_PAGER";
+    public static final String IMAGES_INTENT = "com.krayzk9s.imgurholo.IMAGES";
+    public static final String COMMENTS_INTENT = "com.krayzk9s.imgurholo.COMMENTS";
+    public static final String ALBUMS_INTENT = "com.krayzk9s.imgurholo.ALBUMS";
+    public static final String ACCOUNT_INTENT = "com.krayzk9s.imgurholo.ACCOUNT";
+    public static final String HOLO_DARK = "Holo Dark";
+    public static final String HOLO_LIGHT = "Holo Light";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +69,9 @@ public class ImgurHoloActivity extends FragmentActivity {
         }
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         apiCall = new ApiCall();
-        if(Integer.parseInt(settings.getString("IconSize", "120")) < 120) { //getting rid of 90 because it may crash the app for large screens
+        if(Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty))) < 120) { //getting rid of 90 because it may crash the app for large screens
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString("IconSize", "120");
+            editor.putString(getString(R.string.icon_size), getString(R.string.onetwenty));
             editor.commit();
         }
         theme = settings.getString("theme", MainActivity.HOLO_LIGHT);

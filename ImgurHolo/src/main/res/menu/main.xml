@@ -71,36 +71,36 @@
             <group android:checkableBehavior="single">
                 <item
                         android:id="@+id/menuSortPopularity"
-                        android:title="Popularity" />
+                        android:title="@string/viralsort" />
                 <item
                         android:id="@+id/menuSortBest"
-                        android:title="Best" />
+                        android:title="@string/bestComment" />
                 <item
                         android:id="@+id/menuSortTop"
-                        android:title="Top" />
+                        android:title="@string/topComment" />
                 <item
                         android:id="@+id/menuSortNewest"
-                        android:title="New" />
+                        android:title="@string/newestsort" />
 
                 <item
                         android:id="@+id/menuSortDay"
-                        android:title="Day"
+                        android:title="@string/day"
                         android:visible="false"/>
                 <item
                         android:id="@+id/menuSortWeek"
-                        android:title="Week"
+                        android:title="@string/week"
                         android:visible="false"/>
                 <item
                         android:id="@+id/menuSortMonth"
-                        android:title="Month"
+                        android:title="@string/month"
                         android:visible="false"/>
                 <item
                         android:id="@+id/menuSortYear"
-                        android:title="Year"
+                        android:title="@string/year"
                         android:visible="false"/>
                 <item
                         android:id="@+id/menuSortAll"
-                        android:title="All"
+                        android:title="@string/all"
                         android:visible="false"/>
             </group>
         </menu>

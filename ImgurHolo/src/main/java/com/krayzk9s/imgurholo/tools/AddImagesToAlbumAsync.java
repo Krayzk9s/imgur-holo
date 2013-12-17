@@ -6,18 +6,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by Kurt Zimmer on 11/20/13.
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 public class AddImagesToAlbumAsync extends AsyncTask<Void, Void, Void> {
-	boolean add;
-	private ArrayList<String> imageIDsAsync;
-	String albumId;
-	ApiCall apiCall;
+    private final ArrayList<String> imageIDsAsync;
+	private final String albumId;
+	private final ApiCall apiCall;
 
-	public AddImagesToAlbumAsync(ArrayList<String> _imageIDs, boolean _add, ApiCall _apiCall, String _albumId) {
+	public AddImagesToAlbumAsync(ArrayList<String> _imageIDs, ApiCall _apiCall, String _albumId) {
 		imageIDsAsync = _imageIDs;
-		add = _add;
-		apiCall = _apiCall;
+        apiCall = _apiCall;
 		albumId = _albumId;
 	}
 

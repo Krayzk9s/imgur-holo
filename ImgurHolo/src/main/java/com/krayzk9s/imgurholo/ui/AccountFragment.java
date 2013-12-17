@@ -49,25 +49,35 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
- * Created by Kurt Zimmer on 7/22/13.
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 public class AccountFragment extends Fragment implements GetData {
 
-	String[] mMenuList;
-	ArrayAdapter<String> adapter;
-	String username;
-	SearchView mSearchView;
-	MenuItem searchItem;
-	ListView mDrawerList;
-	TextView usernameText;
-	TextView biography;
-	TextView created;
-	TextView reputation;
-	final static String ACCOUNTDATA = "accountData";
-	final static String COUNTDATA = "countData";
-	final static String LIKEDATA = "likeData";
-	final static String COMMENTDATA = "commentData";
-	final static String ALBUMDATA = "albumData";
+	private String[] mMenuList;
+	private ArrayAdapter<String> adapter;
+	private String username;
+	private SearchView mSearchView;
+    private ListView mDrawerList;
+    private TextView biography;
+	private TextView created;
+	private TextView reputation;
+	private final static String ACCOUNTDATA = "accountData";
+	private final static String COUNTDATA = "countData";
+	private final static String LIKEDATA = "likeData";
+	private final static String COMMENTDATA = "commentData";
+	private final static String ALBUMDATA = "albumData";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +97,7 @@ public class AccountFragment extends Fragment implements GetData {
 			inflater.inflate(R.menu.main_dark, menu);
 		menu.findItem(R.id.action_search).setVisible(true);
 		menu.findItem(R.id.action_refresh).setVisible(true);
-		searchItem = menu.findItem(R.id.action_search);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
 		mSearchView = (SearchView) searchItem.getActionView();
 		mSearchView.setQueryHint("Lookup Users");
 		SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
@@ -146,7 +156,7 @@ public class AccountFragment extends Fragment implements GetData {
 		if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
 			header.setBackgroundColor(0xFFCCCCCC);
 		biography = (TextView) view.findViewById(R.id.biography);
-		usernameText = (TextView) view.findViewById(R.id.username);
+        TextView usernameText = (TextView) view.findViewById(R.id.username);
 		usernameText.setText(username);
 		created = (TextView) view.findViewById(R.id.created);
 		reputation = (TextView) view.findViewById(R.id.reputation);

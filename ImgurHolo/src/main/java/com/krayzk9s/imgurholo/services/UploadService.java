@@ -36,10 +36,11 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
 
+import com.krayzk9s.imgurholo.R;
+import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
 import com.krayzk9s.imgurholo.tools.ApiCall;
 import com.krayzk9s.imgurholo.tools.GetData;
 import com.krayzk9s.imgurholo.tools.NewAlbumAsync;
-import com.krayzk9s.imgurholo.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,10 +54,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by info on 8/30/13.
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 public class UploadService extends IntentService implements GetData {
-    public ApiCall apiCall;
+    private ApiCall apiCall;
     private ArrayList<String> ids;
     private int totalUpload;
 
@@ -139,23 +152,21 @@ public class UploadService extends IntentService implements GetData {
             for (Parcelable parcel : list) {
                 Uri uri = (Uri) parcel;
                 Log.d("recieving", uri.toString());
-                SendImage sendImage = new SendImage(uri, apiCall, getContentResolver().query(uri, null, null, null, null), getApplicationContext(), getResources(), this);
+                SendImage sendImage = new SendImage(apiCall, getContentResolver().query(uri, null, null, null, null), getApplicationContext(), getResources(), this);
                 Log.d("recieving", "executing");
                 sendImage.execute();
             }
         }
         else {
             totalUpload = -1;
-            SendImage sendImage = new SendImage(intent.getData(), apiCall, getContentResolver().query(intent.getData(), null, null, null, null), getApplicationContext(), getResources(), this);
+            SendImage sendImage = new SendImage(apiCall, getContentResolver().query(intent.getData(), null, null, null, null), getApplicationContext(), getResources(), this);
             sendImage.execute();
         }
     }
 
     /* From http://stackoverflow.com/users/1946055/tobiel at http://stackoverflow.com/questions/17839388/creating-a-scaled-bitmap-with-createscaledbitmap-in-android */
-    public static Bitmap lessResolution (String filePath, int width, int height)
+    private static Bitmap lessResolution(String filePath, int width, int height)
     {
-        int reqHeight=height;
-        int reqWidth=width;
         BitmapFactory.Options options = new BitmapFactory.Options();
 
         // First decode with inJustDecodeBounds=true to check dimensions
@@ -165,9 +176,9 @@ public class UploadService extends IntentService implements GetData {
         BitmapFactory.decodeFile(filePath, options);
 
         // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inSampleSize = calculateInSampleSize(options, width, height);
         BitmapFactory.decodeFile(filePath, options);
-        float factor = calculateFactor(options, reqWidth, reqHeight);
+        float factor = calculateFactor(options, width, height);
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
@@ -175,7 +186,7 @@ public class UploadService extends IntentService implements GetData {
         return Bitmap.createScaledBitmap(BitmapFactory.decodeFile(filePath, options), (int)Math.floor(options.outWidth*factor), (int)Math.floor(options.outHeight*factor), false);
     }
 
-    public static int calculateInSampleSize(
+    private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
@@ -207,7 +218,7 @@ public class UploadService extends IntentService implements GetData {
         final int width = options.outWidth;
         Log.d("reqHeight", reqHeight + "");
         Log.d("reqWidth", reqWidth + "");
-        Log.d("height", height + "");
+        Log.d(ImgurHoloActivity.IMAGE_DATA_HEIGHT, height + "");
         Log.d("width", width + "");
         float factor;
         if (height > reqHeight || width > reqWidth) {
@@ -224,32 +235,29 @@ public class UploadService extends IntentService implements GetData {
     }
 
     private static class SendImage extends AsyncTask<Void, Void, JSONObject> {
-        Uri uri;
         Bitmap photo;
-        ApiCall apiCallStatic;
-        Cursor cursor;
-        SharedPreferences settings;
-        Context context;
-        Resources resources;
+        final ApiCall apiCallStatic;
+        final Cursor cursor;
+        final SharedPreferences settings;
+        final Context context;
+        final Resources resources;
         NotificationManager notificationManager;
-        UploadService uploadService;
+        final UploadService uploadService;
 
         private void throwError(String error) {
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
             notificationManager.cancel(0);
-            notificationBuilder = new NotificationCompat.Builder(context);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
             Notification notification = notificationBuilder
                     .setSmallIcon(R.drawable.icon_desaturated)
                     .setContentText(error)
-                    .setContentTitle("Error - Image Upload Failed")
+                    .setContentTitle(context.getString(R.string.error_upload))
                     .build();
             notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(0, notification);
         }
 
-        public SendImage(Uri _uri, ApiCall _apiCallStatic, Cursor _cursor, Context _context, Resources _resources, UploadService _uploadService) {
+        public SendImage(ApiCall _apiCallStatic, Cursor _cursor, Context _context, Resources _resources, UploadService _uploadService) {
             uploadService = _uploadService;
-            uri = _uri;
             apiCallStatic = _apiCallStatic;
             cursor = _cursor;
             context = _context;
@@ -305,7 +313,7 @@ public class UploadService extends IntentService implements GetData {
             Log.d("Image Upload", image);
             HashMap<String, Object> hashMap = new HashMap<String, Object>();
             hashMap.put("image", image);
-            hashMap.put("type", "binary");
+            hashMap.put(ImgurHoloActivity.IMAGE_DATA_TYPE, "binary");
             JSONObject data = apiCallStatic.makeCall("3/image", "post", hashMap);
             if(data == null)
                 data = apiCallStatic.makeCall("3/image", "post", hashMap);
@@ -334,9 +342,9 @@ public class UploadService extends IntentService implements GetData {
             if(data == null) {
                 Notification notification = notificationBuilder
                         .setSmallIcon(R.drawable.icon_desaturated)
-                        .setContentText("Error Uploading to imgur")
+                        .setContentText(context.getString(R.string.error_upload))
                         .setStyle(bigPictureStyle)
-                        .setContentTitle("imgur Image Uploader")
+                        .setContentTitle(context.getString(R.string.imgur_uploader_title))
                         .build();
                 notificationManager.cancel(0);
                 notificationManager.notify(1, notification);
@@ -353,22 +361,22 @@ public class UploadService extends IntentService implements GetData {
             uploadService.onGetObject(id, null);
             Intent viewImageIntent = new Intent();
             viewImageIntent.setAction(Intent.ACTION_VIEW);
-            viewImageIntent.setData(Uri.parse(data.getString("link")));
+            viewImageIntent.setData(Uri.parse(data.getString(ImgurHoloActivity.IMAGE_DATA_LINK)));
             String link = "";
             if (settings.getString("AutoCopyType", resources.getString(R.string.direct_link)).equals(resources.getString(R.string.direct_link))) {
                link = "http://imgur.com/" + data.getString("id");
             }
             else if(settings.getString("AutoCopyType", resources.getString(R.string.direct_link)).equals(resources.getString(R.string.link))) {
-                link = data.getString("link");
+                link = data.getString(ImgurHoloActivity.IMAGE_DATA_LINK);
             }
             else if(settings.getString("AutoCopyType", resources.getString(R.string.direct_link)).equals(resources.getString(R.string.html_link))) {
-                link = "<a href=\"http://imgur.com/" + data.getString("id") + "\"><img src=\"" + data.getString("link") + "\" title=\"Hosted by imgur.com\"/></a>";
+                link = "<a href=\"http://imgur.com/" + data.getString("id") + "\"><img src=\"" + data.getString(ImgurHoloActivity.IMAGE_DATA_LINK) + "\" title=\"Hosted by imgur.com\"/></a>";
             }
             else if(settings.getString("AutoCopyType", resources.getString(R.string.direct_link)).equals(resources.getString(R.string.bbcode_link))) {
-                link = "[IMG]" + data.getString("link") + "[/IMG]";
+                link = "[IMG]" + data.getString(ImgurHoloActivity.IMAGE_DATA_LINK) + "[/IMG]";
             }
             else if(settings.getString("AutoCopyType", resources.getString(R.string.direct_link)).equals(resources.getString(R.string.linked_bbcode_link))) {
-                link = "[URL=http://imgur.com/" + data.getString("id") + "][IMG]" + data.getString("link") + "[/IMG][/URL]";
+                link = "[URL=http://imgur.com/" + data.getString("id") + "][IMG]" + data.getString(ImgurHoloActivity.IMAGE_DATA_LINK) + "[/IMG][/URL]";
             }
             else if(settings.getString("AutoCopyType", resources.getString(R.string.direct_link)).equals(resources.getString(R.string.markdown_link))) {
                 link = "[Imgur](http://i.imgur.com/" + data.getString("id") + ")";
@@ -382,9 +390,9 @@ public class UploadService extends IntentService implements GetData {
                 if(uploadService.totalUpload == -1) {
                 Notification notification = notificationBuilder
                         .setSmallIcon(R.drawable.icon_desaturated)
-                        .setContentText("Finished Uploading")
+                        .setContentText(context.getString(R.string.finished_uploading))
                         .setStyle(bigPictureStyle)
-                        .setContentTitle("imgur Image Uploader")
+                        .setContentTitle(context.getString(R.string.imgur_uploader_title))
                         .setContentIntent(viewImagePendingIntent)
                         .addAction(R.drawable.dark_social_share, "Share", sharePendingIntent)
                         .build();

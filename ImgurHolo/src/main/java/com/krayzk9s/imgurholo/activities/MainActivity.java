@@ -34,7 +34,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -65,11 +64,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends ImgurHoloActivity implements GetData {
-    protected ActionBarDrawerToggle mDrawerToggle;
-    protected CharSequence mDrawerTitle;
-    protected CharSequence mTitle;
-    protected DrawerLayout mDrawerLayout;
-    protected ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mTitle;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,8 +129,8 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
 
     }
 
-    public void updateMenu() {
-        DrawerAdapter drawerAdapter = new DrawerAdapter(this, R.layout.menu_item);
+    void updateMenu() {
+        DrawerAdapter drawerAdapter = new DrawerAdapter(this);
         Log.d("theme", theme);
         Log.d("theme dark?", theme.equals(HOLO_DARK) + "");
         Log.d("theme light?", theme.equals(HOLO_LIGHT) + "");
@@ -144,7 +142,6 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
             drawerAdapter.setMenu(R.array.imgurMenuListLoggedIn, R.array.imgurMenuListIcons);
         else
             drawerAdapter.setMenu(R.array.imgurMenuListLoggedOut, R.array.imgurMenuListIconsLoggedOut);
-        mDrawerTitle = getTitle();
         if (mTitle == null)
             mTitle = "imgur Holo";
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -173,7 +170,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
     }
 
     /* The click listener for ListView in the navigation drawer */
-    protected class DrawerItemClickListener implements ListView.OnItemClickListener {
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position);
@@ -183,11 +180,9 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
     public class DrawerAdapter extends ArrayAdapter<String> {
         public String[] mMenuList;
         public TypedArray mMenuIcons;
-        LayoutInflater mInflater;
 
-        public DrawerAdapter(Context context, int textViewResourceId) {
-            super(context, textViewResourceId);
-            mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        public DrawerAdapter(Context context) {
+            super(context, R.layout.menu_item);
         }
 
         public void setMenu(int list, int array) {
@@ -404,7 +399,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
         }).show();
     }
 
-    protected void selectItem(int position) {
+    void selectItem(int position) {
         mDrawerLayout.closeDrawer(mDrawerList);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -516,8 +511,8 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
     }
 
     private static class UrlAsync extends AsyncTask<Void, Void, Void> {
-        String urlText;
-        ApiCall apiCall;
+        final String urlText;
+        final ApiCall apiCall;
         public UrlAsync(String _urlText, ApiCall _apiCall) {
             urlText = _urlText;
             apiCall = _apiCall;
@@ -532,8 +527,8 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
     }
 
     private static class LoginAsync extends android.os.AsyncTask<Void, Void, String> {
-        ApiCall apiCall;
-        MainActivity activity;
+        final ApiCall apiCall;
+        final MainActivity activity;
 
         public LoginAsync(ApiCall _apiCall, MainActivity _activity) {
             apiCall = _apiCall;
@@ -556,8 +551,8 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
             }
         }
     private static class CallbackAsync extends AsyncTask<Void, Void, Void> {
-        ApiCall apiCall;
-        MainActivity activity;
+        final ApiCall apiCall;
+        final MainActivity activity;
 
         public CallbackAsync(ApiCall _apiCall, MainActivity _activity) {
             apiCall = _apiCall;

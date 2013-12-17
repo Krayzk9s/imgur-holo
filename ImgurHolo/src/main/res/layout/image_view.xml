@@ -31,8 +31,7 @@
         android:gravity="center_horizontal"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@color/DimGray"
-        android:adjustViewBounds="true"
-        android:text="This is a title for the image view" />
+        android:adjustViewBounds="true"/>
 
     <TextView
         android:layout_margin="4dp"
@@ -44,8 +43,7 @@
         android:textColor="@color/Gray"
         android:autoLink="web"
         android:textAppearance="?android:textAppearanceMedium"
-        android:visibility="gone"
-        android:text="This is a description for the image view" />
+        android:visibility="gone"/>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="horizontal"
                   android:layout_gravity="center_horizontal"
@@ -67,8 +65,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/DarkGray"
             android:textAppearance="?android:textAppearanceSmall"
-            android:visibility="gone"
-            android:text="This is the score for the image view" />
+            android:visibility="gone"/>
     </LinearLayout>
 
     <TextView
@@ -79,8 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/DarkGray"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:text="This is details for the image view" />
+        android:textAppearance="?android:textAppearanceSmall"/>
 
 
     <View xmlns:android="http://schemas.android.com/apk/res/android"

@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -53,18 +52,30 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Created by Kurt Zimmer on 7/24/13.
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 public class CommentsFragment extends Fragment implements GetData {
-	MessageAdapter commentsAdapter;
-	ListView mDrawerList;
-	ArrayList<JSONParcelable> commentDataArray;
-	String username;
-	TextView errorText;
-	final CommentsFragment commentsFragment = this;
-	final static String DELETE = "delete";
-	final static String COMMENTS = "comments";
-	final static String IMAGE = "image";
+	private MessageAdapter commentsAdapter;
+	private ListView mDrawerList;
+	private ArrayList<JSONParcelable> commentDataArray;
+	private String username;
+	private TextView errorText;
+	private final CommentsFragment commentsFragment = this;
+	private final static String DELETE = "delete";
+	private final static String COMMENTS = "comments";
+	private final static String IMAGE = "image";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -207,13 +218,11 @@ public class CommentsFragment extends Fragment implements GetData {
 		public ImageButton link;
 		public String id;
 		public String image_id;
-		public int position;
-		public ImageView image;
-	}
+    }
 
 	public class MessageAdapter extends ArrayAdapter<JSONParcelable> {
 		JSONObject commentContent;
-		private LayoutInflater mInflater;
+		private final LayoutInflater mInflater;
 
 		public MessageAdapter(Context context, int textViewResourceId) {
 			super(context, textViewResourceId);
@@ -235,11 +244,9 @@ public class CommentsFragment extends Fragment implements GetData {
 				holder.header = (TextView) convertView.findViewById(R.id.header);
 				holder.delete = (ImageButton) convertView.findViewById(R.id.delete);
 				holder.link = (ImageButton) convertView.findViewById(R.id.link);
-				holder.image = (ImageView) convertView.findViewById(R.id.comment_image);
 				holder.id = "";
 				holder.image_id = "";
-				holder.position = position;
-				convertView.setTag(holder);
+                convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}

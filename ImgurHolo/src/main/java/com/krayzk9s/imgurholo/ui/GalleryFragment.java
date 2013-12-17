@@ -85,36 +85,46 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
- * Created by Kurt Zimmer on 7/23/13.
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 public class GalleryFragment extends Fragment implements GetData, OnRefreshListener {
 
 	private ArrayList<String> urls;
 	private ArrayList<JSONParcelable> ids;
-	ImageAdapter imageAdapter;
-	String sort;
-	String gallery;
-	int page;
-	String subreddit;
-	String memeType;
-	String window;
-	SpinnerAdapter mSpinnerAdapter;
-	ActionBar actionBar;
-	int selectedIndex;
-	SearchView mSearchView;
-	MenuItem searchItem;
-	String search;
-	CharSequence spinner;
-	int lastInView = -1;
-	TextView errorText;
-	GridView gridview;
-	int oldwidth = 0;
+	private ImageAdapter imageAdapter;
+	private String sort;
+	private String gallery;
+	private int page;
+	private String subreddit;
+    private String window;
+	private SpinnerAdapter mSpinnerAdapter;
+	private ActionBar actionBar;
+	private int selectedIndex;
+	private SearchView mSearchView;
+	private MenuItem searchItem;
+	private String search;
+	private CharSequence spinner;
+	private int lastInView = -1;
+	private TextView errorText;
+	private GridView gridview;
+	private int oldwidth = 0;
 	private boolean fetchingImages;
-	TextView noImageView;
-	PullToRefreshLayout mPullToRefreshLayout;
-	CardListView cardListView;
-	GalleryFragment galleryFragment = this;
-    static final String IMAGES = "images";
+    private PullToRefreshLayout mPullToRefreshLayout;
+	private CardListView cardListView;
+	private final GalleryFragment galleryFragment = this;
+    private static final String IMAGES = "images";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -137,7 +147,6 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 		} else {
 			page = 0;
 			subreddit = "pics";
-			memeType = getResources().getString(R.string.top);
 			gallery = settings.getString("DefaultGallery", getResources().getString(R.string.viral));
 			ArrayList<String> galleryOptions = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.galleryOptions)));
 			sort = getResources().getString(R.string.viralsort);
@@ -148,12 +157,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 		}
 	}
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-	}
-
-	@Override
+    @Override
 	public void onResume() {
 		super.onResume();
 		getActivity().getActionBar().setTitle("");
@@ -288,13 +292,12 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 		actionBar = activity.getActionBar();
 		SharedPreferences settings = activity.getSettings();
 		View view;
-		if (settings.getString("GalleryLayout", "Card View").equals("Grid View")) {
+		if (settings.getString("GalleryLayout", getString(R.string.card_view)).equals("Grid View")) {
 			view = inflater.inflate(R.layout.image_layout, container, false);
 			errorText = (TextView) view.findViewById(R.id.error);
 			gridview = (GridView) view.findViewById(R.id.grid_layout);
-			gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString("IconSize", "120")), getActivity()));
+			gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty))), getActivity()));
 			imageAdapter = new ImageAdapter(view.getContext());
-			noImageView = (TextView) view.findViewById(R.id.no_images);
 			gridview.setAdapter(imageAdapter);
 			gridview.setOnItemClickListener(new GridItemClickListener());
 			gridview.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -385,9 +388,9 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 			oldwidth = gridview.getWidth();
 			SharedPreferences settings = activity.getSettings();
 			Log.d("numColumnsWidth", gridview.getWidth() + "");
-			Log.d("numColumnsIconWidth", Utils.dpToPx((Integer.parseInt(settings.getString("IconSize", "120"))), getActivity()) + "");
+			Log.d("numColumnsIconWidth", Utils.dpToPx((Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty)))), getActivity()) + "");
 			final int numColumns = (int) Math.floor(
-					gridview.getWidth() / (Utils.dpToPx((Integer.parseInt(settings.getString("IconSize", "120"))), getActivity()) + Utils.dpToPx(4, getActivity())));
+					gridview.getWidth() / (Utils.dpToPx((Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty)))), getActivity()) + Utils.dpToPx(4, getActivity())));
 			if (numColumns > 0) {
 				imageAdapter.setNumColumns(numColumns);
 				if (BuildConfig.DEBUG) {
@@ -519,8 +522,8 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
                         s = settings.getString("IconQuality", "m");
                     try {
                         if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
-                            if (!urls.contains("http://imgur.com/" + imageData.getString("cover") + s + ".png")) {
-                                urls.add("http://imgur.com/" + imageData.getString("cover") + s + ".png");
+                            if (!urls.contains("http://imgur.com/" + imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER) + s + ".png")) {
+                                urls.add("http://imgur.com/" + imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER) + s + ".png");
                                 JSONParcelable dataParcel = new JSONParcelable();
                                 dataParcel.setJSONObject(imageData);
                                 ids.add(dataParcel);
@@ -630,7 +633,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
     }
 
 	public class ImageAdapter extends BaseAdapter {
-		private Context mContext;
+		private final Context mContext;
 		private int mNumColumns;
 
 		public void setNumColumns(int numColumns) {
@@ -701,7 +704,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 		}
 	}
 
-	public void selectItem(int position) {
+	void selectItem(int position) {
 		Intent intent = new Intent();
 		intent.putExtra("start", position);
 		intent.putExtra("ids", new ArrayList<JSONParcelable>(ids));
@@ -740,10 +743,10 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 	}
 
 	public class SpinnerAdapter extends ArrayAdapter<CharSequence> {
-		Context mContext;
+		final Context mContext;
 
-		public SpinnerAdapter(Context context, int textViewResourceId, List<CharSequence> options) {
-			super(context, textViewResourceId, options);
+		public SpinnerAdapter(Context context, List<CharSequence> options) {
+			super(context, android.R.layout.simple_spinner_dropdown_item, options);
 			mContext = context;
 		}
 
@@ -776,8 +779,8 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 		MainActivity activity = (MainActivity) getActivity();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		Resources res = activity.getResources();
-		List<CharSequence> options = new ArrayList(Arrays.asList(res.getStringArray(R.array.galleryOptions)));
-		mSpinnerAdapter = new SpinnerAdapter(activity, android.R.layout.simple_spinner_dropdown_item, options);
+		ArrayList options = new ArrayList(Arrays.asList(res.getStringArray(R.array.galleryOptions)));
+		mSpinnerAdapter = new SpinnerAdapter(activity, options);
 		if (spinner != null)
 			mSpinnerAdapter.add(spinner);
 		ActionBar.OnNavigationListener mNavigationCallback = new ActionBar.OnNavigationListener() {
@@ -846,13 +849,13 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 
 		@Override
 		public void setupInnerViewElements(ViewGroup parent, View viewImage) {
-			if(ids.get(position).getJSONObject().has("width")) {
+			if(ids.get(position).getJSONObject().has(ImgurHoloActivity.IMAGE_DATA_WIDTH)) {
 				try {
 					Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 					Point size = new Point();
 					display.getSize(size);
-					float imageWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ids.get(position).getJSONObject().getInt("width"), getResources().getDisplayMetrics());
-					float imageHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ids.get(position).getJSONObject().getInt("height"), getResources().getDisplayMetrics());
+					float imageWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ids.get(position).getJSONObject().getInt(ImgurHoloActivity.IMAGE_DATA_WIDTH), getResources().getDisplayMetrics());
+					float imageHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ids.get(position).getJSONObject().getInt(ImgurHoloActivity.IMAGE_DATA_HEIGHT), getResources().getDisplayMetrics());
 					viewImage.getLayoutParams().height = (int) (imageHeight * ((size.x - 32) / imageWidth));
 				}
 				catch (JSONException e) {

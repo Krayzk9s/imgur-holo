@@ -15,6 +15,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.ProgressCallback;
 import com.krayzk9s.imgurholo.R;
+import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
 import com.krayzk9s.imgurholo.libs.JSONParcelable;
 
 import org.json.JSONException;
@@ -23,7 +24,19 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by Kurt Zimmer on 11/17/13.
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 public class DownloadService extends IntentService {
 
@@ -32,25 +45,20 @@ public class DownloadService extends IntentService {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Override
     protected void onHandleIntent(Intent intent) {
 		final NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 		ArrayList<JSONParcelable> ids = intent.getParcelableArrayListExtra("ids");
 		try {
-			final String type = ids.get(0).getJSONObject().getString("type").split("/")[1];
+			final String type = ids.get(0).getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_TYPE).split("/")[1];
 			final String id = ids.get(0).getJSONObject().getString("id");
-			final String link = ids.get(0).getJSONObject().getString("link");
+			final String link = ids.get(0).getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK);
 			Log.d("data", ids.get(0).getJSONObject().toString());
-			Log.d("type", ids.get(0).getJSONObject().getString("type").split("/")[1]);
+			Log.d(ImgurHoloActivity.IMAGE_DATA_TYPE, ids.get(0).getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_TYPE).split("/")[1]);
 			Log.d("id", ids.get(0).getJSONObject().getString("id"));
-			Log.d("link", ids.get(0).getJSONObject().getString("link"));
+			Log.d(ImgurHoloActivity.IMAGE_DATA_LINK, ids.get(0).getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK));
 			final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
-			notificationBuilder.setContentTitle("Picture Download")
-					.setContentText("Download in progress")
+			notificationBuilder.setContentTitle(getString(R.string.picture_download))
+					.setContentText(getString(R.string.download_in_progress))
 					.setSmallIcon(R.drawable.icon_desaturated);
 			Ion.with(getApplicationContext(), link)
 					.progress(new ProgressCallback() {
@@ -64,7 +72,6 @@ public class DownloadService extends IntentService {
 						@Override
 						public void onCompleted(Exception e, File file) {
 							//notificationManager.cancel(0);
-							NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
 							NotificationCompat.Builder notificationComplete = new NotificationCompat.Builder(getApplicationContext());
 							Intent viewImageIntent = new Intent(Intent.ACTION_VIEW);
 							viewImageIntent.setDataAndType(Uri.fromFile(file),"image/*");
@@ -74,11 +81,11 @@ public class DownloadService extends IntentService {
 							shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
 							PendingIntent viewImagePendingIntent = PendingIntent.getActivity(getApplicationContext(), (int) System.currentTimeMillis(), viewImageIntent, 0);
 							PendingIntent sharePendingIntent = PendingIntent.getActivity(getApplicationContext(), (int) System.currentTimeMillis(), shareIntent, 0);
-							notificationComplete.setContentTitle("Download Complete")
+							notificationComplete.setContentTitle(getString(R.string.download_complete))
 									.setSmallIcon(R.drawable.icon_desaturated)
-									.setContentText("Image download finished")
+									.setContentText(getString(R.string.download_finished))
 									.setContentIntent(viewImagePendingIntent)
-									.addAction(R.drawable.dark_social_share, "Share", sharePendingIntent);
+									.addAction(R.drawable.dark_social_share, getString(R.string.share), sharePendingIntent);
 							notificationManager.cancel(0);
 							notificationManager.notify(1, notificationComplete.build());
 							MediaScannerConnection.scanFile(getApplicationContext(), new String[]{android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + id + "." + type}, null,

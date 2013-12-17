@@ -30,6 +30,7 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -52,27 +53,27 @@ public class ZoomableImageView extends View {
 	//
 	// This matrix is recomputed when we go from the thumbnail image to
 	// the full size image.
-	private Matrix mBaseMatrix = new Matrix();
+	private final Matrix mBaseMatrix = new Matrix();
 
 	// This is the supplementary transformation which reflects what 
 	// the user has done in terms of zooming and panning.
 	//
 	// This matrix remains the same when we go from the thumbnail image
 	// to the full size image.
-	private Matrix mSuppMatrix = new Matrix();
+	private final Matrix mSuppMatrix = new Matrix();
 
 	// This is the final matrix which is computed as the concatentation
 	// of the base matrix and the supplementary matrix.
-	private Matrix mDisplayMatrix = new Matrix();
+	private final Matrix mDisplayMatrix = new Matrix();
 
 	// A replacement ImageView matrix
-	private Matrix mMatrix = new Matrix();
+	private final Matrix mMatrix = new Matrix();
 
 	// Used to filter the bitmaps when hardware acceleration is not enabled
 	private Paint mPaint;
 
 	// Temporary buffer used for getting the values out of a matrix.
-	private float[] mMatrixValues = new float[9];
+	private final float[] mMatrixValues = new float[9];
 
 	// The current bitmap being displayed.
 	private Bitmap mBitmap;
@@ -336,8 +337,7 @@ public class ZoomableImageView extends View {
 
 		float fw = (float) mBitmap.getWidth()  / (float)mThisWidth;
 		float fh = (float) mBitmap.getHeight() / (float)mThisHeight;
-		float max = Math.max(fw, fh) * 16;
-		return max;
+		return Math.max(fw, fh) * 16;
 	}
 	
 	// Tries to make best use of the space by zooming the picture
@@ -597,7 +597,7 @@ public class ZoomableImageView extends View {
 					invalidate();
 				}
 			}catch(NullPointerException  e){
-
+                Log.e("Error!", e.toString());
 			}
 
 			return super.onFling( e1, e2, velocityX, velocityY );

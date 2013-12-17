@@ -94,10 +94,10 @@
                         android:defaultValue="Holo Light"
                         android:entries="@array/themes"
                         android:entryValues="@array/themes"/>
-        <ListPreference android:key="IconSize"
+        <ListPreference android:key="@string/icon_size"
                         android:title= "Thumbnail Size"
                         android:summary= "120dps"
-                        android:defaultValue="120"
+                        android:defaultValue="@string/onetwenty"
                         android:entries="@array/iconsizes"
                         android:entryValues="@array/iconsizes"/>
         <ListPreference android:key="IconQuality"

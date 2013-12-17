@@ -33,11 +33,11 @@ import org.scribe.oauth.OAuthService;
 import java.util.HashMap;
 
 public class ApiCall {
-	public static final String OAUTH_CALLBACK_SCHEME = "imgur-holo";
-	public static final String OAUTH_CALLBACK_HOST = "authcallback";
+	private static final String OAUTH_CALLBACK_SCHEME = "imgur-holo";
+	private static final String OAUTH_CALLBACK_HOST = "authcallback";
 	public static final String OAUTH_CALLBACK_URL = OAUTH_CALLBACK_SCHEME + "://" + OAUTH_CALLBACK_HOST;
-	public static final String MASHAPE_KEY = "CoV9d8oMmqhy8YdAbCAnB1MroW1xMJpP";
-	public static final String MASHAPE_URL = "https://imgur-apiv3.p.mashape.com/";
+	private static final String MASHAPE_KEY = "CoV9d8oMmqhy8YdAbCAnB1MroW1xMJpP";
+	private static final String MASHAPE_URL = "https://imgur-apiv3.p.mashape.com/";
 	private static final String CLIENTID = "4cd3f96f162ac80";
 	private static final String SECRETID = "9cd3c621a4e064422e60aba4ccf84d6b149b4463";
 	public static final Token EMPTY_TOKEN = null;
@@ -73,16 +73,18 @@ public class ApiCall {
 					.header("Authorization", "Bearer " + accessKey.getToken())
 					.fields(args)
 					.asJson();
-			Log.d("Getting Code", String.valueOf(response.getCode()));
+			Log.d("Getting Code", response.getCode() + "");
 			int code = response.getCode();
 			if (code == 403) {
 				accessKey = renewAccessToken();
+                Log.d("new Key", accessKey.toString());
 				response = Unirest.post(MASHAPE_URL + url + methodString)
 						.header("accept", "application/json")
 						.header("X-Mashape-Authorization", MASHAPE_KEY)
 						.header("Authorization", "Bearer " + accessKey.getToken())
 						.fields(args)
 						.asJson();
+                code = response.getCode();
 			}
 			if (code == 200) {
 				data = response.getBody().getObject();
@@ -104,6 +106,7 @@ public class ApiCall {
 						.header("Authorization", "Client-ID " + CLIENTID)
 						.fields(args)
 						.asJson();
+                code = response.getCode();
 			}
 			if (code == 200) {
 				data = response.getBody().getObject();
@@ -113,7 +116,7 @@ public class ApiCall {
 		return data;
 	}
 
-	public Token renewAccessToken() {
+	Token renewAccessToken() {
 		SharedPreferences.Editor editor = settings.edit();
 		accessToken = service.refreshAccessToken(accessToken);
 		Log.d("URI", accessToken.getRawResponse());
@@ -122,7 +125,7 @@ public class ApiCall {
 		return accessToken;
 	}
 
-	public Token getAccessToken() {
+	Token getAccessToken() {
 		if (settings.contains("RefreshToken")) {
 			accessToken = new Token(settings.getString("AccessToken", ""), settings.getString("RefreshToken", ""));
 			loggedin = true;

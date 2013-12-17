@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_marginTop="?android:actionBarSize"
         android:layout_height="wrap_content"
-        android:text="Error Loading Images"
+        android:text="@string/error_loading_images"
         android:visibility="gone"/>
     <TextView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Error getting images"
+        android:text="@string/error_getting_images"
         android:visibility="gone"/>
     <LinearLayout
         android:layout_width="match_parent"

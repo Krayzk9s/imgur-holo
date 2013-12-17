@@ -50,13 +50,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by Kurt Zimmer on 7/24/13.
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 public class MessagingFragment extends Fragment {
-	MessageAdapter messageAdapter;
-	ListView mDrawerList;
-	ArrayList<JSONParcelable> messageDataArray;
-	TextView errorText;
+	private MessageAdapter messageAdapter;
+	private ListView mDrawerList;
+	private ArrayList<JSONParcelable> messageDataArray;
+	private TextView errorText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,7 +127,7 @@ public class MessagingFragment extends Fragment {
 		else
 			messageAdapter = new MessageAdapter(activity, R.layout.message_layout_dark);
 		String[] mMenuList = getResources().getStringArray(R.array.emptyList);
-		ArrayAdapter<String> tempAdapter = null;
+		ArrayAdapter<String> tempAdapter;
 		if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
 			tempAdapter = new ArrayAdapter<String>(activity,
 					R.layout.message_layout, mMenuList);
@@ -211,7 +223,7 @@ public class MessagingFragment extends Fragment {
 	public class MessageAdapter extends ArrayAdapter<JSONParcelable> {
 		JSONObject messageData;
 		JSONObject messageContent;
-		private LayoutInflater mInflater;
+		private final LayoutInflater mInflater;
 
 		public MessageAdapter(Context context, int textViewResourceId) {
 			super(context, textViewResourceId);
@@ -310,9 +322,9 @@ public class MessagingFragment extends Fragment {
 	}
 
 	private class MessagingAsync extends AsyncTask<Void, Void, Void> {
-		private String header;
-		private String body;
-		private String username;
+		private final String header;
+		private final String body;
+		private final String username;
 
 		public MessagingAsync(String _header, String _body, String _username) {
 			header = _header;
@@ -322,7 +334,6 @@ public class MessagingFragment extends Fragment {
 
 		@Override
 		protected Void doInBackground(Void... voids) {
-			MainActivity activity = (MainActivity) getActivity();
 			HashMap<String, Object> messageMap = new HashMap<String, Object>();
 			messageMap.put("subject", header);
 			messageMap.put("body", body);
@@ -333,7 +344,7 @@ public class MessagingFragment extends Fragment {
 	}
 
 	private class DeleteAsync extends AsyncTask<Void, Void, Void> {
-		private String id;
+		private final String id;
 
 		public DeleteAsync(String _id) {
 			id = _id;
@@ -341,15 +352,14 @@ public class MessagingFragment extends Fragment {
 
 		@Override
 		protected Void doInBackground(Void... voids) {
-			MainActivity activity = (MainActivity) getActivity();
 			((ImgurHoloActivity) getActivity()).getApiCall().makeCall("3/message/" + id, "delete", null);
 			return null;
 		}
 	}
 
 	private static class ReportAsync extends AsyncTask<Void, Void, Void> {
-		private String username;
-		MainActivity activity;
+		private final String username;
+		final MainActivity activity;
 
 		public ReportAsync(String _username, MainActivity _activity) {
 			username = _username;
@@ -365,8 +375,8 @@ public class MessagingFragment extends Fragment {
 	}
 
 	private static class MessageAsync extends AsyncTask<Void, Void, JSONObject> {
-		MainActivity activity;
-		MessagingFragment messagingFragment;
+		final MainActivity activity;
+		final MessagingFragment messagingFragment;
 
 		public MessageAsync(MainActivity _activity, MessagingFragment _messagingFragment) {
 			activity = _activity;
@@ -375,8 +385,7 @@ public class MessagingFragment extends Fragment {
 
 		@Override
 		protected JSONObject doInBackground(Void... voids) {
-			JSONObject messages = activity.getApiCall().makeCall("/3/account/me/notifications/messages?new=false", "get", null);
-			return messages;
+			return activity.getApiCall().makeCall("/3/account/me/notifications/messages?new=false", "get", null);
 		}
 
 		@Override
@@ -386,9 +395,7 @@ public class MessagingFragment extends Fragment {
 		}
 	}
 
-	;
-
-	@Override
+    @Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putParcelableArrayList("content", messageDataArray);
 		// Always call the superclass so it can save the view hierarchy state

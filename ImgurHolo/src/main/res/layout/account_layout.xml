@@ -16,7 +16,7 @@
                   android:layout_margin="16dp">
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/username"
-                android:text="Username"
+                android:text="@string/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -30,7 +30,6 @@
                       android:layout_marginLeft="16dp"
                       android:layout_marginRight="16dp">
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:id="@+id/header"
                           android:orientation="vertical"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content">
@@ -50,7 +49,6 @@
                           android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"/>
             </LinearLayout>
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:id="@+id/header"
                           android:orientation="vertical"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
@@ -72,7 +70,6 @@
             </LinearLayout>
             </RelativeLayout>
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:id="@+id/header"
                       android:orientation="vertical"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
@@ -101,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content"
-            android:text="Error getting messages"
+            android:text="@string/error_messages"
             android:visibility="gone"/>
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"

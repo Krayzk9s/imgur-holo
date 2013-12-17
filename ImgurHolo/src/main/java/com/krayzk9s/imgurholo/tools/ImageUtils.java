@@ -36,7 +36,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Created by info on 12/13/13.
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 public class ImageUtils {
 	public static void favoriteImage(GetData fragment, JSONParcelable imageData, ImageButton imageFavorite, ApiCall apiCall) {
@@ -155,10 +167,6 @@ public class ImageUtils {
 	}
 
 	public static void fullscreen(android.support.v4.app.Fragment fragment, JSONParcelable imageData, PopupWindow popupWindow, View mainView) {
-		if (popupWindow != null) {
-			popupWindow.dismiss();
-		}
-		popupWindow = new PopupWindow();
 		popupWindow.setBackgroundDrawable(new ColorDrawable(0x80000000));
 		popupWindow.setFocusable(true);
 		popupWindow.setWindowLayoutMode(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -206,7 +214,7 @@ public class ImageUtils {
 		intent.setType("text/plain");
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		try {
-			intent.putExtra(Intent.EXTRA_TEXT, imageData.getJSONObject().getString("link"));
+			intent.putExtra(Intent.EXTRA_TEXT, imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK));
 		} catch (JSONException e) {
 			Log.e("Error!", "bad link to share");
 		}
@@ -220,10 +228,10 @@ public class ImageUtils {
 		String[] copyTypes = fragment.getResources().getStringArray(R.array.copyTypes);
 		try {
 			copyTypes[0] = copyTypes[0] + "\nhttp://imgur.com/" + imageData.getJSONObject().getString("id");
-			copyTypes[1] = copyTypes[1] + "\n" + imageData.getJSONObject().getString("link");
-			copyTypes[2] = copyTypes[2] + "\n<a href=\"http://imgur.com/" + imageData.getJSONObject().getString("id") + "\"><img src=\"" + imageData.getJSONObject().getString("link") + "\" title=\"Hosted by imgur.com\"/></a>";
-			copyTypes[3] = copyTypes[3] + "\n[IMG]" + imageData.getJSONObject().getString("link") + "[/IMG]";
-			copyTypes[4] = copyTypes[4] + "\n[URL=http://imgur.com/" + imageData.getJSONObject().getString("id") + "][IMG]" + imageData.getJSONObject().getString("link") + "[/IMG][/URL]";
+			copyTypes[1] = copyTypes[1] + "\n" + imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK);
+			copyTypes[2] = copyTypes[2] + "\n<a href=\"http://imgur.com/" + imageData.getJSONObject().getString("id") + "\"><img src=\"" + imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK) + "\" title=\"Hosted by imgur.com\"/></a>";
+			copyTypes[3] = copyTypes[3] + "\n[IMG]" + imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK) + "[/IMG]";
+			copyTypes[4] = copyTypes[4] + "\n[URL=http://imgur.com/" + imageData.getJSONObject().getString("id") + "][IMG]" + imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK) + "[/IMG][/URL]";
 			copyTypes[5] = copyTypes[5] + "\n[Imgur](http://i.imgur.com/" + imageData.getJSONObject().getString("id") + ")";
 		} catch (JSONException e) {
 			Log.e("Error!", e.toString());
@@ -241,16 +249,16 @@ public class ImageUtils {
 									link = "http://imgur.com/" + data.getJSONObject().getString("id");
 									break;
 								case 1:
-									link = data.getJSONObject().getString("link");
+									link = data.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK);
 									break;
 								case 2:
-									link = "<a href=\"http://imgur.com/" + data.getJSONObject().getString("id") + "\"><img src=\"" + data.getJSONObject().getString("link") + "\" title=\"Hosted by imgur.com\"/></a>";
+									link = "<a href=\"http://imgur.com/" + data.getJSONObject().getString("id") + "\"><img src=\"" + data.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK) + "\" title=\"Hosted by imgur.com\"/></a>";
 									break;
 								case 3:
-									link = "[IMG]" + data.getJSONObject().getString("link") + "[/IMG]";
+									link = "[IMG]" + data.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK) + "[/IMG]";
 									break;
 								case 4:
-									link = "[URL=http://imgur.com/" + data.getJSONObject().getString("id") + "][IMG]" + data.getJSONObject().getString("link") + "[/IMG][/URL]";
+									link = "[URL=http://imgur.com/" + data.getJSONObject().getString("id") + "][IMG]" + data.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK) + "[/IMG][/URL]";
 									break;
 								case 5:
 									link = "[Imgur](http://i.imgur.com/" + data.getJSONObject().getString("id") + ")";

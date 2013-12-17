@@ -29,7 +29,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 
 import com.krayzk9s.imgurholo.R;
 
@@ -37,11 +36,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Created by Kurt Zimmer on 7/24/13.
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-public class SettingsActivity extends Activity {
-    public static String HOLO_DARK = "Holo Dark";
-    public static String HOLO_LIGHT = "Holo Light";
+class SettingsActivity extends Activity {
+    private static final String HOLO_LIGHT = "Holo Light";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +85,6 @@ public class SettingsActivity extends Activity {
     }
 
     public static class SettingsFragment extends PreferenceFragment {
-        ArrayAdapter<String> adapter;
 
         public SettingsFragment() {
 
@@ -87,7 +96,7 @@ public class SettingsActivity extends Activity {
             // Load the preferences from an XML resource
             addPreferencesFromResource(R.xml.preferences);
             ListPreference defaultPage = (ListPreference) findPreference("DefaultPage");
-            defaultPage.setSummary(defaultPage.getValue().toString());
+            defaultPage.setSummary(defaultPage.getValue());
             defaultPage.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
@@ -96,7 +105,7 @@ public class SettingsActivity extends Activity {
                 }
             });
             ListPreference theme = (ListPreference) findPreference("theme");
-            theme.setSummary(theme.getValue().toString());
+            theme.setSummary(theme.getValue());
             theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
@@ -104,8 +113,8 @@ public class SettingsActivity extends Activity {
                     return true;
                 }
             });
-            ListPreference iconSize = (ListPreference) findPreference("IconSize");
-            iconSize.setSummary(iconSize.getValue().toString());
+            ListPreference iconSize = (ListPreference) findPreference(getString(R.string.icon_size));
+            iconSize.setSummary(iconSize.getValue());
             iconSize.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
@@ -114,7 +123,7 @@ public class SettingsActivity extends Activity {
                 }
             });
             ListPreference galleryDefault = (ListPreference) findPreference("DefaultGallery");
-            galleryDefault.setSummary(galleryDefault.getValue().toString());
+            galleryDefault.setSummary(galleryDefault.getValue());
             galleryDefault.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
@@ -124,7 +133,7 @@ public class SettingsActivity extends Activity {
             });
 
             ListPreference galleryLayout = (ListPreference) findPreference("GalleryLayout");
-            galleryLayout.setSummary(galleryLayout.getValue().toString());
+            galleryLayout.setSummary(galleryLayout.getValue());
             galleryLayout.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
@@ -136,7 +145,7 @@ public class SettingsActivity extends Activity {
             ListPreference iconQuality = (ListPreference) findPreference("IconQuality");
             final ArrayList<String> optionSettings = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.imageQualitiesSettings)));
             final ArrayList<String> options = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.imageQualities)));
-            int i = optionSettings.indexOf(iconQuality.getValue().toString());
+            int i = optionSettings.indexOf(iconQuality.getValue());
             if (i > 0)
                 iconQuality.setSummary(options.get(i));
             iconQuality.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -149,7 +158,7 @@ public class SettingsActivity extends Activity {
             });
 
             final ListPreference commentSort = (ListPreference) findPreference("CommentSort");
-            commentSort.setSummary(commentSort.getValue().toString());
+            commentSort.setSummary(commentSort.getValue());
             commentSort.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
@@ -160,7 +169,7 @@ public class SettingsActivity extends Activity {
 
             CheckBoxPreference autoCopy = (CheckBoxPreference) findPreference("AutoCopy");
             final ListPreference autoCopyType = (ListPreference) findPreference("AutoCopyType");
-            autoCopyType.setSummary(autoCopyType.getValue().toString());
+            autoCopyType.setSummary(autoCopyType.getValue());
             if (!autoCopy.isChecked())
                 autoCopyType.setEnabled(false);
             autoCopyType.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

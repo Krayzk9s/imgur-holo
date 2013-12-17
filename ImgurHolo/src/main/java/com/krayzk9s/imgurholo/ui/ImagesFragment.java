@@ -71,28 +71,39 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
- * Created by Kurt Zimmer on 7/22/13.
+ * Copyright 2013 Kurt Zimmer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 public class ImagesFragment extends Fragment implements GetData, OnRefreshListener {
 
 	public boolean selecting = false;
-	ImageAdapter imageAdapter;
-	String imageCall;
-	GridView gridview;
-	MultiChoiceModeListener multiChoiceModeListener;
-	ArrayList<String> intentReturn;
-	String albumId;
-	JSONObject galleryAlbumData;
-	TextView noImageView;
-	int page;
-	boolean gettingImages = false;
-	int lastInView = -1;
+	private ImageAdapter imageAdapter;
+	private String imageCall;
+	private GridView gridview;
+    private ArrayList<String> intentReturn;
+	private String albumId;
+	private JSONObject galleryAlbumData;
+	private TextView noImageView;
+	private int page;
+	private boolean gettingImages = false;
+	private int lastInView = -1;
 	private ArrayList<String> urls;
 	private ArrayList<JSONParcelable> ids;
-	TextView errorText;
-	PullToRefreshLayout mPullToRefreshLayout;
-	final static String DELETE = "delete";
-	final static String IMAGES = "images";
+	private TextView errorText;
+	private PullToRefreshLayout mPullToRefreshLayout;
+	private final static String DELETE = "delete";
+	private final static String IMAGES = "images";
 
 	public ImagesFragment() {
 		page = 0;
@@ -220,7 +231,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 				ArrayList<String> imageIds = data.getStringArrayListExtra("data");
 				if (imageIds != null)
 					Log.d("Ids!", imageIds.toString());
-				AddImagesToAlbumAsync imageAsync = new AddImagesToAlbumAsync(imageIds, true, ((ImgurHoloActivity) getActivity()).getApiCall(), albumId);
+				AddImagesToAlbumAsync imageAsync = new AddImagesToAlbumAsync(imageIds, ((ImgurHoloActivity) getActivity()).getApiCall(), albumId);
 				imageAsync.execute();
 				break;
 		}
@@ -249,19 +260,19 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 		gridview.setAdapter(imageAdapter);
 		ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
 		final SharedPreferences settings = activity.getApiCall().settings;
-		gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString("IconSize", "120")), getActivity()));
+		gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty))), getActivity()));
 		gridview.setOnItemClickListener(new GridItemClickListener());
 		gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
-		multiChoiceModeListener = new MultiChoiceModeListener();
+        MultiChoiceModeListener multiChoiceModeListener = new MultiChoiceModeListener();
 		gridview.getViewTreeObserver().addOnGlobalLayoutListener(
 				new ViewTreeObserver.OnGlobalLayoutListener() {
 					@Override
 					public void onGlobalLayout() {
 						if (imageAdapter.getNumColumns() == 0) {
 							Log.d("numColumnsWidth", gridview.getWidth() + "");
-							Log.d("numColumnsIconWidth", Utils.dpToPx((Integer.parseInt(settings.getString("IconSize", "120"))), getActivity()) + "");
+							Log.d("numColumnsIconWidth", Utils.dpToPx((Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty)))), getActivity()) + "");
 							final int numColumns = (int) Math.floor(
-									gridview.getWidth() / (Utils.dpToPx((Integer.parseInt(settings.getString("IconSize", "120"))), getActivity()) + Utils.dpToPx(2, getActivity())));
+									gridview.getWidth() / (Utils.dpToPx((Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty)))), getActivity()) + Utils.dpToPx(2, getActivity())));
 							if (numColumns > 0) {
 								imageAdapter.setNumColumns(numColumns);
 								if (BuildConfig.DEBUG) {
@@ -335,8 +346,8 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 						continue;
 					JSONParcelable dataParcel = new JSONParcelable();
 					dataParcel.setJSONObject(imageData);
-					if (imageData.has("is_album") && imageData.getBoolean("is_album") && !urls.contains("http://imgur.com/" + imageData.getString("cover") + "m.png")) {
-						urls.add("http://imgur.com/" + imageData.getString("cover") + "m.png");
+					if (imageData.has("is_album") && imageData.getBoolean("is_album") && !urls.contains("http://imgur.com/" + imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER) + "m.png")) {
+						urls.add("http://imgur.com/" + imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER) + "m.png");
 						ids.add(dataParcel);
 						changed = true;
 					} else if (!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png")) {
@@ -371,7 +382,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 		fetcher.execute();
 	}
 
-	public void selectItem(int position) {
+	void selectItem(int position) {
 		if (!selecting) {
 			ArrayList<JSONParcelable> idCopy = ids;
 			Intent intent = new Intent();
@@ -383,7 +394,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 		}
 	}
 
-	public ImagesFragment getOuter() {
+	ImagesFragment getOuter() {
 		return this;
 	}
 
@@ -398,7 +409,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 	public class ImageAdapter extends BaseAdapter {
 		CheckableLayout l;
 		SquareImageView i;
-		private Context mContext;
+		private final Context mContext;
 		private int mNumColumns;
 
 		public ImageAdapter(Context c) {
@@ -498,10 +509,10 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 				case R.id.action_delete:
 					if (albumId == null) {
 						getChecked();
-						for (int i = 0; i < intentReturn.size(); i++) {
-							Fetcher fetcher = new Fetcher(getOuter(), "3/image/" + intentReturn.get(i), ApiCall.DELETE, null, ((ImgurHoloActivity) getActivity()).getApiCall(), DELETE);
-							fetcher.execute();
-						}
+                        for (String anIntentReturn : intentReturn) {
+                            Fetcher fetcher = new Fetcher(getOuter(), "3/image/" + anIntentReturn, ApiCall.DELETE, null, ((ImgurHoloActivity) getActivity()).getApiCall(), DELETE);
+                            fetcher.execute();
+                        }
 					}
 					break;
 				default:

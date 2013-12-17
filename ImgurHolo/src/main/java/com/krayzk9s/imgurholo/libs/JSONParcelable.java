@@ -37,15 +37,13 @@ public class JSONParcelable implements Parcelable {
     public JSONParcelable() {
     }
 
-    ;
-
     /**
      * Constructor to use when re-constructing object
      * from a parcel
      *
      * @param in a parcel from which to read this object
      */
-    public JSONParcelable(Parcel in) {
+    private JSONParcelable(Parcel in) {
         readFromParcel(in);
     }
 
