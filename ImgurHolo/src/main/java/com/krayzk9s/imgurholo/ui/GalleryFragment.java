@@ -846,6 +846,8 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 
 		@Override
 		public void setupInnerViewElements(ViewGroup parent, View viewImage) {
+			if(ids.size() == 0)
+				return;
 			if(ids.get(position).getJSONObject().has("width")) {
 				try {
 					Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -864,12 +866,11 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 				((ImageView) viewImage).setScaleType(ImageView.ScaleType.CENTER_CROP);
 
 			}
-			if(urls.size() != 0)
-				Ion.with(getActivity()).load(urls.get(position)).progressBar(header.progressBar).withBitmap().intoImageView((ImageView) viewImage).setCallback(new FutureCallback<ImageView>() {
+			Ion.with(getActivity()).load(urls.get(position)).progressBar(header.progressBar).withBitmap().intoImageView((ImageView) viewImage).setCallback(new FutureCallback<ImageView>() {
 					@Override
 					public void onCompleted(Exception e, ImageView imageView) {
-						header.progressBar.setVisibility(View.INVISIBLE);
-					}
+					header.progressBar.setVisibility(View.INVISIBLE);
+				}
 				});
 		}
 	}

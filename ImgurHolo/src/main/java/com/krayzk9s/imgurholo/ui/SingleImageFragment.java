@@ -384,16 +384,17 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
 						imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
 					}
 				});
-			Ion.with(getActivity(), imageData.getJSONObject().getString("link"))
-					.setLogging("MyLogs", Log.DEBUG)
-					.progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
-					.withBitmap()
-					.intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
-				@Override
-				public void onCompleted(Exception e, ImageView result) {
-					imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
-				}
-			});
+			else
+				Ion.with(getActivity(), imageData.getJSONObject().getString("link"))
+						.setLogging("MyLogs", Log.DEBUG)
+						.progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
+						.withBitmap()
+						.intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
+					@Override
+					public void onCompleted(Exception e, ImageView result) {
+						imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
+					}
+				});
 		} catch (JSONException e) {
 			Log.e("Error!", e.toString());
 		}
@@ -570,8 +571,8 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
 			Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 			Point size = new Point();
 			display.getSize(size);
-			int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("height"), getResources().getDisplayMetrics());
-			int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("width"), getResources().getDisplayMetrics());
+			float height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("height"), getResources().getDisplayMetrics());
+			float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt("width"), getResources().getDisplayMetrics());
 			Log.d("height", "" + height);
 			Log.d("width", "" + width);
 			int statusBarHeight = (int) Math.ceil(25 * getActivity().getResources().getDisplayMetrics().density);
@@ -580,7 +581,7 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
 			int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId) + statusBarHeight;
 			imageView = (ImageView) imageLayoutView.findViewById(R.id.single_image_view);
 			imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.VISIBLE);
-			if (imageData.getJSONObject().has("cover")) //temporary to fix large gif bug
+			if (imageData.getJSONObject().has("cover"))
 				Ion.with(getActivity(), "http://imgur.com/" + imageData.getJSONObject().getString("cover") + ".png")
 						.setLogging("MyLogs", Log.DEBUG)
 						.progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
@@ -591,17 +592,17 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
 						imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
 					}
 				});
-
-			Ion.with(getActivity(), imageData.getJSONObject().getString("link"))
-					.setLogging("MyLogs", Log.DEBUG)
-					.progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
-					.withBitmap()
-					.intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
-				@Override
-				public void onCompleted(Exception e, ImageView result) {
-					imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
-				}
-			});
+			else
+				Ion.with(getActivity(), imageData.getJSONObject().getString("link"))
+						.setLogging("MyLogs", Log.DEBUG)
+						.progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
+						.withBitmap()
+						.intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
+					@Override
+					public void onCompleted(Exception e, ImageView result) {
+						imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
+					}
+				});
 			if (settings.getBoolean("VerticalHeight", true))
 				imageView.setMaxHeight(size.y - actionBarHeight);
 		} catch (JSONException e) {
