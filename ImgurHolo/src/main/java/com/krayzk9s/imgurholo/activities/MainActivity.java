@@ -64,10 +64,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends ImgurHoloActivity implements GetData {
-    private ActionBarDrawerToggle mDrawerToggle;
-    private CharSequence mTitle;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+    protected ActionBarDrawerToggle mDrawerToggle;
+    protected CharSequence mTitle;
+    protected DrawerLayout mDrawerLayout;
+    protected ListView mDrawerList;
+	int oldChecked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -399,13 +400,15 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
         }).show();
     }
 
-    void selectItem(int position) {
+    protected void selectItem(int position) {
+		mDrawerList.setItemChecked(oldChecked, true);
         mDrawerLayout.closeDrawer(mDrawerList);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         switch (position) {
             case 0:
                 mDrawerList.setItemChecked(position, true);
+				oldChecked = position;
                 GalleryFragment galleryFragment = new GalleryFragment();
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_layout, galleryFragment)
@@ -414,6 +417,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
             case 1:
                 if (apiCall.loggedin) {
                     mDrawerList.setItemChecked(position, true);
+					oldChecked = position;
                     AccountFragment accountFragment = new AccountFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("username", "me");
@@ -437,6 +441,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
             case 3:
                 if (apiCall.loggedin) {
                     mDrawerList.setItemChecked(position, true);
+					oldChecked = position;
                     ImagesFragment imagesFragment = new ImagesFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("imageCall", "3/account/me/images");
@@ -452,6 +457,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
             case 4:
                 if (apiCall.loggedin) {
                     mDrawerList.setItemChecked(position, true);
+					oldChecked = position;
                     AlbumsFragment albumsFragment = new AlbumsFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("username", "me");
@@ -464,6 +470,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
             case 5:
                 if (apiCall.loggedin) {
                     mDrawerList.setItemChecked(position, true);
+					oldChecked = position;
                     ImagesFragment imagesFragment = new ImagesFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("imageCall", "3/account/me/likes");
@@ -476,6 +483,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
             case 6:
                 if (apiCall.loggedin) {
                     mDrawerList.setItemChecked(position, true);
+					oldChecked = position;
                     MessagingFragment messagingFragment = new MessagingFragment();
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, messagingFragment)

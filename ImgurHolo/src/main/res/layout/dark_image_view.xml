@@ -44,7 +44,7 @@
         android:textColor="@color/DarkGray"
         android:autoLink="web"
         android:textAppearance="?android:textAppearanceMedium"
-        android:visibility="gone"/>
+        android:visibility="gone"/> />
 
     <TextView
         android:layout_marginBottom="4dp"

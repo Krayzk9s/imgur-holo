@@ -389,16 +389,17 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
 						imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
 					}
 				});
-			Ion.with(getActivity(), imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK))
-					.setLogging("MyLogs", Log.DEBUG)
-					.progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
-					.withBitmap()
-					.intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
-				@Override
-				public void onCompleted(Exception e, ImageView result) {
-					imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
-				}
-			});
+			else
+				Ion.with(getActivity(), imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK))
+						.setLogging("MyLogs", Log.DEBUG)
+						.progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
+						.withBitmap()
+						.intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
+					@Override
+					public void onCompleted(Exception e, ImageView result) {
+						imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
+					}
+				});
 		} catch (JSONException e) {
 			Log.e("Error!", e.toString());
 		}
@@ -600,7 +601,7 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
 						imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
 					}
 				});
-
+            else
 			Ion.with(getActivity(), imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK))
 					.setLogging("MyLogs", Log.DEBUG)
 					.progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
