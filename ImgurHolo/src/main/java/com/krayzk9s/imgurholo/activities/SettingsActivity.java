@@ -50,7 +50,7 @@ import java.util.Arrays;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class SettingsActivity extends Activity {
+public class SettingsActivity extends Activity {
     private static final String HOLO_LIGHT = "Holo Light";
 
     @Override

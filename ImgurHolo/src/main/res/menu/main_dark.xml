@@ -71,7 +71,7 @@
             <group android:checkableBehavior="single">
                 <item
                         android:id="@+id/menuSortPopularity"
-                        android:title="@string/viralsort" />
+                        android:title="@string/popularitysort" />
                 <item
                         android:id="@+id/menuSortBest"
                         android:title="@string/bestComment" />
@@ -80,7 +80,7 @@
                         android:title="@string/topComment" />
                 <item
                         android:id="@+id/menuSortNewest"
-                        android:title="@string/newestsort" />
+                        android:title="@string/newComment" />
 
                 <item
                         android:id="@+id/menuSortDay"

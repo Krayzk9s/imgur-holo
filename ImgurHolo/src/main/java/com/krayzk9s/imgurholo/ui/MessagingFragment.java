@@ -338,7 +338,7 @@ public class MessagingFragment extends Fragment {
 			messageMap.put("subject", header);
 			messageMap.put("body", body);
 			messageMap.put("recipient", username);
-			((ImgurHoloActivity) getActivity()).getApiCall().makeCall("/3/message", "post", messageMap);
+			((ImgurHoloActivity) getActivity()).getApiCall().makeCall("/3/conversations", "post", messageMap);
 			return null;
 		}
 	}
@@ -352,7 +352,7 @@ public class MessagingFragment extends Fragment {
 
 		@Override
 		protected Void doInBackground(Void... voids) {
-			((ImgurHoloActivity) getActivity()).getApiCall().makeCall("3/message/" + id, "delete", null);
+			((ImgurHoloActivity) getActivity()).getApiCall().makeCall("3/conversations/" + id, "delete", null);
 			return null;
 		}
 	}
@@ -385,7 +385,7 @@ public class MessagingFragment extends Fragment {
 
 		@Override
 		protected JSONObject doInBackground(Void... voids) {
-			return activity.getApiCall().makeCall("/3/account/me/notifications/messages?new=false", "get", null);
+			return activity.getApiCall().makeCall("/3/conversations", "get", null);
 		}
 
 		@Override

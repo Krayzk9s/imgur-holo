@@ -149,7 +149,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 			subreddit = "pics";
 			gallery = settings.getString("DefaultGallery", getResources().getString(R.string.viral));
 			ArrayList<String> galleryOptions = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.galleryOptions)));
-			sort = getResources().getString(R.string.viralsort);
+			sort = getResources().getString(R.string.popularitysort);
 			window = getResources().getString(R.string.day);
 			urls = new ArrayList<String>();
 			ids = new ArrayList<JSONParcelable>();
@@ -245,7 +245,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 				}).show();
 				return true;
 			case R.id.menuSortPopularity:
-				sort = getResources().getString(R.string.viralsort);
+				sort = getResources().getString(R.string.viralsection);
 				break;
 			case R.id.menuSortNewest:
 				sort = getResources().getString(R.string.time);
@@ -403,7 +403,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
-		if (sort == null || (sort.equals(getResources().getString(R.string.viralsort)) && !gallery.equals(getResources().getString(R.string.top))))
+		if (sort == null || (sort.equals(getResources().getString(R.string.popularitysort)) && !gallery.equals(getResources().getString(R.string.top))))
 			menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setChecked(true);
 		else if (sort.equals(getResources().getString(R.string.time)) && !gallery.equals(getResources().getString(R.string.top)))
 			menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortNewest).setChecked(true);
@@ -504,6 +504,8 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 	public void onGetObject(Object object, String tag) {
         if(tag.equals(IMAGES)) {
             ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+            if(activity == null)
+                return;
             SharedPreferences settings = activity.getApiCall().settings;
             JSONObject data = (JSONObject) object;
             Log.d("imagesData", "checking");
@@ -790,7 +792,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 				switch (i) {
 					case 0:
 						newGallery = getResources().getString(R.string.viral);
-						sort = getResources().getString(R.string.viralsort);
+						sort = getResources().getString(R.string.popularitysort);
 						break;
 					case 1:
 						newGallery = getResources().getString(R.string.top);
@@ -798,11 +800,11 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 						break;
 					case 2:
 						newGallery = getResources().getString(R.string.user);
-						sort = getResources().getString(R.string.viralsort);
+						sort = getResources().getString(R.string.popularitysort);
 						break;
 					case 3:
 						newGallery = getResources().getString(R.string.memes);
-						sort = getResources().getString(R.string.viralsort);
+						sort = getResources().getString(R.string.popularitysort);
 						break;
 					case 4:
 						newGallery = getResources().getString(R.string.random);

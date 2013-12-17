@@ -100,10 +100,11 @@
     <string name="reply">Reply</string>
     <string name="report">Report</string>
 
-    <string name="viralsort">viral</string>
-    <string name="popularitysort">popularity</string>
-    <string name="newestsort">newest</string>
+    <string name="popularitysort">Popularity</string>
+    <string name="newestsort">Newest</string>
     <string name="time">time</string>
+
+    <string name="viralsection">viral</string>
 
     <string name="viral">most viral</string>
     <string name="user">user submitted</string>
@@ -111,11 +112,11 @@
     <string name="memes">memes</string>
     <string name="random">random</string>
 
-    <string name="day">day</string>
-    <string name="week">week</string>
-    <string name="month">month</string>
-    <string name="year">year</string>
-    <string name="all">all</string>
+    <string name="day">Day</string>
+    <string name="week">Week</string>
+    <string name="month">Month</string>
+    <string name="year">Year</string>
+    <string name="all">All</string>
 
     <string name="card_view">Card View</string>
     <string name="grid_view">Grid View</string>
