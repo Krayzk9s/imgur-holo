@@ -90,9 +90,11 @@ public class CommentsFragment extends Fragment implements GetData {
 		super.onResume();
 		ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
 		if (!username.equals("me"))
-			activity.setTitle(username + "'s Comments");
+			activity.setTitle(String.format(
+                    activity.getResources().getString(R.string.activity_title_comments_user),
+                    username));
 		else
-			activity.setTitle("My Comments");
+			activity.setTitle(R.string.activity_title_my_comments);
 	}
 
 	@Override

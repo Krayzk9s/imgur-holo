@@ -56,10 +56,7 @@ public class ImgurLinkActivity extends ImgurHoloActivity implements GetData {
         Log.d("New Intent", intent.toString());
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/")) {
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast;
-                toast = Toast.makeText(this, "Uploading Image...", duration);
-                toast.show();
+                Toast.makeText(this, R.string.toast_uploading, Toast.LENGTH_SHORT).show();
                 Intent serviceIntent = new Intent(this, UploadService.class);
                 if(intent.getExtras() == null)
                     finish();
@@ -69,10 +66,7 @@ public class ImgurLinkActivity extends ImgurHoloActivity implements GetData {
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             Log.d("sending", "sending multiple");
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast;
-            toast = Toast.makeText(this, "Uploading Images...", duration);
-            toast.show();
+            Toast.makeText(this, R.string.toast_uploading, Toast.LENGTH_SHORT).show();
             ArrayList<Parcelable> list =
                     intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
             Intent serviceIntent = new Intent(this, UploadService.class);
