@@ -109,9 +109,9 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
         if (keyCode == KeyEvent.KEYCODE_BACK && settings.getBoolean("ConfirmExit", false) && isTaskRoot() && fragmentManager.getBackStackEntryCount() == 0) {
             //Ask the user if they want to quit
             new AlertDialog.Builder(this)
-                    .setTitle("Quit?")
-                    .setMessage("Are you sure you want to quit?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.dialog_quit_title)
+                    .setMessage(R.string.dialog_quit_summary)
+                    .setPositiveButton(R.string.dialog_answer_yes, new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -121,7 +121,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                         }
 
                     })
-                    .setNegativeButton("No", null)
+                    .setNegativeButton(R.string.no, null)
                     .show();
             return true;
         } else {
@@ -240,10 +240,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
         Log.d("New Intent", intent.toString());
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/")) {
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast;
-                toast = Toast.makeText(this, "Uploading Image...", duration);
-                toast.show();
+                Toast.makeText(this, R.string.toast_uploading, Toast.LENGTH_SHORT).show();
                 Intent serviceIntent = new Intent(this, UploadService.class);
                 if(intent.getExtras() == null)
                     finish();
@@ -253,10 +250,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             Log.d("sending", "sending multiple");
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast;
-            toast = Toast.makeText(this, "Uploading Images...", duration);
-            toast.show();
+            Toast.makeText(this, R.string.toast_uploading, Toast.LENGTH_SHORT).show();
             ArrayList<Parcelable> list =
                     intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
             Intent serviceIntent = new Intent(this, UploadService.class);
@@ -306,10 +300,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
         if (resultCode == -1)
             Log.d("intent", data.toString());
         if (requestCode == 3 && resultCode == -1) {
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast;
-            toast = Toast.makeText(this, "Uploading Image...", duration);
-            toast.show();
+            Toast.makeText(this, R.string.toast_uploading, Toast.LENGTH_SHORT).show();
             Intent serviceIntent = new Intent(this, UploadService.class);
             serviceIntent.setAction("com.krayzk9s.imgurholo.services.UploadService");
             serviceIntent.setData(data.getData());
@@ -317,10 +308,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
             return;
         }
         if (requestCode == 4 && resultCode == -1) {
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast;
-            toast = Toast.makeText(this, "Uploading Images...", duration);
-            toast.show();
+            Toast.makeText(this, R.string.toast_uploading, Toast.LENGTH_SHORT).show();
             if(data.getExtras() != null)
                 Log.d("intent extras", data.getExtras().toString());
             Intent serviceIntent = new Intent(this, UploadService.class);
@@ -347,7 +335,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
     }
 
     private void displayUpload() {
-        new AlertDialog.Builder(this).setTitle("Upload Options")
+        new AlertDialog.Builder(this).setTitle(R.string.dialog_upload_options_title)
                 .setItems(R.array.upload_options, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Intent intent;
@@ -356,14 +344,14 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                             case 0:
                                 final EditText urlText = new EditText(activity);
                                 urlText.setSingleLine();
-                                new AlertDialog.Builder(activity).setTitle("Enter URL").setView(urlText).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                new AlertDialog.Builder(activity).setTitle(R.string.dialog_url_title).setView(urlText).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
                                         if(urlText.getText() != null) {
                                             UrlAsync urlAsync = new UrlAsync(urlText.getText().toString(), apiCall);
                                             urlAsync.execute();
                                         }
                                     }
-                                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                }).setNegativeButton(R.string.dialog_answer_cancel, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
                                         // Do nothing.
                                     }
@@ -382,9 +370,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                                 startActivityForResult(intent, 4);
                                 break;
                             case 3:
-                                new AlertDialog.Builder(activity).setTitle("Image Explanation").setMessage("You can! You just have to do it from the gallery or other app by multiselecting. :(" +
-                                        " The ELI5 explanation is that basically the Android API is a bit weird in this area. More explicitly, I cannot determine a way to request multiple files via intent" +
-                                        ", if you know a work around feel free to contact me on Google Play.").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                new AlertDialog.Builder(activity).setTitle(R.string.dialog_explanation_title).setMessage(R.string.dialog_explanation_summary).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
                                         //do nothing
                                     }
@@ -393,7 +379,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                                 break;
                         }
                     }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                }).setNegativeButton(R.string.dialog_answer_cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // Do nothing.
             }
