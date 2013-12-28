@@ -659,6 +659,8 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
 
     private void addComments() {
         try {
+            if (getActivity() == null)
+                return;
             JSONArray commentJSONArray = commentData.getJSONObject().getJSONArray("data");
             commentArray = new ArrayList<JSONParcelable>();
             Log.d("calling indent function", commentJSONArray.toString());

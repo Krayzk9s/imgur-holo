@@ -114,7 +114,7 @@ public class ImgurLinkActivity extends ImgurHoloActivity implements GetData {
                 singleImageFragment.setArguments(bundle);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame_layout, singleImageFragment).commit();
+                fragmentTransaction.replace(R.id.frame_layout, singleImageFragment).commitAllowingStateLoss();
             } catch (JSONException e) {
                 Log.e("Error!", e.toString());
             }
@@ -133,7 +133,7 @@ public class ImgurLinkActivity extends ImgurHoloActivity implements GetData {
                 fragment.setArguments(bundle);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame_layout, fragment).commit();
+                fragmentTransaction.replace(R.id.frame_layout, fragment).commitAllowingStateLoss();
             } catch (JSONException e) {
                 Log.e("Error!", e.toString());
             }
