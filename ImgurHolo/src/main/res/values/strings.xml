@@ -134,6 +134,7 @@
     <string name="error_upload">Error Uploading to imgur</string>
     <string name="imgur_uploader_title">imgur Image Uploader</string>
     <string name="finished_uploading">Finished Uploading</string>
+    <string name="image_deleted">Image Deleted</string>
 
     <string name="activity_title_images">Images</string>
     <string name="activity_title_image">Image</string>

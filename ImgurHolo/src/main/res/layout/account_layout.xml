@@ -1,109 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/account_layout"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginLeft="@dimen/comments_margin"
-              android:layout_marginRight="@dimen/comments_margin"
-              android:layout_marginTop="?android:actionBarSize">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:id="@+id/header"
-                  android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:background="#FF333333"
-                  android:layout_margin="16dp">
-        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/username"
-                android:text="@string/username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:layout_gravity="center_horizontal"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"/>
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:id="@+id/headerdetails"
-                      android:orientation="horizontal"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_marginLeft="16dp"
-                      android:layout_marginRight="16dp">
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:orientation="vertical"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content">
-                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:text="@string/reputation"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center_horizontal"
-                          android:layout_margin="8dp"
-                          android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"/>
-                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:id="@+id/reputation"
-                          android:text=""
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center_horizontal"
-                          android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"/>
-            </LinearLayout>
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:orientation="vertical"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_alignParentRight="true" >
-                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:text="@string/menu_account_creation"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_margin="8dp"
-                          android:layout_gravity="center_horizontal"
-                          android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"/>
-                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:id="@+id/created"
-                          android:text=""
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center_horizontal"
-                          android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"/>
-            </LinearLayout>
-            </RelativeLayout>
+    android:id="@+id/account_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/comments_margin"
+    android:layout_marginRight="@dimen/comments_margin"
+    android:layout_marginTop="?android:actionBarSize">
+
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ptr_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:orientation="vertical"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_gravity="center_horizontal"
-                      android:layout_margin="8dp">
-            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:text="@string/menu_bio"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_marginBottom="8dp"
-                      android:layout_gravity="center_horizontal"
-                      android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"/>
-            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:id="@+id/biography"
-                      android:text=""
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:gravity="center"
-                      android:layout_gravity="center_horizontal"
-                      android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
-    </LinearLayout>
-    </LinearLayout>
-    <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/error"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_height="wrap_content"
-            android:text="@string/error_messages"
-            android:visibility="gone"/>
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/account_list"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"/>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/header"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FF333333"
+                android:layout_margin="16dp">
 
+
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/username"
+                    android:text="@string/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
+
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/headerdetails"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp">
+
+                    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:text="@string/reputation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_margin="8dp"
+                            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+                        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:id="@+id/reputation"
+                            android:text=""
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
+                    </LinearLayout>
+
+                    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true">
+
+                        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:text="@string/menu_account_creation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:layout_gravity="center_horizontal"
+                            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+                        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:id="@+id/created"
+                            android:text=""
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="8dp">
+
+                    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:text="@string/menu_bio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_gravity="center_horizontal"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
+
+                    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/biography"
+                        android:text=""
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center_horizontal"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/error"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:text="@string/error_messages"
+                android:visibility="gone" />
+
+            <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/account_list"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 </LinearLayout>

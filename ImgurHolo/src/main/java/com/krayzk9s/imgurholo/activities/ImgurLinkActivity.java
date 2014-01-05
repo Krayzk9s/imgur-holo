@@ -43,11 +43,13 @@ public class ImgurLinkActivity extends ImgurHoloActivity implements GetData {
     private final static String IMAGE = "image";
     private final static String ALBUM = "album";
     private String album;
+    private boolean destroyed;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        destroyed = false;
         if(getActionBar() != null)
             getActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
@@ -101,6 +103,8 @@ public class ImgurLinkActivity extends ImgurHoloActivity implements GetData {
         }
     }
     public void onGetObject(Object o, String tag) {
+        if(destroyed)
+            return;
         if(tag.equals(IMAGE)) {
             try {
                 JSONObject singleImageData = (JSONObject) o;
@@ -138,6 +142,11 @@ public class ImgurLinkActivity extends ImgurHoloActivity implements GetData {
                 Log.e("Error!", e.toString());
             }
         }
+    }
+    @Override
+    public void onDestroy() {
+        destroyed = true;
+        super.onDestroy();
     }
 
     public void handleException(Exception e, String tag) {

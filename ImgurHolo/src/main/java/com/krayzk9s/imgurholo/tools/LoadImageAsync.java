@@ -57,7 +57,10 @@ class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
 			Log.e("Error!", e.toString());
 		} catch (IOException e) {
 			Log.e("Error!", e.toString());
-		}
+		} catch (OutOfMemoryError e) {
+            Log.e("Error!", e.toString());
+        }
+
 		return null;
 	}
 

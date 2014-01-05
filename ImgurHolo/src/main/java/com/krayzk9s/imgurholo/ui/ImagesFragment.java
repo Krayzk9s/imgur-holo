@@ -319,6 +319,8 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
     }
 
     public void onGetObject(Object object, String tag) {
+        if(getActivity() == null)
+            return;
         if (tag.equals(DELETE)) {
             urls = new ArrayList<String>();
             ids = new ArrayList<JSONParcelable>();
@@ -375,6 +377,8 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
     }
 
     private void getImages() {
+        if(mPullToRefreshLayout != null)
+            mPullToRefreshLayout.setRefreshing(true);
         errorText.setVisibility(View.GONE);
         Fetcher fetcher = new Fetcher(this, imageCall + "/" + page, ApiCall.GET, null, ((ImgurHoloActivity) getActivity()).getApiCall(), IMAGES);
         fetcher.execute();

@@ -125,6 +125,8 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
     private boolean fetchingImages;
     private PullToRefreshLayout mPullToRefreshLayout;
     private CardListView cardListView;
+    private ArrayList<Card> cards;
+    private CardArrayAdapter mCardArrayAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -461,8 +463,6 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
     }
 
     private void makeGallery() {
-        if (mPullToRefreshLayout != null)
-            mPullToRefreshLayout.setRefreshing(true);
         urls = new ArrayList<String>();
         ids = new ArrayList<JSONParcelable>();
         if (imageAdapter != null)
@@ -473,6 +473,8 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
     }
 
     private void getImages() {
+        if(mPullToRefreshLayout != null)
+            mPullToRefreshLayout.setRefreshing(true);
         fetchingImages = true;
         errorText.setVisibility(View.GONE);
         String call = "";
@@ -559,8 +561,12 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
     private void restoreCards() {
         try {
             ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
-            ArrayList<Card> cards = new ArrayList<Card>();
-            for (int i = 0; i < ids.size(); i++) {
+            int start = 0;
+            if(cardListView != null && cardListView.getAdapter() != null)
+                start = cardListView.getAdapter().getCount();
+            else
+                cards = new ArrayList<Card>();
+            for (int i = start; i < ids.size(); i++) {
                 Card card = new Card(getActivity());
                 final CustomHeaderInnerCard header = new CustomHeaderInnerCard(getActivity());
                 header.setTitle(ids.get(i).getJSONObject().getString("title"));
@@ -624,10 +630,13 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
                 });
                 cards.add(card);
             }
-            CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
-            if (cardListView != null) {
+            if (mCardArrayAdapter == null) {
+                mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
                 cardListView.setAdapter(mCardArrayAdapter);
             }
+            else
+                mCardArrayAdapter.notifyDataSetChanged();
+
         } catch (JSONException e) {
             Log.e("Error!", e.toString());
         }
@@ -868,7 +877,11 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
                 ((ImageView) viewImage).setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             }
-            Ion.with(getActivity()).load(urls.get(position)).progressBar(header.progressBar).withBitmap().intoImageView((ImageView) viewImage).setCallback(new FutureCallback<ImageView>() {
+            Ion.with(getActivity(),urls.get(position))
+                    .progressBar(header.progressBar)
+                    .withBitmap()
+                    .intoImageView((ImageView) viewImage)
+                    .setCallback(new FutureCallback<ImageView>() {
                 @Override
                 public void onCompleted(Exception e, ImageView imageView) {
                     header.progressBar.setVisibility(View.INVISIBLE);

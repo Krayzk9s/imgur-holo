@@ -256,6 +256,8 @@ public class AlbumsFragment extends Fragment implements GetData, OnRefreshListen
     }
 
     void getImages() {
+        if(mPullToRefreshLayout != null)
+            mPullToRefreshLayout.setRefreshing(true);
         Fetcher fetcher = new Fetcher(this, "3/account/" + username + "/albums", ApiCall.GET, null, ((ImgurHoloActivity) getActivity()).getApiCall(), "images");
         fetcher.execute();
     }

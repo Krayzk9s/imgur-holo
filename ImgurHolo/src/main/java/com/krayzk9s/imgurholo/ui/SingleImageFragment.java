@@ -323,8 +323,11 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
     }
 
     public void onGetObject(Object o, String tag) {
+        if(getActivity() == null)
+            return;
+        Log.d("tag", tag);
         if (tag.equals(REPLY)) {
-            Toast.makeText(getActivity(), R.string.toast_explanation_comment_posted, Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), R.string.toast_explanation_comment_posted, Toast.LENGTH_SHORT).show();
             refreshComments();
         } else if (tag.equals(COMMENTS)) {
             JSONObject jsonObject = (JSONObject) o;
@@ -337,7 +340,8 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
             if (mPullToRefreshLayout != null)
                 mPullToRefreshLayout.setRefreshComplete();
         } else if (tag.equals(DELETE)) {
-            getActivity().getFragmentManager().popBackStack();
+            Toast.makeText(getActivity(), R.string.image_deleted, Toast.LENGTH_SHORT).show();
+            getActivity().finish();
         } else if (tag.equals(POSTCOMMENT)) {
             Toast.makeText(getActivity(), R.string.toast_explanation_comment_posted, Toast.LENGTH_SHORT).show();
             refreshComments();
@@ -374,6 +378,7 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
                         .setLogging("MyLogs", Log.DEBUG)
                         .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
                         .withBitmap()
+                        .disableDeviceResize()
                         .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
                     @Override
                     public void onCompleted(Exception e, ImageView result) {
@@ -385,6 +390,7 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
                         .setLogging("MyLogs", Log.DEBUG)
                         .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
                         .withBitmap()
+                        .disableDeviceResize()
                         .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
                     @Override
                     public void onCompleted(Exception e, ImageView result) {
@@ -586,6 +592,7 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
                         .setLogging("MyLogs", Log.DEBUG)
                         .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
                         .withBitmap()
+                        .disableDeviceResize()
                         .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
                     @Override
                     public void onCompleted(Exception e, ImageView result) {
@@ -597,6 +604,7 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
                         .setLogging("MyLogs", Log.DEBUG)
                         .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
                         .withBitmap()
+                        .disableDeviceResize()
                         .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
                     @Override
                     public void onCompleted(Exception e, ImageView result) {
