@@ -370,36 +370,31 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
 
     }
 
-    void refreshComments() {
+    private void loadImage() {
         try {
             imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.VISIBLE);
+            String link = "";
             if (imageData.getJSONObject().has(ImgurHoloActivity.IMAGE_DATA_COVER)) //temporary to fix large gif bug
-                Ion.with(getActivity(), "http://imgur.com/" + imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_COVER) + ".png")
-                        .setLogging("MyLogs", Log.DEBUG)
-                        .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
-                        .withBitmap()
-                        .disableDeviceResize()
-                        .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
-                    @Override
-                    public void onCompleted(Exception e, ImageView result) {
-                        imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
-                    }
-                });
+                link = "http://imgur.com/" + imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_COVER) + ".png";
             else
-                Ion.with(getActivity(), imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK))
-                        .setLogging("MyLogs", Log.DEBUG)
-                        .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
-                        .withBitmap()
-                        .disableDeviceResize()
-                        .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
-                    @Override
-                    public void onCompleted(Exception e, ImageView result) {
-                        imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
-                    }
-                });
+                link = imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK);
+            Ion.with(getActivity(), link)
+                    .setLogging("MyLogs", Log.DEBUG)
+                    .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
+                    .withBitmap()
+                    .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
+                @Override
+                public void onCompleted(Exception e, ImageView result) {
+                    imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
+                }
+            });
         } catch (JSONException e) {
             Log.e("Error!", e.toString());
         }
+    }
+
+    void refreshComments() {
+        loadImage();
         commentAdapter.clear();
         commentAdapter.hiddenViews.clear();
         commentAdapter.notifyDataSetChanged();
@@ -586,31 +581,7 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
             getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
             int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId) + statusBarHeight;
             imageView = (ImageView) imageLayoutView.findViewById(R.id.single_image_view);
-            imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.VISIBLE);
-            if (imageData.getJSONObject().has(ImgurHoloActivity.IMAGE_DATA_COVER)) //temporary to fix large gif bug
-                Ion.with(getActivity(), "http://imgur.com/" + imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_COVER) + ".png")
-                        .setLogging("MyLogs", Log.DEBUG)
-                        .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
-                        .withBitmap()
-                        .disableDeviceResize()
-                        .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
-                    @Override
-                    public void onCompleted(Exception e, ImageView result) {
-                        imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
-                    }
-                });
-            else
-                Ion.with(getActivity(), imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_LINK))
-                        .setLogging("MyLogs", Log.DEBUG)
-                        .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
-                        .withBitmap()
-                        .disableDeviceResize()
-                        .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
-                    @Override
-                    public void onCompleted(Exception e, ImageView result) {
-                        imageLayoutView.findViewById(R.id.image_progress).setVisibility(View.GONE);
-                    }
-                });
+            loadImage();
             if (settings.getBoolean(ImgurHoloActivity.VERTICAL_HEIGHT_SETTING, true))
                 imageView.setMaxHeight(size.y - actionBarHeight);
         } catch (JSONException e) {

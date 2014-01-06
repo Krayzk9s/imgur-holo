@@ -17,9 +17,8 @@ package com.krayzk9s.imgurholo.ui;
  */
 
 import android.app.ActionBar;
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -56,6 +55,7 @@ import com.krayzk9s.imgurholo.BuildConfig;
 import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
 import com.krayzk9s.imgurholo.activities.MainActivity;
+import com.krayzk9s.imgurholo.dialogs.SubredditDialogFragment;
 import com.krayzk9s.imgurholo.libs.JSONParcelable;
 import com.krayzk9s.imgurholo.libs.SquareImageView;
 import com.krayzk9s.imgurholo.tools.ApiCall;
@@ -84,21 +84,6 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-/**
- * Copyright 2013 Kurt Zimmer
- * <p/>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 public class GalleryFragment extends Fragment implements GetData, OnRefreshListener {
 
     private static final String IMAGES = "images";
@@ -151,7 +136,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
             subreddit = "pics";
             gallery = settings.getString("DefaultGallery", getResources().getString(R.string.viral));
             ArrayList<String> galleryOptions = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.galleryOptions)));
-            sort = getResources().getString(R.string.popularitysort);
+            sort = getResources().getString(R.string.viralsort);
             window = getResources().getString(R.string.day);
             urls = new ArrayList<String>();
             ids = new ArrayList<JSONParcelable>();
@@ -225,54 +210,41 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
                 return true;
             case R.id.subreddit:
                 gallery = getResources().getString(R.string.subreddit);
-                sort = getResources().getString(R.string.time);
+                sort = getResources().getString(R.string.newsort);
                 final EditText subredditText = new EditText(activity);
                 subredditText.setSingleLine();
-                new AlertDialog.Builder(activity).setTitle(R.string.dialog_reddit_choose_title).setView(subredditText).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        if (subredditText.getText() != null)
-                            subreddit = subredditText.getText().toString();
-                        mSpinnerAdapter.add("/r/" + subreddit);
-                        search = null;
-                        if (mSpinnerAdapter.getCount() > 6) {
-                            mSpinnerAdapter.remove(mSpinnerAdapter.getItem(5));
-                        }
-                        mSpinnerAdapter.notifyDataSetChanged();
-                        actionBar.setSelectedNavigationItem(5);
-                    }
-                }).setNegativeButton(R.string.dialog_answer_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Do nothing.
-                    }
-                }).show();
+                SubredditDialogFragment subredditDialogFragment = new SubredditDialogFragment();
+                subredditDialogFragment.show(getActivity().getSupportFragmentManager(), "TAG");
+                subredditDialogFragment.setTargetFragment(this, 0);
+
                 return true;
             case R.id.menuSortPopularity:
-                sort = getResources().getString(R.string.viralsection);
+                sort = getResources().getString(R.string.viralsort);
                 break;
             case R.id.menuSortNewest:
-                sort = getResources().getString(R.string.time);
+                sort = getResources().getString(R.string.newsort);
                 break;
             case R.id.menuSortTop:
-                sort = getResources().getString(R.string.top);
+                sort = getResources().getString(R.string.topsort);
                 break;
             case R.id.menuSortDay:
-                sort = getResources().getString(R.string.top);
+                sort = getResources().getString(R.string.topsort);
                 window = getResources().getString(R.string.day);
                 break;
             case R.id.menuSortWeek:
-                sort = getResources().getString(R.string.top);
+                sort = getResources().getString(R.string.topsort);
                 window = getResources().getString(R.string.week);
                 break;
             case R.id.menuSortMonth:
-                sort = getResources().getString(R.string.top);
+                sort = getResources().getString(R.string.topsort);
                 window = getResources().getString(R.string.month);
                 break;
             case R.id.menuSortYear:
-                sort = getResources().getString(R.string.top);
+                sort = getResources().getString(R.string.topsort);
                 window = getResources().getString(R.string.year);
                 break;
             case R.id.menuSortAll:
-                sort = getResources().getString(R.string.top);
+                sort = getResources().getString(R.string.topsort);
                 window = getResources().getString(R.string.all);
                 break;
             default:
@@ -364,7 +336,10 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
                     }
                 }
             });
-            restoreCards();
+            if(ids.size() > 0)
+                restoreCards();
+            else
+                makeGallery();
         }
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
         // Now setup the PullToRefreshLayout
@@ -405,9 +380,9 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        if (sort == null || (sort.equals(getResources().getString(R.string.popularitysort)) && !gallery.equals(getResources().getString(R.string.top))))
+        if (sort == null || (sort.equals(getResources().getString(R.string.viralsort)) && !gallery.equals(getResources().getString(R.string.top))))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setChecked(true);
-        else if (sort.equals(getResources().getString(R.string.time)) && !gallery.equals(getResources().getString(R.string.top)))
+        else if (sort.equals(getResources().getString(R.string.newsort)) && !gallery.equals(getResources().getString(R.string.top)))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortNewest).setChecked(true);
         else if (window.equals(getResources().getString(R.string.day)))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortDay).setChecked(true);
@@ -437,7 +412,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
             //menu.findItem(R.id.action_sort).setVisible(true);
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(true);
             //menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setVisible(true);
-            if (sort.equals(getResources().getString(R.string.top))) {
+            if (sort.equals(getResources().getString(R.string.topsort))) {
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(false);
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortDay).setVisible(true);
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortWeek).setVisible(true);
@@ -451,7 +426,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(true);
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setVisible(false);
             //menu.findItem(R.id.action_sort).setVisible(true);
-            if (sort.equals(getResources().getString(R.string.top))) {
+            if (sort.equals(getResources().getString(R.string.topsort))) {
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortTop).setVisible(false);
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortDay).setVisible(true);
                 menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortWeek).setVisible(true);
@@ -467,7 +442,12 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
         ids = new ArrayList<JSONParcelable>();
         if (imageAdapter != null)
             imageAdapter.notifyDataSetChanged();
-        MainActivity activity = (MainActivity) getActivity();
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        if(activity.getApiCall().settings.getString("GalleryLayout", "Card View").equals("Card View")) {
+            cards = new ArrayList<Card>();
+            mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
+            cardListView.setAdapter(mCardArrayAdapter);
+        }
         activity.invalidateOptionsMenu();
         getImages();
     }
@@ -510,9 +490,6 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
             SharedPreferences settings = activity.getApiCall().settings;
             JSONObject data = (JSONObject) object;
             Log.d("imagesData", "checking");
-            if (activity == null || data == null) {
-                //return;
-            }
             Log.d("imagesData", "failed");
             try {
                 Log.d("URI", data.toString());
@@ -564,8 +541,11 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
             int start = 0;
             if(cardListView != null && cardListView.getAdapter() != null)
                 start = cardListView.getAdapter().getCount();
-            else
+            if(cards == null) {
                 cards = new ArrayList<Card>();
+                mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
+                cardListView.setAdapter(mCardArrayAdapter);
+            }
             for (int i = start; i < ids.size(); i++) {
                 Card card = new Card(getActivity());
                 final CustomHeaderInnerCard header = new CustomHeaderInnerCard(getActivity());
@@ -630,13 +610,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
                 });
                 cards.add(card);
             }
-            if (mCardArrayAdapter == null) {
-                mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
-                cardListView.setAdapter(mCardArrayAdapter);
-            }
-            else
-                mCardArrayAdapter.notifyDataSetChanged();
-
+            mCardArrayAdapter.notifyDataSetChanged();
         } catch (JSONException e) {
             Log.e("Error!", e.toString());
         }
@@ -695,7 +669,7 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
                 switch (i) {
                     case 0:
                         newGallery = getResources().getString(R.string.viral);
-                        sort = getResources().getString(R.string.popularitysort);
+                        sort = getResources().getString(R.string.viralsort);
                         break;
                     case 1:
                         newGallery = getResources().getString(R.string.top);
@@ -703,11 +677,11 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
                         break;
                     case 2:
                         newGallery = getResources().getString(R.string.user);
-                        sort = getResources().getString(R.string.popularitysort);
+                        sort = getResources().getString(R.string.viralsort);
                         break;
                     case 3:
                         newGallery = getResources().getString(R.string.memes);
-                        sort = getResources().getString(R.string.popularitysort);
+                        sort = getResources().getString(R.string.viralsort);
                         break;
                     case 4:
                         newGallery = getResources().getString(R.string.random);
@@ -724,7 +698,8 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
                     search = null;
                 }
                 page = 0;
-                makeGallery();
+                if(i != 5)
+                    makeGallery();
                 return true;
             }
         };
@@ -803,6 +778,24 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
             }
         }
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case 0:
+                if(resultCode != Activity.RESULT_OK)
+                    return;
+                subreddit = data.getStringExtra("subreddit");
+                mSpinnerAdapter.add("/r/" + subreddit);
+                search = null;
+                if (mSpinnerAdapter.getCount() > 6) {
+                    mSpinnerAdapter.remove(mSpinnerAdapter.getItem(5));
+                }
+                mSpinnerAdapter.notifyDataSetChanged();
+                actionBar.setSelectedNavigationItem(5);
+                makeGallery();
+        }
     }
 
     private class GridItemClickListener implements ListView.OnItemClickListener {

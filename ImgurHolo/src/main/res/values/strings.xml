@@ -100,11 +100,12 @@
     <string name="reply">Reply</string>
     <string name="report">Report</string>
 
-    <string name="popularitysort">Popularity</string>
-    <string name="newestsort">Newest</string>
-    <string name="time">time</string>
+    <string name="popularity">Popularity</string>
+    <string name="newest">Newest</string>
 
-    <string name="viralsection">viral</string>
+    <string name="viralsort">viral</string>
+    <string name="topsort">top</string>
+    <string name="newsort">time</string>
 
     <string name="viral">most viral</string>
     <string name="user">user submitted</string>

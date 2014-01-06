@@ -8,5 +8,6 @@
     <dimen name="action_bar_subtitle_text_size">14dp</dimen>
     <dimen name="action_bar_subtitle_top_margin">-3dp</dimen>
     <dimen name="action_bar_subtitle_bottom_margin">5dip</dimen>
+    <dimen name="item_height">48dp</dimen>
 
 </resources>
