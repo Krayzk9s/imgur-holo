@@ -22,10 +22,14 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.ActionMode;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -41,9 +46,11 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.krayzk9s.imgurholo.BuildConfig;
 import com.krayzk9s.imgurholo.R;
@@ -58,6 +65,7 @@ import com.krayzk9s.imgurholo.tools.ApiCall;
 import com.krayzk9s.imgurholo.tools.CommentsAsync;
 import com.krayzk9s.imgurholo.tools.Fetcher;
 import com.krayzk9s.imgurholo.tools.GetData;
+import com.krayzk9s.imgurholo.tools.ImageUtils;
 import com.krayzk9s.imgurholo.tools.Utils;
 
 import org.json.JSONArray;
@@ -65,7 +73,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.RejectedExecutionException;
 
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
+import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.internal.CardThumbnail;
+import it.gmariotti.cardslib.library.internal.base.BaseCard;
+import it.gmariotti.cardslib.library.view.CardListView;
+import it.gmariotti.cardslib.library.view.CardView;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
@@ -91,28 +107,25 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
     private final static String IMAGES = "images";
     public boolean selecting = false;
     private ImageAdapter imageAdapter;
-    private String imageCall;
+    protected String imageCall;
     private GridView gridview;
     private ArrayList<String> intentReturn;
     private String albumId;
     private JSONObject galleryAlbumData;
     private TextView noImageView;
-    private int page;
+    protected int page;
     private boolean gettingImages = false;
     private int lastInView = -1;
     private ArrayList<String> urls;
     private ArrayList<JSONParcelable> ids;
     private TextView errorText;
     private PullToRefreshLayout mPullToRefreshLayout;
+    private CardListView cardListView;
+    private ArrayList<Card> cards;
+    private CardArrayAdapter mCardArrayAdapter;
 
     public ImagesFragment() {
         page = 0;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().getActionBar().setTitle("Images");
     }
 
     @Override
@@ -123,7 +136,8 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
             albumId = bundle.getString("id");
         else
             albumId = null;
-        imageCall = bundle.getString("imageCall");
+        if(bundle.containsKey("imageCall"))
+            imageCall = bundle.getString("imageCall");
         if (bundle.containsKey("albumData")) {
             JSONParcelable dataParcel = bundle.getParcelable("albumData");
             if (dataParcel != null)
@@ -159,11 +173,8 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 
     @Override
     public void onRefreshStarted(View view) {
-        urls = new ArrayList<String>();
-        ids = new ArrayList<JSONParcelable>();
         page = 0;
-        imageAdapter.notifyDataSetChanged();
-        getImages();
+        makeGallery();
     }
 
     @Override
@@ -186,7 +197,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                 ids = new ArrayList<JSONParcelable>();
                 page = 0;
                 imageAdapter.notifyDataSetChanged();
-                getImages();
+                makeGallery();
                 return true;
             case R.id.action_copy:
                 ClipboardManager clipboard = (ClipboardManager)
@@ -310,7 +321,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
             });
         }
         if (savedInstanceState == null && urls.size() == 0) {
-            getImages();
+            makeGallery();
         } else if (savedInstanceState != null) {
             urls = savedInstanceState.getStringArrayList("urls");
             ids = savedInstanceState.getParcelableArrayList("ids");
@@ -319,55 +330,55 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
     }
 
     public void onGetObject(Object object, String tag) {
-        if(getActivity() == null)
-            return;
-        if (tag.equals(DELETE)) {
-            urls = new ArrayList<String>();
-            ids = new ArrayList<JSONParcelable>();
-            page = 0;
-            imageAdapter.notifyDataSetChanged();
-            getImages();
-        } else if (tag.equals(IMAGES)) {
-            JSONObject data = (JSONObject) object;
-            if (data == null)
+        if (tag.equals(IMAGES)) {
+            ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+            if (activity == null)
                 return;
-            Boolean changed = false;
-            JSONArray imageArray;
+            SharedPreferences settings = activity.getApiCall().settings;
+            JSONObject data = (JSONObject) object;
+            Log.d("imagesData", "checking");
+            Log.d("imagesData", "failed");
             try {
-                if (data.optJSONObject("data") != null)
-                    imageArray = data.getJSONObject("data").getJSONArray("images");
-                else
-                    imageArray = data.getJSONArray("data");
-                Log.d("single image array", imageArray.toString());
+                Log.d("URI", data.toString());
+                JSONArray imageArray = data.getJSONArray("data");
+                errorText.setVisibility(View.GONE);
                 for (int i = 0; i < imageArray.length(); i++) {
                     JSONObject imageData = imageArray.getJSONObject(i);
-                    Log.d("Data", imageData.toString());
-                    if (imageCall.equals("3/account/me/likes") && !imageData.getBoolean("favorite"))
-                        continue;
-                    JSONParcelable dataParcel = new JSONParcelable();
-                    dataParcel.setJSONObject(imageData);
-                    if (imageData.has("is_album") && imageData.getBoolean("is_album") && !urls.contains("http://imgur.com/" + imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER) + "m.png")) {
-                        urls.add("http://imgur.com/" + imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER) + "m.png");
-                        ids.add(dataParcel);
-                        changed = true;
-                    } else if (!urls.contains("http://imgur.com/" + imageData.getString("id") + "m.png")) {
-                        urls.add("http://imgur.com/" + imageData.getString("id") + "m.png");
-                        ids.add(dataParcel);
-                        changed = true;
+                    String s = "";
+                    if (!settings.getString("GalleryLayout", "Card View").equals("Card View"))
+                        s = settings.getString("IconQuality", "m");
+                    try {
+                        if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
+                            if (!urls.contains("http://imgur.com/" + imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER) + s + ".png")) {
+                                urls.add("http://imgur.com/" + imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER) + s + ".png");
+                                JSONParcelable dataParcel = new JSONParcelable();
+                                dataParcel.setJSONObject(imageData);
+                                ids.add(dataParcel);
+                            }
+                        } else {
+                            if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png")) {
+                                urls.add("http://imgur.com/" + imageData.getString("id") + s + ".png");
+                                JSONParcelable dataParcel = new JSONParcelable();
+                                dataParcel.setJSONObject(imageData);
+                                ids.add(dataParcel);
+                            }
+                        }
+                    } catch (RejectedExecutionException e) {
+                        Log.e("Rejected", e.toString());
                     }
                 }
             } catch (JSONException e) {
-                Log.e("JSON error!", "oops");
+                Log.e("Error!", e.toString());
             }
-            gettingImages = !changed;
-            if (urls.size() > 0)
+            if (settings.getString("GalleryLayout", "Card View").equals("Card View")) {
+                restoreCards();
+            } else {
                 imageAdapter.notifyDataSetChanged();
-            else if (urls.size() == 0 && noImageView != null)
-                noImageView.setVisibility(View.VISIBLE);
-            else
-                gettingImages = true;
+            }
             if (mPullToRefreshLayout != null)
                 mPullToRefreshLayout.setRefreshComplete();
+            fetchingImages = false;
+            errorText.setVisibility(View.GONE);
         }
     }
 
@@ -376,12 +387,109 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
         noImageView.setVisibility(View.VISIBLE);
     }
 
+    protected void makeGallery() {
+        urls = new ArrayList<String>();
+        ids = new ArrayList<JSONParcelable>();
+        if (imageAdapter != null)
+            imageAdapter.notifyDataSetChanged();
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        if(activity.getApiCall().settings.getString("GalleryLayout", "Card View").equals("Card View")) {
+            cards = new ArrayList<Card>();
+            mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
+            cardListView.setAdapter(mCardArrayAdapter);
+        }
+        activity.invalidateOptionsMenu();
+        getImages();
+    }
+
     private void getImages() {
         if(mPullToRefreshLayout != null)
             mPullToRefreshLayout.setRefreshing(true);
         errorText.setVisibility(View.GONE);
         Fetcher fetcher = new Fetcher(this, imageCall + "/" + page, ApiCall.GET, null, ((ImgurHoloActivity) getActivity()).getApiCall(), IMAGES);
         fetcher.execute();
+    }
+
+    private void restoreCards() {
+        try {
+            ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+            int start = 0;
+            if(cardListView != null && cardListView.getAdapter() != null)
+                start = cardListView.getAdapter().getCount();
+            if(cards == null) {
+                cards = new ArrayList<Card>();
+                mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
+                cardListView.setAdapter(mCardArrayAdapter);
+            }
+            for (int i = start; i < ids.size(); i++) {
+                Card card = new Card(getActivity());
+                final CustomHeaderInnerCard header = new CustomHeaderInnerCard(getActivity());
+                header.setTitle(ids.get(i).getJSONObject().getString("title"));
+                header.position = i;
+                final GetData fragment = this;
+                if (ids.get(i).getJSONObject().has("subreddit"))
+                    header.setPopupMenu(R.menu.card_image, new CardHeader.OnClickCardHeaderPopupMenuListener() {
+                        @Override
+                        public void onMenuItemClick(BaseCard card, MenuItem item) {
+                            ImgurHoloActivity imgurHoloActivity = (ImgurHoloActivity) getActivity();
+                            if (item.getTitle().equals(getString(R.string.rating_good)))
+                                ImageUtils.upVote(fragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
+                            if (item.getTitle().equals(getString(R.string.rating_bad)))
+                                ImageUtils.downVote(fragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
+                            if (item.getTitle().equals(getString(R.string.account)))
+                                ImageUtils.gotoUser(fragment, ids.get(header.position));
+                            if (item.getTitle().equals(getString(R.string.action_share)))
+                                ImageUtils.shareImage(fragment, ids.get(header.position));
+                            if (item.getTitle().equals(getString(R.string.action_copy)))
+                                ImageUtils.copyImageURL(fragment, ids.get(header.position));
+                            if (item.getTitle().equals(getString(R.string.action_download)))
+                                ImageUtils.downloadImage(fragment, ids.get(header.position));
+                            ImageUtils.updateImageFont(ids.get(header.position), header.scoreText);
+                        }
+                    });
+                else
+                    header.setPopupMenu(R.menu.card_image_no_account, new CardHeader.OnClickCardHeaderPopupMenuListener() {
+                        @Override
+                        public void onMenuItemClick(BaseCard card, MenuItem item) {
+                            ImgurHoloActivity imgurHoloActivity = (ImgurHoloActivity) getActivity();
+                            if (item.getTitle().equals(getString(R.string.rating_good)))
+                                ImageUtils.upVote(fragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
+                            if (item.getTitle().equals(getString(R.string.rating_bad)))
+                                ImageUtils.downVote(fragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
+                            if (item.getTitle().equals(getString(R.string.account)))
+                                ImageUtils.gotoUser(fragment, ids.get(header.position));
+                            if (item.getTitle().equals(getString(R.string.action_share)))
+                                ImageUtils.shareImage(fragment, ids.get(header.position));
+                            if (item.getTitle().equals(getString(R.string.action_copy)))
+                                ImageUtils.copyImageURL(fragment, ids.get(header.position));
+                            if (item.getTitle().equals(getString(R.string.action_download)))
+                                ImageUtils.downloadImage(fragment, ids.get(header.position));
+                            ImageUtils.updateImageFont(ids.get(header.position), header.scoreText);
+                        }
+                    });
+                card.addCardHeader(header);
+                CustomThumbCard thumb = new CustomThumbCard(getActivity());
+                thumb.setHeader(header);
+                thumb.setExternalUsage(true);
+                thumb.position = i;
+                final int position = i;
+                card.addCardThumbnail(thumb);
+                if (!activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
+                    card.setBackgroundResourceId(R.drawable.dark_card_background);
+                CardView cardView = (CardView) getActivity().findViewById(R.id.list_cardId);
+                card.setCardView(cardView);
+                card.setOnClickListener(new Card.OnCardClickListener() {
+                    @Override
+                    public void onClick(Card card, View view) {
+                        selectItem(position);
+                    }
+                });
+                cards.add(card);
+            }
+            mCardArrayAdapter.notifyDataSetChanged();
+        } catch (JSONException e) {
+            Log.e("Error!", e.toString());
+        }
     }
 
     void selectItem(int position) {
@@ -587,5 +695,80 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
             setChecked(!mChecked);
         }
 
+    }
+
+
+    public class CustomThumbCard extends CardThumbnail {
+        public int position;
+        public CustomHeaderInnerCard header;
+
+        public CustomThumbCard(Context context) {
+            super(context);
+        }
+
+        public void setHeader(CustomHeaderInnerCard _header) {
+            header = _header;
+        }
+
+        @Override
+        public void setupInnerViewElements(ViewGroup parent, View viewImage) {
+            if (ids.size() == 0)
+                return;
+            if (ids.get(position).getJSONObject().has(ImgurHoloActivity.IMAGE_DATA_WIDTH)) {
+                try {
+                    Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+                    Point size = new Point();
+                    display.getSize(size);
+                    float imageWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ids.get(position).getJSONObject().getInt(ImgurHoloActivity.IMAGE_DATA_WIDTH), getResources().getDisplayMetrics());
+                    float imageHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ids.get(position).getJSONObject().getInt(ImgurHoloActivity.IMAGE_DATA_HEIGHT), getResources().getDisplayMetrics());
+                    viewImage.getLayoutParams().height = (int) (imageHeight * ((size.x - 32) / imageWidth));
+                } catch (JSONException e) {
+                    Log.e("Error!", e.toString());
+                }
+            } else {
+                viewImage.getLayoutParams().height = 500;
+                ((ImageView) viewImage).setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            }
+            Ion.with(getActivity(),urls.get(position))
+                    .progressBar(header.progressBar)
+                    .withBitmap()
+                    .intoImageView((ImageView) viewImage)
+                    .setCallback(new FutureCallback<ImageView>() {
+                        @Override
+                        public void onCompleted(Exception e, ImageView imageView) {
+                            header.progressBar.setVisibility(View.INVISIBLE);
+                        }
+                    });
+        }
+    }
+
+    public class CustomHeaderInnerCard extends CardHeader {
+        public int position;
+        public TextView scoreText;
+        public ProgressBar progressBar;
+
+        public CustomHeaderInnerCard(Context context) {
+            super(context, R.layout.card_header);
+        }
+
+        @Override
+        public void setupInnerViewElements(ViewGroup parent, View view) {
+            if (view != null && ids.size() != 0) {
+                progressBar = (ProgressBar) view.findViewById(R.id.image_progress);
+                progressBar.setVisibility(View.VISIBLE);
+                TextView headerText = (TextView) view.findViewById(R.id.header);
+                if (headerText != null) {
+                    headerText.setText(this.getTitle());
+                    ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+                    if (!activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
+                        headerText.setTextColor(Color.WHITE);
+                }
+                scoreText = (TextView) view.findViewById(R.id.score);
+                ImageUtils.updateImageFont(ids.get(position), scoreText);
+                TextView infoText = (TextView) view.findViewById(R.id.info);
+                ImageUtils.updateInfoFont(ids.get(position), infoText);
+            }
+        }
     }
 }

@@ -599,8 +599,10 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
                 imageTitle.setText(imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_TITLE));
             else
                 imageTitle.setVisibility(View.GONE);
-            if (!imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_DESCRIPTION).equals("null"))
+            if (!imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_DESCRIPTION).equals("null")) {
                 imageDescription.setText(imageData.getJSONObject().getString(ImgurHoloActivity.IMAGE_DATA_DESCRIPTION));
+                imageDescription.setVisibility(View.VISIBLE);
+            }
             else
                 imageDescription.setVisibility(View.GONE);
             commentLayout.addHeaderView(imageLayoutView);

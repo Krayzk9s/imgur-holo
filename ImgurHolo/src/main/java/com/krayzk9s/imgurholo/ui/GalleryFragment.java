@@ -84,7 +84,7 @@ import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class GalleryFragment extends Fragment implements GetData, OnRefreshListener {
+public class GalleryFragment extends ImagesFragment implements GetData, OnRefreshListener {
 
     private static final String IMAGES = "images";
     private final GalleryFragment galleryFragment = this;
@@ -109,14 +109,10 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
     private int oldwidth = 0;
     private boolean fetchingImages;
     private PullToRefreshLayout mPullToRefreshLayout;
-    private CardListView cardListView;
-    private ArrayList<Card> cards;
-    private CardArrayAdapter mCardArrayAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         final MainActivity activity = (MainActivity) getActivity();
         final SharedPreferences settings = activity.getSettings();
         if (savedInstanceState != null) {
@@ -145,14 +141,9 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().getActionBar().setTitle("");
-    }
-
-    @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
+        setupActionBar();
         ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
         if (activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
@@ -255,130 +246,6 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
     }
 
     @Override
-    public void onRefreshStarted(View view) {
-        page = 0;
-        makeGallery();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        MainActivity activity = (MainActivity) getActivity();
-        actionBar = activity.getActionBar();
-        SharedPreferences settings = activity.getSettings();
-        View view;
-        if (settings.getString("GalleryLayout", getString(R.string.card_view)).equals("Grid View")) {
-            view = inflater.inflate(R.layout.image_layout, container, false);
-            errorText = (TextView) view.findViewById(R.id.error);
-            gridview = (GridView) view.findViewById(R.id.grid_layout);
-            gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty))), getActivity()));
-            imageAdapter = new ImageAdapter(view.getContext());
-            gridview.setAdapter(imageAdapter);
-            gridview.setOnItemClickListener(new GridItemClickListener());
-            gridview.getViewTreeObserver().addOnGlobalLayoutListener(
-                    new ViewTreeObserver.OnGlobalLayoutListener() {
-                        @Override
-                        public void onGlobalLayout() {
-                            if (imageAdapter.getNumColumns() == 0 || gridview.getWidth() != oldwidth)
-                                setNumColumns();
-                        }
-                    });
-            gridview.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView absListView, int i) {
-
-                }
-
-                @Override
-                public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    if (lastInView == -1)
-                        lastInView = firstVisibleItem;
-                    else if (lastInView > firstVisibleItem) {
-                        actionBar.show();
-                        lastInView = firstVisibleItem;
-                    } else if (lastInView < firstVisibleItem) {
-                        actionBar.hide();
-                        lastInView = firstVisibleItem;
-                    }
-                    int lastInScreen = firstVisibleItem + visibleItemCount;
-                    if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0 && !fetchingImages) {
-                        if (!gallery.equals("search")) {
-                            page += 1;
-                            getImages();
-                        }
-                    }
-                }
-            });
-        } else {
-            view = inflater.inflate(R.layout.image_layout_card_list, container, false);
-            errorText = (TextView) view.findViewById(R.id.error);
-            cardListView = (CardListView) view.findViewById(R.id.grid_layout);
-            cardListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView absListView, int i) {
-
-                }
-
-                @Override
-                public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    if (lastInView == -1)
-                        lastInView = firstVisibleItem;
-                    else if (lastInView > firstVisibleItem) {
-                        lastInView = firstVisibleItem;
-                    } else if (lastInView < firstVisibleItem) {
-                        lastInView = firstVisibleItem;
-                    }
-                    int lastInScreen = firstVisibleItem + visibleItemCount;
-                    if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0 && !fetchingImages) {
-                        if (!gallery.equals("search")) {
-                            page += 1;
-                            getImages();
-                        }
-                    }
-                }
-            });
-            if(ids.size() > 0)
-                restoreCards();
-            else
-                makeGallery();
-        }
-        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
-        // Now setup the PullToRefreshLayout
-        ActionBarPullToRefresh.from(getActivity())
-                // Mark All Children as pullable
-                .allChildrenArePullable()
-                        // Set the OnRefreshListener
-                .listener(this)
-                        // Finally commit the setup to our PullToRefreshLayout
-                .setup(mPullToRefreshLayout);
-        setupActionBar();
-        if (urls.size() < 1) {
-            Log.d("urls", urls.size() + "");
-            makeGallery();
-        }
-        return view;
-    }
-
-    private void setNumColumns() {
-        Log.d("Setting Columns", "Setting Columns");
-        MainActivity activity = (MainActivity) getActivity();
-        if (activity != null) {
-            oldwidth = gridview.getWidth();
-            SharedPreferences settings = activity.getSettings();
-            Log.d("numColumnsWidth", gridview.getWidth() + "");
-            Log.d("numColumnsIconWidth", Utils.dpToPx((Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty)))), getActivity()) + "");
-            final int numColumns = (int) Math.floor(
-                    gridview.getWidth() / (Utils.dpToPx((Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty)))), getActivity()) + Utils.dpToPx(4, getActivity())));
-            if (numColumns > 0) {
-                imageAdapter.setNumColumns(numColumns);
-                if (BuildConfig.DEBUG) {
-                    Log.d("NUMCOLS", "onCreateView - numColumns set to " + numColumns);
-                }
-                imageAdapter.notifyDataSetChanged();
-            }
-        }
-    }
-
-    @Override
     public void onPrepareOptionsMenu(Menu menu) {
         if (sort == null || (sort.equals(getResources().getString(R.string.viralsort)) && !gallery.equals(getResources().getString(R.string.top))))
             menu.findItem(R.id.action_sort).getSubMenu().findItem(R.id.menuSortPopularity).setChecked(true);
@@ -437,201 +304,28 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
         }
     }
 
-    private void makeGallery() {
-        urls = new ArrayList<String>();
-        ids = new ArrayList<JSONParcelable>();
-        if (imageAdapter != null)
-            imageAdapter.notifyDataSetChanged();
-        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
-        if(activity.getApiCall().settings.getString("GalleryLayout", "Card View").equals("Card View")) {
-            cards = new ArrayList<Card>();
-            mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
-            cardListView.setAdapter(mCardArrayAdapter);
-        }
-        activity.invalidateOptionsMenu();
-        getImages();
-    }
-
-    private void getImages() {
+    @Override
+    protected void makeGallery() {
         if(mPullToRefreshLayout != null)
             mPullToRefreshLayout.setRefreshing(true);
         fetchingImages = true;
         errorText.setVisibility(View.GONE);
-        String call = "";
         if (gallery.equals(getResources().getString(R.string.viral))) {
-            call = "3/gallery/hot/" + sort + "/" + window + "/" + page;
+            imageCall = "3/gallery/hot/" + sort + "/" + window;
         } else if (gallery.equals(getResources().getString(R.string.top))) {
-            call = "3/gallery/top/" + sort + "/" + window + "/" + page;
+            imageCall = "3/gallery/top/" + sort + "/" + window;
         } else if (gallery.equals(getResources().getString(R.string.user))) {
-            call = "3/gallery/user/" + sort + "/" + window + "/" + page;
+            imageCall = "3/gallery/user/" + sort + "/" + window;
         } else if (gallery.equals(getResources().getString(R.string.memes))) {
-            call = "3/gallery/g/memes/" + sort + "/" + window + "/" + page;
+            imageCall = "3/gallery/g/memes/" + sort + "/" + window;
         } else if (gallery.equals(getResources().getString(R.string.random))) {
-            call = "3/gallery/random/random/" + page;
+            imageCall = "3/gallery/random/random/";
         } else if (gallery.equals(getResources().getString(R.string.subreddit))) {
-            call = "3/gallery/r/" + subreddit + "/" + sort + "/" + window + "/" + page;
+            imageCall = "3/gallery/r/" + subreddit + "/" + sort + "/" + window;
         } else if (gallery.equals("search")) {
-            call = "3/gallery/search?q=" + search;
+            imageCall = "3/gallery/search?q=" + search;
         }
-        Fetcher fetcher = new Fetcher(this, call, ApiCall.GET, null, ((ImgurHoloActivity) getActivity()).getApiCall(), IMAGES);
-        fetcher.execute();
-    }
-
-    public void handleException(Exception e, String tag) {
-        Log.e("Error!", e.toString());
-        //errorText.setVisibility(View.VISIBLE);
-    }
-
-    public void onGetObject(Object object, String tag) {
-        if (tag.equals(IMAGES)) {
-            ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
-            if (activity == null)
-                return;
-            SharedPreferences settings = activity.getApiCall().settings;
-            JSONObject data = (JSONObject) object;
-            Log.d("imagesData", "checking");
-            Log.d("imagesData", "failed");
-            try {
-                Log.d("URI", data.toString());
-                JSONArray imageArray = data.getJSONArray("data");
-                errorText.setVisibility(View.GONE);
-                for (int i = 0; i < imageArray.length(); i++) {
-                    JSONObject imageData = imageArray.getJSONObject(i);
-                    String s = "";
-                    if (!settings.getString("GalleryLayout", "Card View").equals("Card View"))
-                        s = settings.getString("IconQuality", "m");
-                    try {
-                        if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
-                            if (!urls.contains("http://imgur.com/" + imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER) + s + ".png")) {
-                                urls.add("http://imgur.com/" + imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER) + s + ".png");
-                                JSONParcelable dataParcel = new JSONParcelable();
-                                dataParcel.setJSONObject(imageData);
-                                ids.add(dataParcel);
-                            }
-                        } else {
-                            if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png")) {
-                                urls.add("http://imgur.com/" + imageData.getString("id") + s + ".png");
-                                JSONParcelable dataParcel = new JSONParcelable();
-                                dataParcel.setJSONObject(imageData);
-                                ids.add(dataParcel);
-                            }
-                        }
-                    } catch (RejectedExecutionException e) {
-                        Log.e("Rejected", e.toString());
-                    }
-                }
-            } catch (JSONException e) {
-                Log.e("Error!", e.toString());
-            }
-            if (settings.getString("GalleryLayout", "Card View").equals("Card View")) {
-                restoreCards();
-            } else {
-                imageAdapter.notifyDataSetChanged();
-            }
-            if (mPullToRefreshLayout != null)
-                mPullToRefreshLayout.setRefreshComplete();
-            fetchingImages = false;
-            errorText.setVisibility(View.GONE);
-        }
-    }
-
-    private void restoreCards() {
-        try {
-            ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
-            int start = 0;
-            if(cardListView != null && cardListView.getAdapter() != null)
-                start = cardListView.getAdapter().getCount();
-            if(cards == null) {
-                cards = new ArrayList<Card>();
-                mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
-                cardListView.setAdapter(mCardArrayAdapter);
-            }
-            for (int i = start; i < ids.size(); i++) {
-                Card card = new Card(getActivity());
-                final CustomHeaderInnerCard header = new CustomHeaderInnerCard(getActivity());
-                header.setTitle(ids.get(i).getJSONObject().getString("title"));
-                header.position = i;
-                if (ids.get(i).getJSONObject().has("subreddit"))
-                    header.setPopupMenu(R.menu.card_image, new CardHeader.OnClickCardHeaderPopupMenuListener() {
-                        @Override
-                        public void onMenuItemClick(BaseCard card, MenuItem item) {
-                            ImgurHoloActivity imgurHoloActivity = (ImgurHoloActivity) getActivity();
-                            if (item.getTitle().equals(getString(R.string.rating_good)))
-                                ImageUtils.upVote(galleryFragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
-                            if (item.getTitle().equals(getString(R.string.rating_bad)))
-                                ImageUtils.downVote(galleryFragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
-                            if (item.getTitle().equals(getString(R.string.account)))
-                                ImageUtils.gotoUser(galleryFragment, ids.get(header.position));
-                            if (item.getTitle().equals(getString(R.string.action_share)))
-                                ImageUtils.shareImage(galleryFragment, ids.get(header.position));
-                            if (item.getTitle().equals(getString(R.string.action_copy)))
-                                ImageUtils.copyImageURL(galleryFragment, ids.get(header.position));
-                            if (item.getTitle().equals(getString(R.string.action_download)))
-                                ImageUtils.downloadImage(galleryFragment, ids.get(header.position));
-                            ImageUtils.updateImageFont(ids.get(header.position), header.scoreText);
-                        }
-                    });
-                else
-                    header.setPopupMenu(R.menu.card_image_no_account, new CardHeader.OnClickCardHeaderPopupMenuListener() {
-                        @Override
-                        public void onMenuItemClick(BaseCard card, MenuItem item) {
-                            ImgurHoloActivity imgurHoloActivity = (ImgurHoloActivity) getActivity();
-                            if (item.getTitle().equals(getString(R.string.rating_good)))
-                                ImageUtils.upVote(galleryFragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
-                            if (item.getTitle().equals(getString(R.string.rating_bad)))
-                                ImageUtils.downVote(galleryFragment, ids.get(header.position), null, null, imgurHoloActivity.getApiCall());
-                            if (item.getTitle().equals(getString(R.string.account)))
-                                ImageUtils.gotoUser(galleryFragment, ids.get(header.position));
-                            if (item.getTitle().equals(getString(R.string.action_share)))
-                                ImageUtils.shareImage(galleryFragment, ids.get(header.position));
-                            if (item.getTitle().equals(getString(R.string.action_copy)))
-                                ImageUtils.copyImageURL(galleryFragment, ids.get(header.position));
-                            if (item.getTitle().equals(getString(R.string.action_download)))
-                                ImageUtils.downloadImage(galleryFragment, ids.get(header.position));
-                            ImageUtils.updateImageFont(ids.get(header.position), header.scoreText);
-                        }
-                    });
-                card.addCardHeader(header);
-                CustomThumbCard thumb = new CustomThumbCard(getActivity());
-                thumb.setHeader(header);
-                thumb.setExternalUsage(true);
-                thumb.position = i;
-                final int position = i;
-                card.addCardThumbnail(thumb);
-                if (!activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
-                    card.setBackgroundResourceId(R.drawable.dark_card_background);
-                CardView cardView = (CardView) getActivity().findViewById(R.id.list_cardId);
-                card.setCardView(cardView);
-                card.setOnClickListener(new Card.OnCardClickListener() {
-                    @Override
-                    public void onClick(Card card, View view) {
-                        selectItem(position);
-                    }
-                });
-                cards.add(card);
-            }
-            mCardArrayAdapter.notifyDataSetChanged();
-        } catch (JSONException e) {
-            Log.e("Error!", e.toString());
-        }
-    }
-
-    void selectItem(int position) {
-        Intent intent = new Intent();
-        intent.putExtra("start", position);
-        intent.putExtra("ids", new ArrayList<JSONParcelable>(ids));
-        intent.setAction(ImgurHoloActivity.IMAGE_PAGER_INTENT);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        MainActivity activity = (MainActivity) getActivity();
-        ActionBar actionBar = activity.getActionBar();
-        if (actionBar != null)
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        super.makeGallery();
     }
 
     @Override
@@ -642,8 +336,6 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
         savedInstanceState.putString("window", window);
         savedInstanceState.putString(getResources().getString(R.string.subreddit), subreddit);
         savedInstanceState.putString("search", search);
-        savedInstanceState.putStringArrayList("urls", urls);
-        savedInstanceState.putParcelableArrayList("ids", ids);
         savedInstanceState.putInt("page", page);
         savedInstanceState.putInt("selectedIndex", selectedIndex);
         if (mSpinnerAdapter != null && mSpinnerAdapter.getCount() > 5)
@@ -838,77 +530,4 @@ public class GalleryFragment extends Fragment implements GetData, OnRefreshListe
         }
     }
 
-    public class CustomThumbCard extends CardThumbnail {
-        public int position;
-        public CustomHeaderInnerCard header;
-
-        public CustomThumbCard(Context context) {
-            super(context);
-        }
-
-        public void setHeader(CustomHeaderInnerCard _header) {
-            header = _header;
-        }
-
-        @Override
-        public void setupInnerViewElements(ViewGroup parent, View viewImage) {
-            if (ids.size() == 0)
-                return;
-            if (ids.get(position).getJSONObject().has(ImgurHoloActivity.IMAGE_DATA_WIDTH)) {
-                try {
-                    Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-                    Point size = new Point();
-                    display.getSize(size);
-                    float imageWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ids.get(position).getJSONObject().getInt(ImgurHoloActivity.IMAGE_DATA_WIDTH), getResources().getDisplayMetrics());
-                    float imageHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ids.get(position).getJSONObject().getInt(ImgurHoloActivity.IMAGE_DATA_HEIGHT), getResources().getDisplayMetrics());
-                    viewImage.getLayoutParams().height = (int) (imageHeight * ((size.x - 32) / imageWidth));
-                } catch (JSONException e) {
-                    Log.e("Error!", e.toString());
-                }
-            } else {
-                viewImage.getLayoutParams().height = 500;
-                ((ImageView) viewImage).setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            }
-            Ion.with(getActivity(),urls.get(position))
-                    .progressBar(header.progressBar)
-                    .withBitmap()
-                    .intoImageView((ImageView) viewImage)
-                    .setCallback(new FutureCallback<ImageView>() {
-                @Override
-                public void onCompleted(Exception e, ImageView imageView) {
-                    header.progressBar.setVisibility(View.INVISIBLE);
-                }
-            });
-        }
-    }
-
-    public class CustomHeaderInnerCard extends CardHeader {
-        public int position;
-        public TextView scoreText;
-        public ProgressBar progressBar;
-
-        public CustomHeaderInnerCard(Context context) {
-            super(context, R.layout.card_header);
-        }
-
-        @Override
-        public void setupInnerViewElements(ViewGroup parent, View view) {
-            if (view != null && ids.size() != 0) {
-                progressBar = (ProgressBar) view.findViewById(R.id.image_progress);
-                progressBar.setVisibility(View.VISIBLE);
-                TextView headerText = (TextView) view.findViewById(R.id.header);
-                if (headerText != null) {
-                    headerText.setText(this.getTitle());
-                    ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
-                    if (!activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
-                        headerText.setTextColor(Color.WHITE);
-                }
-                scoreText = (TextView) view.findViewById(R.id.score);
-                ImageUtils.updateImageFont(ids.get(position), scoreText);
-                TextView infoText = (TextView) view.findViewById(R.id.info);
-                ImageUtils.updateInfoFont(ids.get(position), infoText);
-            }
-        }
-    }
 }
