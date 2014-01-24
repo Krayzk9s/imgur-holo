@@ -22,99 +22,51 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
-import com.krayzk9s.imgurholo.BuildConfig;
 import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
 import com.krayzk9s.imgurholo.activities.MainActivity;
 import com.krayzk9s.imgurholo.dialogs.SubredditDialogFragment;
-import com.krayzk9s.imgurholo.libs.JSONParcelable;
-import com.krayzk9s.imgurholo.libs.SquareImageView;
-import com.krayzk9s.imgurholo.tools.ApiCall;
-import com.krayzk9s.imgurholo.tools.Fetcher;
 import com.krayzk9s.imgurholo.tools.GetData;
-import com.krayzk9s.imgurholo.tools.ImageUtils;
-import com.krayzk9s.imgurholo.tools.Utils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.RejectedExecutionException;
 
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.internal.CardThumbnail;
-import it.gmariotti.cardslib.library.internal.base.BaseCard;
-import it.gmariotti.cardslib.library.view.CardListView;
-import it.gmariotti.cardslib.library.view.CardView;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 public class GalleryFragment extends ImagesFragment implements GetData, OnRefreshListener {
 
-    private static final String IMAGES = "images";
-    private final GalleryFragment galleryFragment = this;
-    private ArrayList<String> urls;
-    private ArrayList<JSONParcelable> ids;
-    private ImageAdapter imageAdapter;
     private String sort;
     private String gallery;
     private int page;
     private String subreddit;
     private String window;
     private SpinnerAdapter mSpinnerAdapter;
-    private ActionBar actionBar;
     private int selectedIndex;
     private SearchView mSearchView;
     private MenuItem searchItem;
     private String search;
     private CharSequence spinner;
-    private int lastInView = -1;
-    private TextView errorText;
-    private GridView gridview;
-    private int oldwidth = 0;
-    private boolean fetchingImages;
-    private PullToRefreshLayout mPullToRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final MainActivity activity = (MainActivity) getActivity();
-        final SharedPreferences settings = activity.getSettings();
+        final ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        final SharedPreferences settings = activity.getApiCall().settings;
+        isGridView = settings.getString("GalleryLayout", getString(R.string.card_view)).equals(getString(R.string.grid_view));
         if (savedInstanceState != null) {
             Log.d("Restoring state", "restoring");
             gallery = savedInstanceState.getString("gallery");
@@ -122,28 +74,28 @@ public class GalleryFragment extends ImagesFragment implements GetData, OnRefres
             window = savedInstanceState.getString("window");
             subreddit = savedInstanceState.getString(getResources().getString(R.string.subreddit));
             search = savedInstanceState.getString("search");
-            urls = savedInstanceState.getStringArrayList("urls");
-            ids = savedInstanceState.getParcelableArrayList("ids");
-            page = savedInstanceState.getInt("page");
             selectedIndex = savedInstanceState.getInt("selectedIndex");
             spinner = savedInstanceState.getCharSequence("spinner");
         } else {
-            page = 0;
             subreddit = "pics";
             gallery = settings.getString("DefaultGallery", getResources().getString(R.string.viral));
             ArrayList<String> galleryOptions = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.galleryOptions)));
             sort = getResources().getString(R.string.viralsort);
             window = getResources().getString(R.string.day);
-            urls = new ArrayList<String>();
-            ids = new ArrayList<JSONParcelable>();
             selectedIndex = galleryOptions.indexOf(gallery);
         }
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        setupActionBar();
+        return view;
+    }
+
+    @Override
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
-        setupActionBar();
         ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
         if (activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             inflater.inflate(R.menu.main, menu);
@@ -189,7 +141,7 @@ public class GalleryFragment extends ImagesFragment implements GetData, OnRefres
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        MainActivity activity = (MainActivity) getActivity();
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
         page = 0;
         switch (item.getItemId()) {
             case R.id.action_sort:
@@ -305,12 +257,17 @@ public class GalleryFragment extends ImagesFragment implements GetData, OnRefres
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        ActionBar actionBar = activity.getActionBar();
+        if (actionBar != null)
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+    }
+
+    @Override
     protected void makeGallery() {
-        if(mPullToRefreshLayout != null)
-            mPullToRefreshLayout.setRefreshing(true);
-        fetchingImages = true;
-        errorText.setVisibility(View.GONE);
-        if (gallery.equals(getResources().getString(R.string.viral))) {
+        if (gallery.equals(getResources().getString(R.string.viral)) || gallery.equals("hot")) { //hot is for legacy
             imageCall = "3/gallery/hot/" + sort + "/" + window;
         } else if (gallery.equals(getResources().getString(R.string.top))) {
             imageCall = "3/gallery/top/" + sort + "/" + window;
@@ -347,7 +304,7 @@ public class GalleryFragment extends ImagesFragment implements GetData, OnRefres
     }
 
     private void setupActionBar() {
-        MainActivity activity = (MainActivity) getActivity();
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         Resources res = activity.getResources();
         ArrayList options = new ArrayList(Arrays.asList(res.getStringArray(R.array.galleryOptions)));
@@ -407,71 +364,6 @@ public class GalleryFragment extends ImagesFragment implements GetData, OnRefres
         actionBar.setListNavigationCallbacks(mSpinnerAdapter, mNavigationCallback);
     }
 
-    public class ImageAdapter extends BaseAdapter {
-        private final Context mContext;
-        private int mNumColumns;
-
-        public ImageAdapter(Context c) {
-            mContext = c;
-        }
-
-        public int getNumColumns() {
-            return mNumColumns;
-        }
-
-        public void setNumColumns(int numColumns) {
-            mNumColumns = numColumns;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position < mNumColumns ? 0 : position - mNumColumns;
-        }
-
-        @Override
-        public int getViewTypeCount() {
-            return 2;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return (position < mNumColumns) ? 1 : 0;
-        }
-
-        public int getCount() {
-            return urls.size() + mNumColumns;
-        }
-
-        public Object getItem(int position) {
-            return position < mNumColumns ?
-                    null : urls.get(position - mNumColumns);
-        }
-
-        // create a new ImageView for each item referenced by the Adapter
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (position < mNumColumns) {
-                if (convertView == null) {
-                    convertView = new View(mContext);
-                }
-                if (getActivity().getActionBar() != null)
-                    convertView.setLayoutParams(new AbsListView.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT, getActivity().getActionBar().getHeight()));
-                return convertView;
-            } else {
-                ImageView imageView;
-                if (convertView == null) {
-                    imageView = new SquareImageView(mContext);
-                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                } else {
-                    imageView = (ImageView) convertView;
-                }
-                Ion.with(imageView).load(urls.get(position - mNumColumns));
-                return imageView;
-            }
-        }
-
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
@@ -487,13 +379,6 @@ public class GalleryFragment extends ImagesFragment implements GetData, OnRefres
                 mSpinnerAdapter.notifyDataSetChanged();
                 actionBar.setSelectedNavigationItem(5);
                 makeGallery();
-        }
-    }
-
-    private class GridItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position - imageAdapter.getNumColumns());
         }
     }
 

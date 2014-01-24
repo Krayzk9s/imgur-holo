@@ -79,7 +79,7 @@ public class MessagingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        MainActivity activity = (MainActivity) getActivity();
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
         activity.setTitle(R.string.activity_title_my_messages);
     }
 
@@ -119,8 +119,8 @@ public class MessagingFragment extends Fragment {
         headerLayout.setVisibility(View.GONE);
         errorText = (TextView) view.findViewById(R.id.error);
         mDrawerList = (ListView) view.findViewById(R.id.account_list);
-        MainActivity activity = (MainActivity) getActivity();
-        SharedPreferences settings = activity.getSettings();
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        SharedPreferences settings = activity.getApiCall().settings;
         Log.d("Theme", settings.getString("theme", MainActivity.HOLO_LIGHT) + "");
         if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
             messageAdapter = new MessageAdapter(activity, R.layout.message_layout);
@@ -175,7 +175,7 @@ public class MessagingFragment extends Fragment {
     }
 
     private void buildSendMessage(String username, String title) {
-        MainActivity activity = (MainActivity) getActivity();
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
         final EditText newHeader = new EditText(activity);
         newHeader.setSingleLine();
         final EditText newUsername = new EditText(activity);
@@ -279,8 +279,8 @@ public class MessagingFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                MainActivity activity = (MainActivity) getActivity();
-                SharedPreferences settings = activity.getSettings();
+                ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+                SharedPreferences settings = activity.getApiCall().settings;
                 if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
                     convertView = mInflater.inflate(R.layout.message_layout, null);
                 else
@@ -344,7 +344,7 @@ public class MessagingFragment extends Fragment {
                     public void onClick(View v) {
                         LinearLayout layout = (LinearLayout) v.getParent().getParent();
                         final ViewHolder dataHolder = (ViewHolder) layout.getTag();
-                        MainActivity activity = (MainActivity) getActivity();
+                        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
                         new AlertDialog.Builder(activity).setTitle(R.string.dialog_send_message_title).setMessage(R.string.dialog_delete_message_summary)
                                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {

@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.1'
+        classpath 'com.android.tools.build:gradle:0.8.+'
     }
 }
 apply plugin: 'android'
@@ -12,7 +12,7 @@ repositories {
     mavenCentral()
     mavenLocal()
     mavenRepo urls:"http://maven.mashape.com/releases"
-    maven { url 'C:\\Users\\Kurt Zimmer\\.m2\\repository' }
+    maven { url 'C:\\Users\\kuzimmer\\.m2\\repository' }
 }
 
 

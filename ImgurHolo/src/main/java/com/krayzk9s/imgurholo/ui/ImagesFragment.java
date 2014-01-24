@@ -16,6 +16,7 @@ package com.krayzk9s.imgurholo.ui;
  * limitations under the License.
  */
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -103,26 +104,29 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  */
 public class ImagesFragment extends Fragment implements GetData, OnRefreshListener {
 
-    private final static String DELETE = "delete";
-    private final static String IMAGES = "images";
+    protected final static String DELETE = "delete";
+    protected final static String IMAGES = "images";
     public boolean selecting = false;
-    private ImageAdapter imageAdapter;
+    protected ImageAdapter imageAdapter;
     protected String imageCall;
-    private GridView gridview;
-    private ArrayList<String> intentReturn;
-    private String albumId;
-    private JSONObject galleryAlbumData;
-    private TextView noImageView;
+    protected GridView gridview;
+    protected ArrayList<String> intentReturn;
+    protected String albumId;
+    protected JSONObject galleryAlbumData;
+    protected TextView noImageView;
     protected int page;
-    private boolean gettingImages = false;
-    private int lastInView = -1;
-    private ArrayList<String> urls;
-    private ArrayList<JSONParcelable> ids;
-    private TextView errorText;
-    private PullToRefreshLayout mPullToRefreshLayout;
-    private CardListView cardListView;
-    private ArrayList<Card> cards;
-    private CardArrayAdapter mCardArrayAdapter;
+    protected int lastInView = -1;
+    protected ArrayList<String> urls;
+    protected ArrayList<JSONParcelable> ids;
+    protected TextView errorText;
+    protected CardListView cardListView;
+    protected ArrayList<Card> cards;
+    protected CardArrayAdapter mCardArrayAdapter;
+    protected boolean fetchingImages;
+    protected PullToRefreshLayout mPullToRefreshLayout;
+    protected ActionBar actionBar;
+    protected int oldWidth;
+    protected boolean isGridView;
 
     public ImagesFragment() {
         page = 0;
@@ -131,7 +135,29 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        actionBar = activity.getActionBar();
+        SharedPreferences settings = activity.getApiCall().settings;
         Bundle bundle = getArguments();
+        if(bundle != null && bundle.containsKey("id"))
+            isGridView = settings.getString("GalleryLayout", getString(R.string.card_view)).equals(getString(R.string.grid_view));
+        else {
+            isGridView = settings.getString("ImagesLayout", getString(R.string.grid_view)).equals(getString(R.string.grid_view));
+        }
+        if (savedInstanceState != null) {
+            urls = savedInstanceState.getStringArrayList("urls");
+            ids = savedInstanceState.getParcelableArrayList("ids");
+            page = savedInstanceState.getInt("page");
+        } else {
+            urls = new ArrayList<String>();
+            ids = new ArrayList<JSONParcelable>();
+            page = 0;
+        }
+
+        if(bundle == null) {
+            return;
+        }
         if (bundle.containsKey("id"))
             albumId = bundle.getString("id");
         else
@@ -144,8 +170,6 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                 galleryAlbumData = dataParcel.getJSONObject();
         } else
             galleryAlbumData = null;
-
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -248,52 +272,25 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        if (urls == null) {
-            urls = new ArrayList<String>();
-            ids = new ArrayList<JSONParcelable>();
-        }
-        View view = inflater.inflate(R.layout.image_layout, container, false);
-        gridview = (GridView) view.findViewById(R.id.grid_layout);
-        errorText = (TextView) view.findViewById(R.id.error);
-        noImageView = (TextView) view.findViewById(R.id.no_images);
-        imageAdapter = new ImageAdapter(view.getContext());
-        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(getActivity())
-                // Mark All Children as pullable
-                .allChildrenArePullable()
-                        // Set the OnRefreshListener
-                .listener(this)
-                        // Finally commit the setup to our PullToRefreshLayout
-                .setup(mPullToRefreshLayout);
-        gridview.setAdapter(imageAdapter);
         ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
-        final SharedPreferences settings = activity.getApiCall().settings;
-        gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty))), getActivity()));
-        gridview.setOnItemClickListener(new GridItemClickListener());
-        gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
-        MultiChoiceModeListener multiChoiceModeListener = new MultiChoiceModeListener();
-        gridview.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        if (imageAdapter.getNumColumns() == 0) {
-                            Log.d("numColumnsWidth", gridview.getWidth() + "");
-                            Log.d("numColumnsIconWidth", Utils.dpToPx((Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty)))), getActivity()) + "");
-                            final int numColumns = (int) Math.floor(
-                                    gridview.getWidth() / (Utils.dpToPx((Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty)))), getActivity()) + Utils.dpToPx(2, getActivity())));
-                            if (numColumns > 0) {
-                                imageAdapter.setNumColumns(numColumns);
-                                if (BuildConfig.DEBUG) {
-                                    Log.d("NUMCOLS", "onCreateView - numColumns set to " + numColumns);
-                                }
-                                imageAdapter.notifyDataSetChanged();
-                            }
+        SharedPreferences settings = activity.getApiCall().settings;
+        View view;
+        if (isGridView) {
+            view = inflater.inflate(R.layout.image_layout, container, false);
+            errorText = (TextView) view.findViewById(R.id.error);
+            gridview = (GridView) view.findViewById(R.id.grid_layout);
+            gridview.setColumnWidth(Utils.dpToPx(Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty))), getActivity()));
+            imageAdapter = new ImageAdapter(view.getContext());
+            gridview.setAdapter(imageAdapter);
+            gridview.setOnItemClickListener(new GridItemClickListener());
+            gridview.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            if (imageAdapter.getNumColumns() == 0 || gridview.getWidth() != oldWidth)
+                                setNumColumns();
                         }
-                    }
-                });
-        gridview.setMultiChoiceModeListener(multiChoiceModeListener);
-        if (albumId == null) {
+                    });
             gridview.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -304,28 +301,70 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                 public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                     if (lastInView == -1)
                         lastInView = firstVisibleItem;
-                    else if (getActivity().getActionBar() != null && lastInView > firstVisibleItem) {
-                        getActivity().getActionBar().show();
+                    else if (lastInView > firstVisibleItem) {
+                        actionBar.show();
                         lastInView = firstVisibleItem;
-                    } else if (getActivity().getActionBar() != null && lastInView < firstVisibleItem) {
-                        getActivity().getActionBar().hide();
+                    } else if (lastInView < firstVisibleItem) {
+                        actionBar.hide();
                         lastInView = firstVisibleItem;
                     }
                     int lastInScreen = firstVisibleItem + visibleItemCount;
-                    if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0 && !gettingImages) {
-                        gettingImages = true;
-                        page += 1;
-                        getImages();
+                    if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0 && !fetchingImages) {
+                            page += 1;
+                            getImages();
                     }
                 }
             });
+            if(ids != null && ids.size() > 0) {
+                imageAdapter.notifyDataSetChanged();
+            }
+            else {
+                makeGallery();
+            }
+        } else {
+            view = inflater.inflate(R.layout.image_layout_card_list, container, false);
+            errorText = (TextView) view.findViewById(R.id.error);
+            cardListView = (CardListView) view.findViewById(R.id.grid_layout);
+            cardListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView absListView, int i) {
+
+                }
+
+                @Override
+                public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    if (lastInView == -1)
+                        lastInView = firstVisibleItem;
+                    else if (lastInView > firstVisibleItem) {
+                        lastInView = firstVisibleItem;
+                    } else if (lastInView < firstVisibleItem) {
+                        lastInView = firstVisibleItem;
+                    }
+                    int lastInScreen = firstVisibleItem + visibleItemCount;
+                    if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0 && !fetchingImages) {
+                            page += 1;
+                            getImages();
+                    }
+                }
+            });
+            if(ids != null && ids.size() > 0) {
+                restoreCards();
+            }
+            else {
+                makeGallery();
+            }
         }
-        if (savedInstanceState == null && urls.size() == 0) {
-            makeGallery();
-        } else if (savedInstanceState != null) {
-            urls = savedInstanceState.getStringArrayList("urls");
-            ids = savedInstanceState.getParcelableArrayList("ids");
-        }
+
+        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+        // Now setup the PullToRefreshLayout
+        ActionBarPullToRefresh.from(getActivity())
+                // Mark All Children as pullable
+                .allChildrenArePullable()
+                        // Set the OnRefreshListener
+                .listener(this)
+                        // Finally commit the setup to our PullToRefreshLayout
+                .setup(mPullToRefreshLayout);
+        noImageView = (TextView) view.findViewById(R.id.no_images);
         return view;
     }
 
@@ -338,18 +377,31 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
             JSONObject data = (JSONObject) object;
             Log.d("imagesData", "checking");
             Log.d("imagesData", "failed");
+            JSONArray imageArray = new JSONArray();
             try {
                 Log.d("URI", data.toString());
-                JSONArray imageArray = data.getJSONArray("data");
+                imageArray = data.getJSONArray("data");
+            }
+            catch (JSONException e) {
+                try {
+                imageArray = data.getJSONObject("data").getJSONArray("images");
+                }
+                catch (JSONException e2) {
+                    Log.e("Error!", e2.toString() + data.toString());
+                }
+            }
+            try {
                 errorText.setVisibility(View.GONE);
+                Boolean changed = false;
                 for (int i = 0; i < imageArray.length(); i++) {
                     JSONObject imageData = imageArray.getJSONObject(i);
                     String s = "";
-                    if (!settings.getString("GalleryLayout", "Card View").equals("Card View"))
+                    if (isGridView)
                         s = settings.getString("IconQuality", "m");
                     try {
                         if (imageData.has("is_album") && imageData.getBoolean("is_album")) {
                             if (!urls.contains("http://imgur.com/" + imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER) + s + ".png")) {
+                                changed = true;
                                 urls.add("http://imgur.com/" + imageData.getString(ImgurHoloActivity.IMAGE_DATA_COVER) + s + ".png");
                                 JSONParcelable dataParcel = new JSONParcelable();
                                 dataParcel.setJSONObject(imageData);
@@ -357,6 +409,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                             }
                         } else {
                             if (!urls.contains("http://imgur.com/" + imageData.getString("id") + s + ".png")) {
+                                changed = true;
                                 urls.add("http://imgur.com/" + imageData.getString("id") + s + ".png");
                                 JSONParcelable dataParcel = new JSONParcelable();
                                 dataParcel.setJSONObject(imageData);
@@ -367,17 +420,21 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                         Log.e("Rejected", e.toString());
                     }
                 }
+                fetchingImages = !changed;
             } catch (JSONException e) {
-                Log.e("Error!", e.toString());
+                Log.e("Error!", e.toString() + "here");
             }
-            if (settings.getString("GalleryLayout", "Card View").equals("Card View")) {
+            if (!isGridView && urls.size() > 0) {
                 restoreCards();
-            } else {
+            } else if (urls.size() > 0) {
                 imageAdapter.notifyDataSetChanged();
+            } else if (urls.size() == 0 && noImageView != null)
+                noImageView.setVisibility(View.VISIBLE);
+            else {
+                fetchingImages = true;
             }
             if (mPullToRefreshLayout != null)
                 mPullToRefreshLayout.setRefreshComplete();
-            fetchingImages = false;
             errorText.setVisibility(View.GONE);
         }
     }
@@ -388,12 +445,13 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
     }
 
     protected void makeGallery() {
+        errorText.setVisibility(View.GONE);
         urls = new ArrayList<String>();
         ids = new ArrayList<JSONParcelable>();
         if (imageAdapter != null)
             imageAdapter.notifyDataSetChanged();
         ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
-        if(activity.getApiCall().settings.getString("GalleryLayout", "Card View").equals("Card View")) {
+        if(!isGridView) {
             cards = new ArrayList<Card>();
             mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
             cardListView.setAdapter(mCardArrayAdapter);
@@ -403,6 +461,8 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
     }
 
     private void getImages() {
+        fetchingImages = true;
+        Log.d("refreshing", "refreshing");
         if(mPullToRefreshLayout != null)
             mPullToRefreshLayout.setRefreshing(true);
         errorText.setVisibility(View.GONE);
@@ -426,7 +486,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                 final CustomHeaderInnerCard header = new CustomHeaderInnerCard(getActivity());
                 header.setTitle(ids.get(i).getJSONObject().getString("title"));
                 header.position = i;
-                final GetData fragment = this;
+                final ImagesFragment fragment = this;
                 if (ids.get(i).getJSONObject().has("subreddit"))
                     header.setPopupMenu(R.menu.card_image, new CardHeader.OnClickCardHeaderPopupMenuListener() {
                         @Override
@@ -697,6 +757,25 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 
     }
 
+    private void setNumColumns() {
+        Log.d("Setting Columns", "Setting Columns");
+        ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
+        if (activity != null) {
+            oldWidth = gridview.getWidth();
+            SharedPreferences settings = activity.getApiCall().settings;
+            Log.d("numColumnsWidth", gridview.getWidth() + "");
+            Log.d("numColumnsIconWidth", Utils.dpToPx((Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty)))), getActivity()) + "");
+            final int numColumns = (int) Math.floor(
+                    gridview.getWidth() / (Utils.dpToPx((Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty)))), getActivity()) + Utils.dpToPx(4, getActivity())));
+            if (numColumns > 0) {
+                imageAdapter.setNumColumns(numColumns);
+                if (BuildConfig.DEBUG) {
+                    Log.d("NUMCOLS", "onCreateView - numColumns set to " + numColumns);
+                }
+                imageAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
     public class CustomThumbCard extends CardThumbnail {
         public int position;

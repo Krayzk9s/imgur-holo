@@ -23,7 +23,7 @@
         <ListPreference android:key="DefaultGallery"
                         android:title= "Default gallery page"
                         android:summary= ""
-                        android:defaultValue="hot"
+                        android:defaultValue="@string/viral"
                         android:entries="@array/galleryOptions"
                         android:entryValues="@array/galleryOptions"/>
         <ListPreference android:key="GalleryLayout"
@@ -94,6 +94,12 @@
                         android:defaultValue="Holo Light"
                         android:entries="@array/themes"
                         android:entryValues="@array/themes"/>
+        <ListPreference android:key="ImagesLayout"
+            android:title= "Images Layout"
+            android:summary= ""
+            android:defaultValue="@string/grid_view"
+            android:entries="@array/galleryLayoutOptions"
+            android:entryValues="@array/galleryLayoutOptions"/>
         <ListPreference android:key="@string/icon_size"
                         android:title= "Thumbnail Size"
                         android:summary= "120dps"
