@@ -46,4 +46,13 @@
             android:fontFamily="sans-serif-condensed"
             />
     </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/description"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="8dp"
+        android:fontFamily="sans-serif-condensed"
+        />
 </LinearLayout>

@@ -554,11 +554,9 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 
     void selectItem(int position) {
         if (!selecting) {
-            ArrayList<JSONParcelable> idCopy = ids;
             Intent intent = new Intent();
-            intent.putExtra("start", position);
-            intent.putExtra("ids", idCopy);
-            intent.setAction(ImgurHoloActivity.IMAGE_PAGER_INTENT);
+            intent.putExtra("id", ids.get(position));
+            intent.setAction(ImgurHoloActivity.IMAGE_INTENT);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             startActivity(intent);
         }
@@ -837,16 +835,33 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                 progressBar = (ProgressBar) view.findViewById(R.id.image_progress);
                 progressBar.setVisibility(View.VISIBLE);
                 TextView headerText = (TextView) view.findViewById(R.id.header);
-                if (headerText != null) {
+                if (headerText != null && this.getTitle() != "null") {
+					headerText.setVisibility(View.VISIBLE);
                     headerText.setText(this.getTitle());
                     ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
                     if (!activity.getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
                         headerText.setTextColor(Color.WHITE);
                 }
+				else {
+					headerText.setVisibility(View.GONE);
+				}
                 scoreText = (TextView) view.findViewById(R.id.score);
                 ImageUtils.updateImageFont(ids.get(position), scoreText);
                 TextView infoText = (TextView) view.findViewById(R.id.info);
                 ImageUtils.updateInfoFont(ids.get(position), infoText);
+				TextView descriptionText = (TextView) view.findViewById(R.id.description);
+				try {
+					if(ids.get(position).getJSONObject().has("description") && ids.get(position).getJSONObject().getString("description") != "null" ) {
+						descriptionText.setVisibility(View.VISIBLE);
+						descriptionText.setText(ids.get(position).getJSONObject().getString("description"));
+					}
+					else {
+						descriptionText.setVisibility(View.GONE);
+					}
+				}
+				catch (JSONException e) {
+					Log.e("Error!", e.toString());
+				}
             }
         }
     }

@@ -47,6 +47,7 @@ public class ImgurHoloActivity extends FragmentActivity {
     public static final String COMMENTS_INTENT = "com.krayzk9s.imgurholo.COMMENTS";
     public static final String ALBUMS_INTENT = "com.krayzk9s.imgurholo.ALBUMS";
     public static final String ACCOUNT_INTENT = "com.krayzk9s.imgurholo.ACCOUNT";
+	public static final String IMAGE_INTENT = "com.krayzk9s.imgurholo.IMAGE";
     public static final String HOLO_DARK = "Holo Dark";
     public static final String HOLO_LIGHT = "Holo Light";
 
