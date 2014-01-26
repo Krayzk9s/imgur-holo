@@ -16,10 +16,7 @@ package com.krayzk9s.imgurholo.activities;
  * limitations under the License.
  */
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -27,7 +24,6 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import com.krayzk9s.imgurholo.R;
@@ -50,22 +46,11 @@ import java.util.Arrays;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class SettingsActivity extends Activity {
-    private static final String HOLO_LIGHT = "Holo Light";
+public class SettingsActivity extends ImgurHoloActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String theme = settings.getString("theme", HOLO_LIGHT);
-        if (theme.equals(HOLO_LIGHT))
-            setTheme(R.style.AppTheme);
-        else
-            setTheme(R.style.AppThemeDark);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
 
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction()

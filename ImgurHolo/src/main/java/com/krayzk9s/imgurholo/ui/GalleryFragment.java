@@ -45,9 +45,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-public class GalleryFragment extends ImagesFragment implements GetData, OnRefreshListener {
+public class GalleryFragment extends ImagesFragment implements GetData {
 
     private String sort;
     private String gallery;
@@ -76,6 +75,7 @@ public class GalleryFragment extends ImagesFragment implements GetData, OnRefres
             search = savedInstanceState.getString("search");
             selectedIndex = savedInstanceState.getInt("selectedIndex");
             spinner = savedInstanceState.getCharSequence("spinner");
+			imageCall = savedInstanceState.getString("imageCall");
         } else {
             subreddit = "pics";
             gallery = settings.getString("DefaultGallery", getResources().getString(R.string.viral));
@@ -293,6 +293,7 @@ public class GalleryFragment extends ImagesFragment implements GetData, OnRefres
         savedInstanceState.putString("window", window);
         savedInstanceState.putString(getResources().getString(R.string.subreddit), subreddit);
         savedInstanceState.putString("search", search);
+		savedInstanceState.putString("imageCall", imageCall);
         savedInstanceState.putInt("page", page);
         savedInstanceState.putInt("selectedIndex", selectedIndex);
         if (mSpinnerAdapter != null && mSpinnerAdapter.getCount() > 5)

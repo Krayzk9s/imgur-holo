@@ -53,6 +53,14 @@ public class ImgurHoloActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		apiCall = new ApiCall();
+		apiCall.setSettings(settings);
+		theme = settings.getString("theme", MainActivity.HOLO_LIGHT);
+		if (theme.equals(MainActivity.HOLO_LIGHT))
+			setTheme(R.style.AppTheme);
+		else
+			setTheme(R.style.AppThemeDark);
         super.onCreate(savedInstanceState);
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
@@ -68,20 +76,13 @@ public class ImgurHoloActivity extends FragmentActivity {
             // Ignore
             Log.e("Error!", e.toString());
         }
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        apiCall = new ApiCall();
+
         if(Integer.parseInt(settings.getString(getString(R.string.icon_size), getString(R.string.onetwenty))) < 120) { //getting rid of 90 because it may crash the app for large screens
             SharedPreferences.Editor editor = settings.edit();
             editor.putString(getString(R.string.icon_size), getString(R.string.onetwenty));
             editor.commit();
         }
-        theme = settings.getString("theme", MainActivity.HOLO_LIGHT);
-        if (theme.equals(MainActivity.HOLO_LIGHT))
-            setTheme(R.style.AppTheme);
-        else
-            setTheme(R.style.AppThemeDark);
         setContentView(R.layout.activity_other);
-        apiCall.setSettings(settings);
         ActionBar actionBar = getActionBar();
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);

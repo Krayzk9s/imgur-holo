@@ -184,5 +184,6 @@
 
     <string name="toast_uploading">Uploading Image…</string>
     <string name="toast_copied">Copied!</string>
-    <string name="toast_downloading">Downloading %2$d images! This may take a while…</string>
+    <string name="toast_downloading">Downloading %d images! This may take a while…</string>
+    <string name="download_progress">Downloaded %d images!</string>
 </resources>

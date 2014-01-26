@@ -140,11 +140,6 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
         actionBar = activity.getActionBar();
         SharedPreferences settings = activity.getApiCall().settings;
         Bundle bundle = getArguments();
-        if(bundle != null && bundle.containsKey("id"))
-            isGridView = settings.getString("GalleryLayout", getString(R.string.card_view)).equals(getString(R.string.grid_view));
-        else {
-            isGridView = settings.getString("ImagesLayout", getString(R.string.grid_view)).equals(getString(R.string.grid_view));
-        }
         if (savedInstanceState != null) {
             urls = savedInstanceState.getStringArrayList("urls");
             ids = savedInstanceState.getParcelableArrayList("ids");
@@ -154,7 +149,11 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
             ids = new ArrayList<JSONParcelable>();
             page = 0;
         }
-
+		if(bundle != null && bundle.containsKey("id"))
+			isGridView = settings.getString("GalleryLayout", getString(R.string.card_view)).equals(getString(R.string.grid_view));
+		else {
+			isGridView = settings.getString("ImagesLayout", getString(R.string.grid_view)).equals(getString(R.string.grid_view));
+		}
         if(bundle == null) {
             return;
         }
@@ -214,6 +213,10 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                          .show();
                 Intent serviceIntent = new Intent(activity, DownloadService.class);
                 serviceIntent.putParcelableArrayListExtra("ids", ids);
+				if(albumId != null)
+					serviceIntent.putExtra("albumName", albumId);
+				else
+					serviceIntent.putExtra("albumName", imageCall);
                 activity.startService(serviceIntent);
                 return true;
             case R.id.action_refresh:
@@ -309,7 +312,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                         lastInView = firstVisibleItem;
                     }
                     int lastInScreen = firstVisibleItem + visibleItemCount;
-                    if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0 && !fetchingImages) {
+                    if ((lastInScreen == totalItemCount) && gridview.getAdapter() != null && gridview.getAdapter().getCount() > 0 && !fetchingImages) {
                             page += 1;
                             getImages();
                     }
@@ -317,9 +320,6 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
             });
             if(ids != null && ids.size() > 0) {
                 imageAdapter.notifyDataSetChanged();
-            }
-            else {
-                makeGallery();
             }
         } else {
             view = inflater.inflate(R.layout.image_layout_card_list, container, false);
@@ -341,20 +341,19 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                         lastInView = firstVisibleItem;
                     }
                     int lastInScreen = firstVisibleItem + visibleItemCount;
-                    if ((lastInScreen == totalItemCount) && urls != null && urls.size() > 0 && !fetchingImages) {
+                    if ((lastInScreen == totalItemCount) && cardListView.getAdapter() != null && cardListView.getAdapter().getCount() > 0 && !fetchingImages) {
                             page += 1;
                             getImages();
                     }
                 }
             });
-            if(ids != null && ids.size() > 0) {
-                restoreCards();
-            }
-            else {
-                makeGallery();
-            }
+			if(ids != null && ids.size() > 0) {
+				restoreCards();
+			}
         }
-
+		if(ids.size() == 0) {
+			makeGallery();
+		}
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
         // Now setup the PullToRefreshLayout
         ActionBarPullToRefresh.from(getActivity())
@@ -645,7 +644,6 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                     l = (CheckableLayout) convertView;
                     i = (SquareImageView) l.getChildAt(0);
                 }
-
                 Ion.with(i).load(urls.get(position - mNumColumns));
                 return l;
             }
