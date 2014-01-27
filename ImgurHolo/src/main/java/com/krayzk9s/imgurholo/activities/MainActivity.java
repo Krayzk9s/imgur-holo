@@ -47,6 +47,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.services.UploadService;
 import com.krayzk9s.imgurholo.tools.ApiCall;
@@ -73,6 +74,8 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Crashlytics.start(this);
+
         setContentView(R.layout.activity_main);
         updateMenu();
         // ActionBarDrawerToggle ties together the the proper interactions

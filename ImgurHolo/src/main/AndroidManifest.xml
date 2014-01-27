@@ -144,6 +144,7 @@
         </activity>
         <service android:name="com.krayzk9s.imgurholo.services.UploadService" />
         <service android:name="com.krayzk9s.imgurholo.services.DownloadService" />
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="83ec4d6737e0b139ec006da8f1c6afe9b5eb36c4"/>
     </application>
 
 </manifest>

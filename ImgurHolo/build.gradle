@@ -1,18 +1,25 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'http://download.crashlytics.com/maven' }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+
     }
 }
 apply plugin: 'android'
+apply plugin: 'crashlytics'
 
 repositories {
     mavenCentral()
     mavenLocal()
     mavenRepo urls:"http://maven.mashape.com/releases"
-    maven { url 'C:\\Users\\Kurt Zimmer\\.m2\\repository' }
+    maven { url 'C:\\Users\\kuzimmer\\.m2\\repository' }
+    maven { url 'http://download.crashlytics.com/maven' }
+
 }
 
 
@@ -33,6 +40,8 @@ dependencies {
     compile files('libs/android-async.jar')
     compile 'com.mobeta.android.dslv:drag-sort-listview:0.6.1-SNAPSHOT-AAR'
     compile files('libs/android-support-v13.jar')
+    compile 'com.crashlytics.android:crashlytics:1.+'
+
 }
 
 android {
