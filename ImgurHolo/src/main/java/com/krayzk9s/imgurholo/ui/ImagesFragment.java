@@ -808,6 +808,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
             Ion.with(getActivity(),urls.get(position))
                     .progressBar(header.progressBar)
                     .withBitmap()
+                    .deepZoom()
                     .intoImageView((ImageView) viewImage)
                     .setCallback(new FutureCallback<ImageView>() {
                         @Override

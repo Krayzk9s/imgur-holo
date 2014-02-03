@@ -382,6 +382,7 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
                     .setLogging("MyLogs", Log.DEBUG)
                     .progressBar((ProgressBar) imageLayoutView.findViewById(R.id.image_progress))
                     .withBitmap()
+                    .deepZoom()
                     .intoImageView(imageView).setCallback(new FutureCallback<ImageView>() {
                 @Override
                 public void onCompleted(Exception e, ImageView result) {
