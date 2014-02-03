@@ -363,6 +363,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                 .listener(this)
                         // Finally commit the setup to our PullToRefreshLayout
                 .setup(mPullToRefreshLayout);
+        mPullToRefreshLayout.setRefreshing(true);
         noImageView = (TextView) view.findViewById(R.id.no_images);
         return view;
     }
@@ -390,7 +391,6 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                 }
             }
             try {
-                errorText.setVisibility(View.GONE);
                 Boolean changed = false;
                 for (int i = 0; i < imageArray.length(); i++) {
                     JSONObject imageData = imageArray.getJSONObject(i);
@@ -552,7 +552,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
     }
 
     void selectItem(int position) {
-        if (!selecting) {
+        if (!selecting && position >= 0) {
             Intent intent = new Intent();
             intent.putExtra("id", ids.get(position));
             intent.setAction(ImgurHoloActivity.IMAGE_INTENT);
