@@ -107,7 +107,7 @@
     </item>
     <item android:id="@+id/subreddit"
           android:title="@string/subreddit"
-          android:orderInCategory="25"
+          android:orderInCategory="15"
           android:icon="@drawable/subredditlogo"
           android:showAsAction="ifRoom|collapseActionView"
           android:visible="false" />
@@ -118,11 +118,15 @@
         android:showAsAction="ifRoom|collapseActionView"
         android:visible="false"/>
     <item android:id="@+id/action_submit"
-          android:title="@string/action_submit"
-          android:orderInCategory="75"
-          android:icon="@drawable/social_add_group"
-          android:showAsAction="ifRoom|collapseActionView"
-          android:visible="false"/>
-
-
+        android:title="@string/action_submit"
+        android:orderInCategory="75"
+        android:icon="@drawable/social_add_group"
+        android:showAsAction="ifRoom|collapseActionView"
+        android:visible="false"/>
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="75"
+        android:icon="@drawable/action_settings"
+        android:showAsAction="never"
+        android:visible="true"/>
 </menu>

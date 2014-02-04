@@ -34,8 +34,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -288,16 +286,6 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        if (theme.equals(HOLO_LIGHT))
-            inflater.inflate(R.menu.main, menu);
-        else
-            inflater.inflate(R.menu.main_dark, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("request code", requestCode + "");
         if (resultCode == -1)
@@ -422,9 +410,8 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                 if(apiCall.loggedin) {
                     displayUpload();
                 } else {
-                    Intent myIntent = new Intent(this, SettingsActivity.class);
-                    startActivity(myIntent);
-                    updateMenu();
+                    LoginAsync loginAsync = new LoginAsync(apiCall, this);
+                    loginAsync.execute();
                 }
                 break;
             case 3:
@@ -438,9 +425,6 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, imagesFragment)
                             .commit();
-                } else {
-                    LoginAsync loginAsync = new LoginAsync(apiCall, this);
-                    loginAsync.execute();
                 }
                 break;
             case 4:
@@ -480,12 +464,6 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                 }
                 break;
             case 7:
-                if (apiCall.loggedin) {
-                    Intent myIntent = new Intent(this, SettingsActivity.class);
-                    startActivity(myIntent);
-                }
-                break;
-            case 8:
                 if (apiCall.loggedin) {
                     SharedPreferences settings = getSettings();
                     SharedPreferences.Editor editor = settings.edit();

@@ -107,7 +107,7 @@
     </item>
     <item android:id="@+id/subreddit"
           android:title="@string/subreddit"
-          android:orderInCategory="25"
+          android:orderInCategory="15"
           android:icon="@drawable/dark_subredditlogo"
           android:showAsAction="ifRoom|collapseActionView"
           android:visible="false" />
@@ -123,6 +123,10 @@
           android:icon="@drawable/dark_social_add_group"
           android:showAsAction="ifRoom|collapseActionView"
           android:visible="false"/>
-
-
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        android:icon="@drawable/dark_action_settings"
+        android:showAsAction="never"
+        android:visible="true"/>
 </menu>

@@ -16,10 +16,8 @@ package com.krayzk9s.imgurholo.activities;
  * limitations under the License.
  */
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.view.Menu;
 
 import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.ui.ImagesFragment;
@@ -39,25 +37,6 @@ public class ImageSelectActivity extends MainActivity {
         fragmentManager.beginTransaction()
                 .replace(R.id.frame_layout, imagesFragment)
                 .commit();
-
-    }
-
-    @Override
-    public void onNewIntent(Intent intent) {
-
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return true;
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.image_select, menu);
-        return true;
     }
 
 }

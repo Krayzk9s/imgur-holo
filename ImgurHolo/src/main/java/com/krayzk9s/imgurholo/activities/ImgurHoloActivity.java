@@ -1,6 +1,7 @@
 package com.krayzk9s.imgurholo.activities;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -104,6 +105,10 @@ public class ImgurHoloActivity extends FragmentActivity {
                 Intent intent = NavUtils.getParentActivityIntent(this);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 NavUtils.navigateUpTo(this, intent);*/
+                return true;
+            case R.id.action_settings:
+                    Intent myIntent = new Intent(this, SettingsActivity.class);
+                    startActivity(myIntent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
