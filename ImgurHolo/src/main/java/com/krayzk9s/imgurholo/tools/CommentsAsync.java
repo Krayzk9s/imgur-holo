@@ -67,7 +67,7 @@ public class CommentsAsync extends AsyncTask<Void, Void, Void> {
 			if (activity != null) {
 				FragmentManager fragmentManager = activity.getSupportFragmentManager();
 				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				fragmentTransaction.replace(R.id.frame_layout, fragment).addToBackStack("tag").commit();
+				fragmentTransaction.replace(R.id.frame_layout, fragment).commit();
 			}
 		}
 	}
