@@ -24,14 +24,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
@@ -39,6 +37,7 @@ import android.util.Log;
 import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
 import com.krayzk9s.imgurholo.tools.ApiCall;
+import com.krayzk9s.imgurholo.tools.FileUtils;
 import com.krayzk9s.imgurholo.tools.GetData;
 import com.krayzk9s.imgurholo.tools.NewAlbumAsync;
 
@@ -152,14 +151,14 @@ public class UploadService extends IntentService implements GetData {
             for (Parcelable parcel : list) {
                 Uri uri = (Uri) parcel;
                 Log.d("recieving", uri.toString());
-                SendImage sendImage = new SendImage(apiCall, getContentResolver().query(uri, null, null, null, null), getApplicationContext(), getResources(), this);
+                SendImage sendImage = new SendImage(apiCall, FileUtils.getPath(this, uri), getApplicationContext(), getResources(), this);
                 Log.d("recieving", "executing");
                 sendImage.execute();
             }
         }
         else {
             totalUpload = -1;
-            SendImage sendImage = new SendImage(apiCall, getContentResolver().query(intent.getData(), null, null, null, null), getApplicationContext(), getResources(), this);
+            SendImage sendImage = new SendImage(apiCall, FileUtils.getPath(getApplicationContext(), intent.getData()), getApplicationContext(), getResources(), this);
             sendImage.execute();
         }
     }
@@ -237,10 +236,10 @@ public class UploadService extends IntentService implements GetData {
     private static class SendImage extends AsyncTask<Void, Void, JSONObject> {
         Bitmap photo;
         final ApiCall apiCallStatic;
-        final Cursor cursor;
         final SharedPreferences settings;
         final Context context;
         final Resources resources;
+        String filePath;
         NotificationManager notificationManager;
         final UploadService uploadService;
 
@@ -256,10 +255,10 @@ public class UploadService extends IntentService implements GetData {
             notificationManager.notify(0, notification);
         }
 
-        public SendImage(ApiCall _apiCallStatic, Cursor _cursor, Context _context, Resources _resources, UploadService _uploadService) {
+        public SendImage(ApiCall _apiCallStatic, String _filepath, Context _context, Resources _resources, UploadService _uploadService) {
             uploadService = _uploadService;
             apiCallStatic = _apiCallStatic;
-            cursor = _cursor;
+            filePath = _filepath;
             context = _context;
             settings = PreferenceManager.getDefaultSharedPreferences(context);
             resources = _resources;
@@ -277,10 +276,6 @@ public class UploadService extends IntentService implements GetData {
         @Override
         protected JSONObject doInBackground(Void... voids) {
             Log.d("recieved", "in background");
-            if(cursor == null)
-                return null;
-            cursor.moveToFirst();
-            final String filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
             Log.d("Image Upload", filePath);
             int maxHeight = Integer.MAX_VALUE;
             if(settings.getBoolean("HeightBoolean", false))

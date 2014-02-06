@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -30,16 +29,13 @@ import android.text.Html;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.ActionMode;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -569,25 +565,8 @@ public class SingleImageFragment extends Fragment implements GetData, OnRefreshL
         ArrayAdapter<String> tempAdapter = new ArrayAdapter<String>(mainView.getContext(),
                 R.layout.drawer_list_item, mMenuList);
         Log.d("URI", "YO I'M IN YOUR SINGLE FRAGMENT gallery:" + inGallery);
-        try {
-            Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt(ImgurHoloActivity.IMAGE_DATA_HEIGHT), getResources().getDisplayMetrics());
-            int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, imageData.getJSONObject().getInt(ImgurHoloActivity.IMAGE_DATA_WIDTH), getResources().getDisplayMetrics());
-            Log.d(ImgurHoloActivity.IMAGE_DATA_HEIGHT, Integer.toString(height));
-            Log.d(ImgurHoloActivity.IMAGE_DATA_WIDTH, Integer.toString(width));
-            int statusBarHeight = (int) Math.ceil(STATUS_BAR_MULT * getActivity().getResources().getDisplayMetrics().density);
-            TypedValue tv = new TypedValue();
-            getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
-            int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId) + statusBarHeight;
-            imageView = (ImageView) imageLayoutView.findViewById(R.id.single_image_view);
-            loadImage();
-            if (settings.getBoolean(ImgurHoloActivity.VERTICAL_HEIGHT_SETTING, true))
-                imageView.setMaxHeight(size.y - actionBarHeight);
-        } catch (JSONException e) {
-            Log.e("drawable Error!", e.toString());
-        }
+        imageView = (ImageView) imageLayoutView.findViewById(R.id.single_image_view);
+        loadImage();
         TextView imageTitle = (TextView) imageLayoutView.findViewById(R.id.single_image_title);
         TextView imageDescription = (TextView) imageLayoutView.findViewById(R.id.single_image_description);
 

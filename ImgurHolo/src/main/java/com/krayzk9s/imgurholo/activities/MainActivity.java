@@ -171,6 +171,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
         mDrawerToggle.syncState();
     }
 
+
     /* The click listener for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
@@ -353,6 +354,7 @@ public class MainActivity extends ImgurHoloActivity implements GetData {
                                 intent.setType("image/*");
                                 intent.setAction(Intent.ACTION_GET_CONTENT);
                                 intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                                 startActivityForResult(Intent.createChooser(intent,
                                         "Select Picture"), 3);
                                 break;

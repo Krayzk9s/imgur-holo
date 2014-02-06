@@ -68,6 +68,7 @@ import com.krayzk9s.imgurholo.tools.Fetcher;
 import com.krayzk9s.imgurholo.tools.GetData;
 import com.krayzk9s.imgurholo.tools.ImageUtils;
 import com.krayzk9s.imgurholo.tools.Utils;
+import com.krayzk9s.imgurholo.tools.onImageSelected;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -169,6 +170,7 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                 galleryAlbumData = dataParcel.getJSONObject();
         } else
             galleryAlbumData = null;
+        Log.d("gallery", galleryAlbumData.toString());
     }
 
     @Override
@@ -277,7 +279,8 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
         SharedPreferences settings = activity.getApiCall().settings;
-        View view;
+        final View view;
+
         if (isGridView) {
             view = inflater.inflate(R.layout.image_layout, container, false);
             errorText = (TextView) view.findViewById(R.id.error);
@@ -363,7 +366,8 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
                 .listener(this)
                         // Finally commit the setup to our PullToRefreshLayout
                 .setup(mPullToRefreshLayout);
-        mPullToRefreshLayout.setRefreshing(true);
+        if(savedInstanceState == null)
+            mPullToRefreshLayout.setRefreshing(true);
         noImageView = (TextView) view.findViewById(R.id.no_images);
         return view;
     }
@@ -440,7 +444,6 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 
     public void handleException(Exception e, String tag) {
         Log.e("Error!", e.toString());
-        noImageView.setVisibility(View.VISIBLE);
     }
 
     protected void makeGallery() {
@@ -553,11 +556,14 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 
     void selectItem(int position) {
         if (!selecting && position >= 0) {
+            /*
             Intent intent = new Intent();
             intent.putExtra("id", ids.get(position));
             intent.setAction(ImgurHoloActivity.IMAGE_INTENT);
             intent.addCategory(Intent.CATEGORY_DEFAULT);
-            startActivity(intent);
+            startActivity(intent);*/
+            onImageSelected activity = (onImageSelected) getActivity();
+            activity.imageSelected(ids.get(position));
         }
     }
 
@@ -790,16 +796,18 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
             if (ids.size() == 0)
                 return;
             if (ids.get(position).getJSONObject().has(ImgurHoloActivity.IMAGE_DATA_WIDTH)) {
-                try {
+               try {
                     Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
                     Point size = new Point();
                     display.getSize(size);
+                    parent.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                    float parentWidth = cardListView.getWidth();
                     float imageWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ids.get(position).getJSONObject().getInt(ImgurHoloActivity.IMAGE_DATA_WIDTH), getResources().getDisplayMetrics());
                     float imageHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ids.get(position).getJSONObject().getInt(ImgurHoloActivity.IMAGE_DATA_HEIGHT), getResources().getDisplayMetrics());
-                    viewImage.getLayoutParams().height = (int) (imageHeight * ((size.x - 32) / imageWidth));
-                } catch (JSONException e) {
-                    Log.e("Error!", e.toString());
-                }
+                    viewImage.getLayoutParams().height = (int) (imageHeight * ((parentWidth - 32) / imageWidth));
+               } catch (JSONException e) {
+                   Log.e("Error!", e.toString());
+            }
             } else {
                 viewImage.getLayoutParams().height = 500;
                 ((ImageView) viewImage).setScaleType(ImageView.ScaleType.CENTER_CROP);

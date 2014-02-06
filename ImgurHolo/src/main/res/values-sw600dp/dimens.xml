@@ -3,4 +3,5 @@
          screen margins) for sw600dp devices (e.g. 7" tablets) here. -->
     <dimen name="activity_horizontal_margin">32dp</dimen>
     <dimen name="comments_margin">32dp</dimen>
+    <dimen name="images_fragment_size">200dp</dimen>
 </resources>

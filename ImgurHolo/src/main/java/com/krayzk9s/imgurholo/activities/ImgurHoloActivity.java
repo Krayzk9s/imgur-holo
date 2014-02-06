@@ -6,12 +6,21 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
+import android.widget.FrameLayout;
 
 import com.krayzk9s.imgurholo.R;
+import com.krayzk9s.imgurholo.libs.JSONParcelable;
 import com.krayzk9s.imgurholo.tools.ApiCall;
+import com.krayzk9s.imgurholo.tools.onImageSelected;
+import com.krayzk9s.imgurholo.ui.ImagesFragment;
+import com.krayzk9s.imgurholo.ui.SingleImageFragment;
+
+import org.json.JSONException;
 
 import java.lang.reflect.Field;
 
@@ -30,7 +39,7 @@ import java.lang.reflect.Field;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class ImgurHoloActivity extends FragmentActivity {
+public class ImgurHoloActivity extends FragmentActivity implements onImageSelected {
     public static final String IMAGE_DATA_LINK = "link";
     public static final String IMAGE_DATA_COVER = "cover";
     public static final String VERTICAL_HEIGHT_SETTING = "VerticalHeight";
@@ -112,5 +121,47 @@ public class ImgurHoloActivity extends FragmentActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void imageSelected(JSONParcelable data) {
+        FrameLayout displayFrag = (FrameLayout) findViewById(R.id.frame_layout_child);
+        if (displayFrag == null) {
+            // DisplayFragment (Fragment B) is not in the layout (handset layout),
+            // so start DisplayActivity (Activity B)
+            // and pass it the info about the selected item
+            Intent intent = new Intent();
+            intent.putExtra("id", data);
+            intent.setAction(ImgurHoloActivity.IMAGE_INTENT);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            startActivity(intent);
+        } else {
+            // DisplayFragment (Fragment B) is in the layout (tablet layout),
+            // so tell the fragment to update
+            try {
+                if (data.getJSONObject().has("is_album") && data.getJSONObject().getBoolean("is_album")) {
+                    ImagesFragment fragment = new ImagesFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("imageCall", "3/album/" + data.getJSONObject().getString("id"));
+                    bundle.putString("id", data.getJSONObject().getString("id"));
+                    bundle.putParcelable("albumData", data);
+                    fragment.setArguments(bundle);
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame_layout_child, fragment).commitAllowingStateLoss();
+                } else {
+                    SingleImageFragment singleImageFragment = new SingleImageFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("gallery", true);
+                    bundle.putParcelable("imageData", data);
+                    singleImageFragment.setArguments(bundle);
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.frame_layout_child, singleImageFragment).commitAllowingStateLoss();
+                }
+            } catch (JSONException e) {
+                Log.e("Error!", e.toString());
+            }
+        }
     }
 }
