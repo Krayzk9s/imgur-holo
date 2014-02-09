@@ -91,7 +91,7 @@ public class ImgurLinkActivity extends ImgurHoloActivity implements GetData {
             }
             else if(album.length() == 7) {
                 Log.d("image", album);
-                Fetcher fetcher = new Fetcher(this, "/3/image/" + album, ApiCall.GET, null, apiCall, IMAGE);
+                Fetcher fetcher = new Fetcher(this, "/3/gallery/image/" + album, ApiCall.GET, null, apiCall, IMAGE);
                 fetcher.execute();
             }
         } else if (Intent.ACTION_VIEW.equals(action) && intent.getData().toString().startsWith("http://i.imgur")) {

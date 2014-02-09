@@ -46,7 +46,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -55,13 +54,13 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Copyright 2013 Kurt Zimmer
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,12 +73,12 @@ public class AccountFragment extends Fragment implements GetData, OnRefreshListe
 	private ArrayAdapter<String> adapter;
 	private String username;
 	private SearchView mSearchView;
-    private ListView mDrawerList;
-    private TextView biography;
+	private ListView mDrawerList;
+	private TextView biography;
 	private TextView created;
 	private TextView reputation;
-    private PullToRefreshLayout mPullToRefreshLayout;
-    private int refreshedCount;
+	private PullToRefreshLayout mPullToRefreshLayout;
+	private int refreshedCount;
 	private final static String ACCOUNTDATA = "accountData";
 	private final static String COUNTDATA = "countData";
 	private final static String LIKEDATA = "likeData";
@@ -89,7 +88,7 @@ public class AccountFragment extends Fragment implements GetData, OnRefreshListe
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        refreshedCount = 0;
+		refreshedCount = 0;
 		Bundle bundle = getArguments();
 		username = bundle.getString("username");
 		setHasOptionsMenu(true);
@@ -105,7 +104,7 @@ public class AccountFragment extends Fragment implements GetData, OnRefreshListe
 			inflater.inflate(R.menu.main_dark, menu);
 		menu.findItem(R.id.action_search).setVisible(true);
 		menu.findItem(R.id.action_refresh).setVisible(true);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+		MenuItem searchItem = menu.findItem(R.id.action_search);
 		mSearchView = (SearchView) searchItem.getActionView();
 		mSearchView.setQueryHint("Lookup Users");
 		SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
@@ -142,15 +141,6 @@ public class AccountFragment extends Fragment implements GetData, OnRefreshListe
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
-		if (!username.equals("me"))
-			activity.setTitle(username + "'s Account");
-		else
-			activity.setTitle("My Account");
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -160,19 +150,19 @@ public class AccountFragment extends Fragment implements GetData, OnRefreshListe
 		SharedPreferences settings = activity.getApiCall().settings;
 		Log.d("SettingTitle", username);
 		View view = inflater.inflate(R.layout.account_layout, container, false);
-        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
-        ActionBarPullToRefresh.from(getActivity())
-                // Mark All Children as pullable
-                .allChildrenArePullable()
-                        // Set the OnRefreshListener
-                .listener(this)
-                        // Finally commit the setup to our PullToRefreshLayout
-                .setup(mPullToRefreshLayout);
+		mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.ptr_layout);
+		ActionBarPullToRefresh.from(getActivity())
+				// Mark All Children as pullable
+				.allChildrenArePullable()
+						// Set the OnRefreshListener
+				.listener(this)
+						// Finally commit the setup to our PullToRefreshLayout
+				.setup(mPullToRefreshLayout);
 		LinearLayout header = (LinearLayout) view.findViewById(R.id.header);
 		if (settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
 			header.setBackgroundColor(0xFFCCCCCC);
 		biography = (TextView) view.findViewById(R.id.biography);
-        TextView usernameText = (TextView) view.findViewById(R.id.username);
+		TextView usernameText = (TextView) view.findViewById(R.id.username);
 		usernameText.setText(username);
 		created = (TextView) view.findViewById(R.id.created);
 		reputation = (TextView) view.findViewById(R.id.reputation);
@@ -189,10 +179,10 @@ public class AccountFragment extends Fragment implements GetData, OnRefreshListe
 	}
 
 	public void onGetObject(Object data, String tag) {
-        refreshedCount++;
-        if(refreshedCount == 5) {
-            mPullToRefreshLayout.setRefreshComplete();
-        }
+		refreshedCount++;
+		if (refreshedCount == 5) {
+			mPullToRefreshLayout.setRefreshComplete();
+		}
 		try {
 			if (data == null) {
 				return;
@@ -249,14 +239,14 @@ public class AccountFragment extends Fragment implements GetData, OnRefreshListe
 		}
 	}
 
-    @Override
-    public void onRefreshStarted(View view) {
-        getAccount();
-    }
+	@Override
+	public void onRefreshStarted(View view) {
+		getAccount();
+	}
 
 	private void getAccount() {
-        refreshedCount = 0;
-        mPullToRefreshLayout.setRefreshing(true);
+		refreshedCount = 0;
+		mPullToRefreshLayout.setRefreshing(true);
 		mMenuList = getResources().getStringArray(R.array.accountMenu);
 		adapter = new ArrayAdapter<String>(getActivity(),
 				R.layout.drawer_list_item, mMenuList);

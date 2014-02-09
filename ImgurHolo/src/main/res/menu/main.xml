@@ -128,5 +128,5 @@
         android:orderInCategory="75"
         android:icon="@drawable/action_settings"
         android:showAsAction="never"
-        android:visible="true"/>
+        android:visible="false"/>
 </menu>

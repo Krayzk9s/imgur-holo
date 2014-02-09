@@ -35,13 +35,13 @@ import java.util.ArrayList;
 
 /**
  * Copyright 2013 Kurt Zimmer
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,7 +50,7 @@ import java.util.ArrayList;
  */
 public class ImagePager extends Fragment {
 	private ViewPager pager;
-    private ArrayList<JSONParcelable> imageData;
+	private ArrayList<JSONParcelable> imageData;
 	private int start;
 
 	@Override
@@ -67,19 +67,12 @@ public class ImagePager extends Fragment {
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		if (getActivity().getActionBar() != null)
-			getActivity().getActionBar().setTitle("Images");
-	}
-
-	@Override
 	public View onCreateView(LayoutInflater inflater,
 							 ViewGroup container,
 							 Bundle savedInstanceState) {
 		View result = inflater.inflate(R.layout.image_viewpager, container, false);
 		pager = (ViewPager) result.findViewById(R.id.pager);
-        ImageAdapter adapter = new ImageAdapter(getChildFragmentManager());
+		ImageAdapter adapter = new ImageAdapter(getChildFragmentManager());
 		pager.setAdapter(adapter);
 		if (savedInstanceState == null)
 			pager.setCurrentItem(start);
@@ -88,9 +81,9 @@ public class ImagePager extends Fragment {
 
 	public class ImageAdapter extends android.support.v4.app.FragmentPagerAdapter {
 
-        public ImageAdapter(FragmentManager mgr) {
+		public ImageAdapter(FragmentManager mgr) {
 			super(mgr);
-        }
+		}
 
 		@Override
 		public int getCount() {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 import com.krayzk9s.imgurholo.R;
 import com.krayzk9s.imgurholo.activities.ImgurHoloActivity;
@@ -67,7 +68,11 @@ public class CommentsAsync extends AsyncTask<Void, Void, Void> {
 			if (activity != null) {
 				FragmentManager fragmentManager = activity.getSupportFragmentManager();
 				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				fragmentTransaction.replace(R.id.frame_layout, fragment).commit();
+				FrameLayout displayFrag = (FrameLayout) activity.findViewById(R.id.frame_layout_child);
+				if(displayFrag != null)
+					fragmentTransaction.replace(R.id.frame_layout_child, fragment).commitAllowingStateLoss();
+				else
+					fragmentTransaction.replace(R.id.frame_layout, fragment).commitAllowingStateLoss();
 			}
 		}
 	}

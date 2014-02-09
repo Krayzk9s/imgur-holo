@@ -53,13 +53,13 @@ import java.util.Calendar;
 
 /**
  * Copyright 2013 Kurt Zimmer
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -83,18 +83,6 @@ public class CommentsFragment extends Fragment implements GetData {
 		Bundle bundle = getArguments();
 		username = bundle.getString("username");
 		setHasOptionsMenu(true);
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		ImgurHoloActivity activity = (ImgurHoloActivity) getActivity();
-		if (!username.equals("me"))
-			activity.setTitle(String.format(
-                    activity.getResources().getString(R.string.activity_title_comments_user),
-                    username));
-		else
-			activity.setTitle(R.string.activity_title_my_comments);
 	}
 
 	@Override
@@ -220,7 +208,7 @@ public class CommentsFragment extends Fragment implements GetData {
 		public ImageButton link;
 		public String id;
 		public String image_id;
-    }
+	}
 
 	public class MessageAdapter extends ArrayAdapter<JSONParcelable> {
 		JSONObject commentContent;
@@ -248,7 +236,7 @@ public class CommentsFragment extends Fragment implements GetData {
 				holder.link = (ImageButton) convertView.findViewById(R.id.link);
 				holder.id = "";
 				holder.image_id = "";
-                convertView.setTag(holder);
+				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}

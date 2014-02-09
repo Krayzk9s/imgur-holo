@@ -70,9 +70,4 @@ public class ImageActivity extends ImgurHoloActivity {
 		}
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		getActionBar().setTitle(R.string.activity_title_images);
-	}
 }
