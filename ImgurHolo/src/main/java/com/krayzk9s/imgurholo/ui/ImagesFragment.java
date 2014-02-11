@@ -223,7 +223,6 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 				urls = new ArrayList<String>();
 				ids = new ArrayList<JSONParcelable>();
 				page = 0;
-				imageAdapter.notifyDataSetChanged();
 				makeGallery();
 				return true;
 			case R.id.action_copy:

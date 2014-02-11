@@ -276,7 +276,6 @@ public class UploadService extends IntentService implements GetData {
         @Override
         protected JSONObject doInBackground(Void... voids) {
             Log.d("recieved", "in background");
-            Log.d("Image Upload", filePath);
             int maxHeight = Integer.MAX_VALUE;
             if(settings.getBoolean("HeightBoolean", false))
                 maxHeight = Integer.parseInt(settings.getString("HeightSize", "1080"));

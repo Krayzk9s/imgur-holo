@@ -86,6 +86,8 @@ public class DownloadService extends IntentService {
 						.setCallback(new FutureCallback<File>() {
 							@Override
 							public void onCompleted(Exception e, File file) {
+                                if(file == null)
+                                    return;
 								downloaded += 1;
 								if(downloaded == ids.size()) {
 									NotificationCompat.Builder notificationComplete = new NotificationCompat.Builder(getApplicationContext());
