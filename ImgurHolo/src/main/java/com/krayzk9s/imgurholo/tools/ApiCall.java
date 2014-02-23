@@ -86,7 +86,7 @@ public class ApiCall {
 						.asJson();
                 code = response.getCode();
 			}
-			if (code == 200) {
+			if (code == 200 || code == 400) {
 				data = response.getBody().getObject();
 				Log.d("Got data", data.toString());
 			}

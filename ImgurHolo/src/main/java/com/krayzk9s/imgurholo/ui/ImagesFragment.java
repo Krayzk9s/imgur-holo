@@ -442,6 +442,11 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 	}
 
 	public void handleException(Exception e, String tag) {
+        Toast.makeText(getActivity(),
+                getActivity().getResources().getString(R.string.imgur_down),
+                Toast.LENGTH_SHORT)
+                .show();
+        mPullToRefreshLayout.setRefreshComplete();
 		Log.e("Error!", e.toString());
 	}
 
@@ -555,14 +560,8 @@ public class ImagesFragment extends Fragment implements GetData, OnRefreshListen
 
 	void selectItem(int position) {
 		if (!selecting && position >= 0) {
-			/*
-            Intent intent = new Intent();
-            intent.putExtra("id", ids.get(position));
-            intent.setAction(ImgurHoloActivity.IMAGE_INTENT);
-            intent.addCategory(Intent.CATEGORY_DEFAULT);
-            startActivity(intent);*/
-			onImageSelected activity = (onImageSelected) getActivity();
-			activity.imageSelected(ids.get(position));
+            onImageSelected activity = (onImageSelected) getActivity();
+			activity.imageSelected(ids,position);
 		}
 	}
 

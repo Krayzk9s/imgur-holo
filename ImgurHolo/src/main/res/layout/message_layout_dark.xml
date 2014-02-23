@@ -8,7 +8,7 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:id="@+id/comment_item"
-                  android:orientation="horizontal"
+                  android:orientation="vertical"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:padding="2dp"
@@ -42,29 +42,5 @@
                       android:layout_marginRight="5dip"
                       android:textAppearance="?android:textAppearanceSmall"
                     />
-    </LinearLayout>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:orientation="horizontal"
-                  android:layout_width="wrap_content"
-                  android:layout_gravity="center_horizontal"
-                  android:layout_height="50dp"
-                  android:id="@+id/comment_buttons"
-            >
-
-        <ImageButton
-                android:id="@+id/reply"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/dark_social_reply"/>
-        <ImageButton
-                android:id="@+id/delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/dark_content_discard"/>
-        <ImageButton
-                android:id="@+id/report"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/dark_alerts_and_states_warning"/>
     </LinearLayout>
 </LinearLayout>

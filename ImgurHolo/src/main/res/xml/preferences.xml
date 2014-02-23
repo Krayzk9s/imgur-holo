@@ -84,6 +84,10 @@
     <PreferenceCategory
             android:title="Theme Settings"
             android:key="pref_cat_theme">
+        <CheckBoxPreference android:key="ImagePagerEnabled"
+            android:title= "Enable paging of images"
+            android:summary= "May affect app speed and stability"
+            android:defaultValue="false" />
         <CheckBoxPreference android:key="VerticalHeight"
             android:title="Constrain images to vertical screen height"
             android:summary="Force resizing of images to fit on screen in the vertical direction"

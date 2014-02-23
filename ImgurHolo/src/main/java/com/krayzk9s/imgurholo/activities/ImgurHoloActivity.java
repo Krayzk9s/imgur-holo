@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
@@ -23,6 +25,7 @@ import com.krayzk9s.imgurholo.ui.SingleImageFragment;
 import org.json.JSONException;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 /**
  * Copyright 2013 Kurt Zimmer
@@ -56,6 +59,7 @@ public class ImgurHoloActivity extends FragmentActivity implements onImageSelect
     public static final String IMAGES_INTENT = "com.krayzk9s.imgurholo.IMAGES";
     public static final String COMMENTS_INTENT = "com.krayzk9s.imgurholo.COMMENTS";
     public static final String ALBUMS_INTENT = "com.krayzk9s.imgurholo.ALBUMS";
+    public static final String MESSAGE_INTENT = "com.krayzk9s.imgurholo.MESSAGES";
     public static final String ACCOUNT_INTENT = "com.krayzk9s.imgurholo.ACCOUNT";
 	public static final String IMAGE_INTENT = "com.krayzk9s.imgurholo.IMAGE";
     public static final String HOLO_DARK = "Holo Dark";
@@ -105,6 +109,19 @@ public class ImgurHoloActivity extends FragmentActivity implements onImageSelect
     }
 
     @Override
+    public boolean onCreateOptionsMenu(
+            Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        if (getApiCall().settings.getString("theme", MainActivity.HOLO_LIGHT).equals(MainActivity.HOLO_LIGHT))
+            inflater.inflate(R.menu.main, menu);
+        else
+            inflater.inflate(R.menu.main_dark, menu);
+        menu.findItem(R.id.action_settings).setVisible(true);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
@@ -124,27 +141,38 @@ public class ImgurHoloActivity extends FragmentActivity implements onImageSelect
     }
 
 
-    public void imageSelected(JSONParcelable data) {
+    public void imageSelected(ArrayList<JSONParcelable> data, int position) {
         FrameLayout displayFrag = (FrameLayout) findViewById(R.id.frame_layout_child);
         if (displayFrag == null) {
             // DisplayFragment (Fragment B) is not in the layout (handset layout),
             // so start DisplayActivity (Activity B)
             // and pass it the info about the selected item
-            Intent intent = new Intent();
-            intent.putExtra("id", data);
-            intent.setAction(ImgurHoloActivity.IMAGE_INTENT);
-            intent.addCategory(Intent.CATEGORY_DEFAULT);
-            startActivity(intent);
+            if(getApiCall().settings.getBoolean("ImagePagerEnabled", false) == false) {
+                Intent intent = new Intent();
+                intent.putExtra("id", data.get(position));
+                Log.d("data", data.get(position).toString());
+                intent.setAction(ImgurHoloActivity.IMAGE_INTENT);
+                intent.addCategory(Intent.CATEGORY_DEFAULT);
+                startActivity(intent);
+            }
+            else {
+                Intent intent = new Intent();
+                intent.putExtra("ids", data);
+                intent.putExtra("start", position);
+                intent.setAction(ImgurHoloActivity.IMAGE_PAGER_INTENT);
+                intent.addCategory(Intent.CATEGORY_DEFAULT);
+                startActivity(intent);
+            }
         } else {
             // DisplayFragment (Fragment B) is in the layout (tablet layout),
             // so tell the fragment to update
             try {
-                if (data.getJSONObject().has("is_album") && data.getJSONObject().getBoolean("is_album")) {
+                if (data.get(position).getJSONObject().has("is_album") && data.get(position).getJSONObject().getBoolean("is_album")) {
                     ImagesFragment fragment = new ImagesFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("imageCall", "3/album/" + data.getJSONObject().getString("id"));
-                    bundle.putString("id", data.getJSONObject().getString("id"));
-                    bundle.putParcelable("albumData", data);
+                    bundle.putString("imageCall", "3/album/" + data.get(position).getJSONObject().getString("id"));
+                    bundle.putString("id", data.get(position).getJSONObject().getString("id"));
+                    bundle.putParcelable("albumData", data.get(position));
                     fragment.setArguments(bundle);
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -153,7 +181,7 @@ public class ImgurHoloActivity extends FragmentActivity implements onImageSelect
                     SingleImageFragment singleImageFragment = new SingleImageFragment();
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("gallery", true);
-                    bundle.putParcelable("imageData", data);
+                    bundle.putParcelable("imageData", data.get(position));
                     singleImageFragment.setArguments(bundle);
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

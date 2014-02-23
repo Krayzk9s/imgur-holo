@@ -2,6 +2,8 @@ package com.krayzk9s.imgurholo.tools;
 
 import com.krayzk9s.imgurholo.libs.JSONParcelable;
 
+import java.util.ArrayList;
+
 /**
  * Copyright 2013 Kurt Zimmer
  * <p/>
@@ -18,5 +20,5 @@ import com.krayzk9s.imgurholo.libs.JSONParcelable;
  * limitations under the License.
  */
 public interface onImageSelected {
-    public void imageSelected(JSONParcelable data);
+    public void imageSelected(ArrayList<JSONParcelable> data, int position);
 }
