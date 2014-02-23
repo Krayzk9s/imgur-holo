@@ -1,46 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/image_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
-    <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/no_images"
         android:layout_width="wrap_content"
         android:layout_marginTop="?android:actionBarSize"
         android:layout_height="wrap_content"
         android:text="@string/error_loading_images"
-        android:visibility="gone"/>
-    <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:visibility="gone" />
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/error"
         android:layout_marginTop="?android:actionBarSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/error_getting_images"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
-        <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <it.gmariotti.cardslib.library.view.CardListView
-                xmlns:android="http://schemas.android.com/apk/res/android"
+
+            <it.gmariotti.cardslib.library.view.CardListView xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:card="http://schemas.android.com/apk/res-auto"
                 android:layout_marginTop="?android:actionBarSize"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/grid_layout"
-                card:list_card_layout_resourceID="@layout/list_card_thumbnail_layout">
-            </it.gmariotti.cardslib.library.view.CardListView>
+                card:list_card_layout_resourceID="@layout/list_card_thumbnail_layout"></it.gmariotti.cardslib.library.view.CardListView>
         </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
     </LinearLayout>
 </LinearLayout>

@@ -154,7 +154,7 @@ public class SubredditDialogFragment extends android.support.v4.app.DialogFragme
 
         public SubredditArrayAdapter(Context context) {
             super(context, R.layout.drag_item);
-            this.addAll(settings.getString("Subreddits", "aww,carporn,earthporn,foodporn,historyporn,mapporn,oldschoolcool,spaceporn,wallpapers").split(","));
+            this.addAll(settings.getString("Subreddits", "aww,carporn,earthporn,foodporn,historyporn,mapporn,oldschoolcool,polandball,spaceporn,wallpapers").split(","));
         }
 
         @Override

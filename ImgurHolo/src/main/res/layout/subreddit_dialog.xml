@@ -5,18 +5,20 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:orientation="vertical"  >
-        <EditText
-            android:id="@+id/subreddit_dialog_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:imeOptions="actionDone" />
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/subreddit_dialog_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:imeOptions="actionDone" />
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/subreddit_cancel"
             style="?android:attr/actionModeCloseButtonStyle"
@@ -24,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Cancel" />
+
         <Button
             android:id="@+id/subreddit_add"
             style="?android:attr/actionModeCloseButtonStyle"
@@ -31,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="+" />
+
         <Button
             android:id="@+id/subreddit_ok"
             style="?android:attr/actionModeCloseButtonStyle"
@@ -39,6 +43,7 @@
             android:layout_weight="1"
             android:text="OK" />
     </LinearLayout>
+
     <com.mobeta.android.dslv.DragSortListView
         android:id="@+id/subreddit_dialog_list"
         android:layout_width="match_parent"

@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/image_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical">
-    <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/no_images"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="?android:actionBarSize"
-            android:layout_height="wrap_content"
-            android:text="@string/error_loading_images"
-            android:visibility="gone"/>
-    <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/error"
-            android:layout_marginTop="?android:actionBarSize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/error_getting_images"
-            android:visibility="gone"/>
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/no_images"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="?android:actionBarSize"
+        android:layout_height="wrap_content"
+        android:text="@string/error_loading_images"
+        android:visibility="gone" />
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/error"
+        android:layout_marginTop="?android:actionBarSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/error_getting_images"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
-        <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <GridView
-                      android:id="@+id/grid_layout"
-                      android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:columnWidth="120dp"
-                      android:rowHeight="120dp"
-                      android:numColumns="auto_fit"
-                      android:verticalSpacing="1dp"
-                      android:horizontalSpacing="1dp"
-                      android:scaleType="fitCenter"
-                      android:gravity="center">
-            </GridView>
+                android:id="@+id/grid_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="120dp"
+                android:rowHeight="120dp"
+                android:numColumns="auto_fit"
+                android:verticalSpacing="1dp"
+                android:horizontalSpacing="1dp"
+                android:scaleType="fitCenter"
+                android:gravity="center"></GridView>
         </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
     </LinearLayout>
 </LinearLayout>

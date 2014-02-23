@@ -1,98 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-    >
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:id="@+id/comment_item"
-                  android:orientation="horizontal"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:background="@drawable/comment_select"
+        android:id="@+id/comment_item"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/comment_select">
+
+        <View xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/margin_1"
+            android:layout_width="5dp"
+            android:background="@color/Blue"
+            android:layout_height="fill_parent" />
+
+        <View xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/margin_2"
+            android:background="@color/Red"
+            android:layout_width="5dp"
+            android:layout_height="fill_parent" />
+
+        <View xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/margin_3"
+            android:background="@color/Yellow"
+            android:layout_width="5dp"
+            android:layout_height="fill_parent" />
+
+        <View xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/margin_4"
+            android:background="@color/Purple"
+            android:layout_width="5dp"
+            android:layout_height="fill_parent" />
+
+        <View xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/margin_5"
+            android:background="@color/Orange"
+            android:layout_width="5dp"
+            android:layout_height="fill_parent" />
+
+        <View xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/margin_6"
+            android:background="@color/Green"
+            android:layout_width="5dp"
+            android:layout_height="fill_parent" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
             >
 
-        <View xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/margin_1"
-              android:layout_width="5dp"
-              android:background="@color/Blue"
-              android:layout_height="fill_parent"/>
+            <View xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/LightGrey" />
 
-        <View xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/margin_2"
-              android:background="@color/Red"
-              android:layout_width="5dp"
-              android:layout_height="fill_parent"/>
-
-        <View xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/margin_3"
-              android:background="@color/Yellow"
-              android:layout_width="5dp"
-              android:layout_height="fill_parent"/>
-
-        <View xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/margin_4"
-              android:background="@color/Purple"
-              android:layout_width="5dp"
-              android:layout_height="fill_parent"/>
-
-        <View xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/margin_5"
-              android:background="@color/Orange"
-              android:layout_width="5dp"
-              android:layout_height="fill_parent"/>
-
-        <View xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/margin_6"
-              android:background="@color/Green"
-              android:layout_width="5dp"
-              android:layout_height="fill_parent"/>
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:layout_width="fill_parent"
-                          android:layout_height="wrap_content"
-                          android:orientation="vertical"
-
-                    >
-                <View xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:layout_width="fill_parent"
-                      android:layout_height="1dp"
-                      android:background="@color/LightGrey"/>
-
-                <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-                               android:layout_width="fill_parent"
-                               android:layout_height="wrap_content"
-                               android:orientation="horizontal"
-                               android:padding="8dp"
-                               android:id="@+id/header">
-
-                    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                              android:id="@+id/points"
-                              android:text="@string/menu_gallery"
-                              android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:textAppearance="?android:textAppearanceSmall"
-                              android:textSize="12sp"
-                              android:textColor="@color/DarkGray"
-                            />
-                </RelativeLayout>
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:id="@+id/header">
 
                 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:id="@+id/body"
-                          android:text="@string/menu_gallery"
-                          android:layout_width="fill_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_marginLeft="8dp"
-                          android:layout_marginBottom="8dp"
-                    android:layout_marginRight="8dp"
-                          android:textAppearance="?android:textAppearanceSmall"
-                          android:autoLink="web"
-                          android:clickable="false"
-                        />
+                    android:id="@+id/points"
+                    android:text="@string/menu_gallery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textSize="12sp"
+                    android:textColor="@color/DarkGray"
+                    android:focusable="false" />
+            </RelativeLayout>
+
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/body"
+                android:text="@string/menu_gallery"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="8dp"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:autoLink="web"
+                android:clickable="false"
+                android:focusable="false" />
+
             <View xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="fill_parent"
-                  android:layout_height="1dp"
-                  android:alpha="0"/>
-            </LinearLayout>
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:alpha="0" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <ListView
+
+        <ListView
             android:id="@+id/comment_thread"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -17,8 +18,7 @@
             android:transcriptMode="disabled"
             android:fastScrollEnabled="true"
             android:persistentDrawingCache="scrolling"
-            android:scrollingCache="false"
-            />
+            android:scrollingCache="false" />
     </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
 </LinearLayout>

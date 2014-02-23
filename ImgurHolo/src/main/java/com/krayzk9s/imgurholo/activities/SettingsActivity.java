@@ -24,6 +24,8 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.krayzk9s.imgurholo.R;
@@ -67,6 +69,12 @@ public class SettingsActivity extends ImgurHoloActivity {
         }
 
         return(super.onOptionsItemSelected(item));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(
+            Menu menu) {
+        return true;
     }
 
     public static class SettingsFragment extends PreferenceFragment {

@@ -37,6 +37,7 @@ public class ImageActivity extends ImgurHoloActivity {
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		if(savedInstanceState == null) {
 			Intent intent = getIntent();
+            Log.d("intent", intent.getExtras().getParcelable("id").toString());
 			JSONObject id = ((JSONParcelable) intent.getExtras().getParcelable("id")).getJSONObject();
 			try {
 				if (id.has("is_album") && id.getBoolean("is_album")) {

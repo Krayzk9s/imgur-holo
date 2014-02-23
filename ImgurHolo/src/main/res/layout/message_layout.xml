@@ -1,45 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:padding="2dp"
-        >
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="2dp">
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:id="@+id/comment_item"
-                  android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:padding="2dp"
-            >
+        android:id="@+id/comment_item"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="2dp">
 
-                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:id="@+id/title"
-                          android:text="@string/menu_gallery"
-                          android:layout_width="fill_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_marginRight="5dip"
-                          android:textAppearance="?android:textAppearanceMedium"
-                        />
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/title"
+            android:text="@string/menu_gallery"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dip"
+            android:textAppearance="?android:textAppearanceMedium" />
 
-                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:id="@+id/header"
-                          android:text="@string/menu_gallery"
-                          android:layout_width="fill_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_marginRight="5dip"
-                          android:textAppearance="?android:textAppearanceSmall"
-                          android:textColor="@color/DarkGray"
-                        />
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/header"
+            android:text="@string/menu_gallery"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dip"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/DarkGray" />
 
-                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-                          android:id="@+id/body"
-                          android:text="@string/menu_gallery"
-                          android:layout_width="fill_parent"
-                          android:layout_height="wrap_content"
-                          android:minHeight="50dp"
-                          android:layout_marginRight="5dip"
-                          android:textAppearance="?android:textAppearanceSmall"
-                        />
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/body"
+            android:text="@string/menu_gallery"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            android:layout_marginRight="5dip"
+            android:textAppearance="?android:textAppearanceSmall" />
     </LinearLayout>
 </LinearLayout>

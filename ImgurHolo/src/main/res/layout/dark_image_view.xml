@@ -8,18 +8,18 @@
     android:paddingTop="?android:actionBarSize"
     android:clipToPadding="false">
 
-        <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/single_image_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:adjustViewBounds="true"/>
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/single_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true" />
+
     <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/image_progress"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        style="@android:style/Widget.Holo.ProgressBar.Horizontal"
-        />
+        style="@android:style/Widget.Holo.ProgressBar.Horizontal" />
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/single_image_title"
@@ -44,7 +44,8 @@
         android:textColor="@color/DarkGray"
         android:autoLink="web"
         android:textAppearance="?android:textAppearanceMedium"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
     <TextView
         android:layout_marginBottom="4dp"
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -55,22 +56,23 @@
         android:textColor="@color/Gray"
         android:textAppearance="?android:textAppearanceSmall"
         android:visibility="gone" />
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:orientation="horizontal"
-                  android:layout_gravity="center_horizontal"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="8dp">
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/single_image_info"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/Gray"
-            android:visibility="gone"
-            />
-        <TextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:visibility="gone" />
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/single_image_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

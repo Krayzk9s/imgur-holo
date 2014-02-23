@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:id="@+id/menu_layout"
-              android:background="@drawable/comment_select">
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/menu_layout"
+    android:background="@drawable/comment_select">
+
     <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-               android:id="@+id/menu_icon"
-               android:layout_width="wrap_content"
-               android:layout_height="fill_parent"
-               android:paddingLeft="16dp"
-               android:layout_centerVertical="true"
-               android:gravity="center"/>
+        android:id="@+id/menu_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:paddingLeft="16dp"
+        android:layout_centerVertical="true"
+        android:gravity="center" />
+
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/menu_text"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:textAppearance="?android:attr/textAppearanceListItemSmall"
-              android:gravity="center_vertical"
-              android:paddingLeft="16dp"
-              android:layout_toRightOf="@id/menu_icon"
-              android:layout_centerVertical="true"
-              android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+        android:id="@+id/menu_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:layout_toRightOf="@id/menu_icon"
+        android:layout_centerVertical="true"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall" />
 
 </RelativeLayout>
